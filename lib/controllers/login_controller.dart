@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants/app_constants.dart';
-import '../models/login_response.dart';
+import '../models/response/login_response.dart';
 import '../services/api/api_client.dart';
 
 class LoginController extends GetxController {
@@ -13,6 +14,17 @@ class LoginController extends GetxController {
   final RxBool isLoading = false.obs;
 
   bool get isFormValid => username.value.trim().isNotEmpty && password.value.trim().isNotEmpty;
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Ensure overlays are active and styled when Login Screen is initialized
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Color(0xFF00897B),
+      statusBarIconBrightness: Brightness.light,
+    ));
+  }
 
   Future<void> login() async {
     if (!isFormValid) return;
@@ -41,7 +53,7 @@ class LoginController extends GetxController {
 
     try {
       final response = await apiClient.post(
-        'v2/User/signin',
+        'api/v2/User/signin',
         data: {
           'email_id': input,
           'password': pass,

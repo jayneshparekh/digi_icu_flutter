@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'controllers/doctor_dashboard_controller.dart';
+import 'controllers/login_controller.dart';
+import 'controllers/splash_controller.dart';
+import 'controllers/patient_list_controller.dart';
+import 'views/screens/patient_list_screen.dart';
 import 'core/bindings/initial_binding.dart';
 import 'core/theme/app_theme.dart';
 import 'views/screens/doctor_dashboard_screen.dart';
@@ -41,14 +46,30 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/',
           page: () => const SplashScreen(),
+          binding: BindingsBuilder(() {
+            Get.put(SplashController());
+          }),
         ),
         GetPage(
           name: '/login',
           page: () => const LoginScreen(),
+          binding: BindingsBuilder(() {
+            Get.lazyPut(() => LoginController());
+          }),
         ),
         GetPage(
           name: '/doctor-dashboard',
           page: () => const DoctorDashboardScreen(),
+          binding: BindingsBuilder(() {
+            Get.lazyPut(() => DoctorDashboardController());
+          }),
+        ),
+        GetPage(
+          name: '/patient-list',
+          page: () => const PatientListScreen(),
+          binding: BindingsBuilder(() {
+            Get.lazyPut(() => PatientListController());
+          }),
         ),
       ],
     );

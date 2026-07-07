@@ -3,8 +3,8 @@
     <!-- Theme applied to the Android Window while the process is starting on Android 12+ (API 31+) -->
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
-        <!-- Remove the default Android 12 splash screen icon and make the background white -->
-        <item name="android:windowSplashScreenAnimatedIcon">@android:color/transparent</item>
+        <!-- Set the circular clinic logo (mhc_round.png) as the Android 12 splash screen icon and make the background white -->
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/launch_image</item>
         <item name="android:windowSplashScreenBackground">@android:color/white</item>
     </style>
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">

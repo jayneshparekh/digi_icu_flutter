@@ -1,7 +1,7 @@
 class AppConstants {
   AppConstants._();
 
-  static const String baseUrl = 'https://www.mhclinic.net/MHC/api/';
+  static const String baseUrl = 'https://www.mhclinic.net/MHC/';
   static const Duration connectTimeout = Duration(seconds: 15);
   static const Duration receiveTimeout = Duration(seconds: 15);
 
@@ -19,4 +19,10 @@ class AppConstants {
   static const String prefScreeningId = 'screening_id';
   static const String doctorRegSec2Pending = 'section_2';
   static const String doctorRegSec3Pending = 'section_3';
+
+  // Orientation settings
+  static const String prefUserOrientation = 'user_orientation';
+
+  // Patient image uploads URL
+  static const String patientImageUrl = 'https://www.mhclinic.net/MHC/uploads/patient_images/';
 }

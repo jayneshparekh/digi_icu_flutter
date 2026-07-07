@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants/app_constants.dart';
@@ -6,6 +7,12 @@ class SplashController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // Ensure overlays are active and styled when Splash Screen is initialized
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Color(0xFF00897B),
+      statusBarIconBrightness: Brightness.light,
+    ));
     _checkSessionAndNavigate();
   }
 
