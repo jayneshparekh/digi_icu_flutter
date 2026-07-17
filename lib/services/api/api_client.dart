@@ -1,4 +1,5 @@
-import 'package:dio/dio.dart';
+﻿import 'package:dio/dio.dart';
+
 import '../../core/constants/app_constants.dart';
 
 class ApiClient {
@@ -48,3 +49,4 @@ class ApiClient {
     }
   }
 }
+

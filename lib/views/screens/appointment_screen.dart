@@ -1,0 +1,309 @@
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../controllers/appointment_controller.dart';
+import '../../models/response/patients/doctor_list_patient_side_response.dart';
+import '../widgets/app_network_avatar.dart';
+
+class AppointmentScreen extends GetView<AppointmentController> {
+  const AppointmentScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final searchController = TextEditingController();
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: AppColors.primary,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Get.back(),
+        ),
+        title: Obx(() {
+          final loggedIn = controller.loggedInUserName.value;
+          final patient = controller.patientName;
+          final subtitle = (loggedIn.isNotEmpty && patient.isNotEmpty)
+              ? 'Dr. $loggedIn ($patient)'
+              : loggedIn.isNotEmpty ? 'Dr. $loggedIn' : patient;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Book Appointment',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              if (subtitle.isNotEmpty)
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                  ),
+                ),
+            ],
+          );
+        }),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home, color: Colors.white),
+            onPressed: () {
+              // Redirect to Dashboard (main route or splash redirection)
+              Get.offAllNamed('/patient-dashboard');
+            },
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          // Search Input Bar
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: TextField(
+                controller: searchController,
+                onChanged: (val) => controller.filterDoctors(val),
+                decoration: const InputDecoration(
+                  hintText: 'Search Doctors',
+                  prefixIcon: Icon(Icons.search, color: AppColors.primary),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // Doctor List Area
+          Expanded(
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.primary,
+                    ),
+                  ),
+                );
+              }
+
+              if (controller.errorMsg.value.isNotEmpty) {
+                return Center(
+                  child: Text(
+                    controller.errorMsg.value,
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                );
+              }
+
+              final list = controller.filteredDoctors;
+              if (list.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No doctors found',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                );
+              }
+
+              return ListView.separated(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                itemCount: list.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final doctor = list[index];
+                  return _buildDoctorCard(context, doctor);
+                },
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDoctorCard(BuildContext context, DoctorDataModel doctor) {
+    final hasReason = doctor.holdReason.isNotEmpty;
+    final isAvailable = doctor.availability == 'Available';
+    final docName = '${doctor.firstName} ${doctor.lastName}';
+
+    // Button text determination matching Android Adapter logic
+    String btnText = 'Take Appointment';
+    if (doctor.bookingStatus == '2') {
+      btnText = 'I am ready';
+    }
+    if (doctor.clinicalFormStatus == '0') {
+      btnText = 'Fill Clinical Form';
+    }
+    if (doctor.status == 'Upcoming') {
+      btnText = 'Join Call';
+    }
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Profile Picture
+            AppNetworkAvatar(
+              imageUrl: doctor.profilePic,
+              size: 90,
+              borderRadius: 4,
+            ),
+            const SizedBox(width: 12),
+
+            // Doctor Details & Action
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    docName,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  if (doctor.degrees.isNotEmpty) ...[
+                    Text(
+                      doctor.degrees,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                  ],
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Reg No: ${doctor.regNo}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: isAvailable ? Colors.green : Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            isAvailable ? 'Available' : 'Not Available',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isAvailable ? Colors.green : Colors.grey,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Hold Reason / Pending statuses
+                  if (hasReason) ...[
+                    Row(
+                      children: [
+                        const Text(
+                          'On Hold: ',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            doctor.holdReason,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.orange,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                  ] else if (doctor.clinicalFormStatus == '0') ...[
+                    const Text(
+                      'Clinical form pending',
+                      style: TextStyle(fontSize: 12, color: Colors.orange),
+                    ),
+                    const SizedBox(height: 6),
+                  ],
+
+                  // Action Button
+                  ElevatedButton(
+                    onPressed: () => controller.checkPaymentStatus(doctor),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      minimumSize: const Size(120, 36),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                    child: Text(
+                      btnText,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+

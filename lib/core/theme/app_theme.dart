@@ -1,3 +1,4 @@
+﻿import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -5,7 +6,7 @@ class AppTheme {
 
   static final ThemeData lightTheme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.teal,
+      seedColor: AppColors.primary,
       brightness: Brightness.light,
     ),
     useMaterial3: true,
@@ -13,9 +14,10 @@ class AppTheme {
 
   static final ThemeData darkTheme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.teal,
+      seedColor: AppColors.primary,
       brightness: Brightness.dark,
     ),
     useMaterial3: true,
   );
 }
+

@@ -1,18 +1,23 @@
+import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../core/constants/app_constants.dart';
-import '../models/response/statuswise_patients_response.dart';
+import '../models/response/doctors/statuswise_patients_response.dart';
 import '../services/api/api_client.dart';
+import '../views/widgets/confirm_patient_dialog.dart';
 
 class PatientListController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
 
   final RxString doctorName = ''.obs;
-  final RxList<PatientAppointmentData> patients = <PatientAppointmentData>[].obs;
+  final RxList<PatientAppointmentData> patients =
+      <PatientAppointmentData>[].obs;
   final RxBool isLoading = false.obs;
+  final RxBool isLoadMoreLoading = false.obs;
   final RxString errorMessage = ''.obs;
 
   // Selected status tab (Defaults to 'In Process')
@@ -20,6 +25,13 @@ class PatientListController extends GetxController {
 
   // Search Text Controller
   final TextEditingController searchController = TextEditingController();
+
+  // Scroll Controller for infinite scrolling
+  late final ScrollController scrollController;
+
+  // Pagination states
+  final RxInt currentPage = 1.obs;
+  final RxBool hasMore = true.obs;
 
   // Dynamic counts for status tabs
   final RxInt referCount = 0.obs;
@@ -31,9 +43,17 @@ class PatientListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    scrollController = ScrollController()..addListener(_onScroll);
     _loadDoctorName().then((_) {
       fetchPatients();
     });
+  }
+
+  void _onScroll() {
+    if (scrollController.position.pixels >=
+        scrollController.position.maxScrollExtent - 200) {
+      fetchPatients(isLoadMore: true, search: searchController.text);
+    }
   }
 
   Future<void> _loadDoctorName() async {
@@ -42,9 +62,19 @@ class PatientListController extends GetxController {
   }
 
   /// Fetches statuswise patients list from API
-  Future<void> fetchPatients({String search = ''}) async {
-    isLoading.value = true;
-    errorMessage.value = '';
+  Future<void> fetchPatients({bool isLoadMore = false, String search = ''}) async {
+    if (isLoadMore) {
+      if (isLoadMoreLoading.value || !hasMore.value) return;
+      isLoadMoreLoading.value = true;
+      currentPage.value++;
+    } else {
+      if (isLoading.value) return;
+      isLoading.value = true;
+      errorMessage.value = '';
+      currentPage.value = 1;
+      hasMore.value = true;
+    }
+
     try {
       final prefs = await SharedPreferences.getInstance();
       final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
@@ -52,46 +82,63 @@ class PatientListController extends GetxController {
 
       if (doctorId.isEmpty) {
         errorMessage.value = 'Doctor ID not found. Please log in again.';
-        patients.clear();
+        if (!isLoadMore) patients.clear();
         return;
       }
 
       final response = await apiClient.post(
-        'api/v2/Doctor/statuswise_patients',
+        ApiEndpoints.statuswisePatients,
         data: {
           'doctor_id': doctorId,
           'appointment_status': selectedStatus.value,
           'search': search,
-          'page_no': 1,
+          'page_no': currentPage.value,
           'limit': 10,
-          'start': 0,
+          'start': (currentPage.value - 1) * 10,
         },
-        options: dio.Options(
-          headers: {
-            'Authorization': token,
-          },
-        ),
+        options: dio.Options(headers: {'Authorization': token}),
       );
 
       if (response.statusCode == 200 && response.data != null) {
         final res = StatuswisePatientsResponse.fromJson(response.data);
         if (res.status == 'success') {
-          patients.assignAll(res.data);
-          _updateCountForStatus(selectedStatus.value, res.data.length);
+          if (isLoadMore) {
+            patients.addAll(res.data);
+          } else {
+            patients.assignAll(res.data);
+            _updateCountForStatus(selectedStatus.value, res.data.length);
+          }
+
+          // If returned data length is less than page limit (10), we reached the end
+          if (res.data.length < 10) {
+            hasMore.value = false;
+          }
         } else {
-          patients.clear();
-          errorMessage.value = res.msg.isNotEmpty ? res.msg : 'No patients found';
-          _updateCountForStatus(selectedStatus.value, 0);
+          if (!isLoadMore) {
+            patients.clear();
+            errorMessage.value = res.msg.isNotEmpty
+                ? res.msg
+                : 'No patients found';
+            _updateCountForStatus(selectedStatus.value, 0);
+          }
+          hasMore.value = false;
         }
       } else {
-        patients.clear();
-        errorMessage.value = 'Failed to load patients: ${response.statusCode}';
+        if (!isLoadMore) {
+          patients.clear();
+          errorMessage.value = 'Failed to load patients: ${response.statusCode}';
+        }
+        hasMore.value = false;
       }
     } catch (e) {
-      patients.clear();
-      errorMessage.value = 'Connection error: $e';
+      if (!isLoadMore) {
+        patients.clear();
+        errorMessage.value = 'Connection error: $e';
+      }
+      hasMore.value = false;
     } finally {
       isLoading.value = false;
+      isLoadMoreLoading.value = false;
     }
   }
 
@@ -133,4 +180,113 @@ class PatientListController extends GetxController {
       );
     }
   }
+
+  /// Confirms doctor consultation for a patient
+  Future<bool> confirmConsultPatientPost(String appointmentId, String type) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.confirmConsultPatientPost,
+        data: {
+          'appointment_id': appointmentId,
+          'type': type,
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final resStatus = response.data['status']?.toString() ?? '';
+        final resMsg = response.data['msg']?.toString() ?? '';
+        if (resStatus == 'success') {
+          Get.rawSnackbar(
+            message: resMsg.isNotEmpty ? resMsg : 'Patient confirmed successfully.',
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          );
+          return true;
+        } else {
+          Get.rawSnackbar(
+            message: resMsg.isNotEmpty ? resMsg : 'Failed to confirm patient.',
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          );
+          return false;
+        }
+      } else {
+        Get.rawSnackbar(
+          message: 'Server error: ${response.statusCode}',
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+        );
+        return false;
+      }
+    } catch (e) {
+      Get.rawSnackbar(
+        message: 'Connection error: $e',
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+      );
+      return false;
+    }
+  }
+
+  /// Handle view details button click
+  void onViewDetails(PatientAppointmentData patient) async {
+    if (patient.doctorVerify == '0') {
+      Get.dialog(
+        ConfirmPatientDialog(
+          patient: patient,
+          onConfirm: () async {
+            final success = await confirmConsultPatientPost(patient.id, 'doctor_verify');
+            if (success) {
+              fetchPatients(search: searchController.text);
+              _navigateToServingPatient(patient);
+            }
+          },
+        ),
+      );
+    } else {
+      _navigateToServingPatient(patient);
+    }
+  }
+
+  void _navigateToServingPatient(PatientAppointmentData patient) async {
+    final prefs = await SharedPreferences.getInstance();
+    final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
+
+    final fullName = '${patient.firstName} ${patient.midName.isNotEmpty ? '${patient.midName[0]} ' : ''}${patient.lastName}'.trim();
+
+    final gender = patient.gender == 'Male'
+        ? 'M'
+        : (patient.gender == 'Female' ? 'F' : 'O');
+
+    final args = {
+      'patientId': patient.patientId,
+      'fullName': fullName,
+      'age': patient.age,
+      'gender': gender,
+      'mhcId': patient.mhcId,
+      'bookingId': patient.id,
+      'mobileNo': patient.mobileNo,
+      'note': patient.note,
+      'selectTab': selectedStatus.value,
+      'status': selectedStatus.value,
+      'leaderName': patient.leaderName,
+      'leaderMobNo': patient.leaderMobile,
+      'isRefer': patient.isRefer,
+      'doctor_home_service_id': patient.doctorHomeServiceId,
+      'doctorId': doctorId,
+      'isAdmitted': patient.isAdmitted,
+      'videoUrl': patient.videoUrl,
+      'clinical_form_status': patient.clinicalFormStatus,
+      'medical_form_status': '1',
+      'instituteId': patient.instituteName,
+    };
+
+    Get.toNamed('/serving-patient', arguments: args);
+  }
 }
+
+

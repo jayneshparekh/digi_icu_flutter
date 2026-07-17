@@ -1,5 +1,7 @@
+﻿import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../controllers/login_controller.dart';
 
 class LoginScreen extends GetView<LoginController> {
@@ -14,12 +16,13 @@ class LoginScreen extends GetView<LoginController> {
           builder: (context, constraints) {
             return SingleChildScrollView(
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                ),
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: IntrinsicHeight(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 16.0,
+                    ),
                     child: Column(
                       children: [
                         const SizedBox(height: 32),
@@ -37,37 +40,59 @@ class LoginScreen extends GetView<LoginController> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             TextField(
-                              onChanged: (val) => controller.username.value = val,
+                              onChanged: (val) =>
+                                  controller.username.value = val,
                               decoration: InputDecoration(
                                 labelText: 'Mobile No/Login Id*',
-                                labelStyle: TextStyle(color: Colors.grey.shade600),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(color: Colors.grey.shade400),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade400,
+                                  ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.teal, width: 2),
+                                  borderSide: const BorderSide(
+                                    color: Colors.teal,
+                                    width: 2,
+                                  ),
                                 ),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 16,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 16),
                             TextField(
-                              onChanged: (val) => controller.password.value = val,
+                              onChanged: (val) =>
+                                  controller.password.value = val,
                               obscureText: true,
                               decoration: InputDecoration(
                                 labelText: 'Password*',
-                                labelStyle: TextStyle(color: Colors.grey.shade600),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(color: Colors.grey.shade400),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade400,
+                                  ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.teal, width: 2),
+                                  borderSide: const BorderSide(
+                                    color: Colors.teal,
+                                    width: 2,
+                                  ),
                                 ),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 16,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -96,10 +121,17 @@ class LoginScreen extends GetView<LoginController> {
                             width: double.infinity,
                             height: 54,
                             child: ElevatedButton(
-                              onPressed: (isValid && !isLoading) ? controller.login : null,
+                              onPressed: (isValid && !isLoading)
+                                  ? controller.login
+                                  : null,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: isValid ? const Color(0xFF4CAF50) : const Color(0xFFBDBDBD), // Green when valid, Grey when invalid
-                                disabledBackgroundColor: const Color(0xFFBDBDBD),
+                                backgroundColor: isValid
+                                    ? AppColors.success
+                                    : AppColors.greyMedium,
+                                // Green when valid, Grey when invalid
+                                disabledBackgroundColor: const Color(
+                                  0xFFBDBDBD,
+                                ),
                                 foregroundColor: Colors.white,
                                 disabledForegroundColor: Colors.white70,
                                 shape: RoundedRectangleBorder(
@@ -108,7 +140,9 @@ class LoginScreen extends GetView<LoginController> {
                                 elevation: 0,
                               ),
                               child: isLoading
-                                  ? const CircularProgressIndicator(color: Colors.white)
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
                                   : const Text(
                                       'Login',
                                       style: TextStyle(
@@ -125,7 +159,10 @@ class LoginScreen extends GetView<LoginController> {
                           alignment: Alignment.topRight,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(top: 12.0, right: 12.0),
+                              padding: const EdgeInsets.only(
+                                top: 12.0,
+                                right: 12.0,
+                              ),
                               child: Row(
                                 children: [
                                   // Lancet Logo Card
@@ -135,7 +172,9 @@ class LoginScreen extends GetView<LoginController> {
                                       padding: const EdgeInsets.all(8),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        border: Border.all(color: Colors.grey.shade300),
+                                        border: Border.all(
+                                          color: Colors.grey.shade300,
+                                        ),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: ClipRRect(
@@ -155,7 +194,9 @@ class LoginScreen extends GetView<LoginController> {
                                       padding: const EdgeInsets.all(8),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        border: Border.all(color: Colors.grey.shade300),
+                                        border: Border.all(
+                                          color: Colors.grey.shade300,
+                                        ),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: ClipRRect(
@@ -176,7 +217,7 @@ class LoginScreen extends GetView<LoginController> {
                               right: 0,
                               child: Container(
                                 decoration: const BoxDecoration(
-                                  color: Color(0xFF616161),
+                                  color: AppColors.greyDark,
                                   shape: BoxShape.circle,
                                 ),
                                 padding: const EdgeInsets.all(4),
@@ -202,3 +243,5 @@ class LoginScreen extends GetView<LoginController> {
     );
   }
 }
+
+

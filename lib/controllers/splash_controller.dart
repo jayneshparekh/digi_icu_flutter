@@ -1,6 +1,8 @@
+﻿import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../core/constants/app_constants.dart';
 
 class SplashController extends GetxController {
@@ -8,11 +10,16 @@ class SplashController extends GetxController {
   void onInit() {
     super.onInit();
     // Ensure overlays are active and styled when Splash Screen is initialized
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color(0xFF00897B),
-      statusBarIconBrightness: Brightness.light,
-    ));
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
+    );
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: AppColors.primary,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
     _checkSessionAndNavigate();
   }
 
@@ -29,3 +36,5 @@ class SplashController extends GetxController {
     });
   }
 }
+
+

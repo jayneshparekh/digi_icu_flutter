@@ -1,41 +1,78 @@
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+
 import '../../controllers/doctor_dashboard_controller.dart';
+import '../widgets/dashboard_card.dart';
+import '../widgets/doctor_side_menu.dart';
 
 class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
   const DoctorDashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Ensure overlays are active and styled when build is called
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
+    );
+
     // Check and trigger orientation layout dialog after the screen is rendered
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (controller.isDialogShown.value) return;
+
       final shortestSide = MediaQuery.of(context).size.shortestSide;
-      final isConfigured = await controller.checkAndApplyOrientation(shortestSide);
-      if (!isConfigured) {
+      final isConfigured = await controller.checkAndApplyOrientation(
+        shortestSide,
+      );
+      if (!context.mounted) return;
+      if (!isConfigured && !controller.isDialogShown.value) {
+        controller.isDialogShown.value = true;
         _showLayoutDialog(context);
       }
     });
 
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
+      drawer: const DoctorSideMenu(),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF00897B), // Teal background matching design
+        backgroundColor: AppColors.primary,
+        // Teal background matching design
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          onPressed: () {
-            // Drawer toggle placeholder
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu, color: Colors.white),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
           },
         ),
         title: Obx(() {
-          return Text(
-            controller.doctorName.value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-            ),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Dr. ${controller.doctorName.value}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(
+                controller.userType.value,
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.85),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
           );
         }),
         actions: [
@@ -45,7 +82,10 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: SvgPicture.asset(
                 'assets/icons/svg/qr_code_scan.svg',
-                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                colorFilter: const ColorFilter.mode(
+                  Colors.white,
+                  BlendMode.srcIn,
+                ),
                 width: 24,
                 height: 24,
               ),
@@ -62,7 +102,7 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
               ),
               child: ClipOval(
                 child: Image.asset(
-                  'assets/images/mhc_round.png',
+                  'assets/images/digi_icu_logo.png',
                   fit: BoxFit.cover,
                 ),
               ),
@@ -92,55 +132,46 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: GridView.count(
-          crossAxisCount: 3,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          children: [
-            // Patient List Card
-            InkWell(
-              onTap: () {
-                Get.toNamed('/patient-list');
-              },
-              borderRadius: BorderRadius.circular(12),
-              child: Card(
-                color: Colors.white,
-                elevation: 1,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.grey.shade200),
-                  borderRadius: BorderRadius.circular(12),
+        padding: const EdgeInsets.all(8.0),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isLandscape =
+                MediaQuery.of(context).orientation == Orientation.landscape;
+            final crossAxisCount = isLandscape ? 5 : 3;
+            final childAspectRatio = isLandscape ? 1.3 : 0.85;
+
+            return GridView.count(
+              crossAxisCount: crossAxisCount,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              childAspectRatio: childAspectRatio,
+              children: [
+                // Patient List Card
+                DashboardCard(
+                  title: 'Patient List',
+                  iconPath: 'assets/icons/svg/ic_patient_list.svg',
+                  onTap: () {
+                    if (controller.accountStatus.value == '2') {
+                      _showPendingRegistrationDialog(context);
+                    } else {
+                      Get.toNamed('/patient-list');
+                    }
+                  },
+                ), // Manage Patients Card
+                DashboardCard(
+                  title: 'Manage Patients',
+                  iconPath: 'assets/icons/svg/ic_person_add.svg',
+                  onTap: () {
+                    if (controller.accountStatus.value == '2') {
+                      _showPendingRegistrationDialog(context);
+                    } else {
+                      Get.toNamed('/manage-patients');
+                    }
+                  },
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 6.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/svg/ic_patient_list.svg',
-                        width: 36,
-                        height: 36,
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFF00897B),
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      const Text(
-                        'Patient List',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );
@@ -150,9 +181,7 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
     Get.dialog(
       AlertDialog(
         backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
         contentPadding: const EdgeInsets.symmetric(horizontal: 24),
         actionsPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -170,40 +199,41 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
           children: [
             const Text(
               'This is the recommended layout but you can change it if you want.',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             const SizedBox(height: 24),
             Obx(() {
               return Column(
                 children: [
-                  RadioListTile<String>(
-                    value: 'portrait',
+                  RadioGroup<String>(
                     groupValue: controller.selectedOrientation.value,
                     onChanged: (val) {
-                      if (val != null) controller.selectedOrientation.value = val;
+                      if (val != null) {
+                        controller.selectedOrientation.value = val;
+                      }
                     },
-                    title: const Text(
-                      'Portrait (Vertical)',
-                      style: TextStyle(fontSize: 16, color: Colors.black87),
+                    child: Column(
+                      children: [
+                        RadioListTile<String>(
+                          value: 'portrait',
+                          title: const Text(
+                            'Portrait (Vertical)',
+                            style: TextStyle(fontSize: 16, color: Colors.black87),
+                          ),
+                          activeColor: AppColors.info,
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                        RadioListTile<String>(
+                          value: 'landscape',
+                          title: const Text(
+                            'Landscape (Horizontal)',
+                            style: TextStyle(fontSize: 16, color: Colors.black87),
+                          ),
+                          activeColor: AppColors.info,
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                      ],
                     ),
-                    activeColor: const Color(0xFF00B0FF),
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  RadioListTile<String>(
-                    value: 'landscape',
-                    groupValue: controller.selectedOrientation.value,
-                    onChanged: (val) {
-                      if (val != null) controller.selectedOrientation.value = val;
-                    },
-                    title: const Text(
-                      'Landscape (Horizontal)',
-                      style: TextStyle(fontSize: 16, color: Colors.black87),
-                    ),
-                    activeColor: const Color(0xFF00B0FF),
-                    contentPadding: EdgeInsets.zero,
                   ),
                   const SizedBox(height: 16),
                   CheckboxListTile(
@@ -215,7 +245,7 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
                       'Set this orientation as default.',
                       style: TextStyle(fontSize: 15, color: Colors.black87),
                     ),
-                    activeColor: const Color(0xFF00B0FF),
+                    activeColor: AppColors.info,
                     checkColor: Colors.white,
                     controlAffinity: ListTileControlAffinity.leading,
                     contentPadding: EdgeInsets.zero,
@@ -229,12 +259,12 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
           TextButton(
             onPressed: () {
               controller.saveAndApplySelectedOrientation();
-              Get.back();
+              Navigator.of(context, rootNavigator: true).pop();
             },
             child: const Text(
               'APPLY',
               style: TextStyle(
-                color: Color(0xFF00897B),
+                color: AppColors.primary,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -245,4 +275,57 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
       barrierDismissible: false,
     );
   }
+
+  void _showPendingRegistrationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          title: const Text(
+            'Warning!!',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          content: const Text(
+            'Your registration formalities are pending, please complete first.',
+            style: TextStyle(fontSize: 14, color: Colors.black87),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Okay',
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+
+

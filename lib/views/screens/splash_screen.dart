@@ -1,5 +1,7 @@
+﻿import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../controllers/splash_controller.dart';
 
 class SplashScreen extends GetView<SplashController> {
@@ -14,7 +16,9 @@ class SplashScreen extends GetView<SplashController> {
           Expanded(
             child: Center(
               child: Image(
-                image: AssetImage('assets/images/mobile_hypertension_clinic.png'),
+                image: AssetImage(
+                  'assets/images/digi_icu_logo.png',
+                ),
                 width: 250,
                 fit: BoxFit.contain,
               ),
@@ -23,7 +27,8 @@ class SplashScreen extends GetView<SplashController> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 48.0),
             child: LinearProgressIndicator(
-              backgroundColor: Color(0xFFFFE0B2), // Light orange background
+              backgroundColor: AppColors.peachBg,
+              // Light orange background
               valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
               minHeight: 6,
               borderRadius: BorderRadius.all(Radius.circular(3)),
@@ -34,3 +39,5 @@ class SplashScreen extends GetView<SplashController> {
     );
   }
 }
+
+

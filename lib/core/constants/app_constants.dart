@@ -1,4 +1,4 @@
-class AppConstants {
+﻿class AppConstants {
   AppConstants._();
 
   static const String baseUrl = 'https://www.mhclinic.net/MHC/';
@@ -17,6 +17,10 @@ class AppConstants {
   static const String prefUserMobileNumber = 'mobile_no';
   static const String prefUserEmail = 'mhc_email';
   static const String prefScreeningId = 'screening_id';
+  static const String prefFirstTimeAppointment = 'first_time_appointment';
+  static const String prefLeaderId = 'leader_id';
+  static const String prefUserHeight = 'height';
+  static const String prefUserWeight = 'weight';
   static const String doctorRegSec2Pending = 'section_2';
   static const String doctorRegSec3Pending = 'section_3';
 
@@ -24,5 +28,11 @@ class AppConstants {
   static const String prefUserOrientation = 'user_orientation';
 
   // Patient image uploads URL
-  static const String patientImageUrl = 'https://www.mhclinic.net/MHC/uploads/patient_images/';
+  static const String patientImageUrl =
+      '${baseUrl}uploads/patient_images/';
+
+  // Doctor profile images URL
+  static const String doctorImageUrl =
+      '${baseUrl}uploads/doctor_images/';
 }
+
