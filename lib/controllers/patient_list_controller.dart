@@ -283,6 +283,7 @@ class PatientListController extends GetxController {
       'clinical_form_status': patient.clinicalFormStatus,
       'medical_form_status': '1',
       'instituteId': patient.instituteName,
+      'qrCode': patient.qrCode,
     };
 
     Get.toNamed('/serving-patient', arguments: args);

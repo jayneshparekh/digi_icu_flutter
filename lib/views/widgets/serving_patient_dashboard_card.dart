@@ -6,6 +6,7 @@ class ServingPatientDashboardCard extends StatelessWidget {
   final String value;
   final Widget? trailing;
   final VoidCallback? onTap;
+  final Color? backgroundColor;
 
   const ServingPatientDashboardCard({
     super.key,
@@ -13,6 +14,7 @@ class ServingPatientDashboardCard extends StatelessWidget {
     required this.value,
     this.trailing,
     this.onTap,
+    this.backgroundColor,
   });
 
   @override
@@ -21,47 +23,46 @@ class ServingPatientDashboardCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(6),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
         decoration: BoxDecoration(
-          color: AppColors.cardBlue,
+          color: backgroundColor ?? AppColors.cardBlue,
           borderRadius: BorderRadius.circular(6),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
+        child: Row(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Text(
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
                     title,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 13,
+                      fontSize: 11,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                ),
-                if (trailing != null) ...[
-                  const SizedBox(width: 4),
-                  trailing!,
+                  const SizedBox(height: 2),
+                  Text(
+                    value,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              value,
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
               ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
             ),
+            if (trailing != null) ...[
+              const SizedBox(width: 4),
+              Center(child: trailing!),
+            ],
           ],
         ),
       ),

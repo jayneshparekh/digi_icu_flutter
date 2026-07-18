@@ -35,6 +35,8 @@ import 'views/screens/medical_form_screen.dart';
 import 'controllers/medical_form_controller.dart';
 import 'controllers/serving_patient_controller.dart';
 import 'views/screens/serving_patient_screen.dart';
+import 'views/screens/diagnosis_screen.dart';
+import 'controllers/diagnosis_controller.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -190,6 +192,13 @@ class MyApp extends StatelessWidget {
           page: () => const MedicalFormScreen(),
           binding: BindingsBuilder(() {
             Get.lazyPut(() => MedicalFormController());
+          }),
+        ),
+        GetPage(
+          name: '/diagnosis',
+          page: () => const DiagnosisScreen(),
+          binding: BindingsBuilder(() {
+            Get.lazyPut(() => DiagnosisController());
           }),
         ),
       ],

@@ -1,51 +1,313 @@
 import 'package:digi_icu_flutter/controllers/serving_patient_controller.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:digi_icu_flutter/views/screens/serving_patient_dashboard_view.dart';
+import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
+import 'package:digi_icu_flutter/views/widgets/patient_rating_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class ServingPatientScreen extends GetView<ServingPatientController> {
   const ServingPatientScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        backgroundColor: AppColors.primary,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Get.back(),
-        ),
-        title: Text(
-          controller.fullName.isNotEmpty ? controller.fullName : 'Serving Patient',
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+  void _showEnlargedQRCode(BuildContext context, String qrCodeUrl) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Patient QR Code',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, color: Colors.grey),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Container(
+                width: 250,
+                height: 250,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: qrCodeUrl.startsWith('http')
+                      ? Image.network(
+                          qrCodeUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Center(child: Icon(Icons.qr_code, size: 100, color: Colors.grey)),
+                        )
+                      : const Center(child: Icon(Icons.qr_code, size: 100, color: Colors.grey)),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'MHC ID: ${controller.mhcId}',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+              ),
+            ],
           ),
         ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(30.0),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 72.0, bottom: 8.0),
-            child: Row(
-              children: [
-                Text(
-                  'Age: ${controller.age}  |  Gender: ${controller.gender}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+      ),
+    );
+  }
+
+  Widget _buildTopActionButton({
+    required String svgName,
+    required VoidCallback onTap,
+    Color bg = AppColors.primary,
+    bool visible = true,
+  }) {
+    if (!visible) return const SizedBox.shrink();
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(6),
+          child: Container(
+            height: 38,
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            padding: const EdgeInsets.all(8.0),
+            child: SvgPicture.asset(
+              'assets/icons/svg/$svgName.svg',
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              fit: BoxFit.contain,
             ),
           ),
         ),
       ),
-      body: const ServingPatientDashboardView(),
+    );
+  }
+
+  Widget _buildBottomTabItem({
+    required String tabName,
+    required String svgName,
+    required String tooltip,
+  }) {
+    return Obx(() {
+      final isSelected = controller.currentTab.value == tabName;
+      final bg = isSelected ? const Color(0xFFFF5722) : AppColors.primary;
+      return Expanded(
+        child: Tooltip(
+          message: tooltip,
+          child: Material(
+            color: bg,
+            child: InkWell(
+              onTap: () => controller.changeTab(tabName),
+              child: Container(
+                height: 52,
+                padding: const EdgeInsets.all(12.0),
+                child: SvgPicture.asset(
+                  'assets/icons/svg/$svgName.svg',
+                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey.shade100,
+      body: SafeArea(
+        child: Obx(() {
+          final isPatientView = controller.userType.value == 'Patient' || controller.fromPatient;
+          final hideHoldAndFinish = controller.selectTab == 'Served' || controller.status == 'Served' || controller.isFrom == 'Direct Patient Call';
+
+          return Stack(
+            children: [
+              Column(
+                children: [
+                  // Top Bar Layout
+                  Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        // Patient Info Row
+                        Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Get.dialog(
+                                    PatientRatingDialog(
+                                      initialRating: controller.patientRating.value,
+                                      onSubmit: (ratingVal) => controller.addRating(ratingVal),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey.shade300),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                                  child: Text(
+                                    '${controller.fullName} / ${controller.age} / ${controller.gender} / ${controller.mhcId} / ★ ${controller.patientRating.value}'
+                                        .toUpperCase(),
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            // QR Code Thumbnail
+                            GestureDetector(
+                              onTap: () => _showEnlargedQRCode(context, controller.qrCode),
+                              child: Container(
+                                width: 38,
+                                height: 38,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(4),
+                                  child: controller.qrCode.startsWith('http')
+                                      ? Image.network(
+                                          controller.qrCode,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (context, error, stackTrace) =>
+                                              const Icon(Icons.qr_code, size: 24, color: Colors.black87),
+                                        )
+                                      : const Icon(Icons.qr_code, size: 24, color: Colors.black87),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (!isPatientView) ...[
+                          const SizedBox(height: 8),
+                          // Action Row 1: Refer, Leader Call, Call, Admit, Hold
+                          Row(
+                            children: [
+                              _buildTopActionButton(
+                                svgName: 'ic_refer',
+                                onTap: () => Get.rawSnackbar(message: 'Refer clicked'),
+                              ),
+                              _buildTopActionButton(
+                                svgName: 'ic_leader_call',
+                                onTap: () => Get.rawSnackbar(message: 'Leader Call clicked'),
+                                bg: Colors.red,
+                              ),
+                              _buildTopActionButton(
+                                svgName: 'ic_baseline_phone_24',
+                                onTap: () => Get.rawSnackbar(message: 'Call clicked'),
+                              ),
+                              _buildTopActionButton(
+                                svgName: 'ic_baseline_admit_24',
+                                onTap: () => Get.rawSnackbar(message: 'Admit clicked'),
+                                bg: controller.isAdmitted == '1' ? Colors.red : AppColors.primary,
+                              ),
+                              _buildTopActionButton(
+                                svgName: 'ic_hold',
+                                onTap: () => Get.rawSnackbar(message: 'Hold clicked'),
+                                visible: !hideHoldAndFinish,
+                              ),
+                            ],
+                          ),
+                        ],
+                        const SizedBox(height: 6),
+                        // Action Row 2: Reload, Home, Start Video, Join Video, Finish
+                        Row(
+                          children: [
+                            _buildTopActionButton(
+                              svgName: 'ic_refresh',
+                              onTap: () => controller.fetchPatientDetails(),
+                              visible: !isPatientView,
+                            ),
+                            _buildTopActionButton(
+                              svgName: 'ic_home',
+                              onTap: () => Get.back(),
+                              visible: !isPatientView && controller.status == 'Served',
+                            ),
+                            _buildTopActionButton(
+                              svgName: 'ic_start_video_call',
+                              onTap: () => Get.rawSnackbar(message: 'Start Video Call clicked'),
+                            ),
+                            _buildTopActionButton(
+                              svgName: 'ic_incoming_call',
+                              onTap: () => Get.rawSnackbar(message: 'Join Call clicked'),
+                            ),
+                            _buildTopActionButton(
+                              svgName: 'ic_finish',
+                              onTap: () => Get.rawSnackbar(message: 'Finish clicked'),
+                              visible: !isPatientView && !hideHoldAndFinish,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(height: 1, thickness: 1),
+                  // Center View area
+                  Expanded(
+                    child: Obx(() {
+                      switch (controller.currentTab.value) {
+                        case 'Dashboard':
+                          return const ServingPatientDashboardView();
+                        case 'Graph':
+                          return const Center(child: Text('Graph Screen Placeholder', style: TextStyle(fontSize: 16, color: Colors.grey)));
+                        case 'Prescription':
+                          return const Center(child: Text('Prescription Screen Placeholder', style: TextStyle(fontSize: 16, color: Colors.grey)));
+                        case 'Form':
+                          return const Center(child: Text('Form Screen Placeholder', style: TextStyle(fontSize: 16, color: Colors.grey)));
+                        case 'DI':
+                          return const Center(child: Text('Doctor Interpretation Placeholder', style: TextStyle(fontSize: 16, color: Colors.grey)));
+                        case 'Reports':
+                          return const Center(child: Text('Reports Folder Placeholder', style: TextStyle(fontSize: 16, color: Colors.grey)));
+                        default:
+                          return const ServingPatientDashboardView();
+                      }
+                    }),
+                  ),
+                  // Bottom Tabs layout (hidden if patient view)
+                  if (!isPatientView)
+                    Row(
+                      children: [
+                        _buildBottomTabItem(tabName: 'Dashboard', svgName: 'ic_dashboard', tooltip: 'Dashboard'),
+                        _buildBottomTabItem(tabName: 'Graph', svgName: 'ic_graph', tooltip: 'Graph'),
+                        _buildBottomTabItem(tabName: 'Prescription', svgName: 'ic_prescription', tooltip: 'Prescription'),
+                        _buildBottomTabItem(tabName: 'Form', svgName: 'ic_my_forms', tooltip: 'Form'),
+                        _buildBottomTabItem(tabName: 'DI', svgName: 'ic_doctor_interpretation', tooltip: 'DI'),
+                        _buildBottomTabItem(tabName: 'Reports', svgName: 'ic_reports', tooltip: 'Reports'),
+                      ],
+                    ),
+                ],
+              ),
+              AppLoadingOverlay(isLoading: controller.isLoadingDetails.value),
+            ],
+          );
+        }),
+      ),
     );
   }
 }
