@@ -14,4 +14,6 @@ class AppColors {
   static const Color success = Color(0xFF4CAF50);
   static const Color cardBlue = Color(0xFF1976D2);
   static const Color warning = Color(0xFFF0AD4E);
+  static const Color loginButtonBg = Color(0xFF1D7FD0);
+  static const Color loginPageBg = Color(0xFF1D7CF8);
 }

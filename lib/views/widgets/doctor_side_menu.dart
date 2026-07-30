@@ -49,7 +49,7 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
                 children: [
                   Row(
                     children: [
-                      // Left: circular cuBP logo
+                      // Left: circular Digi Icu logo
                       Container(
                         width: 52,
                         height: 52,
@@ -118,7 +118,7 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
                   const SizedBox(height: 16),
                   // Footer copyright notice inside header
                   Text(
-                    '@ cuBP Pvt Ltd All Right Reserved',
+                    '@ Medqul HealthTech Pvt Ltd, Mumbai, India',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey.shade400,
