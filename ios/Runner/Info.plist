@@ -21,6 +21,10 @@
 	<string>This app needs access to the camera to capture a patient profile picture.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs access to the photo library to pick a patient profile picture.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>This app needs speech recognition access to convert spoken notes into text.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs microphone access to record audio for speech-to-text conversion.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

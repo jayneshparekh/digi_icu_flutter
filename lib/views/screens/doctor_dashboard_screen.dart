@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/doctor_dashboard_controller.dart';
+import '../widgets/app_drawing_canvas.dart';
+import '../widgets/app_speech_input_widget.dart';
 import '../widgets/dashboard_card.dart';
 import '../widgets/doctor_side_menu.dart';
 
@@ -131,47 +133,75 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
           ),
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(8.0),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final isLandscape =
-                MediaQuery.of(context).orientation == Orientation.landscape;
-            final crossAxisCount = isLandscape ? 5 : 3;
-            final childAspectRatio = isLandscape ? 1.3 : 0.85;
+        child: Column(
+          children: [
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final isLandscape =
+                    MediaQuery.of(context).orientation == Orientation.landscape;
+                final crossAxisCount = isLandscape ? 5 : 3;
+                final childAspectRatio = isLandscape ? 1.3 : 0.85;
 
-            return GridView.count(
-              crossAxisCount: crossAxisCount,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-              childAspectRatio: childAspectRatio,
-              children: [
-                // Patient List Card
-                DashboardCard(
-                  title: 'Patient List',
-                  iconPath: 'assets/icons/svg/ic_patient_list.svg',
-                  onTap: () {
-                    if (controller.accountStatus.value == '2') {
-                      _showPendingRegistrationDialog(context);
-                    } else {
-                      Get.toNamed('/patient-list');
-                    }
-                  },
-                ), // Manage Patients Card
-                DashboardCard(
-                  title: 'Manage Patients',
-                  iconPath: 'assets/icons/svg/ic_person_add.svg',
-                  onTap: () {
-                    if (controller.accountStatus.value == '2') {
-                      _showPendingRegistrationDialog(context);
-                    } else {
-                      Get.toNamed('/manage-patients');
-                    }
-                  },
-                ),
-              ],
-            );
-          },
+                return GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  childAspectRatio: childAspectRatio,
+                  children: [
+                    // Patient List Card
+                    DashboardCard(
+                      title: 'Patient List',
+                      iconPath: 'assets/icons/svg/ic_patient_list.svg',
+                      onTap: () {
+                        if (controller.accountStatus.value == '2') {
+                          _showPendingRegistrationDialog(context);
+                        } else {
+                          Get.toNamed('/patient-list');
+                        }
+                      },
+                    ),
+                    // Manage Patients Card
+                    DashboardCard(
+                      title: 'Manage Patients',
+                      iconPath: 'assets/icons/svg/ic_person_add.svg',
+                      onTap: () {
+                        if (controller.accountStatus.value == '2') {
+                          _showPendingRegistrationDialog(context);
+                        } else {
+                          Get.toNamed('/manage-patients');
+                        }
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            AppDrawingCanvas(
+              height: 450,
+              onSave: (bytes) {
+                Get.snackbar(
+                  'Drawing Saved',
+                  'Canvas image generated (${bytes.length} bytes)',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: AppColors.primary,
+                  colorText: Colors.white,
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            AppSpeechInputWidget(
+              controller: controller.noteTextController,
+              label: 'Voice Input',
+              hintText: 'Type or Speak your notes here',
+              height: 120,
+            ),
+            const SizedBox(height: 16),
+          ],
         ),
       ),
     );

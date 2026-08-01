@@ -1,6 +1,7 @@
-﻿import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +15,9 @@ class DoctorDashboardController extends GetxController {
 
   final RxString doctorName = ''.obs;
   final RxString userType = ''.obs;
+
+  /// TextEditingController for Voice Input / Notes widget on Doctor Dashboard
+  final noteTextController = TextEditingController();
 
   // Selected layout orientation selection ('portrait' or 'landscape')
   final RxString selectedOrientation = 'portrait'.obs;
@@ -45,6 +49,12 @@ class DoctorDashboardController extends GetxController {
     );
     _loadDoctorName();
     checkDoctorHome();
+  }
+
+  @override
+  void onClose() {
+    noteTextController.dispose();
+    super.onClose();
   }
 
   Future<void> _loadDoctorName() async {
