@@ -32,9 +32,9 @@ class AppointmentScreen extends GetView<AppointmentController> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Book Appointment',
-                style: TextStyle(
+              Text(
+                'book_appointment'.tr,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
@@ -74,9 +74,9 @@ class AppointmentScreen extends GetView<AppointmentController> {
               child: TextField(
                 controller: searchController,
                 onChanged: (val) => controller.filterDoctors(val),
-                decoration: const InputDecoration(
-                  hintText: 'Search Doctors',
-                  prefixIcon: Icon(Icons.search, color: AppColors.primary),
+                decoration: InputDecoration(
+                  hintText: 'search_doctors'.tr,
+                  prefixIcon: const Icon(Icons.search, color: AppColors.primary),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 16,
@@ -111,10 +111,10 @@ class AppointmentScreen extends GetView<AppointmentController> {
 
               final list = controller.filteredDoctors;
               if (list.isEmpty) {
-                return const Center(
+                return Center(
                   child: Text(
-                    'No doctors found',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    'no_doctors_found'.tr,
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 );
               }
@@ -145,15 +145,15 @@ class AppointmentScreen extends GetView<AppointmentController> {
     final docName = '${doctor.firstName} ${doctor.lastName}';
 
     // Button text determination matching Android Adapter logic
-    String btnText = 'Take Appointment';
+    String btnText = 'take_appointment'.tr;
     if (doctor.bookingStatus == '2') {
-      btnText = 'I am ready';
+      btnText = 'i_am_ready'.tr;
     }
     if (doctor.clinicalFormStatus == '0') {
-      btnText = 'Fill Clinical Form';
+      btnText = 'fill_clinical_form'.tr;
     }
     if (doctor.status == 'Upcoming') {
-      btnText = 'Join Call';
+      btnText = 'join_call'.tr;
     }
 
     return Card(
@@ -205,7 +205,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
                     children: [
                       Expanded(
                         child: Text(
-                          'Reg No: ${doctor.regNo}',
+                          '${'reg_no'.tr} ${doctor.regNo}',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey.shade500,
@@ -226,7 +226,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            isAvailable ? 'Available' : 'Not Available',
+                            isAvailable ? 'available'.tr : 'not_available'.tr,
                             style: TextStyle(
                               fontSize: 12,
                               color: isAvailable ? Colors.green : Colors.grey,
@@ -243,9 +243,9 @@ class AppointmentScreen extends GetView<AppointmentController> {
                   if (hasReason) ...[
                     Row(
                       children: [
-                        const Text(
-                          'On Hold: ',
-                          style: TextStyle(
+                        Text(
+                          'on_hold_label'.tr,
+                          style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: Colors.orange,
@@ -266,9 +266,9 @@ class AppointmentScreen extends GetView<AppointmentController> {
                     ),
                     const SizedBox(height: 6),
                   ] else if (doctor.clinicalFormStatus == '0') ...[
-                    const Text(
-                      'Clinical form pending',
-                      style: TextStyle(fontSize: 12, color: Colors.orange),
+                    Text(
+                      'clinical_form_pending'.tr,
+                      style: const TextStyle(fontSize: 12, color: Colors.orange),
                     ),
                     const SizedBox(height: 6),
                   ],

@@ -18,9 +18,9 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: const Text(
-          'Add Patient',
-          style: TextStyle(
+        title: Text(
+          'add_patient'.tr,
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -88,28 +88,28 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                 // Name fields
                 AppLabeledTextField(
                   controller: controller.firstNameController,
-                  label: 'First Name',
-                  hint: 'Enter first name',
+                  label: 'first_name'.tr,
+                  hint: 'enter_first_name'.tr,
                 ),
                 const SizedBox(height: 16),
                 AppLabeledTextField(
                   controller: controller.midNameController,
-                  label: 'Middle Name',
-                  hint: 'Enter middle name',
+                  label: 'middle_name'.tr,
+                  hint: 'enter_middle_name'.tr,
                 ),
                 const SizedBox(height: 16),
                 AppLabeledTextField(
                   controller: controller.lastNameController,
-                  label: 'Last Name',
-                  hint: 'Enter last name',
+                  label: 'last_name'.tr,
+                  hint: 'enter_last_name'.tr,
                 ),
                 const SizedBox(height: 16),
 
                 // Mobile Number field
                 AppLabeledTextField(
                   controller: controller.mobileNoController,
-                  label: 'Mobile Number',
-                  hint: 'Enter 10-digit number',
+                  label: 'mobile_number'.tr,
+                  hint: 'enter_mobile_number'.tr,
                   keyboardType: TextInputType.phone,
                 ),
                 const SizedBox(height: 16),
@@ -117,8 +117,8 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                 // Age field
                 AppLabeledTextField(
                   controller: controller.ageController,
-                  label: 'Age',
-                  hint: 'Enter age',
+                  label: 'age'.tr,
+                  hint: 'enter_age'.tr,
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 16),
@@ -126,8 +126,8 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                 // Email field
                 AppLabeledTextField(
                   controller: controller.emailController,
-                  label: 'Email Address (Optional)',
-                  hint: 'Enter email address',
+                  label: 'email_address_optional'.tr,
+                  hint: 'enter_email_address'.tr,
                   keyboardType: TextInputType.emailAddress,
                 ),
                 const SizedBox(height: 24),
@@ -136,7 +136,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Gender',
+                    'gender'.tr,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -157,7 +157,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                       children: [
                         Expanded(
                           child: RadioListTile<String>(
-                            title: const Text('Male'),
+                            title: Text('male'.tr),
                             value: 'Male',
                             activeColor: AppColors.primary,
                             contentPadding: EdgeInsets.zero,
@@ -165,7 +165,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                         ),
                         Expanded(
                           child: RadioListTile<String>(
-                            title: const Text('Female'),
+                            title: Text('female'.tr),
                             value: 'Female',
                             activeColor: AppColors.primary,
                             contentPadding: EdgeInsets.zero,
@@ -181,7 +181,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Past History',
+                    'past_history'.tr,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -190,11 +190,11 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                _buildPastHistoryCheckbox('Hypertension'),
-                _buildPastHistoryCheckbox('Diabetes'),
-                _buildPastHistoryCheckbox('Thyroid'),
-                _buildPastHistoryCheckbox('Family member has it'),
-                _buildPastHistoryCheckbox('None'),
+                _buildPastHistoryCheckbox('hypertension'.tr),
+                _buildPastHistoryCheckbox('diabetes'.tr),
+                _buildPastHistoryCheckbox('thyroid'.tr),
+                _buildPastHistoryCheckbox('family_member_has_it'.tr),
+                _buildPastHistoryCheckbox('none'.tr),
                 const SizedBox(height: 32),
 
                 // Accept Terms & Conditions checkbox
@@ -206,9 +206,9 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                     },
                     activeColor: AppColors.primary,
                     contentPadding: EdgeInsets.zero,
-                    title: const Text(
-                      'I accept the Terms and Conditions of registration.',
-                      style: TextStyle(fontSize: 14, color: Colors.black87),
+                    title: Text(
+                      'accept_terms'.tr,
+                      style: const TextStyle(fontSize: 14, color: Colors.black87),
                     ),
                     controlAffinity: ListTileControlAffinity.leading,
                   );
@@ -235,7 +235,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                         ),
                       ),
                       child: Text(
-                        'SUBMIT',
+                        'submit_upper'.tr,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -290,7 +290,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                   Icons.photo_library,
                   color: AppColors.primary,
                 ),
-                title: const Text('Choose from Gallery'),
+                title: Text('choose_from_gallery'.tr),
                 onTap: () {
                   Navigator.of(context).pop();
                   controller.pickImage(ImageSource.gallery);
@@ -298,7 +298,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
               ),
               ListTile(
                 leading: const Icon(Icons.camera_alt, color: AppColors.primary),
-                title: const Text('Take a Photo'),
+                title: Text('take_a_photo'.tr),
                 onTap: () {
                   Navigator.of(context).pop();
                   controller.pickImage(ImageSource.camera);

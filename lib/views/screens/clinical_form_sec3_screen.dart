@@ -16,8 +16,8 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
           Get.snackbar(
-            'Action Required',
-            "You cannot go back from this form.",
+            'action_required'.tr,
+            'cannot_go_back_form'.tr,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.orange,
             colorText: Colors.white,
@@ -38,7 +38,7 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                         ? controller.patientName
                         : controller.patientName.isNotEmpty
                             ? controller.patientName
-                            : 'Patient Name',
+                            : 'patient_name'.tr,
                     style: const TextStyle(
                       color: Colors.black87,
                       fontSize: 16,
@@ -67,8 +67,8 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     AppFormSectionHeader(
-                      subtitle: 'Clinical Form Section 3',
-                      title: 'Symptoms',
+                      subtitle: 'clinical_form_sec3'.tr,
+                      title: 'symptoms'.tr,
                     ),
                     const SizedBox(height: 24),
 
@@ -83,9 +83,9 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  '1. How are you feeling as compared to our last consultation?',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                Text(
+                                  'how_feeling_compared'.tr,
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                                 ),
                                 const SizedBox(height: 8),
                                   RadioGroup<String>(
@@ -99,7 +99,7 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                                     value: option,
                                                     activeColor: AppColors.primary,
                                                   ),
-                                                  Text(option),
+                                                  Text(option == 'Good' ? 'good'.tr : option == 'Better' ? 'better'.tr : option == 'Same' ? 'same'.tr : option == 'More Suffering' ? 'more_suffering'.tr : 'first_consultation'.tr),
                                                 ],
                                               ))
                                           .toList(),
@@ -123,9 +123,9 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '2. Do you have chest pain?',
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                              Text(
+                                'have_chest_pain'.tr,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                               ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
@@ -137,21 +137,21 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                       value: 'Yes',
                                       activeColor: AppColors.primary,
                                     ),
-                                    const Text('Yes'),
+                                    Text('yes'.tr),
                                     const SizedBox(width: 24),
                                     Radio<String>(
                                       value: 'No',
                                       activeColor: AppColors.primary,
                                     ),
-                                    const Text('No'),
+                                    Text('no'.tr),
                                   ],
                                 ),
                               ),
                               if (controller.chestPain.value == 'Yes') ...[
                                 const SizedBox(height: 12),
-                                const Text(
-                                  'with sweating?',
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
+                                Text(
+                                  'with_sweating'.tr,
+                                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
                                 ),
                                 RadioGroup<String>(
                                   groupValue: controller.chestPainSweating.value,
@@ -162,13 +162,13 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                         value: 'Yes',
                                         activeColor: AppColors.primary,
                                       ),
-                                      const Text('Yes'),
+                                      Text('yes'.tr),
                                       const SizedBox(width: 24),
                                       Radio<String>(
                                         value: 'No',
                                         activeColor: AppColors.primary,
                                       ),
-                                      const Text('No'),
+                                      Text('no'.tr),
                                     ],
                                   ),
                                 ),
@@ -190,9 +190,9 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '3. Do you have difficulty in breathing while walking or at rest?',
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                              Text(
+                                'difficulty_breathing'.tr,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                               ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
@@ -204,13 +204,13 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                       value: 'Yes',
                                       activeColor: AppColors.primary,
                                     ),
-                                    const Text('Yes'),
+                                    Text('yes'.tr),
                                     const SizedBox(width: 24),
                                     Radio<String>(
                                       value: 'No',
                                       activeColor: AppColors.primary,
                                     ),
-                                    const Text('No'),
+                                    Text('no'.tr),
                                   ],
                                 ),
                               ),
@@ -225,13 +225,13 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                         value: 'Walking',
                                         activeColor: AppColors.primary,
                                       ),
-                                      const Text('Walking'),
+                                      Text('walking'.tr),
                                       const SizedBox(width: 16),
                                       Radio<String>(
                                         value: 'At Rest',
                                         activeColor: AppColors.primary,
                                       ),
-                                      const Text('At Rest'),
+                                      Text('at_rest'.tr),
                                     ],
                                   ),
                                 ),
@@ -253,9 +253,9 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '4. Do you have palpitations?',
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                              Text(
+                                'have_palpitations'.tr,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                               ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
@@ -267,13 +267,13 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                       value: 'Yes',
                                       activeColor: AppColors.primary,
                                     ),
-                                    const Text('Yes'),
+                                    Text('yes'.tr),
                                     const SizedBox(width: 24),
                                     Radio<String>(
                                       value: 'No',
                                       activeColor: AppColors.primary,
                                     ),
-                                    const Text('No'),
+                                    Text('no'.tr),
                                   ],
                                 ),
                               ),
@@ -294,9 +294,9 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '5. Do you have giddiness?',
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                              Text(
+                                'have_giddiness'.tr,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                               ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
@@ -308,13 +308,13 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                       value: 'Yes',
                                       activeColor: AppColors.primary,
                                     ),
-                                    const Text('Yes'),
+                                    Text('yes'.tr),
                                     const SizedBox(width: 24),
                                     Radio<String>(
                                       value: 'No',
                                       activeColor: AppColors.primary,
                                     ),
-                                    const Text('No'),
+                                    Text('no'.tr),
                                   ],
                                 ),
                               ),
@@ -335,9 +335,9 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '6. Do you have headache?',
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                              Text(
+                                'have_headache'.tr,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                               ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
@@ -349,13 +349,13 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                       value: 'Yes',
                                       activeColor: AppColors.primary,
                                     ),
-                                    const Text('Yes'),
+                                    Text('yes'.tr),
                                     const SizedBox(width: 24),
                                     Radio<String>(
                                       value: 'No',
                                       activeColor: AppColors.primary,
                                     ),
-                                    const Text('No'),
+                                    Text('no'.tr),
                                   ],
                                 ),
                               ),
@@ -377,9 +377,9 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  '7. When you stand up from sitting or sleeping position, do you feel dizziness?',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                Text(
+                                  'dizziness_standing'.tr,
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -420,9 +420,9 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  '8. Did you have any bleeding episode?',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                Text(
+                                  'bleeding_episode'.tr,
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -462,9 +462,9 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '9. Other Symptoms if any?',
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                              Text(
+                                'other_symptoms_if_any'.tr,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                               ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
@@ -476,13 +476,13 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                       value: 'Yes',
                                       activeColor: AppColors.primary,
                                     ),
-                                    const Text('Yes'),
+                                    Text('yes'.tr),
                                     const SizedBox(width: 24),
                                     Radio<String>(
                                       value: 'None',
                                       activeColor: AppColors.primary,
                                     ),
-                                    const Text('None'),
+                                    Text('none'.tr),
                                   ],
                                 ),
                               ),
@@ -491,9 +491,9 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                 TextField(
                                   controller: controller.otherSymptomsController,
                                   maxLines: 3,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Enter details of other symptoms',
-                                    border: OutlineInputBorder(),
+                                  decoration: InputDecoration(
+                                    labelText: 'enter_details_other_symptoms'.tr,
+                                    border: const OutlineInputBorder(),
                                   ),
                                 ),
                               ],
@@ -506,7 +506,7 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
 
                     // Next Button
                     AppPrimaryButton(
-                      label: 'Next',
+                      label: 'next'.tr,
                       onPressed: () => controller.submitSec3(),
                       backgroundColor: AppColors.success,
                       width: 150,

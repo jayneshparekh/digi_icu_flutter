@@ -43,7 +43,7 @@ class LoginScreen extends GetView<LoginController> {
                             onChanged: (val) =>
                                 controller.username.value = val,
                             decoration: InputDecoration(
-                              labelText: 'Mobile No/Login Id*',
+                              labelText: 'mobile_login_id'.tr,
                               labelStyle: TextStyle(
                                 color: Colors.grey.shade600,
                               ),
@@ -70,7 +70,7 @@ class LoginScreen extends GetView<LoginController> {
                                 controller.password.value = val,
                             obscureText: true,
                             decoration: InputDecoration(
-                              labelText: 'Password*',
+                              labelText: 'password'.tr,
                               labelStyle: TextStyle(
                                 color: Colors.grey.shade600,
                               ),
@@ -97,7 +97,7 @@ class LoginScreen extends GetView<LoginController> {
                               // Forgot password logic placeholder
                             },
                             child: Text(
-                              'Forgot password?',
+                              'forgot_password'.tr,
                               style: TextStyle(
                                 color: Colors.grey.shade800,
                                 fontWeight: FontWeight.w600,
@@ -134,9 +134,9 @@ class LoginScreen extends GetView<LoginController> {
                                     ? const CircularProgressIndicator(
                                         color: Colors.white,
                                       )
-                                    : const Text(
-                                        'Login',
-                                        style: TextStyle(
+                                    : Text(
+                                        'login_btn'.tr,
+                                        style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w600,
                                         ),

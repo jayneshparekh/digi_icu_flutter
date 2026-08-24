@@ -39,10 +39,10 @@ class _PatientRatingDialogState extends State<PatientRatingDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Patient Important',
-                    style: TextStyle(
+                    'patient_important'.tr,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: AppColors.primary,
@@ -69,9 +69,9 @@ class _PatientRatingDialogState extends State<PatientRatingDialog> {
             ),
             const SizedBox(height: 12),
             // Header Choose your rating
-            const Text(
-              'Choose your rating',
-              style: TextStyle(
+            Text(
+              'choose_rating'.tr,
+              style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
@@ -134,7 +134,7 @@ class _PatientRatingDialogState extends State<PatientRatingDialog> {
                     widget.onSubmit(selectedRating.value);
                   } else {
                     Get.rawSnackbar(
-                      message: 'Please choose a rating before submitting.',
+                      message: 'choose_rating_validation'.tr,
                       backgroundColor: Colors.red,
                     );
                   }
@@ -146,9 +146,9 @@ class _PatientRatingDialogState extends State<PatientRatingDialog> {
                     borderRadius: BorderRadius.circular(6),
                   ),
                 ),
-                child: const Text(
-                  'Submit',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                child: Text(
+                  'submit'.tr,
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

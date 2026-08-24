@@ -23,9 +23,9 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Patient QR Code',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Text(
+                    'patient_qr_code'.tr,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.grey),
@@ -55,7 +55,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
               ),
               const SizedBox(height: 16),
               Text(
-                'MHC ID: ${controller.mhcId}',
+                '${'mhc_id_label'.tr}${controller.mhcId}',
                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
               ),
             ],
@@ -211,25 +211,25 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                             children: [
                               _buildTopActionButton(
                                 svgName: 'ic_refer',
-                                onTap: () => Get.rawSnackbar(message: 'Refer clicked'),
+                                onTap: () => Get.rawSnackbar(message: 'refer_clicked'.tr),
                               ),
                               _buildTopActionButton(
                                 svgName: 'ic_leader_call',
-                                onTap: () => Get.rawSnackbar(message: 'Leader Call clicked'),
+                                onTap: () => Get.rawSnackbar(message: 'leader_call_clicked'.tr),
                                 bg: Colors.red,
                               ),
                               _buildTopActionButton(
                                 svgName: 'ic_baseline_phone_24',
-                                onTap: () => Get.rawSnackbar(message: 'Call clicked'),
+                                onTap: () => Get.rawSnackbar(message: 'call_clicked'.tr),
                               ),
                               _buildTopActionButton(
                                 svgName: 'ic_baseline_admit_24',
-                                onTap: () => Get.rawSnackbar(message: 'Admit clicked'),
+                                onTap: () => Get.rawSnackbar(message: 'admit_clicked'.tr),
                                 bg: controller.isAdmitted == '1' ? Colors.red : AppColors.primary,
                               ),
                               _buildTopActionButton(
                                 svgName: 'ic_hold',
-                                onTap: () => Get.rawSnackbar(message: 'Hold clicked'),
+                                onTap: () => Get.rawSnackbar(message: 'hold_clicked'.tr),
                                 visible: !hideHoldAndFinish,
                               ),
                             ],
@@ -251,15 +251,15 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                             ),
                             _buildTopActionButton(
                               svgName: 'ic_start_video_call',
-                              onTap: () => Get.rawSnackbar(message: 'Start Video Call clicked'),
+                              onTap: () => Get.rawSnackbar(message: 'start_video_call_clicked'.tr),
                             ),
                             _buildTopActionButton(
                               svgName: 'ic_incoming_call',
-                              onTap: () => Get.rawSnackbar(message: 'Join Call clicked'),
+                              onTap: () => Get.rawSnackbar(message: 'join_call_clicked'.tr),
                             ),
                             _buildTopActionButton(
                               svgName: 'ic_finish',
-                              onTap: () => Get.rawSnackbar(message: 'Finish clicked'),
+                              onTap: () => Get.rawSnackbar(message: 'finish_clicked'.tr),
                               visible: !isPatientView && !hideHoldAndFinish,
                             ),
                           ],
@@ -275,15 +275,15 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                         case 'Dashboard':
                           return const ServingPatientDashboardView();
                         case 'Graph':
-                          return const Center(child: Text('Graph Screen Placeholder', style: TextStyle(fontSize: 16, color: Colors.grey)));
+                          return Center(child: Text('graph_placeholder'.tr, style: const TextStyle(fontSize: 16, color: Colors.grey)));
                         case 'Prescription':
-                          return const Center(child: Text('Prescription Screen Placeholder', style: TextStyle(fontSize: 16, color: Colors.grey)));
+                          return Center(child: Text('prescription_placeholder'.tr, style: const TextStyle(fontSize: 16, color: Colors.grey)));
                         case 'Form':
-                          return const Center(child: Text('Form Screen Placeholder', style: TextStyle(fontSize: 16, color: Colors.grey)));
+                          return Center(child: Text('form_placeholder'.tr, style: const TextStyle(fontSize: 16, color: Colors.grey)));
                         case 'DI':
-                          return const Center(child: Text('Doctor Interpretation Placeholder', style: TextStyle(fontSize: 16, color: Colors.grey)));
+                          return Center(child: Text('di_placeholder'.tr, style: const TextStyle(fontSize: 16, color: Colors.grey)));
                         case 'Reports':
-                          return const Center(child: Text('Reports Folder Placeholder', style: TextStyle(fontSize: 16, color: Colors.grey)));
+                          return Center(child: Text('reports_placeholder'.tr, style: const TextStyle(fontSize: 16, color: Colors.grey)));
                         default:
                           return const ServingPatientDashboardView();
                       }

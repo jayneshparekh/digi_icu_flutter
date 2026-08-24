@@ -16,6 +16,7 @@ import 'controllers/primary_care_controller.dart';
 import 'controllers/clinical_form_controller.dart';
 import 'core/bindings/initial_binding.dart';
 import 'core/theme/app_theme.dart';
+import 'core/localization/app_translations.dart';
 import 'views/screens/doctor_dashboard_screen.dart';
 import 'views/screens/login_screen.dart';
 import 'views/screens/manage_patients_screen.dart';
@@ -72,6 +73,9 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
+      translations: AppTranslations(),
+      locale: const Locale('en', 'US'),
+      fallbackLocale: const Locale('en', 'US'),
       initialBinding: InitialBinding(),
       initialRoute: '/',
       getPages: [

@@ -1,4 +1,4 @@
-﻿import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/response/patients/installment_details_res.dart';
@@ -44,7 +44,7 @@ class InstallmentPaymentDialog extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        data.installments.isNotEmpty ? data.installments : 'Installment Payment',
+                        data.installments.isNotEmpty ? data.installments : 'installment_payment'.tr,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -89,7 +89,7 @@ class InstallmentPaymentDialog extends StatelessWidget {
 
                 // Due Date
                 Text(
-                  'Installment Due Date: $dueDate',
+                  'installment_due_date'.tr.replaceAll('@date', dueDate),
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.black87,
@@ -112,7 +112,7 @@ class InstallmentPaymentDialog extends StatelessWidget {
 
                 // Amount
                 Text(
-                  'Amount: ₹$amount',
+                  'amount_rupees'.tr.replaceAll('@amount', amount),
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -132,9 +132,9 @@ class InstallmentPaymentDialog extends StatelessWidget {
                         foregroundColor: AppColors.primary,
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       ),
-                      child: const Text(
-                        'Pay Later',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      child: Text(
+                        'pay_later'.tr,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -157,7 +157,7 @@ class InstallmentPaymentDialog extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Text('Pay Now'),
+                      child: Text('pay_now'.tr),
                     ),
                   ],
                 ),

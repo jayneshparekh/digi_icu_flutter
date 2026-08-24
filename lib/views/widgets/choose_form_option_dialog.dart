@@ -23,22 +23,22 @@ class ChooseFormOptionDialog extends StatelessWidget {
 
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: const Row(
+      title: Row(
         children: [
-          Icon(Icons.assignment, color: AppColors.primary),
-          SizedBox(width: 8),
+          const Icon(Icons.assignment, color: AppColors.primary),
+          const SizedBox(width: 8),
           Text(
-            'Choose Consultation Type',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            'choose_consultation_type'.tr,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ],
       ),
       content: SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
         child: forms.isEmpty
-            ? const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('No forms available', style: TextStyle(color: Colors.grey)),
+            ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('no_forms_available'.tr, style: const TextStyle(color: Colors.grey)),
               )
             : ListView.builder(
                 shrinkWrap: true,
@@ -85,7 +85,7 @@ class ChooseFormOptionDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Get.back(),
-          child: const Text('Cancel', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+          child: Text('cancel'.tr, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
         ),
       ],
     );

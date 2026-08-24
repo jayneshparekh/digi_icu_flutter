@@ -18,8 +18,8 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
           Get.snackbar(
-            'Action Required',
-            "You cannot go back from this form.",
+            'action_required'.tr,
+            'cannot_go_back'.tr,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.orange,
             colorText: Colors.white,
@@ -42,9 +42,9 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Medical Form',
-                  style: TextStyle(
+                Text(
+                  'medical_form'.tr,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 17,
@@ -78,13 +78,13 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                   children: [
                     AppFormSectionHeader(
                       subtitle: '',
-                      title: 'Clinical History',
+                      title: 'clinical_history'.tr,
                     ),
                     const SizedBox(height: 12),
 
                     // --- 1. HYPERTENSION ---
                     _buildConditionSection(
-                      title: '1. Do you have hypertension? *',
+                      title: 'q_hypertension'.tr,
                       iconPath: 'assets/images/m_hypertension.png',
                       hasCondition: controller.hasHypertension,
                       yearsSince: controller.htnYears,
@@ -105,7 +105,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
 
                     // --- 2. DIABETES ---
                     _buildConditionSection(
-                      title: '2. Do you have diabetes? *',
+                      title: 'q_diabetes'.tr,
                       iconPath: 'assets/images/m_diabetes.png',
                       hasCondition: controller.hasDiabetes,
                       yearsSince: controller.diabetesYears,
@@ -126,7 +126,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
 
                     // --- 3. THYROID ---
                     _buildConditionSection(
-                      title: '3. Do you have Thyroid? *',
+                      title: 'q_thyroid'.tr,
                       iconPath: 'assets/images/m_feeling.png',
                       hasCondition: controller.hasThyroid,
                       yearsSince: controller.thyroidYears,
@@ -155,9 +155,9 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '4. Do you have cholesterol problem? *',
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                              Text(
+                                'q_cholesterol'.tr,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                               ),
                               const SizedBox(height: 4),
                               RadioGroup<String>(
@@ -167,7 +167,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                   children: ['Yes', 'No', "Don't Know"].map((opt) => Row(
                                     children: [
                                       Radio<String>(value: opt, activeColor: AppColors.primary),
-                                      Text(opt),
+                                      Text(opt == "Don't Know" ? 'dont_know'.tr : opt.toLowerCase().tr),
                                     ],
                                   )).toList(),
                                 ),
@@ -189,9 +189,9 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '5. Do you have asthma? *',
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                              Text(
+                                'q_asthma'.tr,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                               ),
                               const SizedBox(height: 4),
                               RadioGroup<String>(
@@ -201,7 +201,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                   children: ['Yes', 'No'].map((opt) => Row(
                                     children: [
                                       Radio<String>(value: opt, activeColor: AppColors.primary),
-                                      Text(opt),
+                                      Text(opt.toLowerCase().tr),
                                       const SizedBox(width: 24),
                                     ],
                                   )).toList(),
@@ -217,29 +217,29 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                     if (controller.showPregnancySection) ...[
                       const Divider(height: 24),
                       if (controller.showIsPregnantQuestion) ...[
-                        const Text(
-                          'Are you pregnant?',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                        Text(
+                          'q_pregnant'.tr,
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                         ),
                         const SizedBox(height: 4),
                         RadioGroup<String>(
                           groupValue: controller.isPregnant.value,
                           onChanged: (val) => controller.isPregnant.value = val ?? '',
                           child: Row(
-                            children: ['Yes', 'No', 'May be'].map((opt) => Row(
-                              children: [
-                                Radio<String>(value: opt, activeColor: AppColors.primary),
-                                Text(opt),
-                                const SizedBox(width: 16),
-                              ],
+                              children: ['Yes', 'No', 'May be'].map((opt) => Row(
+                                children: [
+                                  Radio<String>(value: opt, activeColor: AppColors.primary),
+                                  Text(opt == 'May be' ? 'may_be'.tr : opt.toLowerCase().tr),
+                                  const SizedBox(width: 16),
+                                ],
                             )).toList(),
                           ),
                         ),
                         const SizedBox(height: 12),
                       ],
-                      const Text(
-                        'During Pregnancy details',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                      Text(
+                        'pregnancy_details'.tr,
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                       ),
                       const SizedBox(height: 4),
                       RadioGroup<String>(
@@ -249,7 +249,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                           children: ['Hypertension', 'Diabetes', 'Both', 'None'].map((opt) => Row(
                             children: [
                               Radio<String>(value: opt, activeColor: AppColors.primary),
-                              Text(opt),
+                              Text(opt == 'Both' ? 'both'.tr : opt == 'None' ? 'none'.tr : opt),
                             ],
                           )).toList(),
                         ),
@@ -259,13 +259,13 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                     const SizedBox(height: 20),
                     AppFormSectionHeader(
                       subtitle: '',
-                      title: 'Past History',
+                      title: 'past_history_title'.tr,
                     ),
                     const SizedBox(height: 12),
 
                     // --- 1. HEART ATTACK ---
                     _buildConditionSection(
-                      title: '1. Did you have Heart attack? *',
+                      title: 'q_heart_attack'.tr,
                       iconPath: 'assets/images/m_heart_attack.png',
                       hasCondition: controller.hasHeartAttack,
                       yearsSince: controller.heartAttackYears,
@@ -287,7 +287,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
 
                     // --- 2. STROKE ---
                     _buildConditionSection(
-                      title: '2. Did you have Stroke? *',
+                      title: 'q_stroke'.tr,
                       iconPath: 'assets/images/m_stroke.png',
                       hasCondition: controller.hasStroke,
                       yearsSince: controller.strokeYears,
@@ -309,7 +309,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
 
                     // --- 3. KIDNEY FAILURE ---
                     _buildConditionSection(
-                      title: '3. Did you have kidney failure? *',
+                      title: 'q_kidney_failure'.tr,
                       iconPath: 'assets/images/m_kidney_failure.png',
                       hasCondition: controller.hasKidneyFailure,
                       yearsSince: controller.kidneyFailureYears,
@@ -331,7 +331,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
 
                     // --- 4. ANGIOPLASTY ---
                     _buildConditionSection(
-                      title: '4. Did you have Angioplasty? *',
+                      title: 'q_angioplasty'.tr,
                       iconPath: 'assets/images/m_angioplasty.png',
                       hasCondition: controller.hasAngioplasty,
                       yearsSince: controller.angioplastyYears,
@@ -353,7 +353,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
 
                     // --- 5. BYPASS SURGERY ---
                     _buildConditionSection(
-                      title: '5. Did you have Bypass surgery? *',
+                      title: 'q_bypass'.tr,
                       iconPath: 'assets/images/m_bypass_surgery.png',
                       hasCondition: controller.hasBypass,
                       yearsSince: controller.bypassYears,
@@ -383,9 +383,9 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '6. Do you have allergy to any medicines? *',
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                              Text(
+                                'q_allergy'.tr,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                               ),
                               const SizedBox(height: 4),
                               RadioGroup<String>(
@@ -395,7 +395,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                   children: ['Yes', 'No'].map((opt) => Row(
                                     children: [
                                       Radio<String>(value: opt, activeColor: AppColors.primary),
-                                      Text(opt),
+                                      Text(opt.toLowerCase().tr),
                                       const SizedBox(width: 24),
                                     ],
                                   )).toList(),
@@ -408,15 +408,15 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                     child: TextButton.icon(
                                       onPressed: () => controller.allergyMedCount.value = 1,
                                       icon: const Icon(Icons.add, color: AppColors.primary),
-                                      label: const Text('Add Medicine', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                                      label: Text('add_medicine'.tr, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
                                     ),
                                   ),
                                 if (controller.allergyMedCount.value >= 1) ...[
                                   TextField(
                                     controller: controller.allergyMedName1Controller,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Enter medicine name',
-                                      border: OutlineInputBorder(),
+                                    decoration: InputDecoration(
+                                      hintText: 'enter_medicine_name'.tr,
+                                      border: const OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                     ),
                                   ),
@@ -425,9 +425,9 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                 if (controller.allergyMedCount.value >= 2) ...[
                                   TextField(
                                     controller: controller.allergyMedName2Controller,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Enter medicine name 2',
-                                      border: OutlineInputBorder(),
+                                    decoration: InputDecoration(
+                                      hintText: 'enter_medicine_name_2'.tr,
+                                      border: const OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                     ),
                                   ),
@@ -436,9 +436,9 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                 if (controller.allergyMedCount.value >= 3) ...[
                                   TextField(
                                     controller: controller.allergyMedName3Controller,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Enter medicine name 3',
-                                      border: OutlineInputBorder(),
+                                    decoration: InputDecoration(
+                                      hintText: 'enter_medicine_name_3'.tr,
+                                      border: const OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                     ),
                                   ),
@@ -450,7 +450,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                     child: TextButton.icon(
                                       onPressed: () => controller.allergyMedCount.value++,
                                       icon: const Icon(Icons.add, color: AppColors.primary),
-                                      label: const Text('Add More', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                                      label: Text('add_more'.tr, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
                                     ),
                                   ),
                               ],
@@ -471,9 +471,9 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '7. Do you have bleeding tendencies e.g. piles, gum bleeding etc...? *',
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                              Text(
+                                'q_bleeding_tendencies'.tr,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                               ),
                               const SizedBox(height: 4),
                               RadioGroup<String>(
@@ -483,7 +483,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                   children: ['Yes', 'No'].map((opt) => Row(
                                     children: [
                                       Radio<String>(value: opt, activeColor: AppColors.primary),
-                                      Text(opt),
+                                      Text(opt.toLowerCase().tr),
                                       const SizedBox(width: 24),
                                     ],
                                   )).toList(),
@@ -506,9 +506,9 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '8. Any other surgery / treatment given to you in past? *',
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                              Text(
+                                'q_other_surgery'.tr,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                               ),
                               const SizedBox(height: 4),
                               RadioGroup<String>(
@@ -518,7 +518,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                   children: ['Yes', 'No'].map((opt) => Row(
                                     children: [
                                       Radio<String>(value: opt, activeColor: AppColors.primary),
-                                      Text(opt),
+                                      Text(opt.toLowerCase().tr),
                                       const SizedBox(width: 24),
                                     ],
                                   )).toList(),
@@ -531,15 +531,15 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                     child: TextButton.icon(
                                       onPressed: () => controller.surgeryMedCount.value = 1,
                                       icon: const Icon(Icons.add, color: AppColors.primary),
-                                      label: const Text('Add Surgery', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                                      label: Text('add_surgery'.tr, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
                                     ),
                                   ),
                                 if (controller.surgeryMedCount.value >= 1) ...[
                                   TextField(
                                     controller: controller.surgeryName1Controller,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Enter surgery / treatment name',
-                                      border: OutlineInputBorder(),
+                                    decoration: InputDecoration(
+                                      hintText: 'enter_surgery_name'.tr,
+                                      border: const OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                     ),
                                   ),
@@ -548,9 +548,9 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                 if (controller.surgeryMedCount.value >= 2) ...[
                                   TextField(
                                     controller: controller.surgeryName2Controller,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Enter surgery / treatment name 2',
-                                      border: OutlineInputBorder(),
+                                    decoration: InputDecoration(
+                                      hintText: 'enter_surgery_name_2'.tr,
+                                      border: const OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                     ),
                                   ),
@@ -559,9 +559,9 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                 if (controller.surgeryMedCount.value >= 3) ...[
                                   TextField(
                                     controller: controller.surgeryName3Controller,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Enter surgery / treatment name 3',
-                                      border: OutlineInputBorder(),
+                                    decoration: InputDecoration(
+                                      hintText: 'enter_surgery_name_3'.tr,
+                                      border: const OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                     ),
                                   ),
@@ -573,7 +573,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                     child: TextButton.icon(
                                       onPressed: () => controller.surgeryMedCount.value++,
                                       icon: const Icon(Icons.add, color: AppColors.primary),
-                                      label: const Text('Add More', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                                      label: Text('add_more'.tr, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
                                     ),
                                   ),
                               ],
@@ -588,7 +588,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                     // Submit Button
                     Center(
                       child: AppPrimaryButton(
-                        label: 'Submit',
+                        label: 'submit'.tr,
                         onPressed: () => controller.submitMedicalForm(),
                         backgroundColor: AppColors.success,
                         width: 160,
@@ -661,7 +661,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                       children: ['Yes', 'No'].map((opt) => Row(
                         children: [
                           Radio<String>(value: opt, activeColor: AppColors.primary),
-                          Text(opt),
+                          Text(opt.toLowerCase().tr),
                           const SizedBox(width: 24),
                         ],
                       )).toList(),
@@ -669,7 +669,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
               ),
               if (hasCondition.value == 'Yes') ...[
                 const SizedBox(height: 12),
-                const Text('Since How many years?', style: TextStyle(fontSize: 13, color: Colors.black54)),
+                Text('since_how_many_years'.tr, style: const TextStyle(fontSize: 13, color: Colors.black54)),
                 const SizedBox(height: 4),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -682,14 +682,14 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                       value: yearsSince.value,
                       isExpanded: true,
                       items: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10+', 'More than 10 Years']
-                          .map((v) => DropdownMenuItem(value: v, child: Text(v)))
+                          .map((v) => DropdownMenuItem(value: v, child: Text(v == 'Select' ? 'select'.tr : v == 'More than 10 Years' ? 'more_than_10_years'.tr : v)))
                           .toList(),
                       onChanged: (val) => yearsSince.value = val ?? 'Select',
                     ),
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text('Are you on medicines?', style: TextStyle(fontSize: 13, color: Colors.black54)),
+                Text('are_you_on_medicines'.tr, style: const TextStyle(fontSize: 13, color: Colors.black54)),
                 const SizedBox(height: 4),
                 RadioGroup<String>(
                   groupValue: onMedicine.value,
@@ -713,19 +713,19 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                         child: TextButton.icon(
                           onPressed: () => medCount.value = 1,
                           icon: const Icon(Icons.add, color: AppColors.primary),
-                          label: const Text('Add Medicine', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                          label: Text('add_medicine'.tr, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
                         ),
                       ),
                     if (medCount.value >= 1) ...[
-                      _buildMedicineRow(medName1, medFreq1, 'Enter the name of medicine'),
+                      _buildMedicineRow(medName1, medFreq1, 'enter_name_of_medicine'.tr),
                       const SizedBox(height: 8),
                     ],
                     if (medCount.value >= 2) ...[
-                      _buildMedicineRow(medName2, medFreq2, 'Enter the name of medicine 2'),
+                      _buildMedicineRow(medName2, medFreq2, 'enter_name_of_medicine_2'.tr),
                       const SizedBox(height: 8),
                     ],
                     if (medCount.value >= 3) ...[
-                      _buildMedicineRow(medName3, medFreq3, 'Enter the name of medicine 3'),
+                      _buildMedicineRow(medName3, medFreq3, 'enter_name_of_medicine_3'.tr),
                       const SizedBox(height: 8),
                     ],
                     if (medCount.value > 0 && medCount.value < 3)
@@ -734,14 +734,14 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                         child: TextButton.icon(
                           onPressed: () => medCount.value++,
                           icon: const Icon(Icons.add, color: AppColors.primary),
-                          label: const Text('Add More', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                          label: Text('add_more'.tr, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
                         ),
                       ),
                   ],
 
                   // Upload Images Section
                   const SizedBox(height: 12),
-                  const Text('OR Upload Report', style: TextStyle(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold)),
+                  Text('or_upload_report'.tr, style: const TextStyle(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 6),
                   if (reportsList.isNotEmpty) ...[
                     SizedBox(
@@ -793,7 +793,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                         ElevatedButton.icon(
                           onPressed: () => _showImageSourceDialog(typeKey),
                           icon: const Icon(Icons.upload_file, size: 18),
-                          label: const Text('Select File'),
+                          label: Text('select_file'.tr),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.grey.shade200,
                             foregroundColor: Colors.black87,
@@ -805,7 +805,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
 
                   if (!hideRegularQuestion) ...[
                     const SizedBox(height: 12),
-                    const Text('Do you take medicines regularly?', style: TextStyle(fontSize: 13, color: Colors.black54)),
+                    Text('do_you_take_medicines_regularly'.tr, style: const TextStyle(fontSize: 13, color: Colors.black54)),
                     const SizedBox(height: 4),
                     RadioGroup<String>(
                       groupValue: medicineRegular.value,
@@ -814,7 +814,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                         children: ['Yes', 'No'].map((opt) => Row(
                           children: [
                             Radio<String>(value: opt, activeColor: AppColors.primary),
-                            Text(opt),
+                            Text(opt.toLowerCase().tr),
                             const SizedBox(width: 24),
                           ],
                         )).toList(),
@@ -858,7 +858,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                 value: freqValue.value,
                 isExpanded: true,
                 items: ['One Time', 'Two Times', 'Three Times', 'Four Times']
-                    .map((v) => DropdownMenuItem(value: v, child: Text(v, style: const TextStyle(fontSize: 12))))
+                    .map((v) => DropdownMenuItem(value: v, child: Text(v == 'One Time' ? 'one_time'.tr : v == 'Two Times' ? 'two_times'.tr : v == 'Three Times' ? 'three_times'.tr : v == 'Four Times' ? 'four_times'.tr : v, style: const TextStyle(fontSize: 12))))
                     .toList(),
                 onChanged: (val) => freqValue.value = val ?? 'One Time',
               ),
@@ -877,11 +877,11 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Choose Image Source', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text('choose_image_source'.tr, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.photo_library, color: AppColors.primary),
-              title: const Text('Choose from Gallery'),
+              title: Text('choose_from_gallery'.tr),
               onTap: () {
                 Get.back();
                 controller.pickReportImage(typeKey, ImageSource.gallery);
@@ -889,7 +889,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
             ),
             ListTile(
               leading: const Icon(Icons.camera_alt, color: AppColors.primary),
-              title: const Text('Take a Photo'),
+              title: Text('take_a_photo'.tr),
               onTap: () {
                 Get.back();
                 controller.pickReportImage(typeKey, ImageSource.camera);

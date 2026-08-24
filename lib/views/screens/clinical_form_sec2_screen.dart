@@ -19,8 +19,8 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
           Get.snackbar(
-            'Action Required',
-            "You cannot go back from this form.",
+            'action_required'.tr,
+            'cannot_go_back_form'.tr,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.orange,
             colorText: Colors.white,
@@ -41,7 +41,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         ? controller.patientName
                         : controller.patientName.isNotEmpty
                             ? controller.patientName
-                            : 'Patient Name',
+                            : 'patient_name'.tr,
                     style: const TextStyle(
                       color: Colors.black87,
                       fontSize: 16,
@@ -68,8 +68,8 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     AppFormSectionHeader(
-                      subtitle: 'Clinical Form Section 2',
-                      title: 'Investigations',
+                      subtitle: 'clinical_form_sec2'.tr,
+                      title: 'investigations'.tr,
                     ),
                     const SizedBox(height: 24),
 
@@ -79,10 +79,10 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                       children: [
                         Image.asset('assets/images/m_glucometer.png', width: 65, height: 65),
                         const SizedBox(width: 16),
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            'Do you have blood investigations to upload?',
-                            style: TextStyle(
+                            'have_blood_investigations'.tr,
+                            style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               color: Colors.black87,
@@ -101,9 +101,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                           onChanged: (val) => controller.checkSugarVal.value = val ?? false,
                           activeColor: AppColors.primary,
                         ),
-                        const Text(
-                          'Blood Sugar Level :',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                        Text(
+                          'blood_sugar_level'.tr,
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                         ),
                       ],
                     ),
@@ -118,9 +118,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                               child: TextField(
                                 controller: controller.fastingController,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Fasting',
-                                  border: OutlineInputBorder(),
+                                decoration: InputDecoration(
+                                  labelText: 'fasting'.tr,
+                                  border: const OutlineInputBorder(),
                                   contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                 ),
                               ),
@@ -130,9 +130,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                               child: TextField(
                                 controller: controller.afterFoodController,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'After Food',
-                                  border: OutlineInputBorder(),
+                                decoration: InputDecoration(
+                                  labelText: 'after_food'.tr,
+                                  border: const OutlineInputBorder(),
                                   contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                 ),
                               ),
@@ -142,9 +142,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                               child: TextField(
                                 controller: controller.randomController,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Random',
-                                  border: OutlineInputBorder(),
+                                decoration: InputDecoration(
+                                  labelText: 'random'.tr,
+                                  border: const OutlineInputBorder(),
                                   contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                 ),
                               ),
@@ -169,9 +169,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                           onChanged: (val) => controller.cbCreatinine.value = val ?? false,
                           activeColor: AppColors.primary,
                         ),
-                        const Text(
-                          'Creatinine',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                        Text(
+                          'creatinine'.tr,
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                         ),
                       ],
                     ),
@@ -183,7 +183,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                           controller: controller.creatinineController,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            labelText: 'Creatinine (Kidney function test)',
+                            labelText: 'creatinine_kidney_function'.tr,
                             border: const OutlineInputBorder(),
                             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             suffixIcon: IconButton(
@@ -204,9 +204,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                           onChanged: (val) => controller.cbHba1c.value = val ?? false,
                           activeColor: AppColors.primary,
                         ),
-                        const Text(
-                          'HbA1c',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                        Text(
+                          'hba1c'.tr,
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                         ),
                       ],
                     ),
@@ -221,7 +221,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                               controller: controller.hba1cController,
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
-                                labelText: 'HbA1c',
+                                labelText: 'hba1c'.tr,
                                 border: const OutlineInputBorder(),
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                 suffixIcon: IconButton(
@@ -244,7 +244,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                             value: 'Today',
                                             activeColor: AppColors.primary,
                                           ),
-                                          const Text('Today'),
+                                          Text('today'.tr),
                                         ],
                                       ),
                                       const SizedBox(width: 8),
@@ -254,7 +254,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                             value: 'Yesterday',
                                             activeColor: AppColors.primary,
                                           ),
-                                          const Text('Yesterday'),
+                                          Text('yesterday'.tr),
                                         ],
                                       ),
                                     ],
@@ -274,7 +274,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            controller.hba1cDateChoice.value,
+                                            controller.hba1cDateChoice.value == 'Today' ? 'today'.tr : controller.hba1cDateChoice.value == 'Yesterday' ? 'yesterday'.tr : controller.hba1cDateChoice.value,
                                             style: const TextStyle(fontSize: 13, color: Colors.black87),
                                           ),
                                           const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
@@ -299,9 +299,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                           onChanged: (val) => controller.cbCholesterol.value = val ?? false,
                           activeColor: AppColors.primary,
                         ),
-                        const Text(
-                          'Total Cholesterol',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                        Text(
+                          'total_cholesterol'.tr,
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                         ),
                       ],
                     ),
@@ -315,7 +315,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                               controller: controller.totalCholesterolController,
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
-                                labelText: 'Total Cholesterol (lipid profile)',
+                                labelText: 'total_cholesterol_lipid'.tr,
                                 border: const OutlineInputBorder(),
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                 suffixIcon: IconButton(
@@ -331,9 +331,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                   child: TextField(
                                     controller: controller.hdlController,
                                     keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(
-                                      labelText: 'HDL',
-                                      border: OutlineInputBorder(),
+                                    decoration: InputDecoration(
+                                      labelText: 'hdl'.tr,
+                                      border: const OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                     ),
                                   ),
@@ -343,9 +343,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                   child: TextField(
                                     controller: controller.ldlController,
                                     keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(
-                                      labelText: 'LDL',
-                                      border: OutlineInputBorder(),
+                                    decoration: InputDecoration(
+                                      labelText: 'ldl'.tr,
+                                      border: const OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                     ),
                                   ),
@@ -355,9 +355,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                   child: TextField(
                                     controller: controller.vldlController,
                                     keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(
-                                      labelText: 'VLDL',
-                                      border: OutlineInputBorder(),
+                                    decoration: InputDecoration(
+                                      labelText: 'vldl'.tr,
+                                      border: const OutlineInputBorder(),
                                       contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                     ),
                                   ),
@@ -378,9 +378,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                           onChanged: (val) => controller.cbUrineAlbumin.value = val ?? false,
                           activeColor: AppColors.primary,
                         ),
-                        const Text(
-                          'Urine Albumin',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                        Text(
+                          'urine_albumin'.tr,
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                         ),
                       ],
                     ),
@@ -391,7 +391,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Urine Albumin', style: TextStyle(fontSize: 13, color: Colors.black54)),
+                            Text('urine_albumin'.tr, style: const TextStyle(fontSize: 13, color: Colors.black54)),
                             RadioGroup<String>(
                               groupValue: controller.urineAlbuminType.value,
                               onChanged: (val) => controller.urineAlbuminType.value = val ?? '',
@@ -403,7 +403,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                         value: 'Numeric',
                                         activeColor: AppColors.primary,
                                       ),
-                                      const Text('Numeric'),
+                                      Text('numeric'.tr),
                                     ],
                                   ),
                                   const SizedBox(width: 16),
@@ -413,7 +413,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                         value: 'Value',
                                         activeColor: AppColors.primary,
                                       ),
-                                      const Text('Value'),
+                                      Text('value'.tr),
                                     ],
                                   ),
                                 ],
@@ -425,7 +425,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                 controller: controller.urineAlbuminNumericController,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
-                                  labelText: 'Enter Numeric',
+                                  labelText: 'enter_numeric'.tr,
                                   border: const OutlineInputBorder(),
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   suffixIcon: IconButton(
@@ -446,7 +446,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                     value: controller.urineAlbuminValueSelected.value,
                                     isExpanded: true,
                                     items: ['Select', 'Negative', 'Trace', 'Positive']
-                                        .map((v) => DropdownMenuItem(value: v, child: Text(v)))
+                                        .map((v) => DropdownMenuItem(value: v, child: Text(v == 'Select' ? 'select'.tr : v == 'Negative' ? 'negative'.tr : v == 'Trace' ? 'trace'.tr : v == 'Positive' ? 'positive'.tr : v)))
                                         .toList(),
                                     onChanged: (val) => controller.urineAlbuminValueSelected.value = val ?? 'Select',
                                   ),
@@ -467,9 +467,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                           onChanged: (val) => controller.cbEcg.value = val ?? false,
                           activeColor: AppColors.primary,
                         ),
-                        const Text(
-                          'ECG :',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                        Text(
+                          'ecg'.tr,
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                         ),
                         IconButton(
                           icon: const Icon(Icons.info, color: Colors.grey, size: 20),
@@ -484,7 +484,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Upload Image', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black87)),
+                            Text('upload_image'.tr, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black87)),
                             const SizedBox(height: 8),
                             Row(
                               children: [
@@ -493,7 +493,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                     onPressed: () => controller.pickEcgImage(ImageSource.gallery),
                                     style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
                                     icon: const Icon(Icons.photo_library),
-                                    label: const Text('Gallery'),
+                                    label: Text('gallery'.tr),
                                   ),
                                 ),
                                 const SizedBox(width: 8),
@@ -502,7 +502,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                     onPressed: () => controller.pickEcgImage(ImageSource.camera),
                                     style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
                                     icon: const Icon(Icons.camera_alt),
-                                    label: const Text('Camera'),
+                                    label: Text('camera'.tr),
                                   ),
                                 ),
                               ],
@@ -538,7 +538,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                               ),
                             ],
                             const SizedBox(height: 16),
-                            const Text('Record ECG', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black87)),
+                            Text('record_ecg'.tr, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black87)),
                             const SizedBox(height: 8),
                             Row(
                               children: [
@@ -546,7 +546,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                   child: ElevatedButton(
                                     onPressed: () {},
                                     style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
-                                    child: const Text('Short ECG (Health Monitor)', style: TextStyle(fontSize: 11)),
+                                    child: Text('short_ecg'.tr, style: const TextStyle(fontSize: 11)),
                                   ),
                                 ),
                                 const SizedBox(width: 6),
@@ -554,7 +554,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                   child: ElevatedButton(
                                     onPressed: () {},
                                     style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
-                                    child: const Text('Record 12 Lead ECG', style: TextStyle(fontSize: 11)),
+                                    child: Text('record_12_lead_ecg'.tr, style: const TextStyle(fontSize: 11)),
                                   ),
                                 ),
                               ],
@@ -598,9 +598,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                           onChanged: (val) => controller.cbThyroid.value = val ?? false,
                           activeColor: AppColors.primary,
                         ),
-                        const Text(
-                          'Thyroid',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                        Text(
+                          'thyroid'.tr,
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                         ),
                       ],
                     ),
@@ -614,9 +614,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                               child: TextField(
                                 controller: controller.t3Controller,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'T3',
-                                  border: OutlineInputBorder(),
+                                decoration: InputDecoration(
+                                  labelText: 't3'.tr,
+                                  border: const OutlineInputBorder(),
                                   contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                 ),
                               ),
@@ -626,9 +626,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                               child: TextField(
                                 controller: controller.t4Controller,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'T4',
-                                  border: OutlineInputBorder(),
+                                decoration: InputDecoration(
+                                  labelText: 't4'.tr,
+                                  border: const OutlineInputBorder(),
                                   contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                 ),
                               ),
@@ -638,9 +638,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                               child: TextField(
                                 controller: controller.tshController,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'TSH',
-                                  border: OutlineInputBorder(),
+                                decoration: InputDecoration(
+                                  labelText: 'tsh'.tr,
+                                  border: const OutlineInputBorder(),
                                   contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                 ),
                               ),
@@ -659,9 +659,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                           onChanged: (val) => controller.cbUricAcid.value = val ?? false,
                           activeColor: AppColors.primary,
                         ),
-                        const Text(
-                          'Uric Acid',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                        Text(
+                          'uric_acid'.tr,
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                         ),
                       ],
                     ),
@@ -673,7 +673,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                           controller: controller.uricAcidController,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            labelText: 'Uric Acid',
+                            labelText: 'uric_acid'.tr,
                             border: const OutlineInputBorder(),
                             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             suffixIcon: IconButton(
@@ -690,9 +690,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Other Investigations?',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                        Text(
+                          'other_investigations'.tr,
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                         ),
                         RadioGroup<String>(
                           groupValue: controller.otherInvestigationsChoice.value,
@@ -705,7 +705,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                     value: 'Yes',
                                     activeColor: AppColors.primary,
                                   ),
-                                  const Text('Yes'),
+                                  Text('yes'.tr),
                                 ],
                               ),
                               const SizedBox(width: 8),
@@ -715,7 +715,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                     value: 'No',
                                     activeColor: AppColors.primary,
                                   ),
-                                  const Text('No'),
+                                  Text('no'.tr),
                                 ],
                               ),
                             ],
@@ -728,9 +728,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                       TextField(
                         controller: controller.otherInvestigationsController,
                         maxLines: 3,
-                        decoration: const InputDecoration(
-                          labelText: 'Enter details of other investigations',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: 'enter_details_other_investigations'.tr,
+                          border: const OutlineInputBorder(),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -741,7 +741,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                               onPressed: () => controller.pickOtherImage(ImageSource.gallery),
                               style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
                               icon: const Icon(Icons.photo_library),
-                              label: const Text('Gallery'),
+                              label: Text('gallery'.tr),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -750,7 +750,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                               onPressed: () => controller.pickOtherImage(ImageSource.camera),
                               style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
                               icon: const Icon(Icons.camera_alt),
-                              label: const Text('Camera'),
+                              label: Text('camera'.tr),
                             ),
                           ),
                         ],
@@ -801,9 +801,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                             borderRadius: BorderRadius.circular(6),
                           ),
                         ),
-                        child: const Text(
-                          'Next',
-                          style: TextStyle(
+                        child: Text(
+                          'next'.tr,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),

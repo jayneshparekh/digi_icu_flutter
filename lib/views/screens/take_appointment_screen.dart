@@ -28,9 +28,9 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Book Appointment',
-                style: TextStyle(
+              Text(
+                'book_appointment'.tr,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
@@ -70,9 +70,9 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Purpose of visit',
-                            style: TextStyle(
+                          Text(
+                            'purpose_of_visit'.tr,
+                            style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               color: Colors.black87,
@@ -84,7 +84,7 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
                             maxLines: 4,
                             maxLength: 500,
                             decoration: InputDecoration(
-                              hintText: 'Purpose of visit',
+                              hintText: 'purpose_of_visit'.tr,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -98,9 +98,9 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
                   ],
 
                   // Question
-                  const Text(
-                    '1. Where are you ?',
-                    style: TextStyle(
+                  Text(
+                    'where_are_you'.tr,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -113,25 +113,25 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _buildLocationOption(
-                        label: 'Home',
+                        label: 'home'.tr,
                         imagePath: 'assets/images/house.png',
                         isSelected: activePlace == 'Home',
                         onTap: () => controller.selectPlace('Home'),
                       ),
                       _buildLocationOption(
-                        label: 'Office',
+                        label: 'office'.tr,
                         imagePath: 'assets/images/building.png',
                         isSelected: activePlace == 'Office',
                         onTap: () => controller.selectPlace('Office'),
                       ),
                       _buildLocationOption(
-                        label: 'Outdoor',
+                        label: 'outdoor'.tr,
                         imagePath: 'assets/images/warehouse.png',
                         isSelected: activePlace == 'Outdoor',
                         onTap: () => controller.selectPlace('Outdoor'),
                       ),
                       _buildLocationOption(
-                        label: 'Clinic/Home visit',
+                        label: 'clinic_home_visit'.tr,
                         imagePath: 'assets/images/health_clinic.png',
                         isSelected: activePlace == 'Clinic',
                         onTap: () => controller.selectPlace('Clinic'),
@@ -155,9 +155,9 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
                           ),
                           elevation: 2,
                         ),
-                        child: const Text(
-                          'Book Now',
-                          style: TextStyle(
+                        child: Text(
+                          'book_now'.tr,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),

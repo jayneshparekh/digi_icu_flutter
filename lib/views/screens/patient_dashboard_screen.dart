@@ -119,7 +119,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12.0),
                     child: Text(
-                      'Next follow up date : $formattedDate',
+                      '${'next_follow_up_date'.tr} $formattedDate',
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -131,9 +131,9 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Recommended',
-                      style: TextStyle(
+                    Text(
+                      'recommended'.tr,
+                      style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
@@ -141,9 +141,9 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                     ),
                     Row(
                       children: [
-                        _buildBadgeButton('About app', AppColors.primary),
+                        _buildBadgeButton('about_app'.tr, AppColors.primary),
                         const SizedBox(width: 8),
-                        _buildBadgeButton('Share App', AppColors.primary),
+                        _buildBadgeButton('share_app'.tr, AppColors.primary),
                       ],
                     ),
                   ],
@@ -162,14 +162,14 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       Expanded(
                         child: PatientDashboardCircleBtn(
                           iconPath: 'assets/icons/svg/ic_doctor_appointment.svg',
-                          label: 'Doctor\nAppointment',
+                          label: 'doctor_appointment'.tr,
                           onTap: () => controller.handleDoctorAppointmentTap(),
                         ),
                       ),
                       Expanded(
                         child: PatientDashboardCircleBtn(
                           iconPath: 'assets/icons/svg/ic_prescription.svg',
-                          label: 'Prescription',
+                          label: 'prescription'.tr,
                           onTap: () {},
                         ),
                       ),
@@ -177,7 +177,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                         child: PatientDashboardCircleBtn(
                           iconPath: 'assets/icons/svg/ic_chest_pain_help.svg',
                           iconColor: Colors.red,
-                          label: 'Chest Pain\nHelp',
+                          label: 'chest_pain_help'.tr,
                           onTap: () {},
                         ),
                       ),
@@ -185,7 +185,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                         Expanded(
                           child: PatientDashboardCircleBtn(
                             iconPath: 'assets/images/digi_icu.png',
-                            label: 'Digi ICU',
+                            label: 'digi_icu'.tr,
                             onTap: () {},
                           ),
                         ),
@@ -203,9 +203,9 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Emergency Services Section
-                  const Text(
-                    'Emergency Services',
-                    style: TextStyle(
+                  Text(
+                    'emergency_services'.tr,
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -218,7 +218,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                         child: PatientDashboardCard(
                           iconPath: 'assets/icons/svg/ic_emergency_call.svg',
                           iconColor: Colors.red,
-                          label: 'Emergency Doctor',
+                          label: 'emergency_doctor'.tr,
                           onTap: () {},
                         ),
                       ),
@@ -227,7 +227,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                         child: PatientDashboardCard(
                           iconPath: 'assets/icons/svg/ic_ambulance.svg',
                           iconColor: Colors.red,
-                          label: 'Call Ambulance',
+                          label: 'call_ambulance'.tr,
                           onTap: () {},
                         ),
                       ),
@@ -236,9 +236,9 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   const SizedBox(height: 16),
 
                   // Other Services Section
-                  const Text(
-                    'Other Services',
-                    style: TextStyle(
+                  Text(
+                    'other_services'.tr,
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -250,7 +250,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       Expanded(
                         child: PatientDashboardCard(
                           iconPath: 'assets/icons/svg/ic_specialist.svg',
-                          label: 'Consult with\nspecialist',
+                          label: 'consult_specialist'.tr,
                           onTap: () {},
                         ),
                       ),
@@ -263,7 +263,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                               iconPath: 'assets/icons/svg/ic_ecg.svg',
                               iconColor: animatedColor,
                               textColor: animatedColor,
-                              label: 'ECG at Home',
+                              label: 'ecg_at_home'.tr,
                               onTap: () {},
                             );
                           },
@@ -297,9 +297,9 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   const SizedBox(height: 16),
 
                   // Choose Package Section
-                  const Text(
-                    'Choose Package',
-                    style: TextStyle(
+                  Text(
+                    'choose_package'.tr,
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -311,7 +311,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       Expanded(
                         child: PatientDashboardVerticalCard(
                           iconPath: 'assets/icons/svg/ic_specialist.svg', // Fallback icon for NRI package
-                          label: 'NRI',
+                          label: 'nri_package'.tr,
                           onTap: () {},
                         ),
                       ),
@@ -319,7 +319,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       Expanded(
                         child: PatientDashboardVerticalCard(
                           iconPath: 'assets/icons/svg/ic_doctor_appointment.svg', // Fallback for Mom Dad package
-                          label: 'My Mom - Dad',
+                          label: 'mom_dad_package'.tr,
                           onTap: () {},
                         ),
                       ),
@@ -327,7 +327,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       Expanded(
                         child: PatientDashboardVerticalCard(
                           iconPath: 'assets/icons/svg/ic_prescription.svg', // Fallback for All Package
-                          label: 'All Package',
+                          label: 'all_package'.tr,
                           onTap: () {},
                         ),
                       ),
@@ -336,9 +336,9 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   const SizedBox(height: 16),
 
                   // Upload Report Section
-                  const Text(
-                    'Upload Report',
-                    style: TextStyle(
+                  Text(
+                    'upload_report'.tr,
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -351,22 +351,22 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                     children: [
                       PatientDashboardCircleBtn(
                         iconPath: 'assets/icons/svg/ic_ecg.svg',
-                        label: 'ECG Report',
+                        label: 'ecg_report'.tr,
                         onTap: () {},
                       ),
                       PatientDashboardCircleBtn(
                         iconPath: 'assets/icons/svg/ic_specialist.svg',
-                        label: 'Sugar',
+                        label: 'sugar_report'.tr,
                         onTap: () {},
                       ),
                       PatientDashboardCircleBtn(
                         iconPath: 'assets/icons/svg/ic_prescription.svg',
-                        label: 'Old Medicines',
+                        label: 'old_medicines'.tr,
                         onTap: () {},
                       ),
                       PatientDashboardCircleBtn(
                         iconPath: 'assets/icons/svg/ic_patient_list.svg',
-                        label: 'Other Report',
+                        label: 'other_report'.tr,
                         onTap: () {},
                       ),
                     ],
@@ -374,9 +374,9 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   const SizedBox(height: 16),
 
                   // Categories Section
-                  const Text(
-                    'Categories',
-                    style: TextStyle(
+                  Text(
+                    'categories'.tr,
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -385,37 +385,37 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   const SizedBox(height: 12),
                   Obx(() {
                     final list = <Map<String, String>>[
-                      {'title': 'My Dashboard', 'icon': 'assets/icons/svg/ic_dashboard.svg'},
-                      {'title': 'Online Pharmacy', 'icon': 'assets/icons/svg/ic_online_pharmacy.svg'},
-                      {'title': 'Quick Form', 'icon': 'assets/icons/svg/ic_quick.svg'},
-                      {'title': 'My Graphs', 'icon': 'assets/icons/svg/ic_graphs.svg'},
-                      {'title': 'Info & Education', 'icon': 'assets/icons/svg/ic_info_education.svg'},
-                      {'title': 'My Forms', 'icon': 'assets/icons/svg/ic_my_forms.svg'},
-                      {'title': 'Orders & Status', 'icon': 'assets/icons/svg/ic_delivery.svg'},
-                      {'title': 'Collaborated Hospitals', 'icon': 'assets/icons/svg/ic_hospital_building.svg'},
-                      {'title': 'Screening', 'icon': 'assets/icons/svg/ic_screening.svg'},
-                      {'title': 'Health Monitor', 'icon': 'assets/icons/svg/ic_health_monitor.svg'},
-                      {'title': 'Stethoscope Device', 'icon': 'assets/icons/svg/ic_health_monitor.svg'},
-                      {'title': 'Family Member', 'icon': 'assets/icons/svg/ic_patient_list.svg'},
+                      {'title': 'my_dashboard'.tr, 'icon': 'assets/icons/svg/ic_dashboard.svg'},
+                      {'title': 'online_pharmacy'.tr, 'icon': 'assets/icons/svg/ic_online_pharmacy.svg'},
+                      {'title': 'quick_form'.tr, 'icon': 'assets/icons/svg/ic_quick.svg'},
+                      {'title': 'my_graphs'.tr, 'icon': 'assets/icons/svg/ic_graphs.svg'},
+                      {'title': 'info_education'.tr, 'icon': 'assets/icons/svg/ic_info_education.svg'},
+                      {'title': 'my_forms'.tr, 'icon': 'assets/icons/svg/ic_my_forms.svg'},
+                      {'title': 'orders_status'.tr, 'icon': 'assets/icons/svg/ic_delivery.svg'},
+                      {'title': 'collaborated_hospitals'.tr, 'icon': 'assets/icons/svg/ic_hospital_building.svg'},
+                      {'title': 'screening'.tr, 'icon': 'assets/icons/svg/ic_screening.svg'},
+                      {'title': 'health_monitor'.tr, 'icon': 'assets/icons/svg/ic_health_monitor.svg'},
+                      {'title': 'stethoscope_device'.tr, 'icon': 'assets/icons/svg/ic_health_monitor.svg'},
+                      {'title': 'family_member'.tr, 'icon': 'assets/icons/svg/ic_patient_list.svg'},
                     ];
 
                     if ((controller.type == "Doctor" || controller.type == "Leader" || controller.type == "Nurse") && controller.rxIsAdmitted.value == "0") {
-                      list.add({'title': 'IPD Admit', 'icon': 'assets/icons/svg/ic_hospital_bed.svg'});
+                      list.add({'title': 'ipd_admit'.tr, 'icon': 'assets/icons/svg/ic_hospital_bed.svg'});
                     }
 
-                    list.add({'title': 'My Admit Details', 'icon': 'assets/icons/svg/ic_hospital_bed.svg'});
+                    list.add({'title': 'my_admit_details'.tr, 'icon': 'assets/icons/svg/ic_hospital_bed.svg'});
 
                     if (controller.type != "Patient") {
-                      list.add({'title': 'Patient Location', 'icon': 'assets/icons/svg/location.svg'});
+                      list.add({'title': 'patient_location'.tr, 'icon': 'assets/icons/svg/location.svg'});
                     } else {
-                      list.add({'title': 'Update My Location', 'icon': 'assets/icons/svg/location.svg'});
+                      list.add({'title': 'update_my_location'.tr, 'icon': 'assets/icons/svg/location.svg'});
                     }
 
-                    list.add({'title': '2D Echo Cardiography Report', 'icon': 'assets/icons/svg/echocardiography.svg'});
-                    list.add({'title': 'Home Services', 'icon': 'assets/icons/svg/ic_orders_status.svg'});
+                    list.add({'title': 'echo_cardiography_report'.tr, 'icon': 'assets/icons/svg/echocardiography.svg'});
+                    list.add({'title': 'home_services'.tr, 'icon': 'assets/icons/svg/ic_orders_status.svg'});
 
                     if (controller.rxCovidIconShow.value == "1") {
-                      list.add({'title': 'Covid Care at Home', 'icon': 'assets/images/covid_logo.png'});
+                      list.add({'title': 'covid_care_at_home'.tr, 'icon': 'assets/images/covid_logo.png'});
                     }
 
                     return GridView.builder(
@@ -467,9 +467,9 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   Center(
                     child: Column(
                       children: [
-                        const Text(
-                          'For details please call',
-                          style: TextStyle(
+                        Text(
+                          'for_details_call'.tr,
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: Colors.black54,

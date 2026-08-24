@@ -14,7 +14,7 @@ class PatientListScreen extends GetView<PatientListController> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: CommonListAppBar(
-        title: 'Patient List',
+        title: 'patient_list'.tr,
         doctorName: controller.doctorName,
         searchController: controller.searchController,
         onSearch: (val) => controller.fetchPatients(search: val),
@@ -83,10 +83,10 @@ class PatientListScreen extends GetView<PatientListController> {
               }
 
               if (controller.patients.isEmpty) {
-                return const Center(
+                return Center(
                   child: Text(
-                    'No patients found',
-                    style: TextStyle(
+                    'no_patients_found'.tr,
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
@@ -135,15 +135,15 @@ class PatientListScreen extends GetView<PatientListController> {
 
       String label = '';
       if (statusValue == 'Refer') {
-        label = 'Refer (${controller.referCount.value})';
+        label = '${'refer'.tr} (${controller.referCount.value})';
       } else if (statusValue == 'Institute') {
-        label = 'Institute';
+        label = 'institute'.tr;
       } else if (statusValue == 'In Process') {
-        label = 'In Process\n(${controller.inProcessCount.value})';
+        label = '${'in_process'.tr}\n(${controller.inProcessCount.value})';
       } else if (statusValue == 'On Hold') {
-        label = 'On Hold\n(${controller.onHoldCount.value})';
+        label = '${'on_hold'.tr}\n(${controller.onHoldCount.value})';
       } else if (statusValue == 'Served') {
-        label = 'Served\n(${controller.servedCount.value})';
+        label = '${'served'.tr}\n(${controller.servedCount.value})';
       }
 
       return InkWell(
@@ -276,7 +276,7 @@ class PatientListScreen extends GetView<PatientListController> {
           const SizedBox(height: 4),
           // Appointment details
           Text(
-            'Appointment: ${patient.id} / ${patient.bookingDate} / ${patient.bookingTime}',
+            '${'appointment_label'.tr} ${patient.id} / ${patient.bookingDate} / ${patient.bookingTime}',
             style: const TextStyle(fontSize: 14, color: Colors.black54),
           ),
           const SizedBox(height: 12),
@@ -294,9 +294,9 @@ class PatientListScreen extends GetView<PatientListController> {
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
-              child: const Text(
-                'View Details',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              child: Text(
+                'view_details'.tr,
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
             ),
           ),

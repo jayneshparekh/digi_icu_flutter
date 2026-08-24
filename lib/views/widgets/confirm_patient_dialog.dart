@@ -34,10 +34,10 @@ class ConfirmPatientDialog extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Confirm Patient',
-                    style: TextStyle(
+                    'confirm_patient'.tr,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -143,9 +143,9 @@ class ConfirmPatientDialog extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () => Get.back(),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(
+                  child: Text(
+                    'cancel'.tr,
+                    style: const TextStyle(
                       color: Colors.red,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -169,9 +169,9 @@ class ConfirmPatientDialog extends StatelessWidget {
                       vertical: 8,
                     ),
                   ),
-                  child: const Text(
-                    'Confirm',
-                    style: TextStyle(
+                  child: Text(
+                    'confirm'.tr,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

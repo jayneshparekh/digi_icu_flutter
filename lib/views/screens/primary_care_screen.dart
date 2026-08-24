@@ -30,8 +30,8 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
           Get.snackbar(
-            'Action Required',
-            'You must complete and submit the form to proceed.',
+            'action_required'.tr,
+            'submit_form_to_proceed'.tr,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.orange,
             colorText: Colors.white,
@@ -54,9 +54,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Primary Care',
-                  style: TextStyle(
+                Text(
+                  'primary_care'.tr,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
@@ -83,9 +83,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // --- Blood Pressure Section ---
-                  const Text(
-                    'Blood Pressure',
-                    style: TextStyle(
+                  Text(
+                    'blood_pressure'.tr,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -99,9 +99,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                         onChanged: (val) => controller.toggleBPApparatus(!(val ?? false)),
                         activeColor: AppColors.primary,
                       ),
-                      const Text(
-                        "I Don't have BP Apparatus?",
-                        style: TextStyle(fontSize: 14, color: Colors.black87),
+                      Text(
+                        'no_bp_apparatus'.tr,
+                        style: const TextStyle(fontSize: 14, color: Colors.black87),
                       ),
                     ],
                   ),
@@ -114,9 +114,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                           child: TextField(
                             controller: controller.systolicController,
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              labelText: 'Systolic BP',
-                              border: OutlineInputBorder(),
+                            decoration: InputDecoration(
+                              labelText: 'systolic_bp'.tr,
+                              border: const OutlineInputBorder(),
                             ),
                           ),
                         ),
@@ -125,9 +125,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                           child: TextField(
                             controller: controller.diastolicController,
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              labelText: 'Diastolic BP',
-                              border: OutlineInputBorder(),
+                            decoration: InputDecoration(
+                              labelText: 'diastolic_bp'.tr,
+                              border: const OutlineInputBorder(),
                             ),
                           ),
                         ),
@@ -136,9 +136,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                           child: TextField(
                             controller: controller.pulseRateController,
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              labelText: 'Pulse Rate',
-                              border: OutlineInputBorder(),
+                            decoration: InputDecoration(
+                              labelText: 'pulse_rate'.tr,
+                              border: const OutlineInputBorder(),
                             ),
                           ),
                         ),
@@ -155,9 +155,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                   const SizedBox(height: 24),
 
                   // --- Blood Sugar Section ---
-                  const Text(
-                    'Blood Sugar Level',
-                    style: TextStyle(
+                  Text(
+                    'blood_sugar_level'.tr,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -171,10 +171,10 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                         onChanged: (val) => controller.toggleGlucometer(!(val ?? false)),
                         activeColor: AppColors.primary,
                       ),
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          "I Don't have Sugar checking machine(Glucometer) ?",
-                          style: TextStyle(fontSize: 14, color: Colors.black87),
+                          'no_glucometer'.tr,
+                          style: const TextStyle(fontSize: 14, color: Colors.black87),
                         ),
                       ),
                     ],
@@ -188,9 +188,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                           child: TextField(
                             controller: controller.fastingController,
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              labelText: 'Fasting',
-                              border: OutlineInputBorder(),
+                            decoration: InputDecoration(
+                              labelText: 'fasting'.tr,
+                              border: const OutlineInputBorder(),
                             ),
                           ),
                         ),
@@ -199,9 +199,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                           child: TextField(
                             controller: controller.afterFoodController,
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              labelText: 'After Food',
-                              border: OutlineInputBorder(),
+                            decoration: InputDecoration(
+                              labelText: 'after_food'.tr,
+                              border: const OutlineInputBorder(),
                             ),
                           ),
                         ),
@@ -210,9 +210,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                           child: TextField(
                             controller: controller.randomController,
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              labelText: 'Random',
-                              border: OutlineInputBorder(),
+                            decoration: InputDecoration(
+                              labelText: 'random'.tr,
+                              border: const OutlineInputBorder(),
                             ),
                           ),
                         ),
@@ -229,9 +229,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                   const SizedBox(height: 24),
 
                   // --- Stethoscope Recording ---
-                  const Text(
-                    'Stethoscope Recording',
-                    style: TextStyle(
+                  Text(
+                    'stethoscope_recording'.tr,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -251,7 +251,7 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                               borderRadius: BorderRadius.circular(6),
                             ),
                           ),
-                          child: const Text('Heart', style: TextStyle(fontWeight: FontWeight.bold)),
+                          child: Text('heart'.tr, style: const TextStyle(fontWeight: FontWeight.bold)),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -266,7 +266,7 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                               borderRadius: BorderRadius.circular(6),
                             ),
                           ),
-                          child: const Text('Lungs', style: TextStyle(fontWeight: FontWeight.bold)),
+                          child: Text('lungs'.tr, style: const TextStyle(fontWeight: FontWeight.bold)),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -281,7 +281,7 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                               borderRadius: BorderRadius.circular(6),
                             ),
                           ),
-                          child: const Text('Baby', style: TextStyle(fontWeight: FontWeight.bold)),
+                          child: Text('baby'.tr, style: const TextStyle(fontWeight: FontWeight.bold)),
                         ),
                       ),
                     ],
@@ -289,9 +289,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                   const SizedBox(height: 24),
 
                   // --- Explain problem in brief Checklist ---
-                  const Text(
-                    'Explain your problem in brief',
-                    style: TextStyle(
+                  Text(
+                    'explain_problem_brief'.tr,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -326,7 +326,7 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                           ),
                           Expanded(
                             child: Text(
-                              symptom,
+                              symptom.replaceAll(' ', '_').toLowerCase().tr,
                               style: const TextStyle(fontSize: 13, color: Colors.black87),
                             ),
                           ),
@@ -342,10 +342,10 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                     children: [
                       DropdownButton<String>(
                         value: 'English',
-                        items: const [
+                        items: [
                           DropdownMenuItem(
                             value: 'English',
-                            child: Text('English'),
+                            child: Text('english'.tr),
                           ),
                         ],
                         onChanged: (val) {},
@@ -373,7 +373,7 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                     controller: controller.symptomsController,
                     maxLines: 4,
                     decoration: InputDecoration(
-                      labelText: 'Enter problem',
+                      labelText: 'enter_problem'.tr,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -382,9 +382,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                   const SizedBox(height: 24),
 
                   // --- Image Upload Section ---
-                  const Text(
-                    'Upload Prescription Images (Optional, max 5)',
-                    style: TextStyle(
+                  Text(
+                    'upload_prescription_images'.tr,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -400,7 +400,7 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                           foregroundColor: Colors.white,
                         ),
                         icon: const Icon(Icons.add_a_photo),
-                        label: const Text('Add Photo'),
+                        label: Text('add_photo'.tr),
                       ),
                     ],
                   ),
@@ -470,9 +470,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Text(
-                        'Submit Primary Care Form',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      child: Text(
+                        'submit_primary_care_form'.tr,
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -496,14 +496,14 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Select Image Source',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              'select_image_source'.tr,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.photo_library, color: AppColors.primary),
-              title: const Text('Gallery'),
+              title: Text('gallery'.tr),
               onTap: () {
                 Get.back();
                 controller.pickImageFromGallery();
@@ -511,7 +511,7 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
             ),
             ListTile(
               leading: const Icon(Icons.camera_alt, color: AppColors.primary),
-              title: const Text('Camera'),
+              title: Text('camera'.tr),
               onTap: () {
                 Get.back();
                 controller.captureImageFromCamera();

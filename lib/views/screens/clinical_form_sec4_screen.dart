@@ -16,8 +16,8 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
           Get.snackbar(
-            'Action Required',
-            "You cannot go back from this form.",
+            'action_required'.tr,
+            'cannot_go_back_form'.tr,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.orange,
             colorText: Colors.white,
@@ -38,7 +38,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                         ? controller.patientName
                         : controller.patientName.isNotEmpty
                             ? controller.patientName
-                            : 'Patient Name',
+                            : 'patient_name'.tr,
                     style: const TextStyle(
                       color: Colors.black87,
                       fontSize: 16,
@@ -69,8 +69,8 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     AppFormSectionHeader(
-                      subtitle: 'Clinical Form Section 4',
-                      title: 'About Habits',
+                      subtitle: 'clinical_form_sec4'.tr,
+                      title: 'about_habits'.tr,
                     ),
                     const SizedBox(height: 24),
 
@@ -85,9 +85,9 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Did you stop smoking?',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                Text(
+                                  'did_you_stop_smoking'.tr,
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -96,8 +96,8 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                      controller.smoking.value = val ?? '';
                                      if (val == 'No') {
                                        _showHabitSuggestionDialog(
-                                         'Suggestion',
-                                         'Quitting smoking significantly reduces the risk of heart disease and stroke. Please consider stopping smoking.',
+                                         'suggestion'.tr,
+                                         'quitting_smoking_msg'.tr,
                                        );
                                      }
                                    },
@@ -109,7 +109,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                            value: option,
                                            activeColor: AppColors.primary,
                                          ),
-                                         Text(option),
+                                         Text(option == 'Yes' ? 'yes'.tr : option == 'No' ? 'no'.tr : 'i_need_help'.tr),
                                        ],
                                      )).toList(),
                                    ),
@@ -133,9 +133,9 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Did you stop alcohol?',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                Text(
+                                  'did_you_stop_alcohol'.tr,
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -144,8 +144,8 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                      controller.alcohol.value = val ?? '';
                                      if (val == 'No') {
                                        _showHabitSuggestionDialog(
-                                         'Suggestion',
-                                         'Limiting alcohol helps control high blood pressure and other medical conditions. Please consider stopping alcohol.',
+                                         'suggestion'.tr,
+                                         'limiting_alcohol_msg'.tr,
                                        );
                                      }
                                    },
@@ -157,7 +157,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                            value: option,
                                            activeColor: AppColors.primary,
                                          ),
-                                         Text(option),
+                                         Text(option == 'Yes' ? 'yes'.tr : option == 'No' ? 'no'.tr : 'i_need_help'.tr),
                                        ],
                                      )).toList(),
                                    ),
@@ -181,9 +181,9 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  '1. Did you reduce salt intake?',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                Text(
+                                  'reduce_salt_intake'.tr,
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -195,13 +195,13 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                          value: 'Yes',
                                          activeColor: AppColors.primary,
                                        ),
-                                       const Text('Yes'),
+                                       Text('yes'.tr),
                                        const SizedBox(width: 24),
                                        Radio<String>(
                                          value: 'No',
                                          activeColor: AppColors.primary,
                                        ),
-                                       const Text('No'),
+                                       Text('no'.tr),
                                      ],
                                    ),
                                  ),
@@ -224,9 +224,9 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  '2. Are you going for morning walk daily?',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                Text(
+                                  'morning_walk_daily'.tr,
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -240,7 +240,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                            value: option,
                                            activeColor: AppColors.primary,
                                          ),
-                                         Text(option),
+                                         Text(option == 'Yes' ? 'yes'.tr : option == 'No' ? 'no'.tr : 'sometimes_missing'.tr),
                                        ],
                                      )).toList(),
                                    ),
@@ -264,9 +264,9 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  '3. Are you in stress?',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                Text(
+                                  'are_you_in_stress'.tr,
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -278,13 +278,13 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                          value: 'Yes',
                                          activeColor: AppColors.primary,
                                        ),
-                                       const Text('Yes'),
+                                       Text('yes'.tr),
                                        const SizedBox(width: 24),
                                        Radio<String>(
                                          value: 'No',
                                          activeColor: AppColors.primary,
                                        ),
-                                       const Text('No'),
+                                       Text('no'.tr),
                                      ],
                                    ),
                                  ),
@@ -307,9 +307,9 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  '4. Did you miss any medication doses in last 5 days?',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                Text(
+                                  'miss_medication_doses'.tr,
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -318,8 +318,8 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                      controller.missMedicine.value = val ?? '';
                                      if (val == 'Yes') {
                                        _showHabitSuggestionDialog(
-                                         'Medication Suggestion',
-                                         'Consistency in taking medicines is critical to your health outcome. Please set reminders or alarms so you never miss a dose.',
+                                         'medication_suggestion'.tr,
+                                         'medication_suggestion_msg'.tr,
                                        );
                                      }
                                    },
@@ -329,13 +329,13 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                          value: 'Yes',
                                          activeColor: AppColors.primary,
                                        ),
-                                       const Text('Yes'),
+                                       Text('yes'.tr),
                                        const SizedBox(width: 24),
                                        Radio<String>(
                                          value: 'No',
                                          activeColor: AppColors.primary,
                                        ),
-                                       const Text('No'),
+                                       Text('no'.tr),
                                      ],
                                    ),
                                  ),
@@ -348,9 +348,9 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                     ],
 
                     // --- VITALS AGAIN SECTION ---
-                    const Text(
-                      'Vitals Again',
-                      style: TextStyle(
+                    Text(
+                      'vitals_again'.tr,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary,
@@ -374,10 +374,10 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '6. Last Hospitalization',
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
-                              ),
+                                Text(
+                                  'last_hospitalization'.tr,
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
                                    groupValue: controller.lastHospitalization.value,
@@ -388,19 +388,19 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                          value: 'Yes',
                                          activeColor: AppColors.primary,
                                        ),
-                                       const Text('Yes'),
+                                       Text('yes'.tr),
                                        const SizedBox(width: 24),
                                        Radio<String>(
                                          value: 'No',
                                          activeColor: AppColors.primary,
                                        ),
-                                       const Text('No'),
+                                       Text('no'.tr),
                                      ],
                                    ),
                                  ),
                               if (controller.lastHospitalization.value == 'Yes') ...[
                                 const SizedBox(height: 12),
-                                const Text('Reason for hospitalization', style: TextStyle(fontSize: 13, color: Colors.black54)),
+                                Text('reason_for_hospitalization'.tr, style: const TextStyle(fontSize: 13, color: Colors.black54)),
                                 const SizedBox(height: 4),
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -420,7 +420,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                         'Stroke',
                                         'Diabetes complications',
                                         'other'
-                                      ].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
+                                      ].map((v) => DropdownMenuItem(value: v, child: Text(v == 'Select' ? 'select'.tr : v == 'Heart attack' ? 'heart_attack'.tr : v == 'Heart failure' ? 'heart_failure'.tr : v == 'High blood pressure' ? 'high_blood_pressure'.tr : v == 'Stroke' ? 'stroke'.tr : v == 'Diabetes complications' ? 'diabetes_complications'.tr : 'other'.tr))).toList(),
                                       onChanged: (val) => controller.hospitalizationReasonSelected.value = val ?? 'Select',
                                     ),
                                   ),
@@ -429,9 +429,9 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                   const SizedBox(height: 12),
                                   TextField(
                                     controller: controller.hospitalizationReasonCustomController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Enter other hospitalization reason',
-                                      border: OutlineInputBorder(),
+                                    decoration: InputDecoration(
+                                      labelText: 'enter_other_hospitalization_reason'.tr,
+                                      border: const OutlineInputBorder(),
                                     ),
                                   ),
                                 ],
@@ -454,9 +454,9 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Vitals BP Measurement',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                Text(
+                                  'vitals_bp_measurement'.tr,
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                                 ),
                                 const SizedBox(height: 12),
                                 Row(
@@ -465,10 +465,10 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                       child: TextField(
                                         controller: controller.systolic3Controller,
                                         keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                          labelText: 'Systolic',
-                                          border: OutlineInputBorder(),
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                        decoration: InputDecoration(
+                                          labelText: 'systolic'.tr,
+                                          border: const OutlineInputBorder(),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                         ),
                                       ),
                                     ),
@@ -477,10 +477,10 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                       child: TextField(
                                         controller: controller.diastolic3Controller,
                                         keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                          labelText: 'Diastolic',
-                                          border: OutlineInputBorder(),
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                        decoration: InputDecoration(
+                                          labelText: 'diastolic'.tr,
+                                          border: const OutlineInputBorder(),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                         ),
                                       ),
                                     ),
@@ -489,10 +489,10 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                       child: TextField(
                                         controller: controller.heartRate3Controller,
                                         keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                          labelText: 'Pulse Rate',
-                                          border: OutlineInputBorder(),
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                        decoration: InputDecoration(
+                                          labelText: 'pulse_rate'.tr,
+                                          border: const OutlineInputBorder(),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                         ),
                                       ),
                                     ),
@@ -508,7 +508,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                       foregroundColor: Colors.white,
                                     ),
                                     icon: const Icon(Icons.bluetooth),
-                                    label: const Text('Measure BP'),
+                                    label: Text('measure_bp'.tr),
                                   ),
                                 ),
                               ],
@@ -521,7 +521,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
 
                     // Submit Button
                     AppPrimaryButton(
-                      label: 'Submit',
+                      label: 'submit'.tr,
                       onPressed: () => controller.submitSec4(),
                       backgroundColor: AppColors.success,
                       width: 150,
@@ -552,7 +552,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('OK, I WILL DO', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            child: Text('ok_i_will_do'.tr, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

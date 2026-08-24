@@ -120,13 +120,13 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
             },
             itemBuilder: (BuildContext context) {
               return [
-                const PopupMenuItem<String>(
+                PopupMenuItem<String>(
                   value: 'wallet',
-                  child: Text('My Wallet'),
+                  child: Text('my_wallet'.tr),
                 ),
-                const PopupMenuItem<String>(
+                PopupMenuItem<String>(
                   value: 'logout',
-                  child: Text('Logout'),
+                  child: Text('logout'.tr),
                 ),
               ];
             },
@@ -154,7 +154,7 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
                   children: [
                     // Patient List Card
                     DashboardCard(
-                      title: 'Patient List',
+                      title: 'patient_list'.tr,
                       iconPath: 'assets/icons/svg/ic_patient_list.svg',
                       onTap: () {
                         if (controller.accountStatus.value == '2') {
@@ -166,7 +166,7 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
                     ),
                     // Manage Patients Card
                     DashboardCard(
-                      title: 'Manage Patients',
+                      title: 'manage_patients'.tr,
                       iconPath: 'assets/icons/svg/ic_person_add.svg',
                       onTap: () {
                         if (controller.accountStatus.value == '2') {
@@ -185,8 +185,8 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
               height: 450,
               onSave: (bytes) {
                 Get.snackbar(
-                  'Drawing Saved',
-                  'Canvas image generated (${bytes.length} bytes)',
+                  'drawing_saved'.tr,
+                  'canvas_image_generated'.trParams({'bytes': bytes.length.toString()}),
                   snackPosition: SnackPosition.BOTTOM,
                   backgroundColor: AppColors.primary,
                   colorText: Colors.white,
@@ -196,8 +196,8 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
             const SizedBox(height: 16),
             AppSpeechInputWidget(
               controller: controller.noteTextController,
-              label: 'Voice Input',
-              hintText: 'Type or Speak your notes here',
+              label: 'voice_input'.tr,
+              hintText: 'type_or_speak_notes'.tr,
               height: 120,
             ),
             const SizedBox(height: 16),
@@ -215,9 +215,9 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
         titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
         contentPadding: const EdgeInsets.symmetric(horizontal: 24),
         actionsPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-        title: const Text(
-          'Select Layout',
-          style: TextStyle(
+        title: Text(
+          'select_layout'.tr,
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
@@ -227,9 +227,9 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'This is the recommended layout but you can change it if you want.',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
+            Text(
+              'recommended_layout_desc'.tr,
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
             const SizedBox(height: 24),
             Obx(() {
@@ -246,18 +246,18 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
                       children: [
                         RadioListTile<String>(
                           value: 'portrait',
-                          title: const Text(
-                            'Portrait (Vertical)',
-                            style: TextStyle(fontSize: 16, color: Colors.black87),
+                          title: Text(
+                            'portrait_vertical'.tr,
+                            style: const TextStyle(fontSize: 16, color: Colors.black87),
                           ),
                           activeColor: AppColors.info,
                           contentPadding: EdgeInsets.zero,
                         ),
                         RadioListTile<String>(
                           value: 'landscape',
-                          title: const Text(
-                            'Landscape (Horizontal)',
-                            style: TextStyle(fontSize: 16, color: Colors.black87),
+                          title: Text(
+                            'landscape_horizontal'.tr,
+                            style: const TextStyle(fontSize: 16, color: Colors.black87),
                           ),
                           activeColor: AppColors.info,
                           contentPadding: EdgeInsets.zero,
@@ -271,9 +271,9 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
                     onChanged: (val) {
                       if (val != null) controller.setAsDefault.value = val;
                     },
-                    title: const Text(
-                      'Set this orientation as default.',
-                      style: TextStyle(fontSize: 15, color: Colors.black87),
+                    title: Text(
+                      'set_orientation_default'.tr,
+                      style: const TextStyle(fontSize: 15, color: Colors.black87),
                     ),
                     activeColor: AppColors.info,
                     checkColor: Colors.white,
@@ -291,9 +291,9 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
               controller.saveAndApplySelectedOrientation();
               Navigator.of(context, rootNavigator: true).pop();
             },
-            child: const Text(
-              'APPLY',
-              style: TextStyle(
+            child: Text(
+              'apply'.tr,
+              style: const TextStyle(
                 color: AppColors.primary,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -314,26 +314,26 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
         return AlertDialog(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          title: const Text(
-            'Warning!!',
-            style: TextStyle(
+          title: Text(
+            'warning'.tr,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
           ),
-          content: const Text(
-            'Your registration formalities are pending, please complete first.',
-            style: TextStyle(fontSize: 14, color: Colors.black87),
+          content: Text(
+            'registration_pending_msg'.tr,
+            style: const TextStyle(fontSize: 14, color: Colors.black87),
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text(
-                'Okay',
-                style: TextStyle(
+              child: Text(
+                'okay'.tr,
+                style: const TextStyle(
                   color: AppColors.primary,
                   fontWeight: FontWeight.bold,
                 ),
@@ -343,9 +343,9 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text(
-                'Cancel',
-                style: TextStyle(
+              child: Text(
+                'cancel'.tr,
+                style: const TextStyle(
                   color: Colors.grey,
                   fontWeight: FontWeight.bold,
                 ),

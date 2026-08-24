@@ -16,7 +16,7 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CommonListAppBar(
-        title: 'Manage Patients',
+        title: 'manage_patients'.tr,
         doctorName: controller.doctorName,
         searchController: controller.searchController,
         onSearch: (val) => controller.searchPatients(),
@@ -34,12 +34,12 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _buildOrangeBtn(
-                    'Export list',
+                    'export_list'.tr,
                     () => _showContactSupportDialog(context),
                   ),
                   const SizedBox(width: 16),
                   _buildOrangeBtn(
-                    'Export patient',
+                    'export_patient'.tr,
                     () => _showContactSupportDialog(context),
                   ),
                 ],
@@ -51,7 +51,7 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
             return Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Text(
-                'Total Patients: ${controller.totalPatientsCount.value}',
+                '${'total_patients'.tr} ${controller.totalPatientsCount.value}',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -89,10 +89,10 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
               }
 
               if (controller.patients.isEmpty) {
-                return const Center(
+                return Center(
                   child: Text(
-                    'No patients found',
-                    style: TextStyle(
+                    'no_patients_found'.tr,
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
@@ -184,7 +184,7 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
     // Condition/disease string formatting
     final condition = patient.pastHistory.isNotEmpty
         ? patient.pastHistory
-        : 'None';
+        : 'none'.tr;
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -212,7 +212,7 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'MHC ID: ${patient.mhcId}',
+                  '${'mhc_id'.tr} ${patient.mhcId}',
                   style: const TextStyle(fontSize: 14, color: Colors.black87),
                 ),
                 if (patient.mhcEmail.isNotEmpty) ...[
@@ -225,9 +225,9 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
                 const SizedBox(height: 2),
                 Row(
                   children: [
-                    const Text(
-                      'Mobile No :',
-                      style: TextStyle(fontSize: 14, color: Colors.black87),
+                    Text(
+                      'mobile_no_label'.tr,
+                      style: const TextStyle(fontSize: 14, color: Colors.black87),
                     ),
                     const SizedBox(width: 4),
                     InkWell(
@@ -289,9 +289,9 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                   ),
-                  child: const Text(
-                    'View Details',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                  child: Text(
+                    'view_details'.tr,
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -309,26 +309,26 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
         return AlertDialog(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          title: const Text(
-            'Contact Support',
-            style: TextStyle(
+          title: Text(
+            'contact_support'.tr,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
           ),
-          content: const Text(
-            'To export patient lists or reports, please contact support.',
-            style: TextStyle(fontSize: 14, color: Colors.black87),
+          content: Text(
+            'contact_support_desc'.tr,
+            style: const TextStyle(fontSize: 14, color: Colors.black87),
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text(
-                'Okay',
-                style: TextStyle(
+              child: Text(
+                'okay'.tr,
+                style: const TextStyle(
                   color: AppColors.primary,
                   fontWeight: FontWeight.bold,
                 ),

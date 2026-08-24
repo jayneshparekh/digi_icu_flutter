@@ -30,9 +30,9 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Book Appointment',
-                style: TextStyle(
+              Text(
+                'book_appointment'.tr,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
@@ -69,9 +69,9 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
               child: TextField(
                 controller: searchController,
                 onChanged: (val) => controller.filterCategories(val),
-                decoration: const InputDecoration(
-                  hintText: 'Search',
-                  prefixIcon: Icon(Icons.search, color: AppColors.primary),
+                decoration: InputDecoration(
+                  hintText: 'search'.tr,
+                  prefixIcon: const Icon(Icons.search, color: AppColors.primary),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
@@ -92,13 +92,13 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                   ],
 
                   // Package categories list heading
-                  const Align(
+                  Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 12.0, left: 4.0),
+                      padding: const EdgeInsets.only(bottom: 12.0, left: 4.0),
                       child: Text(
-                        'Package Categories',
-                        style: TextStyle(
+                        'package_categories'.tr,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
@@ -128,10 +128,10 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
 
                     final list = controller.filteredCategories;
                     if (list.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Text(
-                          'No package categories found',
-                          style: TextStyle(color: Colors.grey, fontSize: 14),
+                          'no_package_categories_found'.tr,
+                          style: const TextStyle(color: Colors.grey, fontSize: 14),
                         ),
                       );
                     }
@@ -203,9 +203,9 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'One time consultation',
-                      style: TextStyle(
+                    Text(
+                      'one_time_consultation'.tr,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -231,9 +231,9 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text(
-                    'Online Pay',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  child: Text(
+                    'online_pay'.tr,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
@@ -247,7 +247,7 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                 children: [
                   Expanded(
                     child: _buildSelectorButton(
-                      text: 'Free',
+                      text: 'free'.tr,
                       isSelected: activeType == 'free',
                       onTap: () => controller.selectPaymentType('free'),
                     ),
@@ -255,7 +255,7 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: _buildSelectorButton(
-                      text: 'Cash/Wallet',
+                      text: 'cash_wallet'.tr,
                       isSelected: activeType == 'cash',
                       onTap: () => controller.selectPaymentType('cash'),
                     ),
@@ -282,8 +282,8 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                           ),
                           child: TextField(
                             controller: controller.promoCodeController,
-                            decoration: const InputDecoration(
-                              hintText: 'Promo Code',
+                            decoration: InputDecoration(
+                              hintText: 'promo_code'.tr,
                               border: InputBorder.none,
                               contentPadding: EdgeInsets.symmetric(horizontal: 12),
                             ),
@@ -300,7 +300,7 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: const Text('Submit'),
+                        child: Text('submit'.tr),
                       ),
                     ],
                   ),

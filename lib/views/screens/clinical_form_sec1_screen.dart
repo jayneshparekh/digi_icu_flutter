@@ -17,8 +17,8 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
           Get.snackbar(
-            'Action Required',
-            "You cannot go back from this form.",
+            'action_required'.tr,
+            'cannot_go_back'.tr,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.orange,
             colorText: Colors.white,
@@ -39,7 +39,7 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                         ? controller.patientName
                         : controller.patientName.isNotEmpty
                             ? controller.patientName
-                            : 'Patient Name',
+                            : 'patient_name_default'.tr,
                     style: const TextStyle(
                       color: Colors.black87,
                       fontSize: 16,
@@ -66,13 +66,13 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     AppFormSectionHeader(
-                      subtitle: 'Clinical Form Section 1',
-                      title: 'BP, Oxygen Level & Weight',
+                      subtitle: 'clinical_form_sec1'.tr,
+                      title: 'bp_oxygen_weight'.tr,
                     ),
                     const SizedBox(height: 24),
 
                     // --- SECTION 2: 1st BP ?* ---
-                    _buildSectionHeader('2. 1st BP ?*'),
+                    _buildSectionHeader('first_bp_question'.tr),
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,10 +90,10 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                                     onChanged: (val) => controller.toggleBPApparatus(!(val ?? false)),
                                     activeColor: AppColors.primary,
                                   ),
-                                  const Expanded(
+                                  Expanded(
                                     child: Text(
-                                      "I Don't have BP Apparatus?",
-                                      style: TextStyle(fontSize: 13, color: Colors.black87),
+                                      'no_bp_apparatus'.tr,
+                                      style: const TextStyle(fontSize: 13, color: Colors.black87),
                                     ),
                                   ),
                                 ],
@@ -106,10 +106,10 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                                       child: TextField(
                                         controller: controller.systolicController,
                                         keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                          labelText: 'Systolic BP',
-                                          border: OutlineInputBorder(),
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                        decoration: InputDecoration(
+                                          labelText: 'systolic_bp'.tr,
+                                          border: const OutlineInputBorder(),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                         ),
                                       ),
                                     ),
@@ -118,10 +118,10 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                                       child: TextField(
                                         controller: controller.diastolicController,
                                         keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                          labelText: 'Diastolic BP',
-                                          border: OutlineInputBorder(),
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                        decoration: InputDecoration(
+                                          labelText: 'diastolic_bp'.tr,
+                                          border: const OutlineInputBorder(),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                         ),
                                       ),
                                     ),
@@ -130,10 +130,10 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                                       child: TextField(
                                         controller: controller.pulseRateController,
                                         keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                          labelText: 'Pulse Rate',
-                                          border: OutlineInputBorder(),
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                        decoration: InputDecoration(
+                                          labelText: 'pulse_rate'.tr,
+                                          border: const OutlineInputBorder(),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                         ),
                                       ),
                                     ),
@@ -154,7 +154,7 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                     const Divider(height: 32),
 
                     // --- SECTION 3: Oxygen Level ---
-                    _buildSectionHeader('3. What is your Oxygen Level(SpO2)?'),
+                    _buildSectionHeader('oxygen_level_question'.tr),
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,13 +174,13 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                                       value: 'Yes',
                                       activeColor: AppColors.primary,
                                     ),
-                                    const Text('Yes'),
+                                    Text('yes'.tr),
                                     const SizedBox(width: 16),
                                     Radio<String>(
                                       value: 'No',
                                       activeColor: AppColors.primary,
                                     ),
-                                    const Text('No'),
+                                    Text('no'.tr),
                                   ],
                                 ),
                               ),
@@ -192,10 +192,10 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                                       child: TextField(
                                         controller: controller.spo2Controller,
                                         keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                          labelText: 'Spo2',
-                                          border: OutlineInputBorder(),
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                        decoration: InputDecoration(
+                                          labelText: 'spo2'.tr,
+                                          border: const OutlineInputBorder(),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                         ),
                                       ),
                                     ),
@@ -216,7 +216,7 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                     const Divider(height: 32),
 
                     // --- SECTION 4: Height & Weight ---
-                    _buildSectionHeader('4. Height and Weight'),
+                    _buildSectionHeader('height_weight'.tr),
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,10 +230,10 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                                 child: TextField(
                                   controller: controller.heightController,
                                   keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Height in cm',
-                                    border: OutlineInputBorder(),
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  decoration: InputDecoration(
+                                    labelText: 'height_cm'.tr,
+                                    border: const OutlineInputBorder(),
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   ),
                                 ),
                               ),
@@ -242,10 +242,10 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                                 child: TextField(
                                   controller: controller.weightController,
                                   keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Weight in kg',
-                                    border: OutlineInputBorder(),
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  decoration: InputDecoration(
+                                    labelText: 'weight_kg'.tr,
+                                    border: const OutlineInputBorder(),
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   ),
                                 ),
                               ),
@@ -258,7 +258,7 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
 
                     // Next Button
                     AppPrimaryButton(
-                      label: 'Next',
+                      label: 'next'.tr,
                       onPressed: () => controller.submit(),
                       backgroundColor: AppColors.success,
                       width: 150,
