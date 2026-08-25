@@ -1,4 +1,4 @@
-﻿import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -69,10 +69,10 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
                       ),
                       const SizedBox(width: 12),
                       // Center: Digi ICU title
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          'Digi ICU',
-                          style: TextStyle(
+                          'digi_icu'.tr,
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                             color: Colors.black87,
@@ -118,7 +118,7 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
                   const SizedBox(height: 16),
                   // Footer copyright notice inside header
                   Text(
-                    '@ Medqul HealthTech Pvt Ltd, Mumbai, India',
+                    'copyright_text'.tr,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey.shade400,
@@ -136,46 +136,46 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
                   bottom: MediaQuery.of(context).padding.bottom,
                 ),
                 children: [
-                  _buildMenuItem('Patient List', () {
+                  _buildMenuItem('menu_patient_list'.tr, () {
                     _handleMenuNavigation('/patient-list');
                   }),
-                  _buildMenuItem('Full Screening', () {
+                  _buildMenuItem('menu_full_screening'.tr, () {
                     _handlePlaceholderAction();
                   }),
-                  _buildMenuItem('Short Screening', () {
+                  _buildMenuItem('menu_short_screening'.tr, () {
                     _handlePlaceholderAction();
                   }),
-                  _buildMenuItem('Manage Patients', () {
+                  _buildMenuItem('menu_manage_patients'.tr, () {
                     _handleMenuNavigation('/manage-patients');
                   }),
-                  _buildMenuItem('Add Templates', () {
+                  _buildMenuItem('menu_add_templates'.tr, () {
                     _handlePlaceholderAction();
                   }),
-                  _buildMenuItem('My Defaults', () {
+                  _buildMenuItem('menu_my_defaults'.tr, () {
                     _handlePlaceholderAction();
                   }),
-                  _buildMenuItem('Add Slots', () {
+                  _buildMenuItem('menu_add_slots'.tr, () {
                     _handlePlaceholderAction();
                   }),
-                  _buildMenuItem('Add PHE', () {
+                  _buildMenuItem('menu_add_phe'.tr, () {
                     _handlePlaceholderAction();
                   }),
-                  _buildMenuItem('Universal Patient Access', () {
+                  _buildMenuItem('menu_universal_patient_access'.tr, () {
                     _handlePlaceholderAction();
                   }),
-                  _buildMenuItem('About app', () {
+                  _buildMenuItem('menu_about_app'.tr, () {
                     _handlePlaceholderAction();
                   }),
-                  _buildMenuItem('Home visit', () {
+                  _buildMenuItem('menu_home_visit'.tr, () {
                     _handlePlaceholderAction();
                   }),
-                  _buildMenuItem('MH Clinic - Tele ECG', () {
+                  _buildMenuItem('menu_mh_clinic_tele_ecg'.tr, () {
                     _handlePlaceholderAction();
                   }),
-                  _buildMenuItem('My IPD pt', () {
+                  _buildMenuItem('menu_my_ipd_pt'.tr, () {
                     _handlePlaceholderAction();
                   }),
-                  _buildMenuItem('Logout', () {
+                  _buildMenuItem('menu_logout'.tr, () {
                     Get.back();
                     controller.logout();
                   }),
@@ -209,26 +209,26 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
       AlertDialog(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        title: const Text(
-          'Warning!!',
-          style: TextStyle(
+        title: Text(
+          'warning_title'.tr,
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),
         ),
-        content: const Text(
-          'Your registration formalities are pending, please complete first.',
-          style: TextStyle(fontSize: 14, color: Colors.black87),
+        content: Text(
+          'registration_pending'.tr,
+          style: const TextStyle(fontSize: 14, color: Colors.black87),
         ),
         actions: [
           TextButton(
             onPressed: () {
               Get.back();
             },
-            child: const Text(
-              'Okay',
-              style: TextStyle(
+            child: Text(
+              'okay'.tr,
+              style: const TextStyle(
                 color: AppColors.primary,
                 fontWeight: FontWeight.bold,
               ),
@@ -238,9 +238,9 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
             onPressed: () {
               Get.back();
             },
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+            child: Text(
+              'cancel'.tr,
+              style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
             ),
           ),
         ],

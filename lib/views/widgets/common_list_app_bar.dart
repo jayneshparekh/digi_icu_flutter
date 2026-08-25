@@ -67,7 +67,7 @@ class CommonListAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   Obx(() {
                     return Text(
-                      'Dr. ${doctorName.value}',
+                      '${'dr_prefix'.tr}${doctorName.value}',
                       style: const TextStyle(
                         color: Colors.black54,
                         fontSize: 12,
@@ -94,9 +94,9 @@ class CommonListAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: TextField(
                   controller: searchController,
                   onSubmitted: onSearch,
-                  decoration: const InputDecoration(
-                    hintText: 'Search Patient',
-                    hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
+                  decoration: InputDecoration(
+                    hintText: 'search_patient'.tr,
+                    hintStyle: const TextStyle(color: Colors.grey, fontSize: 13),
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: 8,
                       vertical: 10,

@@ -339,7 +339,6 @@ class AppTranslations extends Translations {
           'target_bp': 'Target BP',
           'baseline_bp': 'Baseline BP',
           'sugar': 'Sugar',
-          'hba1c': 'HBA1C',
           'weight_bmi': 'Weight & BMI',
           'height_weight_bmi': 'Height, Weight & BMI',
           'creatinine_label': 'Creatinine',
@@ -385,7 +384,6 @@ class AppTranslations extends Translations {
           // Choose Form Option Dialog
           'choose_consultation_type': 'Choose Consultation Type',
           'no_forms_available': 'No forms available',
-          'cancel': 'Cancel',
 
           // Confirm Patient Dialog
           'confirm_patient': 'Confirm Patient',
@@ -402,6 +400,51 @@ class AppTranslations extends Translations {
           'patient_important': 'Patient Important',
           'choose_rating': 'Choose your rating',
           'choose_rating_validation': 'Please choose a rating before submitting.',
+
+          // App Drawing Canvas
+          'select_color': 'Select Color',
+          'stroke_width': 'Stroke Width',
+          'thin': 'Thin',
+          'thick': 'Thick',
+          'pen': 'Pen',
+          'eraser': 'Eraser',
+          'color_palette': 'Color Palette',
+          'line_width': 'Line Width',
+          'undo': 'Undo',
+          'redo': 'Redo',
+          'clear_canvas': 'Clear Canvas',
+          'save_png': 'Save PNG',
+
+          // App Speech Input Widget
+          'type_speak_notes_hint': 'Type or Speak your notes here',
+          'lang_english': 'English',
+          'lang_hindi': 'Hindi (हिंदी)',
+          'lang_gujarati': 'Gujarati (ગુજરાતી)',
+          'lang_marathi': 'Marathi (मराठी)',
+
+          // Doctor Side Menu & Common App Bar
+          'dr_prefix': 'Dr. ',
+          'search_patient': 'Search Patient',
+          'copyright_text': '@ Medqul HealthTech Pvt Ltd, Mumbai, India',
+          'menu_patient_list': 'Patient List',
+          'menu_full_screening': 'Full Screening',
+          'menu_short_screening': 'Short Screening',
+          'menu_manage_patients': 'Manage Patients',
+          'menu_add_templates': 'Add Templates',
+          'menu_my_defaults': 'My Defaults',
+          'menu_add_slots': 'Add Slots',
+          'menu_add_phe': 'Add PHE',
+          'menu_universal_patient_access': 'Universal Patient Access',
+          'menu_about_app': 'About app',
+          'menu_home_visit': 'Home visit',
+          'menu_mh_clinic_tele_ecg': 'MH Clinic - Tele ECG',
+          'menu_my_ipd_pt': 'My IPD pt',
+          'menu_logout': 'Logout',
+          'warning_title': 'Warning!!',
+          'registration_pending': 'Your registration formalities are pending, please complete first.',
+
+          // Patient Dashboard Widgets
+          'mh_clinic_promo': 'MH Clinic Promotion Banner',
 
           // Primary Care Screen
           'primary_care': 'Primary Care',
@@ -436,7 +479,6 @@ class AppTranslations extends Translations {
           'diagnosis_label': 'Diagnosis:  ',
           'na': 'NA',
           'other_diagnosis': 'Other Diagnosis',
-          'hypertension': 'Hypertension',
           'essential': 'Essential',
           'secondary': 'Secondary',
           'white_coat': 'White coat',

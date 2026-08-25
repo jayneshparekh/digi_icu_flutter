@@ -1,7 +1,8 @@
-﻿import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import '../../models/response/patients/slider_response.dart';
 
 class PatientDashboardCircleBtn extends StatelessWidget {
@@ -212,9 +213,9 @@ class _PatientDashboardSliderState extends State<PatientDashboardSlider> {
           borderRadius: BorderRadius.circular(15),
         ),
         alignment: Alignment.center,
-        child: const Text(
-          'MH Clinic Promotion Banner',
-          style: TextStyle(
+        child: Text(
+          'mh_clinic_promo'.tr,
+          style: const TextStyle(
             color: AppColors.primary,
             fontWeight: FontWeight.bold,
           ),

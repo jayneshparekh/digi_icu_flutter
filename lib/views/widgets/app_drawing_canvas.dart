@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:get/get.dart';
 
 /// Representation of a single drawn stroke/path on the canvas.
 class DrawingPath {
@@ -205,9 +206,9 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Select Color',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Text(
+                  'select_color'.tr,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
                 Wrap(
@@ -267,14 +268,14 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text(
-                      'Stroke Width',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    Text(
+                      'stroke_width'.tr,
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        const Text('Thin'),
+                        Text('thin'.tr),
                         Expanded(
                           child: Slider(
                             value: _selectedStrokeWidth,
@@ -291,7 +292,7 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
                             },
                           ),
                         ),
-                        const Text('Thick'),
+                        Text('thick'.tr),
                       ],
                     ),
                     Text('${_selectedStrokeWidth.toStringAsFixed(1)} px'),
@@ -325,7 +326,7 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
         children: [
           _buildIconButton(
             assetName: 'ink_pen.svg',
-            tooltip: 'Pen',
+            tooltip: 'pen'.tr,
             isActive: !_isEraserMode,
             activeColor: _selectedColor,
             onPressed: () {
@@ -336,7 +337,7 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
           ),
           _buildIconButton(
             assetName: 'ink_eraser.svg',
-            tooltip: 'Eraser',
+            tooltip: 'eraser'.tr,
             isActive: _isEraserMode,
             onPressed: () {
               setState(() {
@@ -346,34 +347,34 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
           ),
           _buildIconButton(
             assetName: 'palette.svg',
-            tooltip: 'Color Palette',
+            tooltip: 'color_palette'.tr,
             onPressed: _showColorPicker,
           ),
           _buildIconButton(
             assetName: 'line_weight.svg',
-            tooltip: 'Line Width',
+            tooltip: 'line_width'.tr,
             onPressed: _showStrokeWidthPicker,
           ),
           _buildIconButton(
             assetName: 'ic_undo.svg',
-            tooltip: 'Undo',
+            tooltip: 'undo'.tr,
             isEnabled: _paths.isNotEmpty,
             onPressed: _undo,
           ),
           _buildIconButton(
             assetName: 'ic_redo.svg',
-            tooltip: 'Redo',
+            tooltip: 'redo'.tr,
             isEnabled: _undoStack.isNotEmpty,
             onPressed: _redo,
           ),
           _buildIconButton(
             assetName: 'delete.svg',
-            tooltip: 'Clear Canvas',
+            tooltip: 'clear_canvas'.tr,
             onPressed: _clear,
           ),
           _buildIconButton(
             assetName: 'ic_save.svg',
-            tooltip: 'Save PNG',
+            tooltip: 'save_png'.tr,
             onPressed: _handleSave,
           ),
         ],

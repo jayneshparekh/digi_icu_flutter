@@ -1,6 +1,7 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 /// Language model definition for Speech-To-Text selection.
@@ -23,7 +24,7 @@ class AppSpeechInputWidget extends StatefulWidget {
   final String? label;
 
   /// Hint text if no child is provided.
-  final String hintText;
+  final String? hintText;
 
   /// Custom height for the text area box.
   final double? height;
@@ -50,7 +51,7 @@ class AppSpeechInputWidget extends StatefulWidget {
     super.key,
     required this.controller,
     this.label,
-    this.hintText = 'Type or Speak your notes here',
+    this.hintText,
     this.height,
     this.width,
     this.maxLines = 4,
@@ -79,11 +80,11 @@ class _AppSpeechInputWidgetState extends State<AppSpeechInputWidget> {
     super.initState();
     _speech = stt.SpeechToText();
     _languages = widget.supportedLanguages ??
-        const [
-          SpeechLanguage(name: 'English', localeId: 'en_IN'),
-          SpeechLanguage(name: 'Hindi (हिंदी)', localeId: 'hi_IN'),
-          SpeechLanguage(name: 'Gujarati (ગુજરાતી)', localeId: 'gu_IN'),
-          SpeechLanguage(name: 'Marathi (मराठी)', localeId: 'mr_IN'),
+        [
+          SpeechLanguage(name: 'lang_english'.tr, localeId: 'en_IN'),
+          SpeechLanguage(name: 'lang_hindi'.tr, localeId: 'hi_IN'),
+          SpeechLanguage(name: 'lang_gujarati'.tr, localeId: 'gu_IN'),
+          SpeechLanguage(name: 'lang_marathi'.tr, localeId: 'mr_IN'),
         ];
 
     _selectedLanguage = _languages.firstWhere(
@@ -326,7 +327,7 @@ class _AppSpeechInputWidgetState extends State<AppSpeechInputWidget> {
         maxLines: widget.maxLines,
         onChanged: widget.onChanged,
         decoration: InputDecoration(
-          hintText: widget.hintText,
+          hintText: widget.hintText ?? 'type_speak_notes_hint'.tr,
           hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
           border: InputBorder.none,
           isDense: true,
