@@ -25,7 +25,7 @@ class ChooseFormOptionDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Row(
         children: [
-          const Icon(Icons.assignment, color: AppColors.primary),
+          Icon(Icons.assignment, color: AppColors.teal),
           const SizedBox(width: 8),
           Text(
             'choose_consultation_type'.tr,
@@ -38,7 +38,7 @@ class ChooseFormOptionDialog extends StatelessWidget {
         child: forms.isEmpty
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('no_forms_available'.tr, style: const TextStyle(color: Colors.grey)),
+                child: Text('no_forms_available'.tr, style: TextStyle(color: AppColors.medicalGray)),
               )
             : ListView.builder(
                 shrinkWrap: true,
@@ -56,9 +56,9 @@ class ChooseFormOptionDialog extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryBg,
+                          color: AppColors.lightGray,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                          border: Border.all(color: AppColors.teal.withValues(alpha: 0.2)),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -66,14 +66,14 @@ class ChooseFormOptionDialog extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 formName,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: AppColors.primary,
+                                  color: AppColors.teal,
                                 ),
                               ),
                             ),
-                            const Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.primary),
+                            Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.teal),
                           ],
                         ),
                       ),
@@ -85,7 +85,7 @@ class ChooseFormOptionDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Get.back(),
-          child: Text('cancel'.tr, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+          child: Text('cancel'.tr, style: TextStyle(color: AppColors.medicalGray, fontWeight: FontWeight.bold)),
         ),
       ],
     );

@@ -10,7 +10,7 @@ class LoginScreen extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -45,18 +45,18 @@ class LoginScreen extends GetView<LoginController> {
                             decoration: InputDecoration(
                               labelText: 'mobile_login_id'.tr,
                               labelStyle: TextStyle(
-                                color: Colors.grey.shade600,
+                                color: AppColors.coolGray,
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
-                                  color: Colors.grey.shade400,
+                                  color: AppColors.medicalGray,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                  color: Colors.teal,
+                                borderSide: BorderSide(
+                                  color: AppColors.teal,
                                   width: 2,
                                 ),
                               ),
@@ -72,18 +72,18 @@ class LoginScreen extends GetView<LoginController> {
                             decoration: InputDecoration(
                               labelText: 'password'.tr,
                               labelStyle: TextStyle(
-                                color: Colors.grey.shade600,
+                                color: AppColors.coolGray,
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
-                                  color: Colors.grey.shade400,
+                                  color: AppColors.medicalGray,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                  color: Colors.teal,
+                                borderSide: BorderSide(
+                                  color: AppColors.teal,
                                   width: 2,
                                 ),
                               ),
@@ -99,7 +99,7 @@ class LoginScreen extends GetView<LoginController> {
                             child: Text(
                               'forgot_password'.tr,
                               style: TextStyle(
-                                color: Colors.grey.shade800,
+                                color: AppColors.navy,
                                 fontWeight: FontWeight.w600,
                                 decoration: TextDecoration.underline,
                               ),
@@ -119,12 +119,12 @@ class LoginScreen extends GetView<LoginController> {
                                     ? controller.login
                                     : null,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.loginButtonBg,
+                                  backgroundColor: AppColors.blue,
                                   disabledBackgroundColor:
-                                      AppColors.loginButtonBg
+                                      AppColors.blue
                                           .withValues(alpha: 0.5),
-                                  foregroundColor: Colors.white,
-                                  disabledForegroundColor: Colors.white70,
+                                  foregroundColor: AppColors.white,
+                                  disabledForegroundColor: AppColors.white.withValues(alpha: 0.7),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -132,7 +132,7 @@ class LoginScreen extends GetView<LoginController> {
                                 ),
                                 child: isLoading
                                     ? const CircularProgressIndicator(
-                                        color: Colors.white,
+                                        color: AppColors.white,
                                       )
                                     : Text(
                                         'login_btn'.tr,

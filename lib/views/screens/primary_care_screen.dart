@@ -33,15 +33,15 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
             'action_required'.tr,
             'submit_form_to_proceed'.tr,
             snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.orange,
-            colorText: Colors.white,
+            backgroundColor: AppColors.warning,
+            colorText: AppColors.white,
           );
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         appBar: AppBar(
-          backgroundColor: AppColors.primary,
+          backgroundColor: AppColors.teal,
           elevation: 0,
           automaticallyImplyLeading: false,
           title: Obx(() {
@@ -56,8 +56,8 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
               children: [
                 Text(
                   'primary_care'.tr,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: AppColors.white,
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
                   ),
@@ -65,8 +65,8 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                 if (subtitle.isNotEmpty)
                   Text(
                     subtitle,
-                    style: const TextStyle(
-                      color: Colors.white70,
+                    style: TextStyle(
+                      color: AppColors.white.withValues(alpha: 0.7),
                       fontSize: 12,
                     ),
                   ),
@@ -85,10 +85,10 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                   // --- Blood Pressure Section ---
                   Text(
                     'blood_pressure'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -97,11 +97,11 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                       Checkbox(
                         value: !controller.haveBPApparatus.value,
                         onChanged: (val) => controller.toggleBPApparatus(!(val ?? false)),
-                        activeColor: AppColors.primary,
+                        activeColor: AppColors.teal,
                       ),
                       Text(
                         'no_bp_apparatus'.tr,
-                        style: const TextStyle(fontSize: 14, color: Colors.black87),
+                        style: TextStyle(fontSize: 14, color: AppColors.navy),
                       ),
                     ],
                   ),
@@ -157,10 +157,10 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                   // --- Blood Sugar Section ---
                   Text(
                     'blood_sugar_level'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -169,12 +169,12 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                       Checkbox(
                         value: !controller.haveGlucometer.value,
                         onChanged: (val) => controller.toggleGlucometer(!(val ?? false)),
-                        activeColor: AppColors.primary,
+                        activeColor: AppColors.teal,
                       ),
                       Expanded(
                         child: Text(
                           'no_glucometer'.tr,
-                          style: const TextStyle(fontSize: 14, color: Colors.black87),
+                          style: TextStyle(fontSize: 14, color: AppColors.navy),
                         ),
                       ),
                     ],
@@ -231,10 +231,10 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                   // --- Stethoscope Recording ---
                   Text(
                     'stethoscope_recording'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -244,8 +244,8 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                         child: ElevatedButton(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: Colors.white,
+                            backgroundColor: AppColors.teal,
+                            foregroundColor: AppColors.white,
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6),
@@ -259,8 +259,8 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                         child: ElevatedButton(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: Colors.white,
+                            backgroundColor: AppColors.teal,
+                            foregroundColor: AppColors.white,
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6),
@@ -274,8 +274,8 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                         child: ElevatedButton(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: Colors.white,
+                            backgroundColor: AppColors.teal,
+                            foregroundColor: AppColors.white,
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6),
@@ -291,10 +291,10 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                   // --- Explain problem in brief Checklist ---
                   Text(
                     'explain_problem_brief'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -322,12 +322,12 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                               }
                               controller.toggleSymptom(symptom, selected ?? false);
                             },
-                            activeColor: AppColors.primary,
+                            activeColor: AppColors.teal,
                           ),
                           Expanded(
                             child: Text(
                               symptom.replaceAll(' ', '_').toLowerCase().tr,
-                              style: const TextStyle(fontSize: 13, color: Colors.black87),
+                              style: TextStyle(fontSize: 13, color: AppColors.navy),
                             ),
                           ),
                         ],
@@ -353,12 +353,12 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                       Container(
                         width: 42,
                         height: 42,
-                        decoration: const BoxDecoration(
-                          color: AppColors.primary,
+                        decoration: BoxDecoration(
+                          color: AppColors.teal,
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          icon: const Icon(Icons.mic, color: Colors.white, size: 20),
+                          icon: Icon(Icons.mic, color: AppColors.white, size: 20),
                           onPressed: () {
                             // Speech to text trigger
                           },
@@ -384,10 +384,10 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                   // --- Image Upload Section ---
                   Text(
                     'upload_prescription_images'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -396,8 +396,8 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                       ElevatedButton.icon(
                         onPressed: () => _showImageSourceDialog(context),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: Colors.white,
+                          backgroundColor: AppColors.teal,
+                          foregroundColor: AppColors.white,
                         ),
                         icon: const Icon(Icons.add_a_photo),
                         label: Text('add_photo'.tr),
@@ -423,7 +423,7 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                                 height: 100,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: Colors.grey.shade300),
+                                  border: Border.all(color: AppColors.medicalGray),
                                 ),
                                 clipBehavior: Clip.antiAlias,
                                 child: Image.file(
@@ -437,14 +437,14 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                                 child: GestureDetector(
                                   onTap: () => controller.removeImage(index),
                                   child: Container(
-                                    decoration: const BoxDecoration(
-                                      color: Colors.black54,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.coolGray,
                                       shape: BoxShape.circle,
                                     ),
                                     padding: const EdgeInsets.all(4),
-                                    child: const Icon(
+                                    child: Icon(
                                       Icons.close,
-                                      color: Colors.white,
+                                      color: AppColors.white,
                                       size: 14,
                                     ),
                                   ),
@@ -464,8 +464,8 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                     child: ElevatedButton(
                       onPressed: () => controller.submitForm(),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.teal,
+                        foregroundColor: AppColors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -491,7 +491,7 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
   void _showImageSourceDialog(BuildContext context) {
     Get.bottomSheet(
       Container(
-        color: Colors.white,
+        color: AppColors.white,
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -502,7 +502,7 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
             ),
             const SizedBox(height: 16),
             ListTile(
-              leading: const Icon(Icons.photo_library, color: AppColors.primary),
+              leading: Icon(Icons.photo_library, color: AppColors.teal),
               title: Text('gallery'.tr),
               onTap: () {
                 Get.back();
@@ -510,7 +510,7 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.camera_alt, color: AppColors.primary),
+              leading: Icon(Icons.camera_alt, color: AppColors.teal),
               title: Text('camera'.tr),
               onTap: () {
                 Get.back();

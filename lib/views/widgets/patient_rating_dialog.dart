@@ -42,10 +42,10 @@ class _PatientRatingDialogState extends State<PatientRatingDialog> {
                 Expanded(
                   child: Text(
                     'patient_important'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.primary,
+                      color: AppColors.teal,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -54,13 +54,13 @@ class _PatientRatingDialogState extends State<PatientRatingDialog> {
                   onTap: () => Get.back(),
                   child: Container(
                     padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
+                    decoration: BoxDecoration(
+                      color: AppColors.error,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.close,
-                      color: Colors.white,
+                      color: AppColors.white,
                       size: 16,
                     ),
                   ),
@@ -71,10 +71,10 @@ class _PatientRatingDialogState extends State<PatientRatingDialog> {
             // Header Choose your rating
             Text(
               'choose_rating'.tr,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: AppColors.navy,
               ),
               textAlign: TextAlign.center,
             ),
@@ -101,7 +101,7 @@ class _PatientRatingDialogState extends State<PatientRatingDialog> {
                         children: [
                           Radio<String>(
                             value: rate,
-                            activeColor: AppColors.primary,
+                            activeColor: AppColors.teal,
                             visualDensity: VisualDensity.compact,
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
@@ -111,7 +111,7 @@ class _PatientRatingDialogState extends State<PatientRatingDialog> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                              color: isSelected ? AppColors.primary : Colors.black87,
+                              color: isSelected ? AppColors.teal : AppColors.navy,
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -135,13 +135,13 @@ class _PatientRatingDialogState extends State<PatientRatingDialog> {
                   } else {
                     Get.rawSnackbar(
                       message: 'choose_rating_validation'.tr,
-                      backgroundColor: Colors.red,
+                      backgroundColor: AppColors.error,
                     );
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
+                  backgroundColor: AppColors.teal,
+                  foregroundColor: AppColors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6),
                   ),

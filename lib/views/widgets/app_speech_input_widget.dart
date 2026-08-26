@@ -237,7 +237,7 @@ class _AppSpeechInputWidgetState extends State<AppSpeechInputWidget> {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey.shade700,
+                color: AppColors.coolGray,
               ),
             ),
             const SizedBox(height: 6),
@@ -258,16 +258,16 @@ class _AppSpeechInputWidgetState extends State<AppSpeechInputWidget> {
         DropdownButton<SpeechLanguage>(
           value: _selectedLanguage,
           underline: const SizedBox.shrink(),
-          icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
+          icon: Icon(Icons.arrow_drop_down, color: AppColors.medicalGray),
           items: _languages.map((SpeechLanguage lang) {
             return DropdownMenuItem<SpeechLanguage>(
               value: lang,
               child: Text(
                 lang.name,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black87,
+                  color: AppColors.navy,
                 ),
               ),
             );
@@ -283,10 +283,10 @@ class _AppSpeechInputWidgetState extends State<AppSpeechInputWidget> {
             height: 44,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: _isListening ? Colors.red : AppColors.primary,
+              color: _isListening ? AppColors.error : AppColors.teal,
               boxShadow: [
                 BoxShadow(
-                  color: (_isListening ? Colors.red : AppColors.primary)
+                  color: (_isListening ? AppColors.error : AppColors.teal)
                       .withValues(alpha: 0.3),
                   blurRadius: 6,
                   offset: const Offset(0, 2),
@@ -299,7 +299,7 @@ class _AppSpeechInputWidgetState extends State<AppSpeechInputWidget> {
                 width: 22,
                 height: 22,
                 colorFilter: const ColorFilter.mode(
-                  Colors.white,
+                  AppColors.white,
                   BlendMode.srcIn,
                 ),
               ),
@@ -315,10 +315,10 @@ class _AppSpeechInputWidgetState extends State<AppSpeechInputWidget> {
       height: widget.height,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: _isListening ? Colors.red : Colors.grey.shade400,
+          color: _isListening ? AppColors.error : AppColors.medicalGray,
           width: _isListening ? 1.5 : 1.0,
         ),
       ),
@@ -328,7 +328,7 @@ class _AppSpeechInputWidgetState extends State<AppSpeechInputWidget> {
         onChanged: widget.onChanged,
         decoration: InputDecoration(
           hintText: widget.hintText ?? 'type_speak_notes_hint'.tr,
-          hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+          hintStyle: TextStyle(color: AppColors.medicalGray, fontSize: 14),
           border: InputBorder.none,
           isDense: true,
           contentPadding: EdgeInsets.zero,

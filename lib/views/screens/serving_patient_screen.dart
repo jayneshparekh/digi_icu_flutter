@@ -28,7 +28,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.grey),
+                    icon: Icon(Icons.close, color: AppColors.medicalGray),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -38,7 +38,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                 width: 250,
                 height: 250,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: AppColors.medicalGray),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: ClipRRect(
@@ -48,15 +48,15 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                           qrCodeUrl,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
-                              const Center(child: Icon(Icons.qr_code, size: 100, color: Colors.grey)),
+                              const Center(child: Icon(Icons.qr_code, size: 100, color: AppColors.medicalGray)),
                         )
-                      : const Center(child: Icon(Icons.qr_code, size: 100, color: Colors.grey)),
+                      : const Center(child: Icon(Icons.qr_code, size: 100, color: AppColors.medicalGray)),
                 ),
               ),
               const SizedBox(height: 16),
               Text(
                 '${'mhc_id_label'.tr}${controller.mhcId}',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.navy),
               ),
             ],
           ),
@@ -68,7 +68,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
   Widget _buildTopActionButton({
     required String svgName,
     required VoidCallback onTap,
-    Color bg = AppColors.primary,
+    Color bg = AppColors.teal,
     bool visible = true,
   }) {
     if (!visible) return const SizedBox.shrink();
@@ -87,7 +87,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
             padding: const EdgeInsets.all(8.0),
             child: SvgPicture.asset(
               'assets/icons/svg/$svgName.svg',
-              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(AppColors.white, BlendMode.srcIn),
               fit: BoxFit.contain,
             ),
           ),
@@ -103,7 +103,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
   }) {
     return Obx(() {
       final isSelected = controller.currentTab.value == tabName;
-      final bg = isSelected ? const Color(0xFFFF5722) : AppColors.primary;
+      final bg = isSelected ? const Color(0xFFFF5722) : AppColors.teal;
       return Expanded(
         child: Tooltip(
           message: tooltip,
@@ -116,7 +116,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                 padding: const EdgeInsets.all(12.0),
                 child: SvgPicture.asset(
                   'assets/icons/svg/$svgName.svg',
-                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  colorFilter: const ColorFilter.mode(AppColors.white, BlendMode.srcIn),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -130,7 +130,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: AppColors.lightGray,
       body: SafeArea(
         child: Obx(() {
           final isPatientView = controller.userType.value == 'Patient' || controller.fromPatient;
@@ -142,7 +142,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                 children: [
                   // Top Bar Layout
                   Container(
-                    color: Colors.white,
+                    color: AppColors.white,
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
@@ -161,17 +161,17 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey.shade300),
+                                    border: Border.all(color: AppColors.medicalGray),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
                                   child: Text(
                                     '${controller.fullName} / ${controller.age} / ${controller.gender} / ${controller.mhcId} / ★ ${controller.patientRating.value}'
                                         .toUpperCase(),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
+                                      color: AppColors.navy,
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -186,7 +186,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                                 width: 38,
                                 height: 38,
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey.shade300),
+                                  border: Border.all(color: AppColors.medicalGray),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: ClipRRect(
@@ -196,9 +196,9 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                                           controller.qrCode,
                                           fit: BoxFit.cover,
                                           errorBuilder: (context, error, stackTrace) =>
-                                              const Icon(Icons.qr_code, size: 24, color: Colors.black87),
+                                              Icon(Icons.qr_code, size: 24, color: AppColors.navy),
                                         )
-                                      : const Icon(Icons.qr_code, size: 24, color: Colors.black87),
+                                      : Icon(Icons.qr_code, size: 24, color: AppColors.navy),
                                 ),
                               ),
                             ),
@@ -216,7 +216,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                               _buildTopActionButton(
                                 svgName: 'ic_leader_call',
                                 onTap: () => Get.rawSnackbar(message: 'leader_call_clicked'.tr),
-                                bg: Colors.red,
+                                bg: AppColors.error,
                               ),
                               _buildTopActionButton(
                                 svgName: 'ic_baseline_phone_24',
@@ -225,7 +225,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                               _buildTopActionButton(
                                 svgName: 'ic_baseline_admit_24',
                                 onTap: () => Get.rawSnackbar(message: 'admit_clicked'.tr),
-                                bg: controller.isAdmitted == '1' ? Colors.red : AppColors.primary,
+                                bg: controller.isAdmitted == '1' ? AppColors.error : AppColors.teal,
                               ),
                               _buildTopActionButton(
                                 svgName: 'ic_hold',
@@ -275,15 +275,15 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                         case 'Dashboard':
                           return const ServingPatientDashboardView();
                         case 'Graph':
-                          return Center(child: Text('graph_placeholder'.tr, style: const TextStyle(fontSize: 16, color: Colors.grey)));
+                          return Center(child: Text('graph_placeholder'.tr, style: TextStyle(fontSize: 16, color: AppColors.medicalGray)));
                         case 'Prescription':
-                          return Center(child: Text('prescription_placeholder'.tr, style: const TextStyle(fontSize: 16, color: Colors.grey)));
+                          return Center(child: Text('prescription_placeholder'.tr, style: TextStyle(fontSize: 16, color: AppColors.medicalGray)));
                         case 'Form':
-                          return Center(child: Text('form_placeholder'.tr, style: const TextStyle(fontSize: 16, color: Colors.grey)));
+                          return Center(child: Text('form_placeholder'.tr, style: TextStyle(fontSize: 16, color: AppColors.medicalGray)));
                         case 'DI':
-                          return Center(child: Text('di_placeholder'.tr, style: const TextStyle(fontSize: 16, color: Colors.grey)));
+                          return Center(child: Text('di_placeholder'.tr, style: TextStyle(fontSize: 16, color: AppColors.medicalGray)));
                         case 'Reports':
-                          return Center(child: Text('reports_placeholder'.tr, style: const TextStyle(fontSize: 16, color: Colors.grey)));
+                          return Center(child: Text('reports_placeholder'.tr, style: TextStyle(fontSize: 16, color: AppColors.medicalGray)));
                         default:
                           return const ServingPatientDashboardView();
                       }

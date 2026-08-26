@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 /// A labeled text field with consistent styling across all screens.
 /// Renders a bold [label] above a styled [TextField] with an outline border
-/// that changes to [AppColors.primary] when focused.
+/// that changes to [AppColors.teal] when focused.
 class AppLabeledTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
@@ -38,7 +38,7 @@ class AppLabeledTextField extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: Colors.grey.shade700,
+            color: AppColors.coolGray,
           ),
         ),
         const SizedBox(height: 6),
@@ -51,21 +51,21 @@ class AppLabeledTextField extends StatelessWidget {
           maxLines: maxLines,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+            hintStyle: TextStyle(color: AppColors.medicalGray, fontSize: 14),
             suffixIcon: suffixIcon,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 12,
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
-                color: AppColors.primary,
+              borderSide: BorderSide(
+                color: AppColors.teal,
                 width: 1.5,
               ),
               borderRadius: BorderRadius.circular(8),
             ),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+              borderSide: BorderSide(color: AppColors.medicalGray, width: 1),
               borderRadius: BorderRadius.circular(8),
             ),
           ),

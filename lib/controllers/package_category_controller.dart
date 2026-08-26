@@ -1,4 +1,5 @@
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -199,8 +200,8 @@ class PackageCategoryController extends GetxController {
     Get.snackbar(
       'Payment Successful',
       'Payment ID: ${response.paymentId}',
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
+      backgroundColor: AppColors.success,
+      colorText: AppColors.white,
       snackPosition: SnackPosition.BOTTOM,
       duration: const Duration(seconds: 3),
     );
@@ -211,8 +212,8 @@ class PackageCategoryController extends GetxController {
     Get.snackbar(
       'Payment Failed',
       response.message ?? 'Payment was not completed. Please try again.',
-      backgroundColor: Colors.red,
-      colorText: Colors.white,
+      backgroundColor: AppColors.error,
+      colorText: AppColors.white,
       snackPosition: SnackPosition.BOTTOM,
     );
   }
@@ -255,8 +256,8 @@ class PackageCategoryController extends GetxController {
             'Success',
             'Package booked successfully',
             snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
+            backgroundColor: AppColors.success,
+            colorText: AppColors.white,
             borderRadius: 10,
             margin: const EdgeInsets.all(10),
             duration: const Duration(seconds: 2),

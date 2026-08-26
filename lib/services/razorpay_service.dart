@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../core/constants/razorpay_constants.dart';
@@ -71,8 +72,8 @@ class RazorpayService {
       Get.snackbar(
         'Payment Error',
         'Unable to initiate payment. Please try again.',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
         snackPosition: SnackPosition.BOTTOM,
       );
     }

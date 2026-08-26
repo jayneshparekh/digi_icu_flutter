@@ -1,10 +1,11 @@
 import 'package:digi_icu_flutter/controllers/serving_patient_controller.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
 import 'package:digi_icu_flutter/core/constants/app_constants.dart';
 import 'package:digi_icu_flutter/models/response/doctors/dashboard_details_response.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
 import 'package:dio/dio.dart' as dio;
-import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -80,23 +81,23 @@ class ServingPatientDashboardController extends GetxController {
         if (statusVal == 'success') {
           Get.rawSnackbar(
             message: msgVal.isNotEmpty ? msgVal : 'HbA1c added successfully.',
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.success,
           );
           fetchDashboardDetails();
           return true;
         } else {
           Get.rawSnackbar(
             message: msgVal.isNotEmpty ? msgVal : 'Failed to submit HbA1c.',
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
           );
           return false;
         }
       } else {
-        Get.rawSnackbar(message: 'Server error: ${response.statusCode}', backgroundColor: Colors.red);
+        Get.rawSnackbar(message: 'Server error: ${response.statusCode}', backgroundColor: AppColors.error);
         return false;
       }
     } catch (e) {
-      Get.rawSnackbar(message: 'Error submitting HbA1c: $e', backgroundColor: Colors.red);
+      Get.rawSnackbar(message: 'Error submitting HbA1c: $e', backgroundColor: AppColors.error);
       return false;
     } finally {
       isLoading.value = false;

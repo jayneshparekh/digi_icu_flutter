@@ -20,15 +20,15 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
             'action_required'.tr,
             'cannot_go_back'.tr,
             snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.orange,
-            colorText: Colors.white,
+            backgroundColor: AppColors.warning,
+            colorText: AppColors.white,
           );
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           elevation: 0,
           automaticallyImplyLeading: false,
           title: Column(
@@ -40,8 +40,8 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                         : controller.patientName.isNotEmpty
                             ? controller.patientName
                             : 'patient_name_default'.tr,
-                    style: const TextStyle(
-                      color: Colors.black87,
+                    style: TextStyle(
+                      color: AppColors.navy,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -49,8 +49,8 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
               if (controller.doctorName.isNotEmpty)
                 Text(
                   controller.doctorName,
-                  style: const TextStyle(
-                    color: Colors.grey,
+                  style: TextStyle(
+                    color: AppColors.medicalGray,
                     fontSize: 12,
                   ),
                 ),
@@ -88,12 +88,12 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                                   Checkbox(
                                     value: !controller.haveBPApparatus.value,
                                     onChanged: (val) => controller.toggleBPApparatus(!(val ?? false)),
-                                    activeColor: AppColors.primary,
+                                    activeColor: AppColors.teal,
                                   ),
                                   Expanded(
                                     child: Text(
                                       'no_bp_apparatus'.tr,
-                                      style: const TextStyle(fontSize: 13, color: Colors.black87),
+                                      style: TextStyle(fontSize: 13, color: AppColors.navy),
                                     ),
                                   ),
                                 ],
@@ -172,13 +172,13 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                                   children: [
                                     Radio<String>(
                                       value: 'Yes',
-                                      activeColor: AppColors.primary,
+                                      activeColor: AppColors.teal,
                                     ),
                                     Text('yes'.tr),
                                     const SizedBox(width: 16),
                                     Radio<String>(
                                       value: 'No',
-                                      activeColor: AppColors.primary,
+                                      activeColor: AppColors.teal,
                                     ),
                                     Text('no'.tr),
                                   ],
@@ -286,10 +286,10 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
       child: Text(
         title,
         textAlign: TextAlign.center,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.bold,
-          color: Colors.black87,
+          color: AppColors.navy,
         ),
       ),
     );

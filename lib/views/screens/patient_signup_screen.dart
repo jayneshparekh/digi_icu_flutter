@@ -15,19 +15,19 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.teal,
         title: Text(
           'add_patient'.tr,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: AppColors.white,
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () => Get.back(),
         ),
         elevation: 0,
@@ -49,7 +49,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                       Obx(() {
                         return CircleAvatar(
                           radius: 55,
-                          backgroundColor: Colors.grey.shade200,
+                          backgroundColor: AppColors.lightGray,
                           backgroundImage:
                               controller.pickedImagePath.value.isNotEmpty
                               ? FileImage(
@@ -68,13 +68,13 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                           onTap: () => _showImageSourceDialog(context),
                           child: Container(
                             padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
-                              color: AppColors.primary,
+                            decoration: BoxDecoration(
+                              color: AppColors.teal,
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.camera_alt,
-                              color: Colors.white,
+                              color: AppColors.white,
                               size: 20,
                             ),
                           ),
@@ -140,7 +140,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey.shade700,
+                      color: AppColors.coolGray,
                     ),
                   ),
                 ),
@@ -159,7 +159,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                           child: RadioListTile<String>(
                             title: Text('male'.tr),
                             value: 'Male',
-                            activeColor: AppColors.primary,
+                            activeColor: AppColors.teal,
                             contentPadding: EdgeInsets.zero,
                           ),
                         ),
@@ -167,7 +167,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                           child: RadioListTile<String>(
                             title: Text('female'.tr),
                             value: 'Female',
-                            activeColor: AppColors.primary,
+                            activeColor: AppColors.teal,
                             contentPadding: EdgeInsets.zero,
                           ),
                         ),
@@ -185,7 +185,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey.shade700,
+                      color: AppColors.coolGray,
                     ),
                   ),
                 ),
@@ -204,11 +204,11 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                     onChanged: (val) {
                       if (val != null) controller.acceptTerms.value = val;
                     },
-                    activeColor: AppColors.primary,
+                    activeColor: AppColors.teal,
                     contentPadding: EdgeInsets.zero,
                     title: Text(
                       'accept_terms'.tr,
-                      style: const TextStyle(fontSize: 14, color: Colors.black87),
+                      style: TextStyle(fontSize: 14, color: AppColors.navy),
                     ),
                     controlAffinity: ListTileControlAffinity.leading,
                   );
@@ -227,8 +227,8 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                           : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: isEnabled
-                            ? AppColors.primary
-                            : Colors.grey.shade300,
+                            ? AppColors.teal
+                            : AppColors.medicalGray,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -240,8 +240,8 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: isEnabled
-                              ? Colors.white
-                              : Colors.grey.shade600,
+                              ? AppColors.white
+                              : AppColors.coolGray,
                         ),
                       ),
                     ),
@@ -263,7 +263,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
       return CheckboxListTile(
         title: Text(label),
         value: isChecked,
-        activeColor: AppColors.primary,
+        activeColor: AppColors.teal,
         contentPadding: EdgeInsets.zero,
         controlAffinity: ListTileControlAffinity.leading,
         onChanged: (val) {
@@ -286,9 +286,9 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
           child: Wrap(
             children: [
               ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.photo_library,
-                  color: AppColors.primary,
+                  color: AppColors.teal,
                 ),
                 title: Text('choose_from_gallery'.tr),
                 onTap: () {
@@ -297,7 +297,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.camera_alt, color: AppColors.primary),
+                leading: Icon(Icons.camera_alt, color: AppColors.teal),
                 title: Text('take_a_photo'.tr),
                 onTap: () {
                   Navigator.of(context).pop();

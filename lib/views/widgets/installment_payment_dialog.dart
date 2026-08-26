@@ -28,7 +28,7 @@ class InstallmentPaymentDialog extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 8,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
@@ -45,10 +45,10 @@ class InstallmentPaymentDialog extends StatelessWidget {
                     Expanded(
                       child: Text(
                         data.installments.isNotEmpty ? data.installments : 'installment_payment'.tr,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: AppColors.navy,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -57,13 +57,13 @@ class InstallmentPaymentDialog extends StatelessWidget {
                       onTap: () => Get.back(),
                       child: Container(
                         padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.red,
+                          color: AppColors.error,
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.close,
-                          color: Colors.white,
+                          color: AppColors.white,
                           size: 18,
                         ),
                       ),
@@ -76,8 +76,8 @@ class InstallmentPaymentDialog extends StatelessWidget {
                 if (data.warningMsg.isNotEmpty) ...[
                   Text(
                     data.warningMsg,
-                    style: const TextStyle(
-                      color: Colors.red,
+                    style: TextStyle(
+                      color: AppColors.error,
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
                       fontStyle: FontStyle.italic,
@@ -90,9 +90,9 @@ class InstallmentPaymentDialog extends StatelessWidget {
                 // Due Date
                 Text(
                   'installment_due_date'.tr.replaceAll('@date', dueDate),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: Colors.black87,
+                    color: AppColors.navy,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -101,10 +101,10 @@ class InstallmentPaymentDialog extends StatelessWidget {
                 // Package Name
                 Text(
                   data.packageName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: AppColors.navy,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -113,10 +113,10 @@ class InstallmentPaymentDialog extends StatelessWidget {
                 // Amount
                 Text(
                   'amount_rupees'.tr.replaceAll('@amount', amount),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
+                    color: AppColors.teal,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -129,7 +129,7 @@ class InstallmentPaymentDialog extends StatelessWidget {
                     TextButton(
                       onPressed: () => Get.back(),
                       style: TextButton.styleFrom(
-                        foregroundColor: AppColors.primary,
+                        foregroundColor: AppColors.teal,
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       ),
                       child: Text(
@@ -150,8 +150,8 @@ class InstallmentPaymentDialog extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.teal,
+                        foregroundColor: AppColors.white,
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),

@@ -37,10 +37,10 @@ class ConfirmPatientDialog extends StatelessWidget {
                 Expanded(
                   child: Text(
                     'confirm_patient'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                 ),
@@ -48,13 +48,13 @@ class ConfirmPatientDialog extends StatelessWidget {
                   onTap: () => Get.back(),
                   child: Container(
                     padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
+                    decoration: BoxDecoration(
+                      color: AppColors.error,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.close,
-                      color: Colors.white,
+                      color: AppColors.white,
                       size: 18,
                     ),
                   ),
@@ -70,26 +70,26 @@ class ConfirmPatientDialog extends StatelessWidget {
                 children: [
                   Text(
                     fullName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   Text(
                     ' / ${patient.age} / ',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   Text(
                     genderText,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                 ],
@@ -104,33 +104,33 @@ class ConfirmPatientDialog extends StatelessWidget {
                 children: [
                   Text(
                     patient.mobileNo,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   if (patient.taluka.isNotEmpty)
                     Text(
                       ' / ${patient.taluka}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
-                        color: Colors.black87,
+                        color: AppColors.navy,
                       ),
                     ),
                   if (patient.district.isNotEmpty)
                     Text(
                       ' / ${patient.district}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
-                        color: Colors.black87,
+                        color: AppColors.navy,
                       ),
                     ),
                   if (patient.state.isNotEmpty)
                     Text(
                       ' / ${patient.state}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
-                        color: Colors.black87,
+                        color: AppColors.navy,
                       ),
                     ),
                 ],
@@ -145,8 +145,8 @@ class ConfirmPatientDialog extends StatelessWidget {
                   onPressed: () => Get.back(),
                   child: Text(
                     'cancel'.tr,
-                    style: const TextStyle(
-                      color: Colors.red,
+                    style: TextStyle(
+                      color: AppColors.error,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -159,8 +159,8 @@ class ConfirmPatientDialog extends StatelessWidget {
                     onConfirm();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors.teal,
+                    foregroundColor: AppColors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
                     ),

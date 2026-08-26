@@ -34,7 +34,7 @@ class ServingPatientDashboardView extends StatelessWidget {
               children: [
                 Text(
                   controller.errorMessage.value,
-                  style: const TextStyle(color: Colors.red, fontSize: 15),
+                  style: TextStyle(color: AppColors.error, fontSize: 15),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 12),
@@ -68,7 +68,7 @@ class ServingPatientDashboardView extends StatelessWidget {
         if (parts.isNotEmpty) {
           final systolic = int.tryParse(parts[0].trim());
           if (systolic != null && systolic > 140) {
-            todayBpColor = Colors.red;
+            todayBpColor = AppColors.error;
           }
         }
       }
@@ -81,13 +81,13 @@ class ServingPatientDashboardView extends StatelessWidget {
           creatinineText = '${data.creatinine[0].value}(${data.creatinine[1].value})';
           final finalCreatinine = double.tryParse(data.creatinine[1].value);
           if (finalCreatinine != null && finalCreatinine > 1.2) {
-            creatinineColor = Colors.red;
+            creatinineColor = AppColors.error;
           }
         } else {
           creatinineText = data.creatinine[0].value;
           final finalCreatinine = double.tryParse(creatinineText);
           if (finalCreatinine != null && finalCreatinine > 1.2) {
-            creatinineColor = Colors.red;
+            creatinineColor = AppColors.error;
           }
         }
       }
@@ -102,7 +102,7 @@ class ServingPatientDashboardView extends StatelessWidget {
           final relativeText = _getHba1cRelativeText(data.hba1c[0].created);
           hba1cText = relativeText.isNotEmpty ? '$rawValue ($relativeText)' : rawValue;
           if (finalHba1c > 6.7) {
-            hba1cColor = Colors.red;
+            hba1cColor = AppColors.error;
           }
         }
       }
@@ -120,26 +120,26 @@ class ServingPatientDashboardView extends StatelessWidget {
                   children: [
                     Text(
                       'visit_no'.tr,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: AppColors.navy,
                       ),
                     ),
                     Text(
                       '${data.visitNo} ',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: AppColors.navy,
                       ),
                     ),
                     Text(
                       '($appointmentBy)',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.red,
+                        color: AppColors.error,
                       ),
                     ),
                   ],
@@ -148,9 +148,9 @@ class ServingPatientDashboardView extends StatelessWidget {
                   onTap: () => _showAdmissionHistoryDialog(context, data.admissionHistory),
                   child: Text(
                     'admission_history'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
-                      color: Colors.blue,
+                      color: AppColors.blue,
                       fontWeight: FontWeight.w600,
                       decoration: TextDecoration.underline,
                     ),
@@ -165,10 +165,10 @@ class ServingPatientDashboardView extends StatelessWidget {
               children: [
                 Text(
                   '${'last_visit'.tr}${data.lastVisit.isNotEmpty ? data.lastVisit : "na".tr}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black87,
+                    color: AppColors.navy,
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -177,14 +177,14 @@ class ServingPatientDashboardView extends StatelessWidget {
                     message: '${'first_visit'.tr}${data.firstVisit}',
                     triggerMode: TooltipTriggerMode.tap,
                     decoration: BoxDecoration(
-                      color: Colors.black87,
+                      color: AppColors.navy,
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    textStyle: const TextStyle(color: Colors.white, fontSize: 13),
-                    child: const Icon(
+                    textStyle: TextStyle(color: AppColors.white, fontSize: 13),
+                    child: Icon(
                       Icons.info,
                       size: 18,
-                      color: Colors.grey,
+                      color: AppColors.medicalGray,
                     ),
                   ),
               ],
@@ -200,7 +200,7 @@ class ServingPatientDashboardView extends StatelessWidget {
 
                   final message = data.whoMsg.length > index ? data.whoMsg[index] : risk;
                   final bannerColor = _getWhoRiskColor(risk);
-                  final textColor = risk == '>40%' ? Colors.white : Colors.black87;
+                  final textColor = risk == '>40%' ? AppColors.white : AppColors.navy;
 
                   return Container(
                     width: double.infinity,
@@ -255,9 +255,9 @@ class ServingPatientDashboardView extends StatelessWidget {
                           controller.fetchDashboardDetails();
                         });
                       },
-                      child: const Icon(
+                      child: Icon(
                         Icons.add_circle,
-                        color: Colors.white,
+                        color: AppColors.white,
                         size: 24,
                       ),
                     )
@@ -431,8 +431,8 @@ class ServingPatientDashboardView extends StatelessWidget {
             Center(
               child: Text(
                 'click_history_desc'.tr,
-                style: const TextStyle(
-                  color: Colors.black54,
+                style: TextStyle(
+                  color: AppColors.coolGray,
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                 ),
@@ -512,7 +512,7 @@ class ServingPatientDashboardView extends StatelessWidget {
                 )
               : SingleChildScrollView(
                   child: Table(
-                    border: TableBorder.all(color: Colors.grey.shade300),
+                    border: TableBorder.all(color: AppColors.medicalGray),
                     columnWidths: const {
                       0: FlexColumnWidth(1.4),
                       1: FlexColumnWidth(2.5),
@@ -521,14 +521,14 @@ class ServingPatientDashboardView extends StatelessWidget {
                     children: [
                       // Header Row
                       TableRow(
-                        decoration: const BoxDecoration(color: AppColors.primary),
+                        decoration: BoxDecoration(color: AppColors.teal),
                         children: [
                           TableCell(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 'id'.tr,
-                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -538,7 +538,7 @@ class ServingPatientDashboardView extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 'doctor'.tr,
-                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -548,7 +548,7 @@ class ServingPatientDashboardView extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 'date'.tr,
-                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -558,7 +558,7 @@ class ServingPatientDashboardView extends StatelessWidget {
                       // Data Rows
                       ...list.map((item) {
                         final isAdmitted = item.status.toLowerCase() == 'admitted';
-                        final rowBgColor = isAdmitted ? Colors.green.withValues(alpha: 0.2) : Colors.transparent;
+                        final rowBgColor = isAdmitted ? AppColors.success.withValues(alpha: 0.2) : Colors.transparent;
 
                         return TableRow(
                           decoration: BoxDecoration(color: rowBgColor),
@@ -605,7 +605,7 @@ class ServingPatientDashboardView extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: Text('close'.tr, style: const TextStyle(color: Colors.red)),
+            child: Text('close'.tr, style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -642,11 +642,11 @@ class ServingPatientDashboardView extends StatelessWidget {
                 onTap: () => Get.back(),
                 child: Container(
                   padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
+                  decoration: BoxDecoration(
+                    color: AppColors.error,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.close, color: Colors.white, size: 14),
+                  child: Icon(Icons.close, color: AppColors.white, size: 14),
                 ),
               ),
             ],
@@ -660,7 +660,7 @@ class ServingPatientDashboardView extends StatelessWidget {
                 if (text == 'height_weight_bmi'.tr && height.isNotEmpty) ...[
                   Text(
                     'height_label'.tr.replaceAll('@height', height),
-                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.blue),
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.blue),
                   ),
                   const SizedBox(height: 8),
                 ],
@@ -690,7 +690,7 @@ class ServingPatientDashboardView extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                                 child: Text(
                                   '${item.value}$datePart',
-                                  style: const TextStyle(fontSize: 14, color: Colors.black87),
+                                  style: TextStyle(fontSize: 14, color: AppColors.navy),
                                 ),
                               );
                             },
@@ -742,7 +742,7 @@ class ServingPatientDashboardView extends StatelessWidget {
                         if (val.isEmpty || apiFormattedDate.isEmpty) {
                           Get.rawSnackbar(
                             message: 'fill_hba1c_date'.tr,
-                            backgroundColor: Colors.red,
+                            backgroundColor: AppColors.error,
                           );
                           return;
                         }
@@ -753,8 +753,8 @@ class ServingPatientDashboardView extends StatelessWidget {
                           }
                         }
                       },
-                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-                      child: Text('submit'.tr, style: const TextStyle(color: Colors.white)),
+                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal),
+                      child: Text('submit'.tr, style: TextStyle(color: AppColors.white)),
                     ),
                   ),
                 ],
@@ -765,8 +765,8 @@ class ServingPatientDashboardView extends StatelessWidget {
               ? [
                   FloatingActionButton.small(
                     onPressed: () => showListContainer.value = false,
-                    backgroundColor: AppColors.primary,
-                    child: const Icon(Icons.add, color: Colors.white),
+                    backgroundColor: AppColors.teal,
+                    child: Icon(Icons.add, color: AppColors.white),
                   ),
                 ]
               : null,

@@ -12,7 +12,7 @@ class PatientListScreen extends GetView<PatientListController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: AppColors.lightGray,
       appBar: CommonListAppBar(
         title: 'patient_list'.tr,
         doctorName: controller.doctorName,
@@ -60,7 +60,7 @@ class PatientListScreen extends GetView<PatientListController> {
               if (controller.isLoading.value && controller.patients.isEmpty) {
                 return const Center(
                   child: CircularProgressIndicator(
-                    color: AppColors.primary,
+                    color: AppColors.teal,
                   ),
                 );
               }
@@ -71,9 +71,9 @@ class PatientListScreen extends GetView<PatientListController> {
                     padding: const EdgeInsets.all(24.0),
                     child: Text(
                       controller.errorMessage.value,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
-                        color: Colors.red,
+                        color: AppColors.error,
                         fontWeight: FontWeight.w500,
                       ),
                       textAlign: TextAlign.center,
@@ -86,9 +86,9 @@ class PatientListScreen extends GetView<PatientListController> {
                 return Center(
                   child: Text(
                     'no_patients_found'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
-                      color: Colors.grey,
+                      color: AppColors.medicalGray,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -110,7 +110,7 @@ class PatientListScreen extends GetView<PatientListController> {
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 12.0),
                         child: CircularProgressIndicator(
-                          color: AppColors.primary,
+                          color: AppColors.teal,
                         ),
                       ),
                     );
@@ -131,7 +131,7 @@ class PatientListScreen extends GetView<PatientListController> {
       final isSelected = controller.selectedStatus.value == statusValue;
       final Color bg = isSelected
           ? AppColors.warning
-          : AppColors.primary;
+          : AppColors.teal;
 
       String label = '';
       if (statusValue == 'Refer') {
@@ -158,8 +158,8 @@ class PatientListScreen extends GetView<PatientListController> {
           child: Text(
             label,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: AppColors.white,
               fontSize: 13,
               fontWeight: FontWeight.bold,
             ),
@@ -185,12 +185,12 @@ class PatientListScreen extends GetView<PatientListController> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey.shade200),
+        color: AppColors.white,
+        border: Border.all(color: AppColors.lightGray),
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
+            color: AppColors.pureBlack.withValues(alpha: 0.02),
             spreadRadius: 1,
             blurRadius: 3,
             offset: const Offset(0, 1),
@@ -211,19 +211,19 @@ class PatientListScreen extends GetView<PatientListController> {
                     // Patient Name
                     Text(
                       name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: AppColors.navy,
                       ),
                     ),
                     const SizedBox(height: 4),
                     // Details (Age, MHC ID, Gender)
                     Text(
                       detailsText,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
-                        color: Colors.black87,
+                        color: AppColors.navy,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -233,9 +233,9 @@ class PatientListScreen extends GetView<PatientListController> {
                       onTap: () => controller.callNumber(patient.mobileNo),
                       child: Text(
                         '${patient.mobileNo} /',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
-                          color: AppColors.primary,
+                          color: AppColors.teal,
                           decoration: TextDecoration.underline,
                           fontWeight: FontWeight.w500,
                         ),
@@ -247,9 +247,9 @@ class PatientListScreen extends GetView<PatientListController> {
                       const SizedBox(height: 4),
                       Text(
                         '${patient.taluka} / ${patient.district}'.trim(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
-                          color: Colors.black87,
+                          color: AppColors.navy,
                         ),
                       ),
                     ],
@@ -277,7 +277,7 @@ class PatientListScreen extends GetView<PatientListController> {
           // Appointment details
           Text(
             '${'appointment_label'.tr} ${patient.id} / ${patient.bookingDate} / ${patient.bookingTime}',
-            style: const TextStyle(fontSize: 14, color: Colors.black54),
+            style: TextStyle(fontSize: 14, color: AppColors.coolGray),
           ),
           const SizedBox(height: 12),
           // View Details Button (Only button displayed in patient cards now, no refer button)
@@ -287,8 +287,8 @@ class PatientListScreen extends GetView<PatientListController> {
             child: ElevatedButton(
               onPressed: () => controller.onViewDetails(patient),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
+                backgroundColor: AppColors.teal,
+                foregroundColor: AppColors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4),

@@ -19,15 +19,15 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
             'action_required'.tr,
             'cannot_go_back_form'.tr,
             snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.orange,
-            colorText: Colors.white,
+            backgroundColor: AppColors.warning,
+            colorText: AppColors.white,
           );
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           elevation: 0,
           automaticallyImplyLeading: false,
           title: Column(
@@ -39,8 +39,8 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                         : controller.patientName.isNotEmpty
                             ? controller.patientName
                             : 'patient_name'.tr,
-                    style: const TextStyle(
-                      color: Colors.black87,
+                    style: TextStyle(
+                      color: AppColors.navy,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -48,8 +48,8 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
               if (controller.doctorName.isNotEmpty)
                 Text(
                   controller.doctorName,
-                  style: const TextStyle(
-                    color: Colors.grey,
+                  style: TextStyle(
+                    color: AppColors.medicalGray,
                     fontSize: 12,
                   ),
                 ),
@@ -87,7 +87,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'did_you_stop_smoking'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -107,7 +107,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                        children: [
                                          Radio<String>(
                                            value: option,
-                                           activeColor: AppColors.primary,
+                                           activeColor: AppColors.teal,
                                          ),
                                          Text(option == 'Yes' ? 'yes'.tr : option == 'No' ? 'no'.tr : 'i_need_help'.tr),
                                        ],
@@ -135,7 +135,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'did_you_stop_alcohol'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -155,7 +155,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                        children: [
                                          Radio<String>(
                                            value: option,
-                                           activeColor: AppColors.primary,
+                                           activeColor: AppColors.teal,
                                          ),
                                          Text(option == 'Yes' ? 'yes'.tr : option == 'No' ? 'no'.tr : 'i_need_help'.tr),
                                        ],
@@ -183,7 +183,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'reduce_salt_intake'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -193,13 +193,13 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                      children: [
                                        Radio<String>(
                                          value: 'Yes',
-                                         activeColor: AppColors.primary,
+                                         activeColor: AppColors.teal,
                                        ),
                                        Text('yes'.tr),
                                        const SizedBox(width: 24),
                                        Radio<String>(
                                          value: 'No',
-                                         activeColor: AppColors.primary,
+                                         activeColor: AppColors.teal,
                                        ),
                                        Text('no'.tr),
                                      ],
@@ -226,7 +226,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'morning_walk_daily'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -238,7 +238,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                        children: [
                                          Radio<String>(
                                            value: option,
-                                           activeColor: AppColors.primary,
+                                           activeColor: AppColors.teal,
                                          ),
                                          Text(option == 'Yes' ? 'yes'.tr : option == 'No' ? 'no'.tr : 'sometimes_missing'.tr),
                                        ],
@@ -266,7 +266,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'are_you_in_stress'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -276,13 +276,13 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                      children: [
                                        Radio<String>(
                                          value: 'Yes',
-                                         activeColor: AppColors.primary,
+                                         activeColor: AppColors.teal,
                                        ),
                                        Text('yes'.tr),
                                        const SizedBox(width: 24),
                                        Radio<String>(
                                          value: 'No',
-                                         activeColor: AppColors.primary,
+                                         activeColor: AppColors.teal,
                                        ),
                                        Text('no'.tr),
                                      ],
@@ -309,7 +309,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'miss_medication_doses'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -327,13 +327,13 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                      children: [
                                        Radio<String>(
                                          value: 'Yes',
-                                         activeColor: AppColors.primary,
+                                         activeColor: AppColors.teal,
                                        ),
                                        Text('yes'.tr),
                                        const SizedBox(width: 24),
                                        Radio<String>(
                                          value: 'No',
-                                         activeColor: AppColors.primary,
+                                         activeColor: AppColors.teal,
                                        ),
                                        Text('no'.tr),
                                      ],
@@ -350,17 +350,17 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                     // --- VITALS AGAIN SECTION ---
                     Text(
                       'vitals_again'.tr,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
+                        color: AppColors.teal,
                       ),
                     ),
                     const SizedBox(height: 6),
                     Container(
                       width: 100,
                       height: 2,
-                      color: AppColors.primary,
+                      color: AppColors.teal,
                     ),
                     const SizedBox(height: 24),
 
@@ -376,7 +376,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                             children: [
                                 Text(
                                   'last_hospitalization'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                                 ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
@@ -386,13 +386,13 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                      children: [
                                        Radio<String>(
                                          value: 'Yes',
-                                         activeColor: AppColors.primary,
+                                         activeColor: AppColors.teal,
                                        ),
                                        Text('yes'.tr),
                                        const SizedBox(width: 24),
                                        Radio<String>(
                                          value: 'No',
-                                         activeColor: AppColors.primary,
+                                         activeColor: AppColors.teal,
                                        ),
                                        Text('no'.tr),
                                      ],
@@ -400,12 +400,12 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                  ),
                               if (controller.lastHospitalization.value == 'Yes') ...[
                                 const SizedBox(height: 12),
-                                Text('reason_for_hospitalization'.tr, style: const TextStyle(fontSize: 13, color: Colors.black54)),
+                                Text('reason_for_hospitalization'.tr, style: TextStyle(fontSize: 13, color: AppColors.coolGray)),
                                 const SizedBox(height: 4),
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 12),
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey),
+                                    border: Border.all(color: AppColors.medicalGray),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: DropdownButtonHideUnderline(
@@ -456,7 +456,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'vitals_bp_measurement'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                                 ),
                                 const SizedBox(height: 12),
                                 Row(
@@ -504,8 +504,8 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                   child: ElevatedButton.icon(
                                     onPressed: () {},
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.primary,
-                                      foregroundColor: Colors.white,
+                                      backgroundColor: AppColors.teal,
+                                      foregroundColor: AppColors.white,
                                     ),
                                     icon: const Icon(Icons.bluetooth),
                                     label: Text('measure_bp'.tr),
@@ -552,7 +552,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: Text('ok_i_will_do'.tr, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            child: Text('ok_i_will_do'.tr, style: TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

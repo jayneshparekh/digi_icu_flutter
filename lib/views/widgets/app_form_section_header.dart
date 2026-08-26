@@ -20,25 +20,25 @@ class AppFormSectionHeader extends StatelessWidget {
       children: [
         Text(
           subtitle,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
-            color: Colors.grey,
+            color: AppColors.medicalGray,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: AppColors.primary,
+            color: AppColors.teal,
           ),
         ),
         const SizedBox(height: 6),
         Container(
           width: 100,
           height: 2,
-          color: AppColors.primary,
+          color: AppColors.teal,
         ),
       ],
     );

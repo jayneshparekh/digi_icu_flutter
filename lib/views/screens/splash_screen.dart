@@ -10,7 +10,7 @@ class SplashScreen extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: Column(
         children: [
           Expanded(
@@ -27,9 +27,9 @@ class SplashScreen extends GetView<SplashController> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 48.0),
             child: LinearProgressIndicator(
-              backgroundColor: AppColors.peachBg,
+              backgroundColor: AppColors.lightGray,
               // Light orange background
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.warning),
               minHeight: 6,
               borderRadius: BorderRadius.all(Radius.circular(3)),
             ),

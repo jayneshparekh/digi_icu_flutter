@@ -14,7 +14,7 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       appBar: CommonListAppBar(
         title: 'manage_patients'.tr,
         doctorName: controller.doctorName,
@@ -52,10 +52,10 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Text(
                 '${'total_patients'.tr} ${controller.totalPatientsCount.value}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color: AppColors.navy,
                 ),
               ),
             );
@@ -66,7 +66,7 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
             child: Obx(() {
               if (controller.isLoading.value && controller.patients.isEmpty) {
                 return const Center(
-                  child: CircularProgressIndicator(color: AppColors.primary),
+                  child: CircularProgressIndicator(color: AppColors.teal),
                 );
               }
 
@@ -77,9 +77,9 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
                     padding: const EdgeInsets.all(24.0),
                     child: Text(
                       controller.errorMessage.value,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
-                        color: Colors.grey,
+                        color: AppColors.medicalGray,
                         fontWeight: FontWeight.w500,
                       ),
                       textAlign: TextAlign.center,
@@ -92,9 +92,9 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
                 return Center(
                   child: Text(
                     'no_patients_found'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
-                      color: Colors.grey,
+                      color: AppColors.medicalGray,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -118,7 +118,7 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
                       padding: EdgeInsets.symmetric(vertical: 16.0),
                       child: Center(
                         child: CircularProgressIndicator(
-                          color: AppColors.primary,
+                          color: AppColors.teal,
                         ),
                       ),
                     );
@@ -139,11 +139,11 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
             controller.refreshList();
           }
         },
-        backgroundColor: Colors.red,
+        backgroundColor: AppColors.error,
         shape: const CircleBorder(),
         child: SvgPicture.asset(
           'assets/icons/svg/ic_add.svg',
-          colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          colorFilter: const ColorFilter.mode(AppColors.white, BlendMode.srcIn),
           width: 24,
           height: 24,
         ),
@@ -158,7 +158,7 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
         onPressed: onTap,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.warning,
-          foregroundColor: Colors.white,
+          foregroundColor: AppColors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -189,8 +189,8 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey.shade200),
+        color: AppColors.white,
+        border: Border.all(color: AppColors.lightGray),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -204,22 +204,22 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
               children: [
                 Text(
                   name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: AppColors.navy,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '${'mhc_id'.tr} ${patient.mhcId}',
-                  style: const TextStyle(fontSize: 14, color: Colors.black87),
+                  style: TextStyle(fontSize: 14, color: AppColors.navy),
                 ),
                 if (patient.mhcEmail.isNotEmpty) ...[
                   const SizedBox(height: 2),
                   Text(
                     patient.mhcEmail,
-                    style: const TextStyle(fontSize: 14, color: Colors.black87),
+                    style: TextStyle(fontSize: 14, color: AppColors.navy),
                   ),
                 ],
                 const SizedBox(height: 2),
@@ -227,16 +227,16 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
                   children: [
                     Text(
                       'mobile_no_label'.tr,
-                      style: const TextStyle(fontSize: 14, color: Colors.black87),
+                      style: TextStyle(fontSize: 14, color: AppColors.navy),
                     ),
                     const SizedBox(width: 4),
                     InkWell(
                       onTap: () => controller.callNumber(patient.mobileNo),
                       child: Text(
                         patient.mobileNo,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
-                          color: Colors.red,
+                          color: AppColors.error,
                           decoration: TextDecoration.underline,
                           fontWeight: FontWeight.w500,
                         ),
@@ -247,7 +247,7 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
                 const SizedBox(height: 2),
                 Text(
                   condition,
-                  style: const TextStyle(fontSize: 14, color: Colors.black87),
+                  style: TextStyle(fontSize: 14, color: AppColors.navy),
                 ),
               ],
             ),
@@ -283,8 +283,8 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors.teal,
+                    foregroundColor: AppColors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -307,19 +307,19 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           title: Text(
             'contact_support'.tr,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: AppColors.navy,
             ),
           ),
           content: Text(
             'contact_support_desc'.tr,
-            style: const TextStyle(fontSize: 14, color: Colors.black87),
+            style: TextStyle(fontSize: 14, color: AppColors.navy),
           ),
           actions: [
             TextButton(
@@ -328,8 +328,8 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
               },
               child: Text(
                 'okay'.tr,
-                style: const TextStyle(
-                  color: AppColors.primary,
+                style: TextStyle(
+                  color: AppColors.teal,
                   fontWeight: FontWeight.bold,
                 ),
               ),

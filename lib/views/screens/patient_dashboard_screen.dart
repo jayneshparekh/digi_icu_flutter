@@ -15,9 +15,9 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryBg,
+      backgroundColor: AppColors.lightGray,
       appBar: AppBar(
-        backgroundColor: AppColors.primary, // Teal background matching toolbar
+        backgroundColor: AppColors.teal, // Teal background matching toolbar
         elevation: 0,
         automaticallyImplyLeading: false,
         titleSpacing: 0,
@@ -32,7 +32,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                 constraints: const BoxConstraints(),
                 icon: SvgPicture.asset(
                   'assets/icons/svg/ic_back.svg',
-                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  colorFilter: const ColorFilter.mode(AppColors.white, BlendMode.srcIn),
                   width: 26,
                   height: 26,
                 ),
@@ -47,8 +47,8 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   children: [
                     Text(
                       controller.userName,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: AppColors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -59,7 +59,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       return Text(
                         'Dr. ${controller.doctorName.value}',
                         style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.85),
+                          color: AppColors.white.withValues(alpha: 0.85),
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                         ),
@@ -81,16 +81,16 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
               child: Container(
                 width: 38,
                 height: 38,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
                 child: ClipOval(
                   child: Image.asset(
                     'assets/images/digi_icu_logo.png',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.local_hospital, color: AppColors.primary);
+                      return Icon(Icons.local_hospital, color: AppColors.teal);
                     },
                   ),
                 ),
@@ -104,11 +104,11 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
           // Divider Line
           Container(
             height: 1,
-            color: Colors.grey.shade200,
+            color: AppColors.lightGray,
           ),
           // Top Layout Section (llTop)
           Container(
-            color: AppColors.secondary, // medium teal matching mockup
+            color: AppColors.teal, // medium teal matching mockup
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,10 +120,10 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                     padding: const EdgeInsets.only(bottom: 12.0),
                     child: Text(
                       '${'next_follow_up_date'.tr} $formattedDate',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: AppColors.navy,
                       ),
                     ),
                   );
@@ -133,17 +133,17 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   children: [
                     Text(
                       'recommended'.tr,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: AppColors.navy,
                       ),
                     ),
                     Row(
                       children: [
-                        _buildBadgeButton('about_app'.tr, AppColors.primary),
+                        _buildBadgeButton('about_app'.tr, AppColors.teal),
                         const SizedBox(width: 8),
-                        _buildBadgeButton('share_app'.tr, AppColors.primary),
+                        _buildBadgeButton('share_app'.tr, AppColors.teal),
                       ],
                     ),
                   ],
@@ -176,7 +176,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       Expanded(
                         child: PatientDashboardCircleBtn(
                           iconPath: 'assets/icons/svg/ic_chest_pain_help.svg',
-                          iconColor: Colors.red,
+                          iconColor: AppColors.error,
                           label: 'chest_pain_help'.tr,
                           onTap: () {},
                         ),
@@ -205,10 +205,10 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   // Emergency Services Section
                   Text(
                     'emergency_services'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -217,7 +217,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       Expanded(
                         child: PatientDashboardCard(
                           iconPath: 'assets/icons/svg/ic_emergency_call.svg',
-                          iconColor: Colors.red,
+                          iconColor: AppColors.error,
                           label: 'emergency_doctor'.tr,
                           onTap: () {},
                         ),
@@ -226,7 +226,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       Expanded(
                         child: PatientDashboardCard(
                           iconPath: 'assets/icons/svg/ic_ambulance.svg',
-                          iconColor: Colors.red,
+                          iconColor: AppColors.error,
                           label: 'call_ambulance'.tr,
                           onTap: () {},
                         ),
@@ -238,10 +238,10 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   // Other Services Section
                   Text(
                     'other_services'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -257,7 +257,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: BreathingColorWrapper(
-                          baseColor: Colors.red,
+                          baseColor: AppColors.error,
                           builder: (context, animatedColor) {
                             return PatientDashboardCard(
                               iconPath: 'assets/icons/svg/ic_ecg.svg',
@@ -299,10 +299,10 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   // Choose Package Section
                   Text(
                     'choose_package'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -338,10 +338,10 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   // Upload Report Section
                   Text(
                     'upload_report'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -376,10 +376,10 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   // Categories Section
                   Text(
                     'categories'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -453,7 +453,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: AppColors.navy,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -469,10 +469,10 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       children: [
                         Text(
                           'for_details_call'.tr,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: Colors.black54,
+                            color: AppColors.coolGray,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -488,7 +488,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.blue,
+                              color: AppColors.blue,
                             ),
                           ),
                         ),
@@ -504,9 +504,9 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.teal,
         shape: const CircleBorder(),
-        child: const Icon(Icons.add, color: Colors.white, size: 28),
+        child: Icon(Icons.add, color: AppColors.white, size: 28),
       ),
     );
   }

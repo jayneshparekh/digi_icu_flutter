@@ -53,8 +53,8 @@ class AppDrawingCanvas extends StatefulWidget {
     super.key,
     this.width,
     this.height,
-    this.backgroundColor = Colors.white,
-    this.initialPenColor = Colors.black,
+    this.backgroundColor = AppColors.white,
+    this.initialPenColor = AppColors.pureBlack,
     this.initialStrokeWidth = 3.0,
     this.showToolbar = true,
     this.onSave,
@@ -86,16 +86,16 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
     _selectedStrokeWidth = widget.initialStrokeWidth;
     _availableColors = widget.paletteColors ??
         const [
-          Colors.black,
+          AppColors.pureBlack,
           Colors.purple,
-          Colors.blue,
-          Colors.teal,
-          Colors.green,
+          AppColors.blue,
+          AppColors.teal,
+          AppColors.success,
           Colors.yellow,
-          Colors.orange,
-          Colors.red,
+          AppColors.warning,
+          AppColors.error,
           Colors.brown,
-          Colors.grey,
+          AppColors.medicalGray,
         ];
   }
 
@@ -231,14 +231,14 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
                           color: color,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: isSelected ? AppColors.primary : Colors.grey.shade300,
+                            color: isSelected ? AppColors.teal : AppColors.medicalGray,
                             width: isSelected ? 3 : 1,
                           ),
                         ),
                         child: isSelected
                             ? Icon(
                                 Icons.check,
-                                color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                                color: color.computeLuminance() > 0.5 ? AppColors.pureBlack : AppColors.white,
                               )
                             : null,
                       ),
@@ -281,7 +281,7 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
                             value: _selectedStrokeWidth,
                             min: 1.0,
                             max: 25.0,
-                            activeColor: AppColors.primary,
+                            activeColor: AppColors.teal,
                             onChanged: (val) {
                               setModalState(() {
                                 _selectedStrokeWidth = val;
@@ -391,10 +391,10 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
     Color? activeColor,
   }) {
     final Color tintColor = !isEnabled
-        ? AppColors.greyMedium
+        ? AppColors.medicalGray
         : isActive
-            ? (activeColor ?? AppColors.primary)
-            : AppColors.greyDark;
+            ? (activeColor ?? AppColors.teal)
+            : AppColors.coolGray;
 
     return Tooltip(
       message: tooltip,
@@ -405,7 +405,7 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
           padding: const EdgeInsets.all(8.0),
           decoration: isActive
               ? BoxDecoration(
-                  color: AppColors.primaryBg,
+                  color: AppColors.lightGray,
                   borderRadius: BorderRadius.circular(8),
                 )
               : null,
@@ -423,7 +423,7 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
   Widget _buildCanvasArea() {
     final defaultDecoration = BoxDecoration(
       color: widget.backgroundColor,
-      border: Border.all(color: Colors.black, width: 2.0),
+      border: Border.all(color: AppColors.pureBlack, width: 2.0),
       borderRadius: BorderRadius.circular(4.0),
     );
 

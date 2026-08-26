@@ -9,20 +9,20 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.teal,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () => Get.back(),
         ),
         title: Text(
           'diagnosis'.tr,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.home, color: Colors.white),
+            icon: Icon(Icons.home, color: AppColors.white),
             onPressed: () => Get.offAllNamed('/doctor-dashboard'),
           ),
         ],
@@ -38,18 +38,18 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(12),
-              color: Colors.grey.shade100,
+              color: AppColors.lightGray,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'diagnosis_label'.tr,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black87),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.navy),
                   ),
                   Expanded(
                     child: Text(
                       controller.rxDiagnosisText.value.isNotEmpty ? controller.rxDiagnosisText.value : 'na'.tr,
-                      style: const TextStyle(fontSize: 14, color: Colors.black87),
+                      style: TextStyle(fontSize: 14, color: AppColors.navy),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -57,11 +57,11 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                   ElevatedButton(
                     onPressed: () => controller.submitDiagnosis(),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: AppColors.success,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     ),
-                    child: const Icon(Icons.save, color: Colors.white, size: 20),
+                    child: Icon(Icons.save, color: AppColors.white, size: 20),
                   ),
                 ],
               ),
@@ -114,7 +114,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                                             labelText: '${'other_diagnosis'.tr} ${index + 1}',
                                             border: const OutlineInputBorder(),
                                             contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                                            suffixIcon: const Icon(Icons.mic, color: AppColors.primary, size: 20),
+                                            suffixIcon: Icon(Icons.mic, color: AppColors.teal, size: 20),
                                           ),
                                         ),
                                       ),
@@ -124,12 +124,12 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                                         child: Container(
                                           padding: const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
-                                            color: isAdded ? Colors.red : Colors.green,
+                                            color: isAdded ? AppColors.error : AppColors.success,
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
                                             isAdded ? Icons.close : Icons.add,
-                                            color: Colors.white,
+                                            color: AppColors.white,
                                             size: 20,
                                           ),
                                         ),
@@ -474,8 +474,8 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                                 const SizedBox(width: 8),
                                 ElevatedButton(
                                   onPressed: () => controller.addLvdEf(),
-                                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-                                  child: Text('add'.tr, style: const TextStyle(color: Colors.white)),
+                                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal),
+                                  child: Text('add'.tr, style: TextStyle(color: AppColors.white)),
                                 ),
                               ],
                             ),
@@ -579,7 +579,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: AppColors.medicalGray),
         borderRadius: BorderRadius.circular(6),
       ),
       child: child,

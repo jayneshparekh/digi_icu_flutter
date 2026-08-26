@@ -29,7 +29,7 @@ class LoginController extends GetxController {
     );
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        statusBarColor: AppColors.primary,
+        statusBarColor: AppColors.teal,
         statusBarIconBrightness: Brightness.light,
       ),
     );
@@ -133,12 +133,12 @@ class LoginController extends GetxController {
     Get.rawSnackbar(
       messageText: Text(
         message,
-        style: const TextStyle(
-          color: Colors.white,
+        style: TextStyle(
+          color: AppColors.white,
           fontWeight: FontWeight.bold,
         ),
       ),
-      backgroundColor: Colors.redAccent,
+      backgroundColor: AppColors.error,
       snackPosition: SnackPosition.BOTTOM,
       margin: const EdgeInsets.all(16),
       borderRadius: 8,

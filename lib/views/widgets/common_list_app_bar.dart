@@ -25,7 +25,7 @@ class CommonListAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       elevation: 1,
       automaticallyImplyLeading: false,
       titleSpacing: 0,
@@ -41,7 +41,7 @@ class CommonListAppBar extends StatelessWidget implements PreferredSizeWidget {
               icon: SvgPicture.asset(
                 'assets/icons/svg/ic_back.svg',
                 colorFilter: const ColorFilter.mode(
-                  AppColors.primary,
+                  AppColors.teal,
                   BlendMode.srcIn,
                 ),
                 width: 26,
@@ -59,8 +59,8 @@ class CommonListAppBar extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      color: Colors.black87,
+                    style: TextStyle(
+                      color: AppColors.navy,
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),
@@ -68,8 +68,8 @@ class CommonListAppBar extends StatelessWidget implements PreferredSizeWidget {
                   Obx(() {
                     return Text(
                       '${'dr_prefix'.tr}${doctorName.value}',
-                      style: const TextStyle(
-                        color: Colors.black54,
+                      style: TextStyle(
+                        color: AppColors.coolGray,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -87,8 +87,8 @@ class CommonListAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Container(
                 height: 38,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.grey.shade300),
+                  color: AppColors.white,
+                  border: Border.all(color: AppColors.medicalGray),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: TextField(
@@ -96,7 +96,7 @@ class CommonListAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onSubmitted: onSearch,
                   decoration: InputDecoration(
                     hintText: 'search_patient'.tr,
-                    hintStyle: const TextStyle(color: Colors.grey, fontSize: 13),
+                    hintStyle: TextStyle(color: AppColors.medicalGray, fontSize: 13),
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: 8,
                       vertical: 10,

@@ -12,12 +12,12 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
     final searchController = TextEditingController();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.teal,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () => Get.back(),
         ),
         title: Obx(() {
@@ -32,8 +32,8 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
             children: [
               Text(
                 'book_appointment'.tr,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppColors.white,
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
                 ),
@@ -41,8 +41,8 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
               if (subtitle.isNotEmpty)
                 Text(
                   subtitle,
-                  style: const TextStyle(
-                    color: Colors.white70,
+                  style: TextStyle(
+                    color: AppColors.white.withValues(alpha: 0.7),
                     fontSize: 12,
                   ),
                 ),
@@ -51,7 +51,7 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
         }),
         actions: [
           IconButton(
-            icon: const Icon(Icons.home, color: Colors.white),
+            icon: Icon(Icons.home, color: AppColors.white),
             onPressed: () => Get.offAllNamed('/patient-dashboard'),
           ),
         ],
@@ -63,7 +63,7 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
             padding: const EdgeInsets.all(12.0),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.grey.shade100,
+                color: AppColors.lightGray,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: TextField(
@@ -71,7 +71,7 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                 onChanged: (val) => controller.filterCategories(val),
                 decoration: InputDecoration(
                   hintText: 'search'.tr,
-                  prefixIcon: const Icon(Icons.search, color: AppColors.primary),
+                  prefixIcon: Icon(Icons.search, color: AppColors.teal),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
@@ -98,10 +98,10 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                       padding: const EdgeInsets.only(bottom: 12.0, left: 4.0),
                       child: Text(
                         'package_categories'.tr,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: AppColors.navy,
                         ),
                       ),
                     ),
@@ -112,7 +112,7 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                     if (controller.isLoading.value && controller.categories.isEmpty) {
                       return const Center(
                         child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.teal),
                         ),
                       );
                     }
@@ -121,7 +121,7 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                       return Center(
                         child: Text(
                           controller.errorMsg.value,
-                          style: const TextStyle(color: Colors.grey, fontSize: 14),
+                          style: TextStyle(color: AppColors.medicalGray, fontSize: 14),
                         ),
                       );
                     }
@@ -131,7 +131,7 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                       return Center(
                         child: Text(
                           'no_package_categories_found'.tr,
-                          style: const TextStyle(color: Colors.grey, fontSize: 14),
+                          style: TextStyle(color: AppColors.medicalGray, fontSize: 14),
                         ),
                       );
                     }
@@ -205,19 +205,19 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                   children: [
                     Text(
                       'one_time_consultation'.tr,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '₹ ${controller.consultationCharge}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                     ),
                   ],
@@ -225,8 +225,8 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                 ElevatedButton(
                   onPressed: () => controller.initiateOnlinePayment(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: AppColors.primary,
+                    backgroundColor: AppColors.white,
+                    foregroundColor: AppColors.teal,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -277,7 +277,7 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                       Expanded(
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: AppColors.white,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: TextField(
@@ -294,8 +294,8 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                       ElevatedButton(
                         onPressed: () => controller.applyPromoCode(),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: AppColors.primary,
+                          backgroundColor: AppColors.white,
+                          foregroundColor: AppColors.teal,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -323,14 +323,14 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.orange : Colors.white,
+          color: isSelected ? AppColors.warning : AppColors.white,
           borderRadius: BorderRadius.circular(8),
         ),
         alignment: Alignment.center,
         child: Text(
           text,
           style: TextStyle(
-            color: isSelected ? Colors.white : AppColors.primary,
+            color: isSelected ? AppColors.white : AppColors.teal,
             fontWeight: FontWeight.bold,
           ),
         ),

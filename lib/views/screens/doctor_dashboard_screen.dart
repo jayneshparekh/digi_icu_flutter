@@ -37,16 +37,16 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
     });
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: AppColors.lightGray,
       drawer: const DoctorSideMenu(),
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.teal,
         // Teal background matching design
         elevation: 0,
         leading: Builder(
           builder: (context) {
             return IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white),
+              icon: Icon(Icons.menu, color: AppColors.white),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -60,8 +60,8 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
             children: [
               Text(
                 'Dr. ${controller.doctorName.value}',
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppColors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
                 ),
@@ -69,7 +69,7 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
               Text(
                 controller.userType.value,
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.85),
+                  color: AppColors.white.withValues(alpha: 0.85),
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                 ),
@@ -85,7 +85,7 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
               child: SvgPicture.asset(
                 'assets/icons/svg/qr_code_scan.svg',
                 colorFilter: const ColorFilter.mode(
-                  Colors.white,
+                  AppColors.white,
                   BlendMode.srcIn,
                 ),
                 width: 24,
@@ -98,9 +98,9 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
             child: Container(
               width: 32,
               height: 32,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white,
+                color: AppColors.white,
               ),
               child: ClipOval(
                 child: Image.asset(
@@ -112,7 +112,7 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
           ),
           // 3-dot Popup Menu
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
+            icon: Icon(Icons.more_vert, color: AppColors.white),
             onSelected: (value) {
               if (value == 'logout') {
                 controller.logout();
@@ -188,8 +188,8 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
                   'drawing_saved'.tr,
                   'canvas_image_generated'.trParams({'bytes': bytes.length.toString()}),
                   snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: AppColors.primary,
-                  colorText: Colors.white,
+                  backgroundColor: AppColors.teal,
+                  colorText: AppColors.white,
                 );
               },
             ),
@@ -210,17 +210,17 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
   void _showLayoutDialog(BuildContext context) {
     Get.dialog(
       AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
         contentPadding: const EdgeInsets.symmetric(horizontal: 24),
         actionsPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
         title: Text(
           'select_layout'.tr,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: AppColors.navy,
           ),
         ),
         content: Column(
@@ -229,7 +229,7 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
           children: [
             Text(
               'recommended_layout_desc'.tr,
-              style: const TextStyle(fontSize: 14, color: Colors.grey),
+              style: TextStyle(fontSize: 14, color: AppColors.medicalGray),
             ),
             const SizedBox(height: 24),
             Obx(() {
@@ -248,7 +248,7 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
                           value: 'portrait',
                           title: Text(
                             'portrait_vertical'.tr,
-                            style: const TextStyle(fontSize: 16, color: Colors.black87),
+                            style: TextStyle(fontSize: 16, color: AppColors.navy),
                           ),
                           activeColor: AppColors.info,
                           contentPadding: EdgeInsets.zero,
@@ -257,7 +257,7 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
                           value: 'landscape',
                           title: Text(
                             'landscape_horizontal'.tr,
-                            style: const TextStyle(fontSize: 16, color: Colors.black87),
+                            style: TextStyle(fontSize: 16, color: AppColors.navy),
                           ),
                           activeColor: AppColors.info,
                           contentPadding: EdgeInsets.zero,
@@ -273,10 +273,10 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
                     },
                     title: Text(
                       'set_orientation_default'.tr,
-                      style: const TextStyle(fontSize: 15, color: Colors.black87),
+                      style: TextStyle(fontSize: 15, color: AppColors.navy),
                     ),
                     activeColor: AppColors.info,
-                    checkColor: Colors.white,
+                    checkColor: AppColors.white,
                     controlAffinity: ListTileControlAffinity.leading,
                     contentPadding: EdgeInsets.zero,
                   ),
@@ -293,8 +293,8 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
             },
             child: Text(
               'apply'.tr,
-              style: const TextStyle(
-                color: AppColors.primary,
+              style: TextStyle(
+                color: AppColors.teal,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -312,19 +312,19 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           title: Text(
             'warning'.tr,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: AppColors.navy,
             ),
           ),
           content: Text(
             'registration_pending_msg'.tr,
-            style: const TextStyle(fontSize: 14, color: Colors.black87),
+            style: TextStyle(fontSize: 14, color: AppColors.navy),
           ),
           actions: [
             TextButton(
@@ -333,8 +333,8 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
               },
               child: Text(
                 'okay'.tr,
-                style: const TextStyle(
-                  color: AppColors.primary,
+                style: TextStyle(
+                  color: AppColors.teal,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -345,8 +345,8 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
               },
               child: Text(
                 'cancel'.tr,
-                style: const TextStyle(
-                  color: Colors.grey,
+                style: TextStyle(
+                  color: AppColors.medicalGray,
                   fontWeight: FontWeight.bold,
                 ),
               ),

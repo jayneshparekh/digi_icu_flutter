@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 
 /// A network image displayed as an avatar with rounded corners. Falls back to
 /// [fallbackAsset] (or a generic [Icons.person] icon) when the image URL is
@@ -41,10 +42,10 @@ class AppNetworkAvatar extends StatelessWidget {
     return Image.asset(
       fallbackAsset,
       fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) => const Icon(
+      errorBuilder: (context, error, stackTrace) => Icon(
         Icons.person,
         size: 48,
-        color: Colors.grey,
+        color: AppColors.medicalGray,
       ),
     );
   }

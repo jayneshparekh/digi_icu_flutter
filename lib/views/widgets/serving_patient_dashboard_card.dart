@@ -25,7 +25,7 @@ class ServingPatientDashboardCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
         decoration: BoxDecoration(
-          color: backgroundColor ?? AppColors.cardBlue,
+          color: backgroundColor ?? AppColors.blue,
           borderRadius: BorderRadius.circular(6),
         ),
         child: Row(
@@ -37,8 +37,8 @@ class ServingPatientDashboardCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppColors.white,
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
                     ),
@@ -47,8 +47,8 @@ class ServingPatientDashboardCard extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     value,
-                    style: const TextStyle(
-                      color: Colors.white70,
+                    style: TextStyle(
+                      color: AppColors.white.withValues(alpha: 0.7),
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
                     ),

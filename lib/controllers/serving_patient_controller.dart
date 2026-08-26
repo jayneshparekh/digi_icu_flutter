@@ -134,18 +134,18 @@ class ServingPatientController extends GetxController {
           patientRating.value = ratingValue;
           Get.rawSnackbar(
             message: response.data['msg']?.toString() ?? 'Rating added successfully.',
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.success,
           );
           _showFinishAppointmentDialog();
         } else {
           Get.rawSnackbar(
             message: response.data['msg']?.toString() ?? 'Failed to add rating.',
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
           );
         }
       }
     } catch (e) {
-      Get.rawSnackbar(message: 'Error adding rating: $e', backgroundColor: Colors.red);
+      Get.rawSnackbar(message: 'Error adding rating: $e', backgroundColor: AppColors.error);
     } finally {
       isLoadingDetails.value = false;
     }
@@ -159,15 +159,15 @@ class ServingPatientController extends GetxController {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.medicalGray)),
           ),
           ElevatedButton(
             onPressed: () {
               Get.back();
               changeAppointmentStatus('', '1');
             },
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-            child: const Text('Yes', style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal),
+            child: const Text('Yes', style: TextStyle(color: AppColors.white)),
           ),
         ],
       ),
@@ -195,18 +195,18 @@ class ServingPatientController extends GetxController {
         if (response.data['status'] == 'success') {
           Get.rawSnackbar(
             message: response.data['msg']?.toString() ?? 'Appointment status updated.',
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.success,
           );
           Get.offAllNamed('/patient-list');
         } else {
           Get.rawSnackbar(
             message: response.data['msg']?.toString() ?? 'Failed to update appointment status.',
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
           );
         }
       }
     } catch (e) {
-      Get.rawSnackbar(message: 'Error updating status: $e', backgroundColor: Colors.red);
+      Get.rawSnackbar(message: 'Error updating status: $e', backgroundColor: AppColors.error);
     } finally {
       isLoadingDetails.value = false;
     }

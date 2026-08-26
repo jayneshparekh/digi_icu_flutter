@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 
 /// A small rounded badge with a solid background [color] and a bold white
 /// [label]. Used to display status indicators or category tags.
@@ -27,7 +28,7 @@ class AppStatusBadge extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-          color: Colors.white,
+          color: AppColors.white,
           fontSize: fontSize,
           fontWeight: FontWeight.bold,
         ),

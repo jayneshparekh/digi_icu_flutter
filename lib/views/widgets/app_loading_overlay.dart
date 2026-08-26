@@ -14,10 +14,10 @@ class AppLoadingOverlay extends StatelessWidget {
     if (!isLoading) return const SizedBox.shrink();
 
     return Container(
-      color: Colors.black.withValues(alpha: 0.3),
+      color: AppColors.pureBlack.withValues(alpha: 0.3),
       child: const Center(
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+          valueColor: AlwaysStoppedAnimation<Color>(AppColors.teal),
         ),
       ),
     );

@@ -51,9 +51,9 @@ void main() {
   // Set the status bar color to teal globally
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: AppColors.primary, // Teal status bar
+      statusBarColor: AppColors.teal, // Teal status bar
       statusBarIconBrightness: Brightness.light, // Light icons for status bar
-      systemNavigationBarColor: Colors.white, // Navigation bar color
+      systemNavigationBarColor: AppColors.white, // Navigation bar color
       systemNavigationBarIconBrightness:
           Brightness.dark, // Dark icons for nav bar
     ),
@@ -62,8 +62,38 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// Re-assert system bars every time the app comes back to the foreground.
+  /// The OS can reset the system UI mode on resume, keyboard events, or
+  /// when certain platform views are presented.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.manual,
+        overlays: SystemUiOverlay.values,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

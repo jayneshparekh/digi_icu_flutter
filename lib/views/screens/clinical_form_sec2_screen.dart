@@ -22,15 +22,15 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
             'action_required'.tr,
             'cannot_go_back_form'.tr,
             snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.orange,
-            colorText: Colors.white,
+            backgroundColor: AppColors.warning,
+            colorText: AppColors.white,
           );
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           elevation: 0,
           automaticallyImplyLeading: false,
           title: Column(
@@ -42,8 +42,8 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         : controller.patientName.isNotEmpty
                             ? controller.patientName
                             : 'patient_name'.tr,
-                    style: const TextStyle(
-                      color: Colors.black87,
+                    style: TextStyle(
+                      color: AppColors.navy,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -51,8 +51,8 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
               if (controller.doctorName.isNotEmpty)
                 Text(
                   controller.doctorName,
-                  style: const TextStyle(
-                    color: Colors.grey,
+                  style: TextStyle(
+                    color: AppColors.medicalGray,
                     fontSize: 12,
                   ),
                 ),
@@ -82,10 +82,10 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         Expanded(
                           child: Text(
                             'have_blood_investigations'.tr,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black87,
+                              color: AppColors.navy,
                             ),
                           ),
                         ),
@@ -99,11 +99,11 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         Checkbox(
                           value: controller.checkSugarVal.value,
                           onChanged: (val) => controller.checkSugarVal.value = val ?? false,
-                          activeColor: AppColors.primary,
+                          activeColor: AppColors.teal,
                         ),
                         Text(
                           'blood_sugar_level'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                         ),
                       ],
                     ),
@@ -167,11 +167,11 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         Checkbox(
                           value: controller.cbCreatinine.value,
                           onChanged: (val) => controller.cbCreatinine.value = val ?? false,
-                          activeColor: AppColors.primary,
+                          activeColor: AppColors.teal,
                         ),
                         Text(
                           'creatinine'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                         ),
                       ],
                     ),
@@ -187,7 +187,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                             border: const OutlineInputBorder(),
                             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             suffixIcon: IconButton(
-                              icon: const Icon(Icons.info, color: Colors.grey),
+                              icon: Icon(Icons.info, color: AppColors.medicalGray),
                               onPressed: () => _showInfoDialog('Creatinine', 'Creatinine is a chemical waste product that\'s created by your muscle metabolism and to a smaller extent by eating meat. Healthy kidneys filter creatinine and other waste products from your blood.'),
                             ),
                           ),
@@ -202,11 +202,11 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         Checkbox(
                           value: controller.cbHba1c.value,
                           onChanged: (val) => controller.cbHba1c.value = val ?? false,
-                          activeColor: AppColors.primary,
+                          activeColor: AppColors.teal,
                         ),
                         Text(
                           'hba1c'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                         ),
                       ],
                     ),
@@ -225,7 +225,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                 border: const OutlineInputBorder(),
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                 suffixIcon: IconButton(
-                                  icon: const Icon(Icons.info, color: Colors.grey),
+                                  icon: Icon(Icons.info, color: AppColors.medicalGray),
                                   onPressed: () => _showInfoDialog('HbA1c', 'The HbA1c test shows your average blood sugar level over the past 2 to 3 months. It\'s a common test used to diagnose prediabetes and diabetes.'),
                                 ),
                               ),
@@ -242,7 +242,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                         children: [
                                           Radio<String>(
                                             value: 'Today',
-                                            activeColor: AppColors.primary,
+                                            activeColor: AppColors.teal,
                                           ),
                                           Text('today'.tr),
                                         ],
@@ -252,7 +252,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                         children: [
                                           Radio<String>(
                                             value: 'Yesterday',
-                                            activeColor: AppColors.primary,
+                                            activeColor: AppColors.teal,
                                           ),
                                           Text('yesterday'.tr),
                                         ],
@@ -267,7 +267,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                                       decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.grey),
+                                        border: Border.all(color: AppColors.medicalGray),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       child: Row(
@@ -275,9 +275,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                         children: [
                                           Text(
                                             controller.hba1cDateChoice.value == 'Today' ? 'today'.tr : controller.hba1cDateChoice.value == 'Yesterday' ? 'yesterday'.tr : controller.hba1cDateChoice.value,
-                                            style: const TextStyle(fontSize: 13, color: Colors.black87),
+                                            style: TextStyle(fontSize: 13, color: AppColors.navy),
                                           ),
-                                          const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                                          Icon(Icons.calendar_today, size: 16, color: AppColors.medicalGray),
                                         ],
                                       ),
                                     ),
@@ -297,11 +297,11 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         Checkbox(
                           value: controller.cbCholesterol.value,
                           onChanged: (val) => controller.cbCholesterol.value = val ?? false,
-                          activeColor: AppColors.primary,
+                          activeColor: AppColors.teal,
                         ),
                         Text(
                           'total_cholesterol'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                         ),
                       ],
                     ),
@@ -319,7 +319,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                 border: const OutlineInputBorder(),
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                 suffixIcon: IconButton(
-                                  icon: const Icon(Icons.info, color: Colors.grey),
+                                  icon: Icon(Icons.info, color: AppColors.medicalGray),
                                   onPressed: () => _showInfoDialog('Total Cholesterol', 'Total cholesterol is a measure of the total amount of cholesterol in your blood, including LDL (bad) cholesterol and HDL (good) cholesterol.'),
                                 ),
                               ),
@@ -376,11 +376,11 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         Checkbox(
                           value: controller.cbUrineAlbumin.value,
                           onChanged: (val) => controller.cbUrineAlbumin.value = val ?? false,
-                          activeColor: AppColors.primary,
+                          activeColor: AppColors.teal,
                         ),
                         Text(
                           'urine_albumin'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                         ),
                       ],
                     ),
@@ -391,7 +391,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('urine_albumin'.tr, style: const TextStyle(fontSize: 13, color: Colors.black54)),
+                            Text('urine_albumin'.tr, style: TextStyle(fontSize: 13, color: AppColors.coolGray)),
                             RadioGroup<String>(
                               groupValue: controller.urineAlbuminType.value,
                               onChanged: (val) => controller.urineAlbuminType.value = val ?? '',
@@ -401,7 +401,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                     children: [
                                       Radio<String>(
                                         value: 'Numeric',
-                                        activeColor: AppColors.primary,
+                                        activeColor: AppColors.teal,
                                       ),
                                       Text('numeric'.tr),
                                     ],
@@ -411,7 +411,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                     children: [
                                       Radio<String>(
                                         value: 'Value',
-                                        activeColor: AppColors.primary,
+                                        activeColor: AppColors.teal,
                                       ),
                                       Text('value'.tr),
                                     ],
@@ -429,7 +429,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                   border: const OutlineInputBorder(),
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   suffixIcon: IconButton(
-                                    icon: const Icon(Icons.info, color: Colors.grey),
+                                    icon: Icon(Icons.info, color: AppColors.medicalGray),
                                     onPressed: () => _showInfoDialog('Urine Albumin', 'Urine albumin is a test to detect small amounts of a blood protein (albumin) in your urine. An albumin test helps identify kidney disease.'),
                                   ),
                                 ),
@@ -438,7 +438,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 12),
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
+                                  border: Border.all(color: AppColors.medicalGray),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: DropdownButtonHideUnderline(
@@ -465,14 +465,14 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         Checkbox(
                           value: controller.cbEcg.value,
                           onChanged: (val) => controller.cbEcg.value = val ?? false,
-                          activeColor: AppColors.primary,
+                          activeColor: AppColors.teal,
                         ),
                         Text(
                           'ecg'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.info, color: Colors.grey, size: 20),
+                          icon: Icon(Icons.info, color: AppColors.medicalGray, size: 20),
                           onPressed: () => _showInfoDialog('ECG', 'An electrocardiogram (ECG) records the electrical signals in your heart. It\'s a common and painless test used to quickly detect heart problems and monitor your heart\'s health.'),
                         ),
                       ],
@@ -484,14 +484,14 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('upload_image'.tr, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black87)),
+                            Text('upload_image'.tr, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.navy)),
                             const SizedBox(height: 8),
                             Row(
                               children: [
                                 Expanded(
                                   child: ElevatedButton.icon(
                                     onPressed: () => controller.pickEcgImage(ImageSource.gallery),
-                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
+                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal, foregroundColor: AppColors.white),
                                     icon: const Icon(Icons.photo_library),
                                     label: Text('gallery'.tr),
                                   ),
@@ -500,7 +500,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                 Expanded(
                                   child: ElevatedButton.icon(
                                     onPressed: () => controller.pickEcgImage(ImageSource.camera),
-                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
+                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal, foregroundColor: AppColors.white),
                                     icon: const Icon(Icons.camera_alt),
                                     label: Text('camera'.tr),
                                   ),
@@ -526,8 +526,8 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                           child: GestureDetector(
                                             onTap: () => controller.removeEcgImage(index),
                                             child: Container(
-                                              color: Colors.black54,
-                                              child: const Icon(Icons.close, color: Colors.white, size: 16),
+                                              color: AppColors.coolGray,
+                                              child: Icon(Icons.close, color: AppColors.white, size: 16),
                                             ),
                                           ),
                                         ),
@@ -538,14 +538,14 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                               ),
                             ],
                             const SizedBox(height: 16),
-                            Text('record_ecg'.tr, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black87)),
+                            Text('record_ecg'.tr, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.navy)),
                             const SizedBox(height: 8),
                             Row(
                               children: [
                                 Expanded(
                                   child: ElevatedButton(
                                     onPressed: () {},
-                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
+                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal, foregroundColor: AppColors.white),
                                     child: Text('short_ecg'.tr, style: const TextStyle(fontSize: 11)),
                                   ),
                                 ),
@@ -553,7 +553,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                 Expanded(
                                   child: ElevatedButton(
                                     onPressed: () {},
-                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
+                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal, foregroundColor: AppColors.white),
                                     child: Text('record_12_lead_ecg'.tr, style: const TextStyle(fontSize: 11)),
                                   ),
                                 ),
@@ -565,8 +565,8 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                               height: 120,
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                color: Colors.grey.shade50,
+                                border: Border.all(color: AppColors.medicalGray),
+                                color: AppColors.lightGray,
                               ),
                               child: GridView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
@@ -577,8 +577,8 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                 itemBuilder: (context, index) => Container(
                                   decoration: BoxDecoration(
                                     border: Border(
-                                      bottom: BorderSide(color: Colors.grey.shade200),
-                                      right: BorderSide(color: Colors.grey.shade200),
+                                      bottom: BorderSide(color: AppColors.lightGray),
+                                      right: BorderSide(color: AppColors.lightGray),
                                     ),
                                   ),
                                 ),
@@ -596,11 +596,11 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         Checkbox(
                           value: controller.cbThyroid.value,
                           onChanged: (val) => controller.cbThyroid.value = val ?? false,
-                          activeColor: AppColors.primary,
+                          activeColor: AppColors.teal,
                         ),
                         Text(
                           'thyroid'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                         ),
                       ],
                     ),
@@ -657,11 +657,11 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         Checkbox(
                           value: controller.cbUricAcid.value,
                           onChanged: (val) => controller.cbUricAcid.value = val ?? false,
-                          activeColor: AppColors.primary,
+                          activeColor: AppColors.teal,
                         ),
                         Text(
                           'uric_acid'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                         ),
                       ],
                     ),
@@ -677,7 +677,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                             border: const OutlineInputBorder(),
                             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             suffixIcon: IconButton(
-                              icon: const Icon(Icons.info, color: Colors.grey),
+                              icon: Icon(Icons.info, color: AppColors.medicalGray),
                               onPressed: () => _showInfoDialog('Uric Acid', 'Uric acid is a waste product found in blood. It\'s created when the body breaks down chemicals called purines. Most uric acid dissolves in blood, passes through the kidneys and leaves the body in urine.'),
                             ),
                           ),
@@ -692,7 +692,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                       children: [
                         Text(
                           'other_investigations'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
                         ),
                         RadioGroup<String>(
                           groupValue: controller.otherInvestigationsChoice.value,
@@ -703,7 +703,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                 children: [
                                   Radio<String>(
                                     value: 'Yes',
-                                    activeColor: AppColors.primary,
+                                    activeColor: AppColors.teal,
                                   ),
                                   Text('yes'.tr),
                                 ],
@@ -713,7 +713,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                 children: [
                                   Radio<String>(
                                     value: 'No',
-                                    activeColor: AppColors.primary,
+                                    activeColor: AppColors.teal,
                                   ),
                                   Text('no'.tr),
                                 ],
@@ -739,7 +739,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                           Expanded(
                             child: ElevatedButton.icon(
                               onPressed: () => controller.pickOtherImage(ImageSource.gallery),
-                              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
+                              style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal, foregroundColor: AppColors.white),
                               icon: const Icon(Icons.photo_library),
                               label: Text('gallery'.tr),
                             ),
@@ -748,7 +748,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                           Expanded(
                             child: ElevatedButton.icon(
                               onPressed: () => controller.pickOtherImage(ImageSource.camera),
-                              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
+                              style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal, foregroundColor: AppColors.white),
                               icon: const Icon(Icons.camera_alt),
                               label: Text('camera'.tr),
                             ),
@@ -774,8 +774,8 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                     child: GestureDetector(
                                       onTap: () => controller.removeOtherImage(index),
                                       child: Container(
-                                        color: Colors.black54,
-                                        child: const Icon(Icons.close, color: Colors.white, size: 16),
+                                        color: AppColors.coolGray,
+                                        child: Icon(Icons.close, color: AppColors.white, size: 16),
                                       ),
                                     ),
                                   ),
@@ -796,7 +796,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                         onPressed: () => controller.submitSec2(),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.success, // Green Next button
-                          foregroundColor: Colors.white,
+                          foregroundColor: AppColors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6),
                           ),
@@ -832,7 +832,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Close', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            child: const Text('Close', style: TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -849,9 +849,9 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.light(
-              primary: AppColors.primary,
-              onPrimary: Colors.white,
-              onSurface: Colors.black,
+              primary: AppColors.teal,
+              onPrimary: AppColors.white,
+              onSurface: AppColors.pureBlack,
             ),
           ),
           child: child!,

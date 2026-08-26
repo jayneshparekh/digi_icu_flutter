@@ -2,7 +2,7 @@ import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-/// A square tappable button with an [AppColors.primary] background and a
+/// A square tappable button with an [AppColors.teal] background and a
 /// white SVG icon.
 class AppTealIconButton extends StatelessWidget {
   final String assetPath;
@@ -29,13 +29,13 @@ class AppTealIconButton extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: AppColors.primary,
+          color: AppColors.teal,
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         padding: EdgeInsets.all(iconPadding),
         child: SvgPicture.asset(
           assetPath,
-          colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          colorFilter: const ColorFilter.mode(AppColors.white, BlendMode.srcIn),
         ),
       ),
     );

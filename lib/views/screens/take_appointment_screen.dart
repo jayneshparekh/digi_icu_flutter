@@ -10,12 +10,12 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.teal,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () => Get.back(),
         ),
         title: Obx(() {
@@ -30,8 +30,8 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
             children: [
               Text(
                 'book_appointment'.tr,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppColors.white,
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
                 ),
@@ -39,8 +39,8 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
               if (subtitle.isNotEmpty)
                 Text(
                   subtitle,
-                  style: const TextStyle(
-                    color: Colors.white70,
+                  style: TextStyle(
+                    color: AppColors.white.withValues(alpha: 0.7),
                     fontSize: 12,
                   ),
                 ),
@@ -49,7 +49,7 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
         }),
         actions: [
           IconButton(
-            icon: const Icon(Icons.home, color: Colors.white),
+            icon: Icon(Icons.home, color: AppColors.white),
             onPressed: () => Get.offAllNamed('/patient-dashboard'),
           ),
         ],
@@ -72,10 +72,10 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
                         children: [
                           Text(
                             'purpose_of_visit'.tr,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black87,
+                              color: AppColors.navy,
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -100,10 +100,10 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
                   // Question
                   Text(
                     'where_are_you'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -148,8 +148,8 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
                       child: ElevatedButton(
                         onPressed: () => controller.bookAppointment(),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: Colors.white,
+                          backgroundColor: AppColors.teal,
+                          foregroundColor: AppColors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6),
                           ),
@@ -191,7 +191,7 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: isSelected ? Colors.red : Colors.transparent,
+                color: isSelected ? AppColors.error : Colors.transparent,
                 width: 3,
               ),
             ),
@@ -209,7 +209,7 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? Colors.red : Colors.black87,
+                color: isSelected ? AppColors.error : AppColors.navy,
               ),
             ),
           ),

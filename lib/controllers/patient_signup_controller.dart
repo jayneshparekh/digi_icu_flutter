@@ -1,4 +1,5 @@
 ﻿import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -78,8 +79,8 @@ class PatientSignUpController extends GetxController {
         'Error',
         'Failed to pick image: $e',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
     }
   }
@@ -95,8 +96,8 @@ class PatientSignUpController extends GetxController {
         'Validation Error',
         'First name, Middle name, Last name, Mobile no and Age are required fields.',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -106,8 +107,8 @@ class PatientSignUpController extends GetxController {
         'Validation Error',
         'Please select at least one past history option.',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -226,8 +227,8 @@ class PatientSignUpController extends GetxController {
             'Success',
             res['msg'] ?? 'Patient registered successfully!',
             snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
+            backgroundColor: AppColors.success,
+            colorText: AppColors.white,
           );
           // Go back to list and refresh
           Get.back(result: true);
@@ -236,8 +237,8 @@ class PatientSignUpController extends GetxController {
             'Registration Error',
             res['msg'] ?? 'Could not register patient.',
             snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
+            backgroundColor: AppColors.error,
+            colorText: AppColors.white,
           );
         }
       } else {
@@ -245,8 +246,8 @@ class PatientSignUpController extends GetxController {
           'Error',
           'Failed to connect to the server.',
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
       }
     } catch (e) {
@@ -254,8 +255,8 @@ class PatientSignUpController extends GetxController {
         'Error',
         'Something went wrong: $e',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
     } finally {
       isLoading.value = false;

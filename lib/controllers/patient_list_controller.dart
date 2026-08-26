@@ -1,4 +1,5 @@
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -202,14 +203,14 @@ class PatientListController extends GetxController {
         if (resStatus == 'success') {
           Get.rawSnackbar(
             message: resMsg.isNotEmpty ? resMsg : 'Patient confirmed successfully.',
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.success,
             duration: const Duration(seconds: 2),
           );
           return true;
         } else {
           Get.rawSnackbar(
             message: resMsg.isNotEmpty ? resMsg : 'Failed to confirm patient.',
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
             duration: const Duration(seconds: 3),
           );
           return false;
@@ -217,7 +218,7 @@ class PatientListController extends GetxController {
       } else {
         Get.rawSnackbar(
           message: 'Server error: ${response.statusCode}',
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
           duration: const Duration(seconds: 3),
         );
         return false;
@@ -225,7 +226,7 @@ class PatientListController extends GetxController {
     } catch (e) {
       Get.rawSnackbar(
         message: 'Connection error: $e',
-        backgroundColor: Colors.red,
+        backgroundColor: AppColors.error,
         duration: const Duration(seconds: 3),
       );
       return false;

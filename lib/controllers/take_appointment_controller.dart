@@ -1,4 +1,5 @@
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -139,8 +140,8 @@ class TakeAppointmentController extends GetxController {
             'Success',
             'Appointment booked successfully!',
             snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
+            backgroundColor: AppColors.success,
+            colorText: AppColors.white,
           );
 
           if (res.defaultFormType.isNotEmpty) {

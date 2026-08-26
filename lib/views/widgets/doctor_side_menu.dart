@@ -19,20 +19,20 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
+        statusBarColor: AppColors.teal,
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.dark,
-        systemNavigationBarColor: Colors.white,
+        systemNavigationBarColor: AppColors.white,
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
       child: Drawer(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Teal status bar area using SafeArea padding — works across all Android versions and orientations
             Container(
-              color: AppColors.primary,
+              color: AppColors.teal,
               child: SafeArea(
                 bottom: false,
                 child: const SizedBox(width: double.infinity),
@@ -56,7 +56,7 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Colors.green.shade600,
+                            color: AppColors.success,
                             width: 1,
                           ),
                         ),
@@ -72,10 +72,10 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
                       Expanded(
                         child: Text(
                           'digi_icu'.tr,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
-                            color: Colors.black87,
+                            color: AppColors.navy,
                           ),
                         ),
                       ),
@@ -85,7 +85,7 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
                         icon: SvgPicture.asset(
                           'assets/icons/svg/ic_settings.svg',
                           colorFilter: const ColorFilter.mode(
-                            AppColors.greyDark,
+                            AppColors.coolGray,
                             BlendMode.srcIn,
                           ),
                           width: 24,
@@ -105,7 +105,7 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
                           icon: SvgPicture.asset(
                             iconPath,
                             colorFilter: const ColorFilter.mode(
-                              Colors.black87,
+                              AppColors.navy,
                               BlendMode.srcIn,
                             ),
                             width: 24,
@@ -121,7 +121,7 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
                     'copyright_text'.tr,
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.grey.shade400,
+                      color: AppColors.medicalGray,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -207,19 +207,19 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
   void _showPendingRegistrationDialog() {
     Get.dialog(
       AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         title: Text(
           'warning_title'.tr,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: AppColors.navy,
           ),
         ),
         content: Text(
           'registration_pending'.tr,
-          style: const TextStyle(fontSize: 14, color: Colors.black87),
+          style: TextStyle(fontSize: 14, color: AppColors.navy),
         ),
         actions: [
           TextButton(
@@ -228,8 +228,8 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
             },
             child: Text(
               'okay'.tr,
-              style: const TextStyle(
-                color: AppColors.primary,
+              style: TextStyle(
+                color: AppColors.teal,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -240,7 +240,7 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
             },
             child: Text(
               'cancel'.tr,
-              style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+              style: TextStyle(color: AppColors.medicalGray, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -263,15 +263,15 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
             ),
             child: Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
-                color: Colors.black87,
+                color: AppColors.navy,
               ),
             ),
           ),
         ),
-        const Divider(height: 1, thickness: 1, color: AppColors.divider),
+        const Divider(height: 1, thickness: 1, color: AppColors.medicalGray),
       ],
     );
   }

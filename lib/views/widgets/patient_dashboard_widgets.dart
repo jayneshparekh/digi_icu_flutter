@@ -17,8 +17,8 @@ class PatientDashboardCircleBtn extends StatelessWidget {
     required this.iconPath,
     required this.label,
     required this.onTap,
-    this.iconColor = AppColors.primary,
-    this.backgroundColor = Colors.white,
+    this.iconColor = AppColors.teal,
+    this.backgroundColor = AppColors.white,
   });
 
   @override
@@ -52,7 +52,7 @@ class PatientDashboardCircleBtn extends StatelessWidget {
                 color: backgroundColor,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
+                    color: AppColors.pureBlack.withValues(alpha: 0.08),
                     spreadRadius: 1,
                     blurRadius: 4,
                     offset: const Offset(0, 2),
@@ -70,10 +70,10 @@ class PatientDashboardCircleBtn extends StatelessWidget {
             Text(
               label,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
+                color: AppColors.navy,
               ),
             ),
           ],
@@ -96,8 +96,8 @@ class PatientDashboardCard extends StatelessWidget {
     required this.iconPath,
     required this.label,
     required this.onTap,
-    this.iconColor = AppColors.primary,
-    this.textColor = Colors.black87,
+    this.iconColor = AppColors.teal,
+    this.textColor = AppColors.navy,
     this.cornerRadius = 12,
   });
 
@@ -118,9 +118,9 @@ class PatientDashboardCard extends StatelessWidget {
     }
 
     return Card(
-      color: Colors.white,
+      color: AppColors.white,
       elevation: 2,
-      shadowColor: Colors.black12,
+      shadowColor: AppColors.lightGray,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(cornerRadius),
       ),
@@ -209,14 +209,14 @@ class _PatientDashboardSliderState extends State<PatientDashboardSlider> {
       return Container(
         height: 140,
         decoration: BoxDecoration(
-          color: Colors.teal.shade50,
+          color: AppColors.teal,
           borderRadius: BorderRadius.circular(15),
         ),
         alignment: Alignment.center,
         child: Text(
           'mh_clinic_promo'.tr,
-          style: const TextStyle(
-            color: AppColors.primary,
+          style: TextStyle(
+            color: AppColors.teal,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -248,12 +248,12 @@ class _PatientDashboardSliderState extends State<PatientDashboardSlider> {
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
-                      color: Colors.teal.shade50,
+                      color: AppColors.teal,
                       alignment: Alignment.center,
-                      child: const Icon(
+                      child: Icon(
                         Icons.image_not_supported,
                         size: 40,
-                        color: AppColors.primary,
+                        color: AppColors.teal,
                       ),
                     );
                   },
@@ -275,8 +275,8 @@ class _PatientDashboardSliderState extends State<PatientDashboardSlider> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: _currentPage == index
-                          ? AppColors.primary
-                          : Colors.white.withValues(alpha: 0.5),
+                          ? AppColors.teal
+                          : AppColors.white.withValues(alpha: 0.5),
                     ),
                   ),
                 ),
@@ -302,8 +302,8 @@ class PatientDashboardVerticalCard extends StatelessWidget {
     required this.iconPath,
     required this.label,
     required this.onTap,
-    this.iconColor = AppColors.primary,
-    this.textColor = Colors.black87,
+    this.iconColor = AppColors.teal,
+    this.textColor = AppColors.navy,
     this.cornerRadius = 12,
   });
 
@@ -324,9 +324,9 @@ class PatientDashboardVerticalCard extends StatelessWidget {
     }
 
     return Card(
-      color: Colors.white,
+      color: AppColors.white,
       elevation: 2,
-      shadowColor: Colors.black12,
+      shadowColor: AppColors.lightGray,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(cornerRadius),
       ),

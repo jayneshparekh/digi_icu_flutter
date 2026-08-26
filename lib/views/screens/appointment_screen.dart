@@ -14,12 +14,12 @@ class AppointmentScreen extends GetView<AppointmentController> {
     final searchController = TextEditingController();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.teal,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () => Get.back(),
         ),
         title: Obx(() {
@@ -34,8 +34,8 @@ class AppointmentScreen extends GetView<AppointmentController> {
             children: [
               Text(
                 'book_appointment'.tr,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppColors.white,
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
                 ),
@@ -43,8 +43,8 @@ class AppointmentScreen extends GetView<AppointmentController> {
               if (subtitle.isNotEmpty)
                 Text(
                   subtitle,
-                  style: const TextStyle(
-                    color: Colors.white70,
+                  style: TextStyle(
+                    color: AppColors.white.withValues(alpha: 0.7),
                     fontSize: 12,
                   ),
                 ),
@@ -53,7 +53,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
         }),
         actions: [
           IconButton(
-            icon: const Icon(Icons.home, color: Colors.white),
+            icon: Icon(Icons.home, color: AppColors.white),
             onPressed: () {
               // Redirect to Dashboard (main route or splash redirection)
               Get.offAllNamed('/patient-dashboard');
@@ -68,7 +68,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
             padding: const EdgeInsets.all(12.0),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.grey.shade100,
+                color: AppColors.lightGray,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: TextField(
@@ -76,7 +76,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
                 onChanged: (val) => controller.filterDoctors(val),
                 decoration: InputDecoration(
                   hintText: 'search_doctors'.tr,
-                  prefixIcon: const Icon(Icons.search, color: AppColors.primary),
+                  prefixIcon: Icon(Icons.search, color: AppColors.teal),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 16,
@@ -94,7 +94,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
                 return const Center(
                   child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      AppColors.primary,
+                      AppColors.teal,
                     ),
                   ),
                 );
@@ -104,7 +104,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
                 return Center(
                   child: Text(
                     controller.errorMsg.value,
-                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                    style: TextStyle(fontSize: 16, color: AppColors.medicalGray),
                   ),
                 );
               }
@@ -114,7 +114,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
                 return Center(
                   child: Text(
                     'no_doctors_found'.tr,
-                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                    style: TextStyle(fontSize: 16, color: AppColors.medicalGray),
                   ),
                 );
               }
@@ -160,9 +160,9 @@ class AppointmentScreen extends GetView<AppointmentController> {
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: Colors.grey.shade200),
+        side: BorderSide(color: AppColors.lightGray),
       ),
-      color: Colors.white,
+      color: AppColors.white,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(
@@ -183,10 +183,10 @@ class AppointmentScreen extends GetView<AppointmentController> {
                 children: [
                   Text(
                     docName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.navy,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -195,7 +195,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
                       doctor.degrees,
                       style: TextStyle(
                         fontSize: 13,
-                        color: Colors.grey.shade600,
+                        color: AppColors.coolGray,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -208,7 +208,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
                           '${'reg_no'.tr} ${doctor.regNo}',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey.shade500,
+                            color: AppColors.coolGray,
                           ),
                         ),
                       ),
@@ -221,7 +221,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
                             height: 10,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: isAvailable ? Colors.green : Colors.grey,
+                              color: isAvailable ? AppColors.success : AppColors.medicalGray,
                             ),
                           ),
                           const SizedBox(width: 4),
@@ -229,7 +229,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
                             isAvailable ? 'available'.tr : 'not_available'.tr,
                             style: TextStyle(
                               fontSize: 12,
-                              color: isAvailable ? Colors.green : Colors.grey,
+                              color: isAvailable ? AppColors.success : AppColors.medicalGray,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -245,18 +245,18 @@ class AppointmentScreen extends GetView<AppointmentController> {
                       children: [
                         Text(
                           'on_hold_label'.tr,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: Colors.orange,
+                            color: AppColors.warning,
                           ),
                         ),
                         Expanded(
                           child: Text(
                             doctor.holdReason,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: Colors.orange,
+                              color: AppColors.warning,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -268,7 +268,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
                   ] else if (doctor.clinicalFormStatus == '0') ...[
                     Text(
                       'clinical_form_pending'.tr,
-                      style: const TextStyle(fontSize: 12, color: Colors.orange),
+                      style: TextStyle(fontSize: 12, color: AppColors.warning),
                     ),
                     const SizedBox(height: 6),
                   ],
@@ -277,8 +277,8 @@ class AppointmentScreen extends GetView<AppointmentController> {
                   ElevatedButton(
                     onPressed: () => controller.checkPaymentStatus(doctor),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
+                      backgroundColor: AppColors.teal,
+                      foregroundColor: AppColors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 8,

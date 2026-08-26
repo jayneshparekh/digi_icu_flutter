@@ -14,8 +14,8 @@ class DashboardCard extends StatelessWidget {
     required this.title,
     required this.iconPath,
     required this.onTap,
-    this.iconColor = AppColors.primary,
-    this.backgroundColor = Colors.white,
+    this.iconColor = AppColors.teal,
+    this.backgroundColor = AppColors.white,
   });
 
   @override
@@ -27,7 +27,7 @@ class DashboardCard extends StatelessWidget {
         color: backgroundColor,
         elevation: 1,
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: Colors.grey.shade200),
+          side: BorderSide(color: AppColors.lightGray),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Padding(
@@ -42,7 +42,7 @@ class DashboardCard extends StatelessWidget {
                     ? Image.network(
                         iconPath,
                         fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image, color: Colors.grey),
+                        errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image, color: AppColors.medicalGray),
                       )
                     : iconPath.endsWith('.svg')
                         ? SvgPicture.asset(
@@ -58,10 +58,10 @@ class DashboardCard extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black87,
+                  color: AppColors.navy,
                 ),
                 textAlign: TextAlign.center,
               ),

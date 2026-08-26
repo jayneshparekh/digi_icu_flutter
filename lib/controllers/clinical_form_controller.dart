@@ -800,8 +800,8 @@ class ClinicalFormController extends GetxController {
               middleText: 'Do you want to upload self video of your problems ?',
               textConfirm: 'Yes',
               textCancel: 'No',
-              confirmTextColor: Colors.white,
-              buttonColor: AppColors.primary,
+              confirmTextColor: AppColors.white,
+              buttonColor: AppColors.teal,
               onConfirm: () {
                 Get.back();
                 Get.snackbar('Video Upload', 'Video upload is currently placeholder');

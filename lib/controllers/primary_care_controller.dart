@@ -1,4 +1,5 @@
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -176,8 +177,8 @@ class PrimaryCareController extends GetxController {
             'Success',
             msg,
             snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
+            backgroundColor: AppColors.success,
+            colorText: AppColors.white,
           );
           // Go to manage patients
           Get.offAllNamed('/manage-patients');
