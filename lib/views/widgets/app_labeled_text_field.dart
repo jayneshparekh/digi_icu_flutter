@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// Renders a bold [label] above a styled [TextField] with an outline border
 /// that changes to [AppColors.teal] when focused.
 class AppLabeledTextField extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String label;
   final String hint;
   final TextInputType keyboardType;
@@ -17,7 +17,7 @@ class AppLabeledTextField extends StatelessWidget {
 
   const AppLabeledTextField({
     super.key,
-    required this.controller,
+    this.controller,
     required this.label,
     this.hint = '',
     this.keyboardType = TextInputType.text,

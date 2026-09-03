@@ -1,4 +1,6 @@
-﻿import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
+import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -296,7 +298,7 @@ class ClinicalFormController extends GetxController {
 
   Future<void> pickEcgImage(ImageSource source) async {
     if (ecgReportImages.length >= 3) {
-      Get.snackbar('Limit Reached', 'You can upload up to 3 ECG images');
+      AppSnackbars.showWarning('Limit Reached', 'You can upload up to 3 ECG images');
       return;
     }
     final XFile? img = await _picker.pickImage(source: source);
@@ -311,7 +313,7 @@ class ClinicalFormController extends GetxController {
 
   Future<void> pickOtherImage(ImageSource source) async {
     if (otherReportImages.length >= 3) {
-      Get.snackbar('Limit Reached', 'You can upload up to 3 investigation images');
+      AppSnackbars.showWarning('Limit Reached', 'You can upload up to 3 investigation images');
       return;
     }
     final XFile? img = await _picker.pickImage(source: source);
@@ -330,28 +332,28 @@ class ClinicalFormController extends GetxController {
       final diastText = diastolicController.text.trim();
 
       if (sysText.isEmpty) {
-        Get.snackbar('Validation Error', 'Enter Systolic BP');
+        AppSnackbars.showError('Validation Error', 'Enter Systolic BP');
         return false;
       }
       final sysVal = int.tryParse(sysText) ?? 0;
       if (sysVal < 20 || sysVal > 300) {
-        Get.snackbar('Validation Error', 'Enter valid Systolic BP (20-300)');
+        AppSnackbars.showError('Validation Error', 'Enter valid Systolic BP (20-300)');
         return false;
       }
 
       if (diastText.isEmpty) {
-        Get.snackbar('Validation Error', 'Enter Diastolic BP');
+        AppSnackbars.showError('Validation Error', 'Enter Diastolic BP');
         return false;
       }
       final diastVal = int.tryParse(diastText) ?? 0;
       if (diastVal < 20 || diastVal > 140) {
-        Get.snackbar('Validation Error', 'Enter valid Diastolic BP (20-140)');
+        AppSnackbars.showError('Validation Error', 'Enter valid Diastolic BP (20-140)');
         return false;
       }
     }
 
     if (spo2Choice.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose SpO2 option');
+      AppSnackbars.showError('Validation Error', 'Please choose SpO2 option');
       return false;
     }
 
@@ -359,7 +361,7 @@ class ClinicalFormController extends GetxController {
     if (hText.isNotEmpty) {
       final hVal = int.tryParse(hText) ?? 0;
       if (hVal < 10 || hVal > 200) {
-        Get.snackbar('Validation Error', 'Enter valid height (10-200)');
+        AppSnackbars.showError('Validation Error', 'Enter valid height (10-200)');
         return false;
       }
     }
@@ -368,7 +370,7 @@ class ClinicalFormController extends GetxController {
     if (wText.isNotEmpty) {
       final wVal = int.tryParse(wText) ?? 0;
       if (wVal < 10 || wVal > 150) {
-        Get.snackbar('Validation Error', 'Enter valid weight (10-150)');
+        AppSnackbars.showError('Validation Error', 'Enter valid weight (10-150)');
         return false;
       }
     }
@@ -407,28 +409,28 @@ class ClinicalFormController extends GetxController {
       if (fastingController.text.trim().isEmpty &&
           afterFoodController.text.trim().isEmpty &&
           randomController.text.trim().isEmpty) {
-        Get.snackbar('Validation Error', 'Fasting, After Food or Random sugar value must be filled');
+        AppSnackbars.showError('Validation Error', 'Fasting, After Food or Random sugar value must be filled');
         return false;
       }
     }
 
     if (cbCreatinine.value) {
       if (creatinineController.text.trim().isEmpty) {
-        Get.snackbar('Validation Error', 'Please enter Creatinine value');
+        AppSnackbars.showError('Validation Error', 'Please enter Creatinine value');
         return false;
       }
     }
 
     if (cbHba1c.value) {
       if (hba1cController.text.trim().isEmpty) {
-        Get.snackbar('Validation Error', 'Please enter HbA1c value');
+        AppSnackbars.showError('Validation Error', 'Please enter HbA1c value');
         return false;
       }
     }
 
     if (cbCholesterol.value) {
       if (totalCholesterolController.text.trim().isEmpty) {
-        Get.snackbar('Validation Error', 'Please enter Total Cholesterol value');
+        AppSnackbars.showError('Validation Error', 'Please enter Total Cholesterol value');
         return false;
       }
     }
@@ -437,14 +439,14 @@ class ClinicalFormController extends GetxController {
       if (t3Controller.text.trim().isEmpty ||
           t4Controller.text.trim().isEmpty ||
           tshController.text.trim().isEmpty) {
-        Get.snackbar('Validation Error', 'Please enter all Thyroid values');
+        AppSnackbars.showError('Validation Error', 'Please enter all Thyroid values');
         return false;
       }
     }
 
     if (cbUricAcid.value) {
       if (uricAcidController.text.trim().isEmpty) {
-        Get.snackbar('Validation Error', 'Please enter Uric Acid value');
+        AppSnackbars.showError('Validation Error', 'Please enter Uric Acid value');
         return false;
       }
     }
@@ -452,12 +454,12 @@ class ClinicalFormController extends GetxController {
     if (cbUrineAlbumin.value) {
       if (urineAlbuminType.value == 'Numeric') {
         if (urineAlbuminNumericController.text.trim().isEmpty) {
-          Get.snackbar('Validation Error', 'Please enter Urine Albumin value');
+          AppSnackbars.showError('Validation Error', 'Please enter Urine Albumin value');
           return false;
         }
       } else {
         if (urineAlbuminValueSelected.value == 'Select') {
-          Get.snackbar('Validation Error', 'Please select Urine Albumin value option');
+          AppSnackbars.showError('Validation Error', 'Please select Urine Albumin value option');
           return false;
         }
       }
@@ -465,7 +467,7 @@ class ClinicalFormController extends GetxController {
 
     if (otherInvestigationsChoice.value == 'Yes') {
       if (otherInvestigationsController.text.trim().isEmpty) {
-        Get.snackbar('Validation Error', 'Please describe other investigations');
+        AppSnackbars.showError('Validation Error', 'Please describe other investigations');
         return false;
       }
     }
@@ -527,51 +529,51 @@ class ClinicalFormController extends GetxController {
 
   bool checkValidationSec3() {
     if (improvement.value.isEmpty && speciality.isEmpty) {
-      Get.snackbar('Validation Error', 'Please select feeling compared to last visit option');
+      AppSnackbars.showError('Validation Error', 'Please select feeling compared to last visit option');
       return false;
     }
     if (chestPain.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose chest pain option');
+      AppSnackbars.showError('Validation Error', 'Please choose chest pain option');
       return false;
     }
     if (chestPain.value == 'Yes' && chestPainSweating.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose if chest pain has sweating');
+      AppSnackbars.showError('Validation Error', 'Please choose if chest pain has sweating');
       return false;
     }
     if (breathlessness.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose breathlessness option');
+      AppSnackbars.showError('Validation Error', 'Please choose breathlessness option');
       return false;
     }
     if (breathlessness.value == 'Yes' && breathlessWhile.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose breathlessness during activity');
+      AppSnackbars.showError('Validation Error', 'Please choose breathlessness during activity');
       return false;
     }
     if (palpitations.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose palpitations option');
+      AppSnackbars.showError('Validation Error', 'Please choose palpitations option');
       return false;
     }
     if (giddiness.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose giddiness option');
+      AppSnackbars.showError('Validation Error', 'Please choose giddiness option');
       return false;
     }
     if (headache.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose headache option');
+      AppSnackbars.showError('Validation Error', 'Please choose headache option');
       return false;
     }
     if (dizziness.value.isEmpty && speciality.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose dizziness option');
+      AppSnackbars.showError('Validation Error', 'Please choose dizziness option');
       return false;
     }
     if (bleedingEpisode.value.isEmpty && speciality.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose bleeding episode option');
+      AppSnackbars.showError('Validation Error', 'Please choose bleeding episode option');
       return false;
     }
     if (otherSymptomsChoice.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose other symptoms option');
+      AppSnackbars.showError('Validation Error', 'Please choose other symptoms option');
       return false;
     }
     if (otherSymptomsChoice.value == 'Yes' && otherSymptomsController.text.trim().isEmpty) {
-      Get.snackbar('Validation Error', 'Please enter other symptoms details');
+      AppSnackbars.showError('Validation Error', 'Please enter other symptoms details');
       return false;
     }
     return true;
@@ -604,54 +606,54 @@ class ClinicalFormController extends GetxController {
 
   bool checkValidationSec4() {
     if (reduceSalt.value.isEmpty && speciality.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose if you reduced salt intake');
+      AppSnackbars.showError('Validation Error', 'Please choose if you reduced salt intake');
       return false;
     }
     if (exercise.value.isEmpty && speciality.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose if you go for morning walks');
+      AppSnackbars.showError('Validation Error', 'Please choose if you go for morning walks');
       return false;
     }
     if (inStress.value.isEmpty && speciality.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose if you are in stress');
+      AppSnackbars.showError('Validation Error', 'Please choose if you are in stress');
       return false;
     }
     if (missMedicine.value.isEmpty && speciality.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose if you missed medication doses');
+      AppSnackbars.showError('Validation Error', 'Please choose if you missed medication doses');
       return false;
     }
     if (haveBPApparatus.value) {
       if (systolic3Controller.text.trim().isEmpty) {
-        Get.snackbar('Validation Error', 'Please enter Systolic BP value');
+        AppSnackbars.showError('Validation Error', 'Please enter Systolic BP value');
         return false;
       }
       final sysVal = int.tryParse(systolic3Controller.text.trim()) ?? 0;
       if (sysVal < 20 || sysVal > 300) {
-        Get.snackbar('Validation Error', 'Enter valid Systolic BP (20-300)');
+        AppSnackbars.showError('Validation Error', 'Enter valid Systolic BP (20-300)');
         return false;
       }
 
       if (diastolic3Controller.text.trim().isEmpty) {
-        Get.snackbar('Validation Error', 'Please enter Diastolic BP value');
+        AppSnackbars.showError('Validation Error', 'Please enter Diastolic BP value');
         return false;
       }
       final diastVal = int.tryParse(diastolic3Controller.text.trim()) ?? 0;
       if (diastVal < 20 || diastVal > 140) {
-        Get.snackbar('Validation Error', 'Enter valid Diastolic BP (20-140)');
+        AppSnackbars.showError('Validation Error', 'Enter valid Diastolic BP (20-140)');
         return false;
       }
     }
     if (lastHospitalization.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please choose last hospitalization option');
+      AppSnackbars.showError('Validation Error', 'Please choose last hospitalization option');
       return false;
     }
     if (lastHospitalization.value == 'Yes') {
       if (hospitalizationReasonSelected.value == 'Select') {
-        Get.snackbar('Validation Error', 'Please select hospitalization reason');
+        AppSnackbars.showError('Validation Error', 'Please select hospitalization reason');
         return false;
       }
       if (hospitalizationReasonSelected.value == 'other' &&
           hospitalizationReasonCustomController.text.trim().isEmpty) {
-        Get.snackbar('Validation Error', 'Please specify other hospitalization reason');
+        AppSnackbars.showError('Validation Error', 'Please specify other hospitalization reason');
         return false;
       }
     }
@@ -790,37 +792,38 @@ class ClinicalFormController extends GetxController {
 
       if (response.statusCode == 200 && response.data != null) {
         if (response.data['status'] == 'success') {
-          Get.snackbar('Success', response.data['msg'] ?? 'Clinical form submitted successfully');
+          AppSnackbars.showSuccess('Success', response.data['msg'] ?? 'Clinical form submitted successfully');
           if (isFromDoctorHomeService) {
             Get.offAllNamed('/patient-list', arguments: {'doctor_hs_req_id': doctorHsReqId});
           } else {
-            // Show optional video popup dialog or go back to home
-            Get.defaultDialog(
-              title: 'Form Submitted',
-              middleText: 'Do you want to upload self video of your problems ?',
-              textConfirm: 'Yes',
-              textCancel: 'No',
-              confirmTextColor: AppColors.white,
-              buttonColor: AppColors.teal,
+            AppDialog.show(
+              title: 'form_submitted'.tr,
+              confirmLabel: 'yes'.tr,
+              cancelLabel: 'no'.tr,
               onConfirm: () {
                 Get.back();
-                Get.snackbar('Video Upload', 'Video upload is currently placeholder');
+                AppSnackbars.showInfo('Video Upload', 'Video upload is currently placeholder');
                 Get.offAllNamed('/manage-patients');
               },
               onCancel: () {
+                Get.back();
                 Get.offAllNamed('/manage-patients');
               },
+              body: Text(
+                'upload_video_prompt'.tr,
+                style: const TextStyle(fontSize: 14, color: AppColors.navy),
+              ),
             );
           }
         } else {
-          Get.snackbar('Error', response.data['msg'] ?? 'Submission failed');
+          AppSnackbars.showError('Error', response.data['msg'] ?? 'Submission failed');
         }
       } else {
-        Get.snackbar('Error', 'Submission failed. Server returned status: ${response.statusCode}');
+        AppSnackbars.showError('Error', 'Submission failed. Server returned status: ${response.statusCode}');
       }
     } catch (e) {
       isLoading.value = false;
-      Get.snackbar('Error', 'An error occurred during submission: $e');
+      AppSnackbars.showError('Error', 'An error occurred during submission: $e');
     }
   }
 }

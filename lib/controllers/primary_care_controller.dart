@@ -1,5 +1,6 @@
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
-import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
+
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -98,7 +99,7 @@ class PrimaryCareController extends GetxController {
 
   Future<void> pickImageFromGallery() async {
     if (selectedImages.length >= 5) {
-      Get.snackbar('Limit Reached', 'You can upload up to 5 images only');
+      AppSnackbars.showWarning('Limit Reached', 'You can upload up to 5 images only');
       return;
     }
     final List<XFile> images = await _picker.pickMultiImage();
@@ -111,7 +112,7 @@ class PrimaryCareController extends GetxController {
 
   Future<void> captureImageFromCamera() async {
     if (selectedImages.length >= 5) {
-      Get.snackbar('Limit Reached', 'You can upload up to 5 images only');
+      AppSnackbars.showWarning('Limit Reached', 'You can upload up to 5 images only');
       return;
     }
     final XFile? image = await _picker.pickImage(source: ImageSource.camera);
@@ -127,7 +128,7 @@ class PrimaryCareController extends GetxController {
   Future<void> submitForm() async {
     final symptoms = symptomsController.text.trim();
     if (symptoms.isEmpty) {
-      Get.snackbar('Error', 'Please describe or select symptoms');
+      AppSnackbars.showError('Error', 'Please describe or select symptoms');
       return;
     }
 
@@ -173,23 +174,17 @@ class PrimaryCareController extends GetxController {
         final status = response.data['status']?.toString();
         final msg = response.data['msg']?.toString() ?? 'Form submitted successfully';
         if (status == 'success') {
-          Get.snackbar(
-            'Success',
-            msg,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: AppColors.success,
-            colorText: AppColors.white,
-          );
+          AppSnackbars.showSuccess('Success', msg);
           // Go to manage patients
           Get.offAllNamed('/manage-patients');
         } else {
-          Get.snackbar('Submission Failed', msg);
+          AppSnackbars.showInfo('Submission Failed', msg);
         }
       } else {
-        Get.snackbar('Error', 'API submission failed');
+        AppSnackbars.showError('Error', 'API submission failed');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Something went wrong submitting form');
+      AppSnackbars.showError('Error', 'Something went wrong submitting form');
     } finally {
       isLoading.value = false;
     }

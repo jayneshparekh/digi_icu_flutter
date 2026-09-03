@@ -1,7 +1,10 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:digi_icu_flutter/views/widgets/app_form_section_header.dart';
 import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
 import 'package:digi_icu_flutter/views/widgets/app_primary_button.dart';
+import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/clinical_form_controller.dart';
@@ -15,13 +18,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          Get.snackbar(
-            'action_required'.tr,
-            'cannot_go_back_form'.tr,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: AppColors.warning,
-            colorText: AppColors.white,
-          );
+          AppSnackbars.showWarning('action_required'.tr, 'cannot_go_back_form'.tr);
         }
       },
       child: Scaffold(
@@ -105,10 +102,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                      crossAxisAlignment: CrossAxisAlignment.start,
                                      children: ['Yes', 'No', 'I need help'].map((option) => Row(
                                        children: [
-                                         Radio<String>(
-                                           value: option,
-                                           activeColor: AppColors.teal,
-                                         ),
+                                         AppRadio<String>(value: option),
                                          Text(option == 'Yes' ? 'yes'.tr : option == 'No' ? 'no'.tr : 'i_need_help'.tr),
                                        ],
                                      )).toList(),
@@ -153,10 +147,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                      crossAxisAlignment: CrossAxisAlignment.start,
                                      children: ['Yes', 'No', 'I need help'].map((option) => Row(
                                        children: [
-                                         Radio<String>(
-                                           value: option,
-                                           activeColor: AppColors.teal,
-                                         ),
+                                         AppRadio<String>(value: option),
                                          Text(option == 'Yes' ? 'yes'.tr : option == 'No' ? 'no'.tr : 'i_need_help'.tr),
                                        ],
                                      )).toList(),
@@ -191,16 +182,10 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                    onChanged: (val) => controller.reduceSalt.value = val ?? '',
                                    child: Row(
                                      children: [
-                                       Radio<String>(
-                                         value: 'Yes',
-                                         activeColor: AppColors.teal,
-                                       ),
+                                       AppRadio<String>(value: 'Yes'),
                                        Text('yes'.tr),
                                        const SizedBox(width: 24),
-                                       Radio<String>(
-                                         value: 'No',
-                                         activeColor: AppColors.teal,
-                                       ),
+                                       AppRadio<String>(value: 'No'),
                                        Text('no'.tr),
                                      ],
                                    ),
@@ -236,10 +221,7 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                      crossAxisAlignment: CrossAxisAlignment.start,
                                      children: ['Yes', 'No', 'sometimes missing'].map((option) => Row(
                                        children: [
-                                         Radio<String>(
-                                           value: option,
-                                           activeColor: AppColors.teal,
-                                         ),
+                                         AppRadio<String>(value: option),
                                          Text(option == 'Yes' ? 'yes'.tr : option == 'No' ? 'no'.tr : 'sometimes_missing'.tr),
                                        ],
                                      )).toList(),
@@ -274,16 +256,10 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                    onChanged: (val) => controller.inStress.value = val ?? '',
                                    child: Row(
                                      children: [
-                                       Radio<String>(
-                                         value: 'Yes',
-                                         activeColor: AppColors.teal,
-                                       ),
+                                       AppRadio<String>(value: 'Yes'),
                                        Text('yes'.tr),
                                        const SizedBox(width: 24),
-                                       Radio<String>(
-                                         value: 'No',
-                                         activeColor: AppColors.teal,
-                                       ),
+                                       AppRadio<String>(value: 'No'),
                                        Text('no'.tr),
                                      ],
                                    ),
@@ -325,16 +301,10 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                    },
                                    child: Row(
                                      children: [
-                                       Radio<String>(
-                                         value: 'Yes',
-                                         activeColor: AppColors.teal,
-                                       ),
+                                       AppRadio<String>(value: 'Yes'),
                                        Text('yes'.tr),
                                        const SizedBox(width: 24),
-                                       Radio<String>(
-                                         value: 'No',
-                                         activeColor: AppColors.teal,
-                                       ),
+                                       AppRadio<String>(value: 'No'),
                                        Text('no'.tr),
                                      ],
                                    ),
@@ -384,16 +354,10 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
                                    onChanged: (val) => controller.lastHospitalization.value = val ?? '',
                                    child: Row(
                                      children: [
-                                       Radio<String>(
-                                         value: 'Yes',
-                                         activeColor: AppColors.teal,
-                                       ),
+                                       AppRadio<String>(value: 'Yes'),
                                        Text('yes'.tr),
                                        const SizedBox(width: 24),
-                                       Radio<String>(
-                                         value: 'No',
-                                         activeColor: AppColors.teal,
-                                       ),
+                                       AppRadio<String>(value: 'No'),
                                        Text('no'.tr),
                                      ],
                                    ),
@@ -545,17 +509,11 @@ class ClinicalFormSec4Screen extends GetView<ClinicalFormController> {
   }
 
   void _showHabitSuggestionDialog(String title, String message) {
-    Get.dialog(
-      AlertDialog(
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text('ok_i_will_do'.tr, style: TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold)),
-          ),
-        ],
-      ),
+    AppDialog.show(
+      title: title,
+      confirmLabel: 'ok_i_will_do'.tr,
+      onConfirm: () => Get.back(),
+      body: Text(message),
     );
   }
 }

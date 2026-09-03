@@ -1,4 +1,6 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'dart:io';
 import 'package:digi_icu_flutter/views/widgets/app_form_section_header.dart';
 import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
@@ -18,13 +20,7 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          Get.snackbar(
-            'action_required'.tr,
-            'cannot_go_back_form'.tr,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: AppColors.warning,
-            colorText: AppColors.white,
-          );
+          AppSnackbars.showWarning('action_required'.tr, 'cannot_go_back_form'.tr);
         }
       },
       child: Scaffold(
@@ -240,20 +236,14 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                     children: [
                                       Row(
                                         children: [
-                                          Radio<String>(
-                                            value: 'Today',
-                                            activeColor: AppColors.teal,
-                                          ),
+                                          AppRadio<String>(value: 'Today'),
                                           Text('today'.tr),
                                         ],
                                       ),
                                       const SizedBox(width: 8),
                                       Row(
                                         children: [
-                                          Radio<String>(
-                                            value: 'Yesterday',
-                                            activeColor: AppColors.teal,
-                                          ),
+                                          AppRadio<String>(value: 'Yesterday'),
                                           Text('yesterday'.tr),
                                         ],
                                       ),
@@ -399,20 +389,14 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                                 children: [
                                   Row(
                                     children: [
-                                      Radio<String>(
-                                        value: 'Numeric',
-                                        activeColor: AppColors.teal,
-                                      ),
+                                      AppRadio<String>(value: 'Numeric'),
                                       Text('numeric'.tr),
                                     ],
                                   ),
                                   const SizedBox(width: 16),
                                   Row(
                                     children: [
-                                      Radio<String>(
-                                        value: 'Value',
-                                        activeColor: AppColors.teal,
-                                      ),
+                                      AppRadio<String>(value: 'Value'),
                                       Text('value'.tr),
                                     ],
                                   ),
@@ -701,20 +685,14 @@ class ClinicalFormSec2Screen extends GetView<ClinicalFormController> {
                             children: [
                               Row(
                                 children: [
-                                  Radio<String>(
-                                    value: 'Yes',
-                                    activeColor: AppColors.teal,
-                                  ),
+                                  AppRadio<String>(value: 'Yes'),
                                   Text('yes'.tr),
                                 ],
                               ),
                               const SizedBox(width: 8),
                               Row(
                                 children: [
-                                  Radio<String>(
-                                    value: 'No',
-                                    activeColor: AppColors.teal,
-                                  ),
+                                  AppRadio<String>(value: 'No'),
                                   Text('no'.tr),
                                 ],
                               ),

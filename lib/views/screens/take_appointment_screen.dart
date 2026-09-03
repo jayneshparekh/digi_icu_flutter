@@ -1,5 +1,7 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
+import 'package:digi_icu_flutter/views/widgets/app_labeled_text_field.dart';
+import 'package:digi_icu_flutter/views/widgets/app_primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/take_appointment_controller.dart';
@@ -70,26 +72,11 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'purpose_of_visit'.tr,
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.navy,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextField(
+                          AppLabeledTextField(
                             controller: controller.problemController,
+                            label: 'purpose_of_visit'.tr,
+                            hint: 'purpose_of_visit'.tr,
                             maxLines: 4,
-                            maxLength: 500,
-                            decoration: InputDecoration(
-                              hintText: 'purpose_of_visit'.tr,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              contentPadding: const EdgeInsets.all(12),
-                            ),
                           ),
                           const SizedBox(height: 24),
                         ],
@@ -142,27 +129,10 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
 
                   // Book Now Button (Shown only when a place is selected)
                   if (activePlace.isNotEmpty)
-                    SizedBox(
+                    AppPrimaryButton(
+                      label: 'book_now'.tr,
+                      onPressed: () => controller.bookAppointment(),
                       width: 160,
-                      height: 48,
-                      child: ElevatedButton(
-                        onPressed: () => controller.bookAppointment(),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.teal,
-                          foregroundColor: AppColors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          elevation: 2,
-                        ),
-                        child: Text(
-                          'book_now'.tr,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
                     ),
                 ],
               ),

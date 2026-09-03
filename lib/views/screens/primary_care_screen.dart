@@ -1,4 +1,5 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'dart:io';
 import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
 import 'package:digi_icu_flutter/views/widgets/app_teal_icon_button.dart';
@@ -29,13 +30,7 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          Get.snackbar(
-            'action_required'.tr,
-            'submit_form_to_proceed'.tr,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: AppColors.warning,
-            colorText: AppColors.white,
-          );
+          AppSnackbars.showWarning('action_required'.tr, 'submit_form_to_proceed'.tr);
         }
       },
       child: Scaffold(

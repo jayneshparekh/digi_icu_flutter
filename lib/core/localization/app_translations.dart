@@ -15,6 +15,8 @@ class AppTranslations extends Translations {
           'close': 'Close',
           'yes': 'Yes',
           'no': 'No',
+          'form_submitted': 'Form Submitted',
+          'upload_video_prompt': 'Do you want to upload self video of your problems?',
           
           // Doctor Dashboard
           'my_wallet': 'My Wallet',

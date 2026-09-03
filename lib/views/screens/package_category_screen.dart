@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/package_category_controller.dart';
 import '../widgets/dashboard_card.dart';
+import '../widgets/app_primary_button.dart';
 
 class PackageCategoryScreen extends GetView<PackageCategoryController> {
   const PackageCategoryScreen({super.key});
@@ -222,19 +223,14 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                     ),
                   ],
                 ),
-                ElevatedButton(
+                AppPrimaryButton(
+                  label: 'online_pay'.tr,
                   onPressed: () => controller.initiateOnlinePayment(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.white,
-                    foregroundColor: AppColors.teal,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text(
-                    'online_pay'.tr,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  backgroundColor: AppColors.white,
+                  labelStyle: const TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold, fontSize: 14),
+                  width: 110,
+                  height: 38,
+                  borderRadius: 8,
                 ),
               ],
             ),
@@ -291,16 +287,14 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      ElevatedButton(
+                      AppPrimaryButton(
+                        label: 'submit'.tr,
                         onPressed: () => controller.applyPromoCode(),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.white,
-                          foregroundColor: AppColors.teal,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: Text('submit'.tr),
+                        backgroundColor: AppColors.white,
+                        labelStyle: const TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold, fontSize: 14),
+                        width: 90,
+                        height: 38,
+                        borderRadius: 8,
                       ),
                     ],
                   ),

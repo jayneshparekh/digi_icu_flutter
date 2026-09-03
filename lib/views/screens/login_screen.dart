@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/login_controller.dart';
+import '../../views/widgets/app_labeled_text_field.dart';
+import '../../views/widgets/app_primary_button.dart';
 
 class LoginScreen extends GetView<LoginController> {
   const LoginScreen({super.key});
@@ -39,57 +41,17 @@ class LoginScreen extends GetView<LoginController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          TextField(
-                            onChanged: (val) =>
-                                controller.username.value = val,
-                            decoration: InputDecoration(
-                              labelText: 'mobile_login_id'.tr,
-                              labelStyle: TextStyle(
-                                color: AppColors.coolGray,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: AppColors.medicalGray,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: AppColors.teal,
-                                  width: 2,
-                                ),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 16),
-                            ),
+                          AppLabeledTextField(
+                            onChanged: (val) => controller.username.value = val,
+                            label: 'mobile_login_id'.tr,
+                            hint: 'mobile_login_id'.tr,
                           ),
                           const SizedBox(height: 12),
-                          TextField(
-                            onChanged: (val) =>
-                                controller.password.value = val,
+                          AppLabeledTextField(
+                            onChanged: (val) => controller.password.value = val,
                             obscureText: true,
-                            decoration: InputDecoration(
-                              labelText: 'password'.tr,
-                              labelStyle: TextStyle(
-                                color: AppColors.coolGray,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: AppColors.medicalGray,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: AppColors.teal,
-                                  width: 2,
-                                ),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 16),
-                            ),
+                            label: 'password'.tr,
+                            hint: 'password'.tr,
                           ),
                           const SizedBox(height: 8),
                           GestureDetector(
@@ -111,37 +73,16 @@ class LoginScreen extends GetView<LoginController> {
                             final isValid = controller.isFormValid;
                             final isLoading = controller.isLoading.value;
 
-                            return SizedBox(
-                              width: double.infinity,
-                              height: 54,
-                              child: ElevatedButton(
-                                onPressed: (isValid && !isLoading)
-                                    ? controller.login
-                                    : null,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.blue,
-                                  disabledBackgroundColor:
-                                      AppColors.blue
-                                          .withValues(alpha: 0.5),
-                                  foregroundColor: AppColors.white,
-                                  disabledForegroundColor: AppColors.white.withValues(alpha: 0.7),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  elevation: 0,
-                                ),
-                                child: isLoading
-                                    ? const CircularProgressIndicator(
-                                        color: AppColors.white,
-                                      )
-                                    : Text(
-                                        'login_btn'.tr,
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
+                            return AppPrimaryButton(
+                              label: 'login_btn'.tr,
+                              onPressed: isValid ? controller.login : null,
+                              isLoading: isLoading,
+                              backgroundColor: AppColors.blue,
+                              labelStyle: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
                               ),
+                              height: 54,
                             );
                           }),
                         ],

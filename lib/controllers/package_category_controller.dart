@@ -1,5 +1,6 @@
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
-import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
+
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -125,7 +126,7 @@ class PackageCategoryController extends GetxController {
     final chargeStr = consultationCharge.replaceAll(RegExp(r'[^0-9.]'), '');
     final chargeAmount = double.tryParse(chargeStr) ?? 0;
     if (chargeAmount <= 0) {
-      Get.snackbar('Error', 'Invalid consultation charge amount');
+      AppSnackbars.showError('Error', 'Invalid consultation charge amount');
       return;
     }
 
@@ -165,14 +166,14 @@ class PackageCategoryController extends GetxController {
             appLogo: orderRes.appLogo,
           );
         } else {
-          Get.snackbar('Order Error', orderRes.msg);
+          AppSnackbars.showError('Order Error', orderRes.msg);
         }
       } else {
-        Get.snackbar('Error', 'Failed to create payment order. Please try again.');
+        AppSnackbars.showError('Error', 'Failed to create payment order. Please try again.');
       }
     } catch (e) {
       isLoading.value = false;
-      Get.snackbar('Error', 'Something went wrong. Please try again.');
+      AppSnackbars.showError('Error', 'Something went wrong. Please try again.');
     }
   }
 
@@ -197,39 +198,22 @@ class PackageCategoryController extends GetxController {
   }
 
   void _onPaymentSuccess(PaymentSuccessResponse response) {
-    Get.snackbar(
-      'Payment Successful',
-      'Payment ID: ${response.paymentId}',
-      backgroundColor: AppColors.success,
-      colorText: AppColors.white,
-      snackPosition: SnackPosition.BOTTOM,
-      duration: const Duration(seconds: 3),
-    );
+    AppSnackbars.showSuccess('Payment Successful', 'Payment ID: ${response.paymentId}');
     redirectToScreen();
   }
 
   void _onPaymentFailure(PaymentFailureResponse response) {
-    Get.snackbar(
-      'Payment Failed',
-      response.message ?? 'Payment was not completed. Please try again.',
-      backgroundColor: AppColors.error,
-      colorText: AppColors.white,
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    AppSnackbars.showInfo('Payment Failed', response.message ?? 'Payment was not completed. Please try again.');
   }
 
   void _onExternalWallet(ExternalWalletResponse response) {
-    Get.snackbar(
-      'External Wallet',
-      'Payment via ${response.walletName}',
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    AppSnackbars.showInfo('External Wallet', 'Payment via ${response.walletName}');
   }
 
   Future<void> applyPromoCode() async {
     final code = promoCodeController.text.trim();
     if (code.isEmpty) {
-      Get.snackbar('Error', 'Please enter the promo code');
+      AppSnackbars.showError('Error', 'Please enter the promo code');
       return;
     }
 
@@ -252,25 +236,16 @@ class PackageCategoryController extends GetxController {
         final status = response.data['status']?.toString();
         final msg = response.data['msg']?.toString() ?? '';
         if (status == 'success') {
-          Get.snackbar(
-            'Success',
-            'Package booked successfully',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: AppColors.success,
-            colorText: AppColors.white,
-            borderRadius: 10,
-            margin: const EdgeInsets.all(10),
-            duration: const Duration(seconds: 2),
-          );
+          AppSnackbars.showSuccess('Success', 'Package booked successfully');
           redirectToScreen();
         } else {
-          Get.snackbar('Promo Code Error', msg);
+          AppSnackbars.showError('Promo Code Error', msg);
         }
       } else {
-        Get.snackbar('Error', 'Failed to check promo code');
+        AppSnackbars.showError('Error', 'Failed to check promo code');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Something went wrong applying promo code');
+      AppSnackbars.showError('Error', 'Something went wrong applying promo code');
     } finally {
       isLoading.value = false;
     }

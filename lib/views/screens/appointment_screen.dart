@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../controllers/appointment_controller.dart';
 import '../../models/response/patients/doctor_list_patient_side_response.dart';
 import '../widgets/app_network_avatar.dart';
+import '../widgets/app_primary_button.dart';
 
 class AppointmentScreen extends GetView<AppointmentController> {
   const AppointmentScreen({super.key});
@@ -157,10 +158,10 @@ class AppointmentScreen extends GetView<AppointmentController> {
     }
 
     return Card(
-      elevation: 2,
+      elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: AppColors.lightGray),
+        side: const BorderSide(color: AppColors.medicalGray, width: 1),
       ),
       color: AppColors.white,
       child: Padding(
@@ -274,26 +275,15 @@ class AppointmentScreen extends GetView<AppointmentController> {
                   ],
 
                   // Action Button
-                  ElevatedButton(
+                  AppPrimaryButton(
+                    label: btnText,
                     onPressed: () => controller.checkPaymentStatus(doctor),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.teal,
-                      foregroundColor: AppColors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      minimumSize: const Size(120, 36),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                    ),
-                    child: Text(
-                      btnText,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    height: 36,
+                    width: 140,
+                    borderRadius: 6,
+                    labelStyle: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],

@@ -1,5 +1,6 @@
-﻿import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
-import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
+
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -75,13 +76,7 @@ class PatientSignUpController extends GetxController {
         pickedImagePath.value = file.path;
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to pick image: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.error,
-        colorText: AppColors.white,
-      );
+      AppSnackbars.showError('Error', 'Failed to pick image: $e');
     }
   }
 
@@ -92,24 +87,12 @@ class PatientSignUpController extends GetxController {
         lastNameController.text.trim().isEmpty ||
         mobileNoController.text.trim().isEmpty ||
         ageController.text.trim().isEmpty) {
-      Get.snackbar(
-        'Validation Error',
-        'First name, Middle name, Last name, Mobile no and Age are required fields.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.error,
-        colorText: AppColors.white,
-      );
+      AppSnackbars.showError('Validation Error', 'First name, middle name, last name, mobile and age are mandatory.');
       return;
     }
 
     if (selectedPastHistory.isEmpty) {
-      Get.snackbar(
-        'Validation Error',
-        'Please select at least one past history option.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.error,
-        colorText: AppColors.white,
-      );
+      AppSnackbars.showError('Validation Error', 'Please select at least one past history option.');
       return;
     }
 
@@ -223,41 +206,17 @@ class PatientSignUpController extends GetxController {
       if (response.statusCode == 200 && response.data != null) {
         final res = response.data;
         if (res['status'] == 'success') {
-          Get.snackbar(
-            'Success',
-            res['msg'] ?? 'Patient registered successfully!',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: AppColors.success,
-            colorText: AppColors.white,
-          );
+          AppSnackbars.showSuccess('Success', res['msg'] ?? 'Patient registered successfully!');
           // Go back to list and refresh
           Get.back(result: true);
         } else {
-          Get.snackbar(
-            'Registration Error',
-            res['msg'] ?? 'Could not register patient.',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: AppColors.error,
-            colorText: AppColors.white,
-          );
+          AppSnackbars.showError('Registration Error', res['msg'] ?? 'Could not register patient.');
         }
       } else {
-        Get.snackbar(
-          'Error',
-          'Failed to connect to the server.',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: AppColors.error,
-          colorText: AppColors.white,
-        );
+        AppSnackbars.showError('Error', 'Failed to connect to the server.');
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Something went wrong: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.error,
-        colorText: AppColors.white,
-      );
+      AppSnackbars.showError('Error', 'Something went wrong: $e');
     } finally {
       isLoading.value = false;
     }

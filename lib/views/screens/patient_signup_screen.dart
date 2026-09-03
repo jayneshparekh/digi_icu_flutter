@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:digi_icu_flutter/views/widgets/app_labeled_text_field.dart';
 import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
+import 'package:digi_icu_flutter/views/widgets/app_primary_button.dart';
+import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -156,19 +158,15 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: RadioListTile<String>(
+                          child: AppRadioListTile<String>(
                             title: Text('male'.tr),
                             value: 'Male',
-                            activeColor: AppColors.teal,
-                            contentPadding: EdgeInsets.zero,
                           ),
                         ),
                         Expanded(
-                          child: RadioListTile<String>(
+                          child: AppRadioListTile<String>(
                             title: Text('female'.tr),
                             value: 'Female',
-                            activeColor: AppColors.teal,
-                            contentPadding: EdgeInsets.zero,
                           ),
                         ),
                       ],
@@ -218,33 +216,14 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
                 // Submit Button
                 Obx(() {
                   final isEnabled = controller.acceptTerms.value;
-                  return SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: isEnabled
-                          ? () => controller.registerPatient()
-                          : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isEnabled
-                            ? AppColors.teal
-                            : AppColors.medicalGray,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: Text(
-                        'submit_upper'.tr,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: isEnabled
-                              ? AppColors.white
-                              : AppColors.coolGray,
-                        ),
-                      ),
-                    ),
+                  return AppPrimaryButton(
+                    label: 'submit_upper'.tr,
+                    onPressed: isEnabled
+                        ? () => controller.registerPatient()
+                        : null,
+                    backgroundColor: isEnabled
+                        ? AppColors.teal
+                        : AppColors.medicalGray,
                   );
                 }),
                 const SizedBox(height: 40),

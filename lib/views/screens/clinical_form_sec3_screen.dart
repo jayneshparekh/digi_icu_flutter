@@ -1,4 +1,6 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:digi_icu_flutter/views/widgets/app_form_section_header.dart';
 import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
 import 'package:digi_icu_flutter/views/widgets/app_primary_button.dart';
@@ -15,13 +17,7 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          Get.snackbar(
-            'action_required'.tr,
-            'cannot_go_back_form'.tr,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: AppColors.warning,
-            colorText: AppColors.white,
-          );
+          AppSnackbars.showWarning('action_required'.tr, 'cannot_go_back_form'.tr);
         }
       },
       child: Scaffold(
@@ -95,10 +91,7 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                       children: ['Good', 'Better', 'Same', 'More Suffering', 'This is my first consultation']
                                           .map((option) => Row(
                                                 children: [
-                                                  Radio<String>(
-                                                    value: option,
-                                                    activeColor: AppColors.teal,
-                                                  ),
+                                                  AppRadio<String>(value: option),
                                                   Text(option == 'Good' ? 'good'.tr : option == 'Better' ? 'better'.tr : option == 'Same' ? 'same'.tr : option == 'More Suffering' ? 'more_suffering'.tr : 'first_consultation'.tr),
                                                 ],
                                               ))
@@ -133,16 +126,10 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                 onChanged: (val) => controller.chestPain.value = val ?? '',
                                 child: Row(
                                   children: [
-                                    Radio<String>(
-                                      value: 'Yes',
-                                      activeColor: AppColors.teal,
-                                    ),
+                                    AppRadio<String>(value: 'Yes'),
                                     Text('yes'.tr),
                                     const SizedBox(width: 24),
-                                    Radio<String>(
-                                      value: 'No',
-                                      activeColor: AppColors.teal,
-                                    ),
+                                    AppRadio<String>(value: 'No'),
                                     Text('no'.tr),
                                   ],
                                 ),
@@ -158,16 +145,10 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                   onChanged: (val) => controller.chestPainSweating.value = val ?? '',
                                   child: Row(
                                     children: [
-                                      Radio<String>(
-                                        value: 'Yes',
-                                        activeColor: AppColors.teal,
-                                      ),
+                                      AppRadio<String>(value: 'Yes'),
                                       Text('yes'.tr),
                                       const SizedBox(width: 24),
-                                      Radio<String>(
-                                        value: 'No',
-                                        activeColor: AppColors.teal,
-                                      ),
+                                      AppRadio<String>(value: 'No'),
                                       Text('no'.tr),
                                     ],
                                   ),
@@ -200,16 +181,10 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                 onChanged: (val) => controller.breathlessness.value = val ?? '',
                                 child: Row(
                                   children: [
-                                    Radio<String>(
-                                      value: 'Yes',
-                                      activeColor: AppColors.teal,
-                                    ),
+                                    AppRadio<String>(value: 'Yes'),
                                     Text('yes'.tr),
                                     const SizedBox(width: 24),
-                                    Radio<String>(
-                                      value: 'No',
-                                      activeColor: AppColors.teal,
-                                    ),
+                                    AppRadio<String>(value: 'No'),
                                     Text('no'.tr),
                                   ],
                                 ),
@@ -221,16 +196,10 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                   onChanged: (val) => controller.breathlessWhile.value = val ?? '',
                                   child: Row(
                                     children: [
-                                      Radio<String>(
-                                        value: 'Walking',
-                                        activeColor: AppColors.teal,
-                                      ),
+                                      AppRadio<String>(value: 'Walking'),
                                       Text('walking'.tr),
                                       const SizedBox(width: 16),
-                                      Radio<String>(
-                                        value: 'At Rest',
-                                        activeColor: AppColors.teal,
-                                      ),
+                                      AppRadio<String>(value: 'At Rest'),
                                       Text('at_rest'.tr),
                                     ],
                                   ),
@@ -263,16 +232,10 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                 onChanged: (val) => controller.palpitations.value = val ?? '',
                                 child: Row(
                                   children: [
-                                    Radio<String>(
-                                      value: 'Yes',
-                                      activeColor: AppColors.teal,
-                                    ),
+                                    AppRadio<String>(value: 'Yes'),
                                     Text('yes'.tr),
                                     const SizedBox(width: 24),
-                                    Radio<String>(
-                                      value: 'No',
-                                      activeColor: AppColors.teal,
-                                    ),
+                                    AppRadio<String>(value: 'No'),
                                     Text('no'.tr),
                                   ],
                                 ),
@@ -304,16 +267,10 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                 onChanged: (val) => controller.giddiness.value = val ?? '',
                                 child: Row(
                                   children: [
-                                    Radio<String>(
-                                      value: 'Yes',
-                                      activeColor: AppColors.teal,
-                                    ),
+                                    AppRadio<String>(value: 'Yes'),
                                     Text('yes'.tr),
                                     const SizedBox(width: 24),
-                                    Radio<String>(
-                                      value: 'No',
-                                      activeColor: AppColors.teal,
-                                    ),
+                                    AppRadio<String>(value: 'No'),
                                     Text('no'.tr),
                                   ],
                                 ),
@@ -345,16 +302,10 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                 onChanged: (val) => controller.headache.value = val ?? '',
                                 child: Row(
                                   children: [
-                                    Radio<String>(
-                                      value: 'Yes',
-                                      activeColor: AppColors.teal,
-                                    ),
+                                    AppRadio<String>(value: 'Yes'),
                                     Text('yes'.tr),
                                     const SizedBox(width: 24),
-                                    Radio<String>(
-                                      value: 'No',
-                                      activeColor: AppColors.teal,
-                                    ),
+                                    AppRadio<String>(value: 'No'),
                                     Text('no'.tr),
                                   ],
                                 ),
@@ -387,16 +338,10 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                    onChanged: (val) => controller.dizziness.value = val ?? '',
                                    child: Row(
                                      children: [
-                                       Radio<String>(
-                                         value: 'Yes',
-                                         activeColor: AppColors.teal,
-                                       ),
+                                       AppRadio<String>(value: 'Yes'),
                                        const Text('Yes'),
                                        const SizedBox(width: 24),
-                                       Radio<String>(
-                                         value: 'No',
-                                         activeColor: AppColors.teal,
-                                       ),
+                                       AppRadio<String>(value: 'No'),
                                        const Text('No'),
                                      ],
                                    ),
@@ -430,16 +375,10 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                    onChanged: (val) => controller.bleedingEpisode.value = val ?? '',
                                    child: Row(
                                      children: [
-                                       Radio<String>(
-                                         value: 'Yes',
-                                         activeColor: AppColors.teal,
-                                       ),
+                                       AppRadio<String>(value: 'Yes'),
                                        const Text('Yes'),
                                        const SizedBox(width: 24),
-                                       Radio<String>(
-                                         value: 'No',
-                                         activeColor: AppColors.teal,
-                                       ),
+                                       AppRadio<String>(value: 'No'),
                                        const Text('No'),
                                      ],
                                    ),
@@ -472,16 +411,10 @@ class ClinicalFormSec3Screen extends GetView<ClinicalFormController> {
                                 onChanged: (val) => controller.otherSymptomsChoice.value = val ?? '',
                                 child: Row(
                                   children: [
-                                    Radio<String>(
-                                      value: 'Yes',
-                                      activeColor: AppColors.teal,
-                                    ),
+                                    AppRadio<String>(value: 'Yes'),
                                     Text('yes'.tr),
                                     const SizedBox(width: 24),
-                                    Radio<String>(
-                                      value: 'None',
-                                      activeColor: AppColors.teal,
-                                    ),
+                                    AppRadio<String>(value: 'None'),
                                     Text('none'.tr),
                                   ],
                                 ),

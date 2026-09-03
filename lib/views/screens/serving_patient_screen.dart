@@ -1,6 +1,7 @@
 import 'package:digi_icu_flutter/controllers/serving_patient_controller.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:digi_icu_flutter/views/screens/serving_patient_dashboard_view.dart';
+import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
 import 'package:digi_icu_flutter/views/widgets/patient_rating_dialog.dart';
 import 'package:flutter/material.dart';
@@ -11,56 +12,36 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
   const ServingPatientScreen({super.key});
 
   void _showEnlargedQRCode(BuildContext context, String qrCodeUrl) {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'patient_qr_code'.tr,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.close, color: AppColors.medicalGray),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Container(
-                width: 250,
-                height: 250,
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.medicalGray),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: qrCodeUrl.startsWith('http')
-                      ? Image.network(
-                          qrCodeUrl,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Center(child: Icon(Icons.qr_code, size: 100, color: AppColors.medicalGray)),
-                        )
-                      : const Center(child: Icon(Icons.qr_code, size: 100, color: AppColors.medicalGray)),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                '${'mhc_id_label'.tr}${controller.mhcId}',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.navy),
-              ),
-            ],
+    AppDialog.show(
+      title: 'patient_qr_code'.tr,
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 250,
+            height: 250,
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.medicalGray),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: qrCodeUrl.startsWith('http')
+                  ? Image.network(
+                      qrCodeUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Center(child: Icon(Icons.qr_code, size: 100, color: AppColors.medicalGray)),
+                    )
+                  : const Center(child: Icon(Icons.qr_code, size: 100, color: AppColors.medicalGray)),
+            ),
           ),
-        ),
+          const SizedBox(height: 16),
+          Text(
+            '${'mhc_id_label'.tr}${controller.mhcId}',
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.navy),
+          ),
+        ],
       ),
     );
   }

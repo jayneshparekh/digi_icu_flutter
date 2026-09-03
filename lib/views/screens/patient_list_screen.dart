@@ -5,6 +5,7 @@ import '../../controllers/patient_list_controller.dart';
 import '../../core/constants/app_constants.dart';
 import '../../models/response/doctors/statuswise_patients_response.dart';
 import '../widgets/common_list_app_bar.dart';
+import '../widgets/app_primary_button.dart';
 
 class PatientListScreen extends GetView<PatientListController> {
   const PatientListScreen({super.key});
@@ -186,16 +187,8 @@ class PatientListScreen extends GetView<PatientListController> {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.white,
-        border: Border.all(color: AppColors.lightGray),
+        border: Border.all(color: AppColors.medicalGray),
         borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.pureBlack.withValues(alpha: 0.02),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,24 +274,11 @@ class PatientListScreen extends GetView<PatientListController> {
           ),
           const SizedBox(height: 12),
           // View Details Button (Only button displayed in patient cards now, no refer button)
-          SizedBox(
-            width: double.infinity,
+          AppPrimaryButton(
+            label: 'view_details'.tr,
+            onPressed: () => controller.onViewDetails(patient),
             height: 42,
-            child: ElevatedButton(
-              onPressed: () => controller.onViewDetails(patient),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.teal,
-                foregroundColor: AppColors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-              child: Text(
-                'view_details'.tr,
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-            ),
+            borderRadius: 4,
           ),
         ],
       ),

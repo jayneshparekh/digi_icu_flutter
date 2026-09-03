@@ -1,5 +1,6 @@
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
-import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
+
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -63,12 +64,12 @@ class TakeAppointmentController extends GetxController {
 
   Future<void> bookAppointment() async {
     if (selectedPlace.value.isEmpty) {
-      Get.snackbar('Error', 'Please select a location');
+      AppSnackbars.showError('Error', 'Please select a location');
       return;
     }
 
     if (speciality.isNotEmpty && problemController.text.trim().isEmpty) {
-      Get.snackbar('Error', 'Please describe the purpose of visit');
+      AppSnackbars.showError('Error', 'Please describe the purpose of visit');
       return;
     }
 
@@ -95,13 +96,13 @@ class TakeAppointmentController extends GetxController {
       );
 
       if (slotsResponse.statusCode != 200 || slotsResponse.data == null) {
-        Get.snackbar('Error', 'Failed to retrieve slots');
+        AppSnackbars.showError('Error', 'Failed to retrieve slots');
         return;
       }
 
       final slotsData = AppointmentSlotsResponse.fromJson(slotsResponse.data);
       if (slotsData.status != 'success' || slotsData.data.isEmpty) {
-        Get.snackbar('Doctor Unavailable', 'Doctor has no active slots today');
+        AppSnackbars.showInfo('Doctor Unavailable', 'Doctor has no active slots today');
         return;
       }
 
@@ -136,13 +137,7 @@ class TakeAppointmentController extends GetxController {
       if (bookResponse.statusCode == 200 && bookResponse.data != null) {
         final res = BookAppointmentResponse.fromJson(bookResponse.data);
         if (res.status == 'success') {
-          Get.snackbar(
-            'Success',
-            'Appointment booked successfully!',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: AppColors.success,
-            colorText: AppColors.white,
-          );
+          AppSnackbars.showSuccess('Success', 'Appointment booked successfully!');
 
           if (res.defaultFormType.isNotEmpty) {
             Get.dialog(
@@ -194,13 +189,13 @@ class TakeAppointmentController extends GetxController {
             });
           }
         } else {
-          Get.snackbar('Booking Failed', res.msg);
+          AppSnackbars.showInfo('Booking Failed', res.msg);
         }
       } else {
-        Get.snackbar('Error', 'Booking API failed');
+        AppSnackbars.showError('Error', 'Booking API failed');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Something went wrong during booking');
+      AppSnackbars.showError('Error', 'Something went wrong during booking');
     } finally {
       isLoading.value = false;
     }

@@ -50,14 +50,7 @@ class PatientDashboardCircleBtn extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: backgroundColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.pureBlack.withValues(alpha: 0.08),
-                    spreadRadius: 1,
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+                border: Border.all(color: AppColors.medicalGray, width: 1),
               ),
               alignment: Alignment.center,
               child: SizedBox(

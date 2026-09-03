@@ -7,6 +7,7 @@ import '../../controllers/manage_patients_controller.dart';
 import '../../models/response/doctors/get_patient_list_response.dart';
 import '../widgets/app_network_avatar.dart';
 import '../widgets/common_list_app_bar.dart';
+import '../widgets/app_dialog.dart';
 
 class ManagePatientsScreen extends GetView<ManagePatientsController> {
   const ManagePatientsScreen({super.key});
@@ -303,40 +304,14 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
   }
 
   void _showContactSupportDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppColors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          title: Text(
-            'contact_support'.tr,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppColors.navy,
-            ),
-          ),
-          content: Text(
-            'contact_support_desc'.tr,
-            style: TextStyle(fontSize: 14, color: AppColors.navy),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'okay'.tr,
-                style: TextStyle(
-                  color: AppColors.teal,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+    AppDialog.show(
+      title: 'contact_support'.tr,
+      confirmLabel: 'okay'.tr,
+      onConfirm: () => Get.back(),
+      body: Text(
+        'contact_support_desc'.tr,
+        style: const TextStyle(fontSize: 14, color: AppColors.navy),
+      ),
     );
   }
 }

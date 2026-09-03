@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -313,198 +314,198 @@ class MedicalFormController extends GetxController {
         }
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to pick image: $e');
+      AppSnackbars.showError('Error', 'Failed to pick image: $e');
     }
   }
 
   bool validateForm() {
     // --- SECTION 1 VALIDATION ---
     if (hasHypertension.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please select if you have hypertension');
+      AppSnackbars.showError('Validation Error', 'Please select if you have hypertension');
       return false;
     }
     if (hasHypertension.value == 'Yes') {
       if (htnYears.value == 'Select') {
-        Get.snackbar('Validation Error', 'Please select how many years you have hypertension');
+        AppSnackbars.showError('Validation Error', 'Please select how many years you have hypertension');
         return false;
       }
       if (htnOnMedicine.value.isEmpty) {
-        Get.snackbar('Validation Error', 'Please select if you are on hypertension medicines');
+        AppSnackbars.showError('Validation Error', 'Please select if you are on hypertension medicines');
         return false;
       }
       if (htnOnMedicine.value == 'Yes') {
         if (htnMedicineRegular.value.isEmpty) {
-          Get.snackbar('Validation Error', 'Please select if you take medicines regularly');
+          AppSnackbars.showError('Validation Error', 'Please select if you take medicines regularly');
           return false;
         }
         if (htnMedCount.value == 0) {
-          Get.snackbar('Validation Error', 'Please add at least one hypertension medicine name');
+          AppSnackbars.showError('Validation Error', 'Please add at least one hypertension medicine name');
           return false;
         }
         if (htnMedCount.value >= 1 && htnMedName1Controller.text.trim().isEmpty) {
-          Get.snackbar('Validation Error', 'Please enter first hypertension medicine name');
+          AppSnackbars.showError('Validation Error', 'Please enter first hypertension medicine name');
           return false;
         }
       }
     }
 
     if (hasDiabetes.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please select if you have diabetes');
+      AppSnackbars.showError('Validation Error', 'Please select if you have diabetes');
       return false;
     }
     if (hasDiabetes.value == 'Yes') {
       if (diabetesYears.value == 'Select') {
-        Get.snackbar('Validation Error', 'Please select how many years you have diabetes');
+        AppSnackbars.showError('Validation Error', 'Please select how many years you have diabetes');
         return false;
       }
       if (diabetesOnMedicine.value.isEmpty) {
-        Get.snackbar('Validation Error', 'Please select if you are on diabetes medicines');
+        AppSnackbars.showError('Validation Error', 'Please select if you are on diabetes medicines');
         return false;
       }
       if (diabetesOnMedicine.value == 'Yes') {
         if (diabetesMedicineRegular.value.isEmpty) {
-          Get.snackbar('Validation Error', 'Please select if you take diabetes medicines regularly');
+          AppSnackbars.showError('Validation Error', 'Please select if you take diabetes medicines regularly');
           return false;
         }
         if (diabetesMedCount.value == 0) {
-          Get.snackbar('Validation Error', 'Please add at least one diabetes medicine name');
+          AppSnackbars.showError('Validation Error', 'Please add at least one diabetes medicine name');
           return false;
         }
         if (diabetesMedCount.value >= 1 && diabetesMedName1Controller.text.trim().isEmpty) {
-          Get.snackbar('Validation Error', 'Please enter first diabetes medicine name');
+          AppSnackbars.showError('Validation Error', 'Please enter first diabetes medicine name');
           return false;
         }
       }
     }
 
     if (hasThyroid.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please select if you have thyroid');
+      AppSnackbars.showError('Validation Error', 'Please select if you have thyroid');
       return false;
     }
     if (hasThyroid.value == 'Yes') {
       if (thyroidYears.value == 'Select') {
-        Get.snackbar('Validation Error', 'Please select how many years you have thyroid');
+        AppSnackbars.showError('Validation Error', 'Please select how many years you have thyroid');
         return false;
       }
       if (thyroidOnMedicine.value.isEmpty) {
-        Get.snackbar('Validation Error', 'Please select if you are on thyroid medicines');
+        AppSnackbars.showError('Validation Error', 'Please select if you are on thyroid medicines');
         return false;
       }
       if (thyroidOnMedicine.value == 'Yes') {
         if (thyroidMedicineRegular.value.isEmpty) {
-          Get.snackbar('Validation Error', 'Please select if you take thyroid medicines regularly');
+          AppSnackbars.showError('Validation Error', 'Please select if you take thyroid medicines regularly');
           return false;
         }
         if (thyroidMedCount.value == 0) {
-          Get.snackbar('Validation Error', 'Please add at least one thyroid medicine name');
+          AppSnackbars.showError('Validation Error', 'Please add at least one thyroid medicine name');
           return false;
         }
         if (thyroidMedCount.value >= 1 && thyroidMedName1Controller.text.trim().isEmpty) {
-          Get.snackbar('Validation Error', 'Please enter first thyroid medicine name');
+          AppSnackbars.showError('Validation Error', 'Please enter first thyroid medicine name');
           return false;
         }
       }
     }
 
     if (hasCholesterol.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please select if you have a cholesterol problem');
+      AppSnackbars.showError('Validation Error', 'Please select if you have a cholesterol problem');
       return false;
     }
 
     if (hasAsthma.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please select if you have asthma');
+      AppSnackbars.showError('Validation Error', 'Please select if you have asthma');
       return false;
     }
 
 
     // --- SECTION 2 VALIDATION ---
     if (hasHeartAttack.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please select if you had a heart attack');
+      AppSnackbars.showError('Validation Error', 'Please select if you had a heart attack');
       return false;
     }
     if (hasHeartAttack.value == 'Yes') {
       if (heartAttackYears.value == 'Select') {
-        Get.snackbar('Validation Error', 'Please select when you had a heart attack');
+        AppSnackbars.showError('Validation Error', 'Please select when you had a heart attack');
         return false;
       }
       if (heartAttackOnMedicine.value.isEmpty) {
-        Get.snackbar('Validation Error', 'Please select if you are on heart attack medicines');
+        AppSnackbars.showError('Validation Error', 'Please select if you are on heart attack medicines');
         return false;
       }
     }
 
     if (hasStroke.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please select if you had a stroke');
+      AppSnackbars.showError('Validation Error', 'Please select if you had a stroke');
       return false;
     }
     if (hasStroke.value == 'Yes') {
       if (strokeYears.value == 'Select') {
-        Get.snackbar('Validation Error', 'Please select when you had a stroke');
+        AppSnackbars.showError('Validation Error', 'Please select when you had a stroke');
         return false;
       }
       if (strokeOnMedicine.value.isEmpty) {
-        Get.snackbar('Validation Error', 'Please select if you are on stroke medicines');
+        AppSnackbars.showError('Validation Error', 'Please select if you are on stroke medicines');
         return false;
       }
     }
 
     if (hasKidneyFailure.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please select if you had kidney failure');
+      AppSnackbars.showError('Validation Error', 'Please select if you had kidney failure');
       return false;
     }
     if (hasKidneyFailure.value == 'Yes') {
       if (kidneyFailureYears.value == 'Select') {
-        Get.snackbar('Validation Error', 'Please select when you had kidney failure');
+        AppSnackbars.showError('Validation Error', 'Please select when you had kidney failure');
         return false;
       }
       if (kidneyFailureOnMedicine.value.isEmpty) {
-        Get.snackbar('Validation Error', 'Please select if you are on kidney failure medicines');
+        AppSnackbars.showError('Validation Error', 'Please select if you are on kidney failure medicines');
         return false;
       }
     }
 
     if (hasAngioplasty.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please select if you had angioplasty');
+      AppSnackbars.showError('Validation Error', 'Please select if you had angioplasty');
       return false;
     }
     if (hasAngioplasty.value == 'Yes') {
       if (angioplastyYears.value == 'Select') {
-        Get.snackbar('Validation Error', 'Please select when you had angioplasty');
+        AppSnackbars.showError('Validation Error', 'Please select when you had angioplasty');
         return false;
       }
       if (angioplastyOnMedicine.value.isEmpty) {
-        Get.snackbar('Validation Error', 'Please select if you are on angioplasty medicines');
+        AppSnackbars.showError('Validation Error', 'Please select if you are on angioplasty medicines');
         return false;
       }
     }
 
     if (hasBypass.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please select if you had bypass surgery');
+      AppSnackbars.showError('Validation Error', 'Please select if you had bypass surgery');
       return false;
     }
     if (hasBypass.value == 'Yes') {
       if (bypassYears.value == 'Select') {
-        Get.snackbar('Validation Error', 'Please select when you had bypass surgery');
+        AppSnackbars.showError('Validation Error', 'Please select when you had bypass surgery');
         return false;
       }
       if (bypassOnMedicine.value.isEmpty) {
-        Get.snackbar('Validation Error', 'Please select if you are on bypass surgery medicines');
+        AppSnackbars.showError('Validation Error', 'Please select if you are on bypass surgery medicines');
         return false;
       }
     }
 
     if (hasAllergy.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please select if you have a medicine allergy');
+      AppSnackbars.showError('Validation Error', 'Please select if you have a medicine allergy');
       return false;
     }
 
     if (hasBleedingTendency.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please select if you have bleeding tendencies');
+      AppSnackbars.showError('Validation Error', 'Please select if you have bleeding tendencies');
       return false;
     }
 
     if (hasOtherSurgery.value.isEmpty) {
-      Get.snackbar('Validation Error', 'Please select if you had other surgeries');
+      AppSnackbars.showError('Validation Error', 'Please select if you had other surgeries');
       return false;
     }
 
@@ -712,14 +713,14 @@ class MedicalFormController extends GetxController {
             'problem': problem,
           });
         } else {
-          Get.snackbar('Error', response.data['msg'] ?? 'Failed to submit form');
+          AppSnackbars.showError('Error', response.data['msg'] ?? 'Failed to submit form');
         }
       } else {
-        Get.snackbar('Error', 'Failed to submit. Server status: ${response.statusCode}');
+        AppSnackbars.showError('Error', 'Failed to submit. Server status: ${response.statusCode}');
       }
     } catch (e) {
       isLoading.value = false;
-      Get.snackbar('Error', 'An error occurred during submission: $e');
+      AppSnackbars.showError('Error', 'An error occurred during submission: $e');
     }
   }
 }

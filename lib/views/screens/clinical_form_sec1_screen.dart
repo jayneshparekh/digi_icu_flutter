@@ -1,4 +1,6 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:digi_icu_flutter/views/widgets/app_form_section_header.dart';
 import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
 import 'package:digi_icu_flutter/views/widgets/app_primary_button.dart';
@@ -16,13 +18,7 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          Get.snackbar(
-            'action_required'.tr,
-            'cannot_go_back'.tr,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: AppColors.warning,
-            colorText: AppColors.white,
-          );
+          AppSnackbars.showWarning('action_required'.tr, 'cannot_go_back'.tr);
         }
       },
       child: Scaffold(
@@ -170,16 +166,10 @@ class ClinicalFormSec1Screen extends GetView<ClinicalFormController> {
                                 onChanged: (val) => controller.selectSpo2Choice(val ?? ''),
                                 child: Row(
                                   children: [
-                                    Radio<String>(
-                                      value: 'Yes',
-                                      activeColor: AppColors.teal,
-                                    ),
+                                    AppRadio<String>(value: 'Yes'),
                                     Text('yes'.tr),
                                     const SizedBox(width: 16),
-                                    Radio<String>(
-                                      value: 'No',
-                                      activeColor: AppColors.teal,
-                                    ),
+                                    AppRadio<String>(value: 'No'),
                                     Text('no'.tr),
                                   ],
                                 ),

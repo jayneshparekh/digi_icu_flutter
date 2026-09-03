@@ -1,4 +1,5 @@
 import 'package:digi_icu_flutter/controllers/diagnosis_controller.dart';
+import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -190,9 +191,9 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                               },
                               child: Row(
                                 children: [
-                                  Expanded(child: RadioListTile<String>(value: 'On Rx', title: Text('on_rx'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: RadioListTile<String>(value: 'On Observation', title: Text('on_obs'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: RadioListTile<String>(value: 'On Therapeutic', title: Text('on_therapeutic'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'On Rx', title: Text('on_rx'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'On Observation', title: Text('on_obs'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'On Therapeutic', title: Text('on_therapeutic'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
                                 ],
                               ),
                             ),
@@ -242,10 +243,10 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                               },
                               child: Row(
                                 children: [
-                                  Expanded(child: RadioListTile<String>(value: 'On Rx', title: Text('on_rx'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: RadioListTile<String>(value: 'On Observation', title: Text('on_obs'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: RadioListTile<String>(value: 'On TLS', title: Text('on_tls'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: RadioListTile<String>(value: 'On Diet', title: Text('on_diet'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'On Rx', title: Text('on_rx'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'On Observation', title: Text('on_obs'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'On TLS', title: Text('on_tls'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'On Diet', title: Text('on_diet'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
                                 ],
                               ),
                             ),
@@ -512,10 +513,10 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                               },
                               child: Row(
                                 children: [
-                                  Expanded(child: RadioListTile<String>(value: 'I', title: const Text('I', style: TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: RadioListTile<String>(value: 'II', title: const Text('II', style: TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: RadioListTile<String>(value: 'III', title: const Text('III', style: TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: RadioListTile<String>(value: 'IV', title: const Text('IV', style: TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'I', title: const Text('I', style: TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'II', title: const Text('II', style: TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'III', title: const Text('III', style: TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'IV', title: const Text('IV', style: TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
                                 ],
                               ),
                             ),
@@ -552,10 +553,10 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                               },
                               child: Row(
                                 children: [
-                                  Expanded(child: RadioListTile<String>(value: 'On Rx', title: Text('on_rx'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: RadioListTile<String>(value: 'On Observation', title: Text('on_obs'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: RadioListTile<String>(value: 'On TLS', title: Text('on_tls'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: RadioListTile<String>(value: 'On Diet', title: Text('on_diet'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'On Rx', title: Text('on_rx'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'On Observation', title: Text('on_obs'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'On TLS', title: Text('on_tls'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(child: AppRadioListTile<String>(value: 'On Diet', title: Text('on_diet'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
                                 ],
                               ),
                             ),

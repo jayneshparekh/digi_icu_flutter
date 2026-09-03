@@ -1,4 +1,5 @@
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -171,13 +172,13 @@ class AppointmentController extends GetxController {
             });
           }
         } else {
-          Get.snackbar('Error', payRes.msg);
+          AppSnackbars.showError('Error', payRes.msg);
         }
       } else {
-        Get.snackbar('Error', 'Failed to check payment status');
+        AppSnackbars.showError('Error', 'Failed to check payment status');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Something went wrong checking payment');
+      AppSnackbars.showError('Error', 'Something went wrong checking payment');
     } finally {
       isLoading.value = false;
     }

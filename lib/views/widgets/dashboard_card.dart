@@ -1,4 +1,4 @@
-﻿import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -22,13 +22,13 @@ class DashboardCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(8),
       child: Card(
         color: backgroundColor,
-        elevation: 1,
+        elevation: 0,
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: AppColors.lightGray),
-          borderRadius: BorderRadius.circular(12),
+          side: const BorderSide(color: AppColors.medicalGray, width: 1),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 6.0),

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:digi_icu_flutter/views/widgets/app_form_section_header.dart';
 import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
@@ -17,13 +19,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          Get.snackbar(
-            'action_required'.tr,
-            'cannot_go_back'.tr,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: AppColors.warning,
-            colorText: AppColors.white,
-          );
+          AppSnackbars.showWarning('action_required'.tr, 'cannot_go_back'.tr);
         }
       },
       child: Scaffold(
@@ -166,7 +162,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                 child: Column(
                                   children: ['Yes', 'No', "Don't Know"].map((opt) => Row(
                                     children: [
-                                      Radio<String>(value: opt, activeColor: AppColors.teal),
+                                      AppRadio<String>(value: opt),
                                       Text(opt == "Don't Know" ? 'dont_know'.tr : opt.toLowerCase().tr),
                                     ],
                                   )).toList(),
@@ -200,7 +196,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                 child: Row(
                                   children: ['Yes', 'No'].map((opt) => Row(
                                     children: [
-                                      Radio<String>(value: opt, activeColor: AppColors.teal),
+                                      AppRadio<String>(value: opt),
                                       Text(opt.toLowerCase().tr),
                                       const SizedBox(width: 24),
                                     ],
@@ -228,7 +224,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                           child: Row(
                               children: ['Yes', 'No', 'May be'].map((opt) => Row(
                                 children: [
-                                  Radio<String>(value: opt, activeColor: AppColors.teal),
+                                  AppRadio<String>(value: opt),
                                   Text(opt == 'May be' ? 'may_be'.tr : opt.toLowerCase().tr),
                                   const SizedBox(width: 16),
                                 ],
@@ -248,7 +244,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                         child: Column(
                           children: ['Hypertension', 'Diabetes', 'Both', 'None'].map((opt) => Row(
                             children: [
-                              Radio<String>(value: opt, activeColor: AppColors.teal),
+                              AppRadio<String>(value: opt),
                               Text(opt == 'Both' ? 'both'.tr : opt == 'None' ? 'none'.tr : opt),
                             ],
                           )).toList(),
@@ -394,7 +390,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                 child: Row(
                                   children: ['Yes', 'No'].map((opt) => Row(
                                     children: [
-                                      Radio<String>(value: opt, activeColor: AppColors.teal),
+                                      AppRadio<String>(value: opt),
                                       Text(opt.toLowerCase().tr),
                                       const SizedBox(width: 24),
                                     ],
@@ -482,7 +478,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                 child: Row(
                                   children: ['Yes', 'No'].map((opt) => Row(
                                     children: [
-                                      Radio<String>(value: opt, activeColor: AppColors.teal),
+                                      AppRadio<String>(value: opt),
                                       Text(opt.toLowerCase().tr),
                                       const SizedBox(width: 24),
                                     ],
@@ -517,7 +513,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                                 child: Row(
                                   children: ['Yes', 'No'].map((opt) => Row(
                                     children: [
-                                      Radio<String>(value: opt, activeColor: AppColors.teal),
+                                      AppRadio<String>(value: opt),
                                       Text(opt.toLowerCase().tr),
                                       const SizedBox(width: 24),
                                     ],
@@ -652,7 +648,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                   ? Column(
                       children: ['Yes', 'No', "Don't Know"].map((opt) => Row(
                         children: [
-                          Radio<String>(value: opt, activeColor: AppColors.teal),
+                          AppRadio<String>(value: opt),
                           Text(opt),
                         ],
                       )).toList(),
@@ -660,7 +656,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                   : Row(
                       children: ['Yes', 'No'].map((opt) => Row(
                         children: [
-                          Radio<String>(value: opt, activeColor: AppColors.teal),
+                          AppRadio<String>(value: opt),
                           Text(opt.toLowerCase().tr),
                           const SizedBox(width: 24),
                         ],
@@ -697,7 +693,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                   child: Row(
                     children: ['Yes', 'No'].map((opt) => Row(
                       children: [
-                        Radio<String>(value: opt, activeColor: AppColors.teal),
+                        AppRadio<String>(value: opt),
                         Text(opt),
                         const SizedBox(width: 24),
                       ],
@@ -813,7 +809,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                       child: Row(
                         children: ['Yes', 'No'].map((opt) => Row(
                           children: [
-                            Radio<String>(value: opt, activeColor: AppColors.teal),
+                            AppRadio<String>(value: opt),
                             Text(opt.toLowerCase().tr),
                             const SizedBox(width: 24),
                           ],

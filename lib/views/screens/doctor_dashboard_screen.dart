@@ -1,4 +1,5 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +10,8 @@ import '../widgets/app_drawing_canvas.dart';
 import '../widgets/app_speech_input_widget.dart';
 import '../widgets/dashboard_card.dart';
 import '../widgets/doctor_side_menu.dart';
+import '../widgets/app_dialog.dart';
+import '../widgets/app_radio.dart';
 
 class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
   const DoctorDashboardScreen({super.key});
@@ -184,12 +187,9 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
             AppDrawingCanvas(
               height: 450,
               onSave: (bytes) {
-                Get.snackbar(
+                AppSnackbars.showInfo(
                   'drawing_saved'.tr,
                   'canvas_image_generated'.trParams({'bytes': bytes.length.toString()}),
-                  snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: AppColors.teal,
-                  colorText: AppColors.white,
                 );
               },
             ),
@@ -208,152 +208,85 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
   }
 
   void _showLayoutDialog(BuildContext context) {
-    Get.dialog(
-      AlertDialog(
-        backgroundColor: AppColors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 24),
-        actionsPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-        title: Text(
-          'select_layout'.tr,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: AppColors.navy,
+    AppDialog.show(
+      title: 'select_layout'.tr,
+      confirmLabel: 'apply'.tr,
+      onConfirm: () {
+        controller.saveAndApplySelectedOrientation();
+        Get.back();
+      },
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'recommended_layout_desc'.tr,
+            style: const TextStyle(fontSize: 14, color: AppColors.medicalGray),
           ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'recommended_layout_desc'.tr,
-              style: TextStyle(fontSize: 14, color: AppColors.medicalGray),
-            ),
-            const SizedBox(height: 24),
-            Obx(() {
-              return Column(
-                children: [
-                  RadioGroup<String>(
-                    groupValue: controller.selectedOrientation.value,
-                    onChanged: (val) {
-                      if (val != null) {
-                        controller.selectedOrientation.value = val;
-                      }
-                    },
-                    child: Column(
-                      children: [
-                        RadioListTile<String>(
-                          value: 'portrait',
-                          title: Text(
-                            'portrait_vertical'.tr,
-                            style: TextStyle(fontSize: 16, color: AppColors.navy),
-                          ),
-                          activeColor: AppColors.info,
-                          contentPadding: EdgeInsets.zero,
+          const SizedBox(height: 24),
+          Obx(() {
+            return Column(
+              children: [
+                RadioGroup<String>(
+                  groupValue: controller.selectedOrientation.value,
+                  onChanged: (val) {
+                    if (val != null) {
+                      controller.selectedOrientation.value = val;
+                    }
+                  },
+                  child: Column(
+                    children: [
+                      AppRadioListTile<String>(
+                        value: 'portrait',
+                        title: Text(
+                          'portrait_vertical'.tr,
+                          style: const TextStyle(fontSize: 16, color: AppColors.navy),
                         ),
-                        RadioListTile<String>(
-                          value: 'landscape',
-                          title: Text(
-                            'landscape_horizontal'.tr,
-                            style: TextStyle(fontSize: 16, color: AppColors.navy),
-                          ),
-                          activeColor: AppColors.info,
-                          contentPadding: EdgeInsets.zero,
+                      ),
+                      AppRadioListTile<String>(
+                        value: 'landscape',
+                        title: Text(
+                          'landscape_horizontal'.tr,
+                          style: const TextStyle(fontSize: 16, color: AppColors.navy),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  CheckboxListTile(
-                    value: controller.setAsDefault.value,
-                    onChanged: (val) {
-                      if (val != null) controller.setAsDefault.value = val;
-                    },
-                    title: Text(
-                      'set_orientation_default'.tr,
-                      style: TextStyle(fontSize: 15, color: AppColors.navy),
-                    ),
-                    activeColor: AppColors.info,
-                    checkColor: AppColors.white,
-                    controlAffinity: ListTileControlAffinity.leading,
-                    contentPadding: EdgeInsets.zero,
+                ),
+                const SizedBox(height: 16),
+                CheckboxListTile(
+                  value: controller.setAsDefault.value,
+                  onChanged: (val) {
+                    if (val != null) controller.setAsDefault.value = val;
+                  },
+                  title: Text(
+                    'set_orientation_default'.tr,
+                    style: const TextStyle(fontSize: 15, color: AppColors.navy),
                   ),
-                ],
-              );
-            }),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              controller.saveAndApplySelectedOrientation();
-              Navigator.of(context, rootNavigator: true).pop();
-            },
-            child: Text(
-              'apply'.tr,
-              style: TextStyle(
-                color: AppColors.teal,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+                  activeColor: AppColors.info,
+                  checkColor: AppColors.white,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ],
+            );
+          }),
         ],
       ),
-      barrierDismissible: false,
     );
   }
 
   void _showPendingRegistrationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppColors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          title: Text(
-            'warning'.tr,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppColors.navy,
-            ),
-          ),
-          content: Text(
-            'registration_pending_msg'.tr,
-            style: TextStyle(fontSize: 14, color: AppColors.navy),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'okay'.tr,
-                style: TextStyle(
-                  color: AppColors.teal,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'cancel'.tr,
-                style: TextStyle(
-                  color: AppColors.medicalGray,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+    AppDialog.show(
+      title: 'warning'.tr,
+      confirmLabel: 'okay'.tr,
+      cancelLabel: 'cancel'.tr,
+      onConfirm: () => Get.back(),
+      onCancel: () => Get.back(),
+      body: Text(
+        'registration_pending_msg'.tr,
+        style: const TextStyle(fontSize: 14, color: AppColors.navy),
+      ),
     );
   }
 }
