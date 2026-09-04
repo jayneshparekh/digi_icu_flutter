@@ -1,6 +1,9 @@
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
 import 'package:digi_icu_flutter/core/constants/app_constants.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/models/response/doctor/bp_graph_response.dart';
+import 'package:digi_icu_flutter/models/response/doctor/other_graph_response.dart';
+import 'package:digi_icu_flutter/models/response/doctor/sugar_graph_response.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -42,6 +45,13 @@ class ServingPatientController extends GetxController {
   final RxString patientRating = '0'.obs;
   final RxBool isLoadingDetails = false.obs;
   final RxString userType = 'Doctor'.obs;
+
+  // Graph tab state & data
+  final RxBool isLoadingGraph = false.obs;
+  final RxList<BPGraphData> bpGraphList = <BPGraphData>[].obs;
+  final Rxn<TargetBp> targetBp = Rxn<TargetBp>();
+  final RxList<SugarGraphData> sugarGraphList = <SugarGraphData>[].obs;
+  final RxList<OtherGraphData> otherGraphList = <OtherGraphData>[].obs;
 
   @override
   void onInit() {
@@ -112,6 +122,90 @@ class ServingPatientController extends GetxController {
 
   void changeTab(String tab) {
     currentTab.value = tab;
+    if (tab == 'Graph' && bpGraphList.isEmpty && sugarGraphList.isEmpty && otherGraphList.isEmpty) {
+      fetchGraphData();
+    }
+  }
+
+  Future<void> fetchGraphData() async {
+    if (patientId.isEmpty) return;
+    isLoadingGraph.value = true;
+    try {
+      await Future.wait([
+        fetchBPGraph(),
+        fetchSugarGraph(),
+        fetchOtherGraph(),
+      ]);
+    } finally {
+      isLoadingGraph.value = false;
+    }
+  }
+
+  Future<void> fetchBPGraph() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.bpGraph,
+        data: {'patient_id': patientId},
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final res = BPGraphResponse.fromJson(response.data);
+        if (res.status == 'success') {
+          bpGraphList.value = res.data ?? [];
+          targetBp.value = res.targetBp;
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching BP graph: $e');
+    }
+  }
+
+  Future<void> fetchSugarGraph() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.sugarGraph,
+        data: {'patient_id': patientId},
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final res = SugarGraphResponse.fromJson(response.data);
+        if (res.status == 'success') {
+          sugarGraphList.value = res.data ?? [];
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching Sugar graph: $e');
+    }
+  }
+
+  Future<void> fetchOtherGraph() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.otherGraph,
+        data: {'patient_id': patientId},
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final res = OtherGraphResponse.fromJson(response.data);
+        if (res.status == 'success') {
+          otherGraphList.value = res.data ?? [];
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching Other graph: $e');
+    }
   }
 
   Future<void> addRating(String ratingValue) async {

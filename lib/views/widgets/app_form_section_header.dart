@@ -5,30 +5,32 @@ import 'package:flutter/material.dart';
 /// Renders a grey [subtitle], a bold primary-colored [title], and a short
 /// teal underline bar below the title.
 class AppFormSectionHeader extends StatelessWidget {
-  final String subtitle;
   final String title;
+  final String? subtitle;
 
   const AppFormSectionHeader({
     super.key,
-    required this.subtitle,
     required this.title,
+    this.subtitle,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          subtitle,
-          style: TextStyle(
-            fontSize: 14,
-            color: AppColors.medicalGray,
+        if (subtitle != null && subtitle!.isNotEmpty) ...[
+          Text(
+            subtitle!,
+            style: const TextStyle(
+              fontSize: 14,
+              color: AppColors.coolGray,
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
+          const SizedBox(height: 4),
+        ],
         Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: AppColors.teal,

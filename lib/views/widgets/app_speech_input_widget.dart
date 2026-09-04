@@ -169,10 +169,10 @@ class _AppSpeechInputWidgetState extends State<AppSpeechInputWidget> {
     final activeLocaleId = await _getResolvedLocaleId();
 
     await _speech.listen(
-      localeId: activeLocaleId,
-      listenFor: const Duration(minutes: 3),
-      pauseFor: const Duration(seconds: 30),
       listenOptions: stt.SpeechListenOptions(
+        localeId: activeLocaleId,
+        listenFor: const Duration(minutes: 3),
+        pauseFor: const Duration(seconds: 30),
         partialResults: true,
         cancelOnError: false,
         listenMode: stt.ListenMode.dictation,

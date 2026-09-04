@@ -539,6 +539,18 @@ class AppTranslations extends Translations {
           'diastolic': 'Diastolic',
           'measure_bp': 'Measure BP',
           'ok_i_will_do': 'OK, I WILL DO',
+
+          // Graph Translations
+          'after_food_or_pp': 'After Food / PP',
+          'bmi': 'BMI',
+          'urine_protein': 'Urine Protein',
+          'vldl_txt': 'VLDL',
+          'fbs': 'FBS',
+          'ppbs_': 'PPBS',
+          'bp_graph_title': 'BP Graph',
+          'sugar_graph_title': 'Sugar Graph',
+          'other_vitals_title': 'Lab Parameters & Other Vitals',
+          'no_graph_data': 'No graph data available',
         },
       };
 }

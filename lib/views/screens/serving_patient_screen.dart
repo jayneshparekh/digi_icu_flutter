@@ -1,6 +1,7 @@
 import 'package:digi_icu_flutter/controllers/serving_patient_controller.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:digi_icu_flutter/views/screens/serving_patient_dashboard_view.dart';
+import 'package:digi_icu_flutter/views/screens/serving_patient_graph_view.dart';
 import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
 import 'package:digi_icu_flutter/views/widgets/patient_rating_dialog.dart';
@@ -256,7 +257,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                         case 'Dashboard':
                           return const ServingPatientDashboardView();
                         case 'Graph':
-                          return Center(child: Text('graph_placeholder'.tr, style: TextStyle(fontSize: 16, color: AppColors.medicalGray)));
+                          return const ServingPatientGraphView();
                         case 'Prescription':
                           return Center(child: Text('prescription_placeholder'.tr, style: TextStyle(fontSize: 16, color: AppColors.medicalGray)));
                         case 'Form':

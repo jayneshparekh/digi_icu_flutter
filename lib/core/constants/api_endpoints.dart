@@ -30,6 +30,9 @@ class ApiEndpoints {
   static const String getPatientList = 'api/v2/Doctor/get_patient_list';
   static const String checkDoctorHome = 'api/v2/Doctor/check_doctor_home';
   static const String getMedicalForm = 'api/v2/Doctor/get_medical_form';
+  static const String bpGraph = 'api/v2/Doctor/bp_graph';
+  static const String sugarGraph = 'api/v2/Doctor/sugar_graph';
+  static const String otherGraph = 'api/v2/Doctor/other_graph';
 
   // ==========================================
   // Admin Endpoints
