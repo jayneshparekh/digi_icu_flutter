@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
 import 'package:digi_icu_flutter/core/constants/app_constants.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
@@ -5,10 +6,14 @@ import 'package:digi_icu_flutter/models/response/doctor/bp_graph_response.dart';
 import 'package:digi_icu_flutter/models/response/doctor/other_graph_response.dart';
 import 'package:digi_icu_flutter/models/response/doctor/sugar_graph_response.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ServingPatientController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -53,8 +58,16 @@ class ServingPatientController extends GetxController {
   final RxList<SugarGraphData> sugarGraphList = <SugarGraphData>[].obs;
   final RxList<OtherGraphData> otherGraphList = <OtherGraphData>[].obs;
 
+  // Prescription tab state & data
+  final RxString prescriptionType = 'OPD'.obs;
+  final RxBool isLoadingPrescriptions = false.obs;
+  final RxBool isLoadingMedicines = false.obs;
+  final RxList<dynamic> prescriptionList = <dynamic>[].obs;
+  final RxString lastAppointmentId = ''.obs;
+
   @override
   void onInit() {
+
     super.onInit();
     final args = Get.arguments as Map<String, dynamic>? ?? {};
     patientId = args['patientId']?.toString() ?? '';
@@ -124,8 +137,185 @@ class ServingPatientController extends GetxController {
     currentTab.value = tab;
     if (tab == 'Graph' && bpGraphList.isEmpty && sugarGraphList.isEmpty && otherGraphList.isEmpty) {
       fetchGraphData();
+    } else if (tab == 'Prescription' && prescriptionList.isEmpty) {
+      fetchDoctorPrescription(prescriptionType.value);
     }
   }
+
+  Future<void> fetchDoctorPrescription(String type) async {
+    if (patientId.isEmpty) return;
+    prescriptionType.value = type;
+    isLoadingPrescriptions.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.prescriptionList,
+        data: {
+          'patient_id': patientId,
+          'type': type,
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        if (response.data['status'] == 'success') {
+          prescriptionList.value = response.data['data'] as List<dynamic>? ?? [];
+          lastAppointmentId.value = response.data['last_appointment_id']?.toString() ?? '';
+        } else {
+          prescriptionList.clear();
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching prescriptions: $e');
+      prescriptionList.clear();
+    } finally {
+      isLoadingPrescriptions.value = false;
+    }
+  }
+
+  Future<Map<String, dynamic>?> fetchMedicineDetails(String id) async {
+    isLoadingMedicines.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.getMedicines,
+        data: {
+          'appointment_id': id,
+          'type': '',
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        if (response.data['status'] == 'success') {
+          return response.data as Map<String, dynamic>;
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching medicine details: $e');
+    } finally {
+      isLoadingMedicines.value = false;
+    }
+    return null;
+  }
+
+  Future<void> sharePrescriptionPdf(String createdDate, Map<String, dynamic> data) async {
+    try {
+      isLoadingDetails.value = true;
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      // Format summary text
+      final medicinesList = data['data'] as List<dynamic>? ?? [];
+      String shareText = 'Prescription Date: $createdDate\nPatient: $fullName ($mhcId)\n';
+      if (medicinesList.isNotEmpty) {
+        shareText += '\nMedicines:';
+        for (final med in medicinesList) {
+          final subMeds = med['medicines'] as List<dynamic>? ?? [];
+          final medNames = subMeds.map((m) => m['medicine_name']?.toString() ?? '').where((n) => n.isNotEmpty).join(', ');
+          final freq = med['frequency']?.toString() ?? '';
+          final days = med['days']?.toString() ?? '';
+          shareText += '\n- $medNames (Freq: $freq, Days: $days)';
+        }
+      }
+
+      // Fetch diagnosis if available
+      String diagnosisText = '';
+      try {
+        final diagRes = await apiClient.post(
+          ApiEndpoints.getPatientDiagnosis,
+          data: {'patient_id': patientId},
+          options: dio.Options(headers: {'Authorization': token}),
+        );
+        if (diagRes.statusCode == 200 && diagRes.data != null) {
+          final diagObj = diagRes.data is String ? jsonDecode(diagRes.data) : diagRes.data;
+          if (diagObj['status'] == 'success' && diagObj['data'] != null) {
+            diagnosisText = diagObj['data']['diagnosis']?.toString() ?? '';
+          }
+        }
+      } catch (_) {}
+
+      final formData = dio.FormData.fromMap({
+        'appointment_id': bookingId,
+        'patient_id': patientId,
+        'diagnosis': diagnosisText,
+      });
+
+      final response = await apiClient.post(
+        ApiEndpoints.sharePrescription,
+        data: formData,
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        dynamic resData = response.data;
+        if (resData is String) {
+          try {
+            resData = jsonDecode(resData);
+          } catch (_) {}
+        }
+
+        final Map<String, dynamic> resMap = resData is Map<String, dynamic>
+            ? resData
+            : (resData is Map ? Map<String, dynamic>.from(resData) : {});
+
+        final status = resMap['status']?.toString() ?? '';
+        if (status == 'success') {
+          final message = resMap['message']?.toString() ?? '';
+          final httpIndex = message.indexOf('http');
+          if (httpIndex != -1) {
+            final pdfUrl = message.substring(httpIndex).trim();
+            await _downloadAndSharePdfFile(pdfUrl, shareText);
+          } else {
+            AppSnackbars.showError('Prescription', 'PDF link not found.');
+          }
+        } else {
+          AppSnackbars.showError('Prescription', resMap['msg']?.toString() ?? resMap['message']?.toString() ?? 'Failed to share prescription.');
+        }
+      } else {
+        AppSnackbars.showError('Prescription', 'Failed to generate prescription PDF.');
+      }
+    } catch (e) {
+      debugPrint('Error sharing prescription PDF: $e');
+      AppSnackbars.showError('Prescription', 'Failed to share prescription.');
+    } finally {
+      isLoadingDetails.value = false;
+    }
+  }
+
+  Future<void> _downloadAndSharePdfFile(String pdfUrl, String shareText) async {
+    try {
+      final dioClient = dio.Dio();
+      final tempDir = await getTemporaryDirectory();
+      final fileName = 'prescription_${bookingId.isNotEmpty ? bookingId : 'file'}.pdf';
+      final filePath = '${tempDir.path}/$fileName';
+
+      await dioClient.download(pdfUrl, filePath);
+
+      final xFile = XFile(filePath);
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [xFile],
+          text: shareText,
+          subject: 'Prescription PDF - $fullName',
+        ),
+      );
+    } catch (e) {
+      debugPrint('Error downloading or sharing PDF file: $e');
+      final uri = Uri.parse(pdfUrl);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        AppSnackbars.showError('Prescription', 'Failed to share PDF file.');
+      }
+    }
+  }
+
+
 
   Future<void> fetchGraphData() async {
     if (patientId.isEmpty) return;

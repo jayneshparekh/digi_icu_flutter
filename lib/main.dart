@@ -28,10 +28,7 @@ import 'views/screens/package_category_screen.dart';
 import 'views/screens/appointment_screen.dart';
 import 'views/screens/take_appointment_screen.dart';
 import 'views/screens/primary_care_screen.dart';
-import 'views/screens/clinical_form_sec1_screen.dart';
-import 'views/screens/clinical_form_sec2_screen.dart';
-import 'views/screens/clinical_form_sec3_screen.dart';
-import 'views/screens/clinical_form_sec4_screen.dart';
+import 'views/screens/clinical_form_screen.dart';
 import 'views/screens/medical_form_screen.dart';
 import 'controllers/medical_form_controller.dart';
 import 'controllers/serving_patient_controller.dart';
@@ -195,28 +192,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ),
         GetPage(
           name: '/clinical-form',
-          page: () => const ClinicalFormSec1Screen(),
-          binding: BindingsBuilder(() {
-            Get.lazyPut(() => ClinicalFormController());
-          }),
-        ),
-        GetPage(
-          name: '/clinical-form-sec2',
-          page: () => const ClinicalFormSec2Screen(),
-          binding: BindingsBuilder(() {
-            Get.lazyPut(() => ClinicalFormController());
-          }),
-        ),
-        GetPage(
-          name: '/clinical-form-sec3',
-          page: () => const ClinicalFormSec3Screen(),
-          binding: BindingsBuilder(() {
-            Get.lazyPut(() => ClinicalFormController());
-          }),
-        ),
-        GetPage(
-          name: '/clinical-form-sec4',
-          page: () => const ClinicalFormSec4Screen(),
+          page: () => const ClinicalFormScreen(),
           binding: BindingsBuilder(() {
             Get.lazyPut(() => ClinicalFormController());
           }),

@@ -17,6 +17,7 @@ class ApiEndpoints {
   static const String checkPaymentStatus = 'api/v2/Patient/check_payment_status';
   static const String patientDetails = 'api/v2/Patient/pt_details';
   static const String quickForm = 'api/v2/Patient/quick_form';
+  static const String prescriptionList = 'api/v2/Patient/prescription_list';
   
   // ==========================================
   // Doctor Endpoints
@@ -33,6 +34,8 @@ class ApiEndpoints {
   static const String bpGraph = 'api/v2/Doctor/bp_graph';
   static const String sugarGraph = 'api/v2/Doctor/sugar_graph';
   static const String otherGraph = 'api/v2/Doctor/other_graph';
+  static const String getMedicines = 'api/v2/Doctor/get_medicines';
+  static const String addPatientPrescription = 'api/v2/Doctor/add_patient_prescription';
 
   // ==========================================
   // Admin Endpoints
@@ -51,4 +54,9 @@ class ApiEndpoints {
   // Payment Endpoints
   // ==========================================
   static const String getOrder = 'api/v2/Payment/get_order';
+
+  // ==========================================
+  // Servingpatient Endpoints
+  // ==========================================
+  static const String sharePrescription = 'web/Servingpatient/share_prescription';
 }

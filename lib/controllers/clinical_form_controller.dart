@@ -523,7 +523,7 @@ class ClinicalFormController extends GetxController {
     }
 
     if (checkValidationSec2()) {
-      Get.toNamed('/clinical-form-sec3');
+      // Sec 2 validated
     }
   }
 
@@ -598,10 +598,45 @@ class ClinicalFormController extends GetxController {
     mClinicalFormData.dizzinessSystolic = dizzinessSystolicController.text.trim();
     mClinicalFormData.dizzinessDiaStolic = dizzinessDiastolicController.text.trim();
     mClinicalFormData.heartRate2 = heartRate2Controller.text.trim();
+  }
 
-    if (checkValidationSec3()) {
-      Get.toNamed('/clinical-form-sec4');
+  void submitAll() {
+    // Populate Section 1 data
+    mClinicalFormData.systolic1 = systolicController.text.trim();
+    mClinicalFormData.diastolic1 = diastolicController.text.trim();
+    mClinicalFormData.heartRate1 = pulseRateController.text.trim();
+    mClinicalFormData.height = heightController.text.trim();
+    mClinicalFormData.weight = weightController.text.trim();
+    mClinicalFormData.spo2 = spo2Choice.value;
+    mClinicalFormData.spo2Details = spo2Controller.text.trim();
+    mClinicalFormData.bpApparatus = haveBPApparatus.value ? 'Yes' : 'No';
+
+    if (mClinicalFormData.height.isNotEmpty && mClinicalFormData.weight.isNotEmpty) {
+      final weightVal = double.tryParse(mClinicalFormData.weight) ?? 0.0;
+      final heightVal = (double.tryParse(mClinicalFormData.height) ?? 0.0) / 100;
+      if (heightVal > 0) {
+        final bmi = weightVal / (heightVal * heightVal);
+        mClinicalFormData.bmi = bmi.toStringAsFixed(1);
+      }
+    } else {
+      mClinicalFormData.bmi = '';
     }
+
+    if (!checkValidation()) return;
+    if (!checkValidationSec2()) return;
+
+    // Populate Section 2 data
+    submitSec2();
+
+    if (!checkValidationSec3()) return;
+
+    // Populate Section 3 data
+    submitSec3();
+
+    if (!checkValidationSec4()) return;
+
+    // Final submission
+    submitSec4();
   }
 
   bool checkValidationSec4() {

@@ -119,15 +119,17 @@ class PatientSignUpController extends GetxController {
         if (permission == LocationPermission.always ||
             permission == LocationPermission.whileInUse) {
           final Position position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high,
-            timeLimit: const Duration(seconds: 5),
+            locationSettings: const LocationSettings(
+              accuracy: LocationAccuracy.high,
+              timeLimit: Duration(seconds: 5),
+            ),
           );
           latitude = position.latitude;
           longitude = position.longitude;
 
-          final List<Placemark> placemarks = await placemarkFromCoordinates(
-            latitude,
-            longitude,
+          final List<Placemark> placemarks = await Geocoding().placemarkFromCoordinates(
+            position.latitude,
+            position.longitude,
           );
           if (placemarks.isNotEmpty) {
             final pm = placemarks.first;

@@ -2,12 +2,14 @@ import 'package:digi_icu_flutter/controllers/serving_patient_controller.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:digi_icu_flutter/views/screens/serving_patient_dashboard_view.dart';
 import 'package:digi_icu_flutter/views/screens/serving_patient_graph_view.dart';
+import 'package:digi_icu_flutter/views/screens/serving_patient_prescription_view.dart';
 import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
 import 'package:digi_icu_flutter/views/widgets/patient_rating_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+
 
 class ServingPatientScreen extends GetView<ServingPatientController> {
   const ServingPatientScreen({super.key});
@@ -259,7 +261,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                         case 'Graph':
                           return const ServingPatientGraphView();
                         case 'Prescription':
-                          return Center(child: Text('prescription_placeholder'.tr, style: TextStyle(fontSize: 16, color: AppColors.medicalGray)));
+                          return const ServingPatientPrescriptionView();
                         case 'Form':
                           return Center(child: Text('form_placeholder'.tr, style: TextStyle(fontSize: 16, color: AppColors.medicalGray)));
                         case 'DI':
