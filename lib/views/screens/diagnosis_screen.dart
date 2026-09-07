@@ -1,5 +1,6 @@
 import 'package:digi_icu_flutter/controllers/diagnosis_controller.dart';
 import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
+import 'package:digi_icu_flutter/views/widgets/app_speech_input_widget.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,7 +42,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
               padding: const EdgeInsets.all(12),
               color: AppColors.lightGray,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     'diagnosis_label'.tr,
@@ -107,31 +108,34 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 10.0),
                                   child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Expanded(
-                                        child: TextField(
+                                        child: AppSpeechInputWidget(
                                           controller: controller.otherControllers[index],
-                                          decoration: InputDecoration(
-                                            labelText: '${'other_diagnosis'.tr} ${index + 1}',
-                                            border: const OutlineInputBorder(),
-                                            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                                            suffixIcon: Icon(Icons.mic, color: AppColors.teal, size: 20),
-                                          ),
+                                          label: '${'other_diagnosis'.tr} ${index + 1}',
+                                          hintText: 'Type or speak diagnosis...',
+                                          height: 48,
+                                          maxLines: 1,
+                                          onChanged: (_) => controller.compileDiagnosis(),
                                         ),
                                       ),
                                       const SizedBox(width: 8),
-                                      GestureDetector(
-                                        onTap: () => controller.toggleOtherSlot(index),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            color: isAdded ? AppColors.error : AppColors.success,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Icon(
-                                            isAdded ? Icons.close : Icons.add,
-                                            color: AppColors.white,
-                                            size: 20,
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 4.0),
+                                        child: GestureDetector(
+                                          onTap: () => controller.toggleOtherSlot(index),
+                                          child: Container(
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: isAdded ? AppColors.error : AppColors.success,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              isAdded ? Icons.close : Icons.add,
+                                              color: AppColors.white,
+                                              size: 20,
+                                            ),
                                           ),
                                         ),
                                       ),

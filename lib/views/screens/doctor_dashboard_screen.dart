@@ -1,13 +1,10 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
-import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/doctor_dashboard_controller.dart';
-import '../widgets/app_drawing_canvas.dart';
-import '../widgets/app_speech_input_widget.dart';
 import '../widgets/dashboard_card.dart';
 import '../widgets/doctor_side_menu.dart';
 import '../widgets/app_dialog.dart';
@@ -182,23 +179,6 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
                   ],
                 );
               },
-            ),
-            const SizedBox(height: 16),
-            AppDrawingCanvas(
-              height: 450,
-              onSave: (bytes) {
-                AppSnackbars.showInfo(
-                  'drawing_saved'.tr,
-                  'canvas_image_generated'.trParams({'bytes': bytes.length.toString()}),
-                );
-              },
-            ),
-            const SizedBox(height: 16),
-            AppSpeechInputWidget(
-              controller: controller.noteTextController,
-              label: 'voice_input'.tr,
-              hintText: 'type_or_speak_notes'.tr,
-              height: 120,
             ),
             const SizedBox(height: 16),
           ],

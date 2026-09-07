@@ -35,6 +35,8 @@ import 'controllers/serving_patient_controller.dart';
 import 'views/screens/serving_patient_screen.dart';
 import 'views/screens/diagnosis_screen.dart';
 import 'controllers/diagnosis_controller.dart';
+import 'views/screens/add_prescription_screen.dart';
+import 'controllers/add_prescription_controller.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -209,6 +211,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           page: () => const DiagnosisScreen(),
           binding: BindingsBuilder(() {
             Get.lazyPut(() => DiagnosisController());
+          }),
+        ),
+        GetPage(
+          name: '/add-prescription',
+          page: () => const AddPrescriptionScreen(),
+          binding: BindingsBuilder(() {
+            Get.lazyPut(() => AddPrescriptionController());
           }),
         ),
       ],

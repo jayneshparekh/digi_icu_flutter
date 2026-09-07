@@ -31,7 +31,7 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
     }
 
     AppDialog.show(
-      title: 'Prescription Details',
+      title: 'prescription_details'.tr,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +49,7 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                 children: [
                   Expanded(
                     child: Text(
-                      'Date: $createdDate',
+                      'date_colon'.trParams({'date': createdDate}),
                       style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy, fontSize: 13),
                     ),
                   ),
@@ -64,9 +64,9 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
 
             // Prescribed Images Section (if present)
             if (imageUrls.isNotEmpty) ...[
-              const Text(
-                'Prescribed Images',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+              Text(
+                'prescribed_images'.tr,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
               ),
               const SizedBox(height: 6),
               SizedBox(
@@ -103,15 +103,15 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
             ],
 
             // Medicines List Section
-            const Text(
-              'Medicines',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+            Text(
+              'medicines'.tr,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
             ),
             const SizedBox(height: 6),
             if (medicinesData.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-                child: Text('No medicines specified.', style: TextStyle(color: AppColors.coolGray, fontSize: 13)),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text('no_medicines_specified'.tr, style: const TextStyle(color: AppColors.coolGray, fontSize: 13)),
               )
             else
               ListView.separated(
@@ -138,7 +138,9 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          medNames.isNotEmpty ? medNames : (category.isNotEmpty ? category : 'Medicine ${index + 1}'),
+                          medNames.isNotEmpty
+                              ? medNames
+                              : (category.isNotEmpty ? category : 'medicine_item_fallback'.trParams({'number': (index + 1).toString()})),
                           style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy, fontSize: 13),
                         ),
                         const SizedBox(height: 4),
@@ -146,10 +148,10 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                           children: [
                             if (frequency.isNotEmpty)
                               Expanded(
-                                child: Text('Freq: $frequency', style: const TextStyle(fontSize: 12, color: AppColors.coolGray)),
+                                child: Text('freq_colon'.trParams({'freq': frequency}), style: const TextStyle(fontSize: 12, color: AppColors.coolGray)),
                               ),
                             if (days.isNotEmpty)
-                              Text('Duration: $days Days', style: const TextStyle(fontSize: 12, color: AppColors.coolGray)),
+                              Text('duration_days'.trParams({'days': days}), style: const TextStyle(fontSize: 12, color: AppColors.coolGray)),
                           ],
                         ),
                       ],
@@ -162,9 +164,9 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
 
             // Advice Section (if available)
             if (adviceData != null && (adviceData['for_patient'] != null || adviceData['follow_date'] != null)) ...[
-              const Text(
-                'Advice & Follow-up',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+              Text(
+                'advice_followup'.tr,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
               ),
               const SizedBox(height: 6),
               Container(
@@ -179,21 +181,21 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                   children: [
                     if (adviceData['follow_date'] != null && adviceData['follow_date'].toString().isNotEmpty) ...[
                       Text(
-                        'Follow-up Date: ${adviceData['follow_date']}',
+                        'followup_date_colon'.trParams({'date': adviceData['follow_date'].toString()}),
                         style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.teal, fontSize: 12),
                       ),
                       const SizedBox(height: 4),
                     ],
                     if (adviceData['for_patient'] != null && adviceData['for_patient'].toString().isNotEmpty) ...[
                       Text(
-                        'Patient Advice: ${adviceData['for_patient']}',
+                        'patient_advice_colon'.trParams({'advice': adviceData['for_patient'].toString()}),
                         style: const TextStyle(color: AppColors.navy, fontSize: 12),
                       ),
                     ],
                     if (adviceData['for_leader'] != null && adviceData['for_leader'].toString().isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Text(
-                        'Leader Advice: ${adviceData['for_leader']}',
+                        'leader_advice_colon'.trParams({'advice': adviceData['for_leader'].toString()}),
                         style: const TextStyle(color: AppColors.coolGray, fontSize: 12),
                       ),
                     ],
@@ -205,9 +207,9 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
 
             // Investigations Section (if available)
             if (investigationsData.isNotEmpty) ...[
-              const Text(
-                'Investigations Requested',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+              Text(
+                'investigations_requested'.tr,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
               ),
               const SizedBox(height: 4),
               Text(
@@ -219,8 +221,8 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
           ],
         ),
       ),
-      confirmLabel: 'Share',
-      cancelLabel: 'Close',
+      confirmLabel: 'share'.tr,
+      cancelLabel: 'close'.tr,
       onConfirm: () {
         controller.sharePrescriptionPdf(createdDate, data);
       },
@@ -265,24 +267,38 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
             child: Row(
               children: [
                 _buildActionButton(
-                  label: 'Prescription',
+                  label: 'prescriptions_tab'.tr,
                   color: const Color(0xFFFF5722),
-                  onTap: () => AppSnackbars.showInfo('Prescription', 'Feature coming soon.'),
+                  onTap: () async {
+                    final result = await Get.toNamed(
+                      '/add-prescription',
+                      arguments: {
+                        'patientId': controller.patientId,
+                        'bookingId': controller.bookingId,
+                        'patientName': controller.fullName,
+                        'lastAppointmentId': controller.bookingId,
+                        'isServed': controller.status == 'Served',
+                      },
+                    );
+                    if (result == true) {
+                      controller.fetchDoctorPrescription(controller.prescriptionType.value);
+                    }
+                  },
                 ),
                 _buildActionButton(
-                  label: 'Investigations',
+                  label: 'investigations_tab'.tr,
                   color: AppColors.teal,
-                  onTap: () => AppSnackbars.showInfo('Investigations', 'Feature coming soon.'),
+                  onTap: () => AppSnackbars.showInfo('investigations_tab'.tr, 'feature_coming_soon'.tr),
                 ),
                 _buildActionButton(
-                  label: 'Drug History',
+                  label: 'drug_history_tab'.tr,
                   color: AppColors.teal,
-                  onTap: () => AppSnackbars.showInfo('Drug History', 'Feature coming soon.'),
+                  onTap: () => AppSnackbars.showInfo('drug_history_tab'.tr, 'feature_coming_soon'.tr),
                 ),
                 _buildActionButton(
-                  label: 'Old Medicines',
+                  label: 'old_medicines_tab'.tr,
                   color: AppColors.teal,
-                  onTap: () => AppSnackbars.showInfo('Old Medicines', 'Feature coming soon.'),
+                  onTap: () => AppSnackbars.showInfo('old_medicines_tab'.tr, 'feature_coming_soon'.tr),
                 ),
               ],
             ),
@@ -309,7 +325,7 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                         GestureDetector(
                           onTap: () => controller.fetchDoctorPrescription('IPD'),
                           child: Text(
-                            'IPD',
+                            'ipd_label'.tr,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: controller.prescriptionType.value == 'IPD' ? FontWeight.bold : FontWeight.normal,
@@ -328,7 +344,7 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                         GestureDetector(
                           onTap: () => controller.fetchDoctorPrescription('OPD'),
                           child: Text(
-                            'OPD',
+                            'opd_label'.tr,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: controller.prescriptionType.value == 'OPD' ? FontWeight.bold : FontWeight.normal,
@@ -354,10 +370,10 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
               }
 
               if (controller.prescriptionList.isEmpty) {
-                return const Center(
+                return Center(
                   child: Text(
-                    'No Data Available',
-                    style: TextStyle(fontSize: 14, color: AppColors.coolGray, fontWeight: FontWeight.w500),
+                    'no_data_available'.tr,
+                    style: const TextStyle(fontSize: 14, color: AppColors.coolGray, fontWeight: FontWeight.w500),
                   ),
                 );
               }
@@ -381,7 +397,7 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                         if (details != null && context.mounted) {
                           _showMedicineDetailsDialog(context, details, createdDate);
                         } else {
-                          AppSnackbars.showError('Error', 'Failed to load medicine details.');
+                          AppSnackbars.showError('error'.tr, 'failed_to_load_medicine_details'.tr);
                         }
                       }
                     },
@@ -389,7 +405,6 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                 },
               );
             }),
-
           ),
         ],
       ),

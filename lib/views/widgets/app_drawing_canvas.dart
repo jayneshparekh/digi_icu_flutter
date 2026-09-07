@@ -320,64 +320,67 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
 
   Widget _buildToolbar() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildIconButton(
-            assetName: 'ink_pen.svg',
-            tooltip: 'pen'.tr,
-            isActive: !_isEraserMode,
-            activeColor: _selectedColor,
-            onPressed: () {
-              setState(() {
-                _isEraserMode = false;
-              });
-            },
-          ),
-          _buildIconButton(
-            assetName: 'ink_eraser.svg',
-            tooltip: 'eraser'.tr,
-            isActive: _isEraserMode,
-            onPressed: () {
-              setState(() {
-                _isEraserMode = true;
-              });
-            },
-          ),
-          _buildIconButton(
-            assetName: 'palette.svg',
-            tooltip: 'color_palette'.tr,
-            onPressed: _showColorPicker,
-          ),
-          _buildIconButton(
-            assetName: 'line_weight.svg',
-            tooltip: 'line_width'.tr,
-            onPressed: _showStrokeWidthPicker,
-          ),
-          _buildIconButton(
-            assetName: 'ic_undo.svg',
-            tooltip: 'undo'.tr,
-            isEnabled: _paths.isNotEmpty,
-            onPressed: _undo,
-          ),
-          _buildIconButton(
-            assetName: 'ic_redo.svg',
-            tooltip: 'redo'.tr,
-            isEnabled: _undoStack.isNotEmpty,
-            onPressed: _redo,
-          ),
-          _buildIconButton(
-            assetName: 'delete.svg',
-            tooltip: 'clear_canvas'.tr,
-            onPressed: _clear,
-          ),
-          _buildIconButton(
-            assetName: 'ic_save.svg',
-            tooltip: 'save_png'.tr,
-            onPressed: _handleSave,
-          ),
-        ],
+      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildIconButton(
+              assetName: 'ink_pen.svg',
+              tooltip: 'pen'.tr,
+              isActive: !_isEraserMode,
+              activeColor: _selectedColor,
+              onPressed: () {
+                setState(() {
+                  _isEraserMode = false;
+                });
+              },
+            ),
+            _buildIconButton(
+              assetName: 'ink_eraser.svg',
+              tooltip: 'eraser'.tr,
+              isActive: _isEraserMode,
+              onPressed: () {
+                setState(() {
+                  _isEraserMode = true;
+                });
+              },
+            ),
+            _buildIconButton(
+              assetName: 'palette.svg',
+              tooltip: 'color_palette'.tr,
+              onPressed: _showColorPicker,
+            ),
+            _buildIconButton(
+              assetName: 'line_weight.svg',
+              tooltip: 'line_width'.tr,
+              onPressed: _showStrokeWidthPicker,
+            ),
+            _buildIconButton(
+              assetName: 'ic_undo.svg',
+              tooltip: 'undo'.tr,
+              isEnabled: _paths.isNotEmpty,
+              onPressed: _undo,
+            ),
+            _buildIconButton(
+              assetName: 'ic_redo.svg',
+              tooltip: 'redo'.tr,
+              isEnabled: _undoStack.isNotEmpty,
+              onPressed: _redo,
+            ),
+            _buildIconButton(
+              assetName: 'delete.svg',
+              tooltip: 'clear_canvas'.tr,
+              onPressed: _clear,
+            ),
+            _buildIconButton(
+              assetName: 'ic_save.svg',
+              tooltip: 'save_png'.tr,
+              onPressed: _handleSave,
+            ),
+          ],
+        ),
       ),
     );
   }

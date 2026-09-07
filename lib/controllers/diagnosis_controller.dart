@@ -103,8 +103,8 @@ class DiagnosisController extends GetxController {
   void onInit() {
     super.onInit();
     final args = Get.arguments as Map<String, dynamic>? ?? {};
-    patientId = args['patient_id']?.toString() ?? '';
-    bookingId = args['appointment_id']?.toString() ?? '';
+    patientId = args['patient_id']?.toString() ?? args['patientId']?.toString() ?? '';
+    bookingId = args['appointment_id']?.toString() ?? args['bookingId']?.toString() ?? '';
     
     // Bind listeners to automatically update the compiled summary text
     _setupChangeListeners();

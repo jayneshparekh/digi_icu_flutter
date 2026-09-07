@@ -36,6 +36,7 @@ class ApiEndpoints {
   static const String otherGraph = 'api/v2/Doctor/other_graph';
   static const String getMedicines = 'api/v2/Doctor/get_medicines';
   static const String addPatientPrescription = 'api/v2/Doctor/add_patient_prescription';
+  static const String getPersonalisedTT = 'api/v2/Doctor/get_personalised_tt';
 
   // ==========================================
   // Admin Endpoints
