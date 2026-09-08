@@ -5,7 +5,14 @@ import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:digi_icu_flutter/models/response/doctor/bp_graph_response.dart';
 import 'package:digi_icu_flutter/models/response/doctor/other_graph_response.dart';
 import 'package:digi_icu_flutter/models/response/doctor/sugar_graph_response.dart';
+import 'package:digi_icu_flutter/models/request/doctor/add_patient_note_req.dart';
+import 'package:digi_icu_flutter/models/request/doctor/add_self_note_req.dart';
+import 'package:digi_icu_flutter/models/request/doctor/add_event_req.dart';
+import 'package:digi_icu_flutter/models/request/doctor/add_ecg_req.dart';
+import 'package:digi_icu_flutter/models/request/doctor/add_bp_req.dart';
+import 'package:digi_icu_flutter/models/request/doctor/add_tmt_req.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
+import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -64,6 +71,64 @@ class ServingPatientController extends GetxController {
   final RxBool isLoadingMedicines = false.obs;
   final RxList<dynamic> prescriptionList = <dynamic>[].obs;
   final RxString lastAppointmentId = ''.obs;
+
+  // Doctor Interpretation (DI) tab state & data
+  final RxString selectedTopDiTab = 'Notes'.obs; // Notes, Self Notes, Event
+  final RxString selectedBottomDiTab = 'ECG'.obs; // ECG, Target BP, TMT
+  final RxBool isLoadingDi = false.obs;
+  final RxString diagnosisText = ''.obs;
+
+  // DI - Notes & Self Notes
+  final TextEditingController patientNoteController = TextEditingController();
+  final TextEditingController selfNoteController = TextEditingController();
+
+  // DI - Event State
+  final RxString eventType = 'None'.obs; // None, Hospitalisation, Non-Hospitalisation, Death
+  final RxString deathType = 'Sudden death noncardiac'.obs;
+  final RxString medicinesEffect = 'Good'.obs;
+  final RxString askedInvestigations = 'NA'.obs;
+  final RxString saltReduction = 'Yes'.obs;
+  final RxString exercise = 'Yes'.obs;
+
+  // Hospitalisation Checkboxes
+  final RxBool cbMI = false.obs;
+  final RxBool cbCOA = false.obs;
+  final RxBool cbStroke = false.obs;
+  final RxBool cbRatinol = false.obs;
+  final RxBool cbHypoglycemia = false.obs;
+  final RxBool cbHypotension = false.obs;
+  final RxBool cbDKA = false.obs;
+  final RxBool cbRegurgitation = false.obs;
+  final RxBool cbPIH = false.obs;
+  final RxBool cbICH = false.obs;
+  final RxBool cbAkI = false.obs;
+  final RxBool cbHospitalizationOther = false.obs;
+  final TextEditingController hospitalizationOtherController = TextEditingController();
+
+  // Non-Hospitalisation Checkboxes
+  final RxBool cbPostural = false.obs;
+  final RxBool cbSVT = false.obs;
+  final RxBool cbBleeding = false.obs;
+  final RxBool cbNonHospOther = false.obs;
+  final TextEditingController nonHospOtherController = TextEditingController();
+
+  // DI - ECG State
+  final RxString ecgRhythm = 'Sinus'.obs;
+  final RxString stSegment = 'Normal'.obs;
+  final RxString stSegmentLevel = 'Select…'.obs;
+  final TextEditingController sv2Rv5Controller = TextEditingController();
+  final RxString ecgImpression = 'Normal'.obs;
+  final TextEditingController otherInterpretationController = TextEditingController();
+  final RxString ecgReportImageUrl = ''.obs;
+
+  // DI - Target BP State
+  final TextEditingController systolicController = TextEditingController(text: '120');
+  final TextEditingController diastolicController = TextEditingController(text: '80');
+
+  // DI - TMT State
+  final RxString tmtResult = 'Positive'.obs;
+  final TextEditingController metsController = TextEditingController();
+  final TextEditingController metOtherController = TextEditingController();
 
   @override
   void onInit() {
@@ -139,6 +204,9 @@ class ServingPatientController extends GetxController {
       fetchGraphData();
     } else if (tab == 'Prescription' && prescriptionList.isEmpty) {
       fetchDoctorPrescription(prescriptionType.value);
+    } else if (tab == 'DI') {
+      fetchDiagnosisData();
+      fetchEcgReport();
     }
   }
 
@@ -494,5 +562,865 @@ class ServingPatientController extends GetxController {
     } finally {
       isLoadingDetails.value = false;
     }
+  }
+
+  // ==========================================
+  // Doctor Interpretation (DI) API Operations
+  // ==========================================
+
+  Future<void> fetchDiagnosisData() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.getPatientDiagnosis,
+        data: {'patient_id': patientId, 'appointment_id': bookingId},
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        if (response.data['status'] == 'success' && response.data['data'] != null) {
+          diagnosisText.value = response.data['data']['diagnosis']?.toString() ?? '';
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching diagnosis: $e');
+    }
+  }
+
+  Future<void> fetchEcgReport() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.getReport,
+        data: {
+          'patient_id': patientId,
+          'report_name': 'ECG',
+          'user_type': userType.value,
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        if (response.data['status'] == 'success' && response.data['data'] != null && (response.data['data'] as List).isNotEmpty) {
+          final lastReport = (response.data['data'] as List).last;
+          ecgReportImageUrl.value = lastReport['report_img']?.toString() ?? '';
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching ECG report: $e');
+    }
+  }
+
+  Future<void> submitPatientNote() async {
+    final noteText = patientNoteController.text.trim();
+    if (noteText.isEmpty) {
+      AppSnackbars.showError('Error', 'Please enter patient note');
+      return;
+    }
+
+    isLoadingDi.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final req = AddPatientNoteReq(
+        appointmentId: bookingId,
+        doctorId: doctorId,
+        patientId: patientId,
+        patientNote: noteText,
+      );
+
+      final response = await apiClient.post(
+        ApiEndpoints.addPatientNotes,
+        data: req.toJson(),
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final msg = response.data['msg']?.toString() ?? 'Note added successfully';
+        if (response.data['status'] == 'success') {
+          AppSnackbars.showSuccess('Success', msg);
+          patientNoteController.clear();
+        } else {
+          AppSnackbars.showError('Error', msg);
+        }
+      }
+    } catch (e) {
+      AppSnackbars.showError('Error', 'Failed to add note: $e');
+    } finally {
+      isLoadingDi.value = false;
+    }
+  }
+
+  Future<void> submitSelfNote() async {
+    final noteText = selfNoteController.text.trim();
+    if (noteText.isEmpty) {
+      AppSnackbars.showError('Error', 'Please enter self note');
+      return;
+    }
+
+    isLoadingDi.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final req = AddSelfNoteReq(
+        appointmentId: bookingId,
+        doctorId: doctorId,
+        patientId: patientId,
+        selfNote: noteText,
+      );
+
+      final response = await apiClient.post(
+        ApiEndpoints.addSelfNotes,
+        data: req.toJson(),
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final msg = response.data['msg']?.toString() ?? 'Self note added successfully';
+        if (response.data['status'] == 'success') {
+          AppSnackbars.showSuccess('Success', msg);
+          selfNoteController.clear();
+        } else {
+          AppSnackbars.showError('Error', msg);
+        }
+      }
+    } catch (e) {
+      AppSnackbars.showError('Error', 'Failed to add self note: $e');
+    } finally {
+      isLoadingDi.value = false;
+    }
+  }
+
+  Future<void> submitEvent() async {
+    String eventDetailsStr = '';
+
+    if (eventType.value == 'None') {
+      eventDetailsStr = 'None';
+    } else if (eventType.value == 'Hospitalisation') {
+      final detailsList = <String>[];
+      if (cbMI.value) detailsList.add('MI');
+      if (cbCOA.value) detailsList.add('COA');
+      if (cbStroke.value) detailsList.add('Stroke');
+      if (cbRatinol.value) detailsList.add('Ratinol');
+      if (cbHypoglycemia.value) detailsList.add('Hypoglycemia');
+      if (cbHypotension.value) detailsList.add('Hypotension');
+      if (cbDKA.value) detailsList.add('DKA');
+      if (cbRegurgitation.value) detailsList.add('Acc. HTN');
+      if (cbPIH.value) detailsList.add('PIH');
+      if (cbICH.value) detailsList.add('ICH');
+      if (cbAkI.value) detailsList.add('AkI');
+      if (cbHospitalizationOther.value && hospitalizationOtherController.text.trim().isNotEmpty) {
+        detailsList.add(hospitalizationOtherController.text.trim());
+      }
+      eventDetailsStr = detailsList.join(', ');
+    } else if (eventType.value == 'Non-Hospitalisation') {
+      final detailsList = <String>[];
+      if (cbPostural.value) detailsList.add('Postural Hypotension');
+      if (cbSVT.value) detailsList.add('SVT');
+      if (cbBleeding.value) detailsList.add('Bleeding');
+      if (cbNonHospOther.value && nonHospOtherController.text.trim().isNotEmpty) {
+        detailsList.add(nonHospOtherController.text.trim());
+      }
+      eventDetailsStr = detailsList.join(', ');
+    } else if (eventType.value == 'Death') {
+      eventDetailsStr = deathType.value;
+    }
+
+    isLoadingDi.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final req = AddEventReq(
+        appointmentId: bookingId,
+        doctorId: doctorId,
+        patientId: patientId,
+        event: eventType.value,
+        eventDetails: eventDetailsStr,
+        medicines: medicinesEffect.value,
+        investigations: askedInvestigations.value,
+        saltReduction: saltReduction.value,
+        exercise: exercise.value,
+      );
+
+      final response = await apiClient.post(
+        ApiEndpoints.addEvent,
+        data: req.toJson(),
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final msg = response.data['msg']?.toString() ?? 'Event added successfully';
+        if (response.data['status'] == 'success') {
+          AppSnackbars.showSuccess('Success', msg);
+        } else {
+          AppSnackbars.showError('Error', msg);
+        }
+      }
+    } catch (e) {
+      AppSnackbars.showError('Error', 'Failed to add event: $e');
+    } finally {
+      isLoadingDi.value = false;
+    }
+  }
+
+  Future<void> submitEcg() async {
+    final finalImpression = ecgImpression.value == 'Other'
+        ? otherInterpretationController.text.trim()
+        : ecgImpression.value;
+
+    isLoadingDi.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final req = AddEcgReq(
+        appointmentId: bookingId,
+        doctorId: doctorId,
+        patientId: patientId,
+        ecgRhythm: ecgRhythm.value,
+        sv2Rv5: sv2Rv5Controller.text.trim(),
+        stSegment: stSegment.value,
+        stSegmentLevel: stSegment.value == 'Normal' ? '' : stSegmentLevel.value,
+        ecgImpression: finalImpression,
+      );
+
+      final response = await apiClient.post(
+        ApiEndpoints.addEcg,
+        data: req.toJson(),
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final msg = response.data['msg']?.toString() ?? 'ECG assessment saved';
+        if (response.data['status'] == 'success') {
+          AppSnackbars.showSuccess('Success', msg);
+        } else {
+          AppSnackbars.showError('Error', msg);
+        }
+      }
+    } catch (e) {
+      AppSnackbars.showError('Error', 'Failed to add ECG: $e');
+    } finally {
+      isLoadingDi.value = false;
+    }
+  }
+
+  Future<void> submitTargetBp() async {
+    final systolic = systolicController.text.trim();
+    final diastolic = diastolicController.text.trim();
+
+    if (systolic.isEmpty || diastolic.isEmpty) {
+      AppSnackbars.showError('Error', 'Please enter both Systolic and Diastolic values');
+      return;
+    }
+
+    isLoadingDi.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final req = AddBpReq(
+        appointmentId: bookingId,
+        doctorId: doctorId,
+        patientId: patientId,
+        systolic: systolic,
+        diastolic: diastolic,
+      );
+
+      final response = await apiClient.post(
+        ApiEndpoints.addBp,
+        data: req.toJson(),
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final msg = response.data['msg']?.toString() ?? 'Target BP saved';
+        if (response.data['status'] == 'success') {
+          AppSnackbars.showSuccess('Success', msg);
+        } else {
+          AppSnackbars.showError('Error', msg);
+        }
+      }
+    } catch (e) {
+      AppSnackbars.showError('Error', 'Failed to save Target BP: $e');
+    } finally {
+      isLoadingDi.value = false;
+    }
+  }
+
+  Future<void> submitTmt() async {
+    isLoadingDi.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final req = AddTmtReq(
+        appointmentId: bookingId,
+        doctorId: doctorId,
+        patientId: patientId,
+        tmtDetails: tmtResult.value,
+        mets: metsController.text.trim(),
+        metOthers: metOtherController.text.trim(),
+      );
+
+      final response = await apiClient.post(
+        ApiEndpoints.addTmt,
+        data: req.toJson(),
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final msg = response.data['msg']?.toString() ?? 'TMT saved successfully';
+        if (response.data['status'] == 'success') {
+          AppSnackbars.showSuccess('Success', msg);
+        } else {
+          AppSnackbars.showError('Error', msg);
+        }
+      }
+    } catch (e) {
+      AppSnackbars.showError('Error', 'Failed to save TMT: $e');
+    } finally {
+      isLoadingDi.value = false;
+    }
+  }
+
+  // ==========================================
+  // Doctor Interpretation Dialog Operations
+  // ==========================================
+
+  Future<void> fetchNoteTemplates() async {
+    try {
+      isLoadingDi.value = true;
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.getTemplates,
+        data: {
+          'doctor_id': doctorId,
+          'type': 'Notes',
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final dataList = response.data['data'] as List<dynamic>? ?? [];
+        _showTemplateListDialog('Notes', dataList);
+      } else {
+        AppSnackbars.showError('Templates', 'No templates found');
+      }
+    } catch (e) {
+      debugPrint('Error fetching templates: $e');
+      AppSnackbars.showError('Templates', 'Failed to fetch templates');
+    } finally {
+      isLoadingDi.value = false;
+    }
+  }
+
+  void _showTemplateListDialog(String title, List<dynamic> templates) {
+    if (templates.isEmpty) {
+      AppSnackbars.showInfo('Templates', 'No templates available');
+      return;
+    }
+
+    AppDialog.show(
+      title: title,
+      body: SizedBox(
+        width: double.maxFinite,
+        child: ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: templates.length,
+          separatorBuilder: (context, index) => const Divider(height: 1),
+          itemBuilder: (context, index) {
+            final item = templates[index];
+            final noteText = item['notes']?.toString() ?? item['patient_note']?.toString() ?? item['template']?.toString() ?? '';
+            final displayText = '${index + 1}. $noteText';
+            return ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(displayText, style: const TextStyle(fontSize: 14, color: AppColors.navy)),
+              onTap: () {
+                Get.back();
+                final currentText = patientNoteController.text.trim();
+                if (currentText.isNotEmpty) {
+                  if (!currentText.split(', ').contains(noteText)) {
+                    patientNoteController.text = '$currentText, $noteText';
+                  }
+                } else {
+                  patientNoteController.text = noteText;
+                }
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> showRecentNotesDialog() async {
+    if (patientId.isEmpty) return;
+    try {
+      isLoadingDi.value = true;
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final formData = dio.FormData.fromMap({
+        'patient_id': patientId,
+      });
+
+      final response = await apiClient.post(
+        ApiEndpoints.getPatientNotes,
+        data: formData,
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final notesList = response.data['data'] as List<dynamic>? ?? [];
+        _showRecentNotesListDialog('Recent Notes', notesList);
+      } else {
+        AppSnackbars.showInfo('Recent Notes', 'No recent notes found');
+      }
+    } catch (e) {
+      debugPrint('Error fetching recent notes: $e');
+      AppSnackbars.showError('Recent Notes', 'Failed to fetch recent notes');
+    } finally {
+      isLoadingDi.value = false;
+    }
+  }
+
+  void _showRecentNotesListDialog(String title, List<dynamic> notes) {
+    if (notes.isEmpty) {
+      AppSnackbars.showInfo('Recent Notes', 'No notes found');
+      return;
+    }
+
+    AppDialog.show(
+      title: title,
+      body: SizedBox(
+        width: double.maxFinite,
+        child: ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: notes.length,
+          separatorBuilder: (context, index) => const Divider(height: 16, thickness: 1),
+          itemBuilder: (context, index) {
+            final item = notes[index];
+            final visitNo = item['visit_no']?.toString() ?? '';
+            final noteDetails = item['note_details'] as List<dynamic>?;
+
+            if (noteDetails != null && noteDetails.isNotEmpty) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (visitNo.isNotEmpty) ...[
+                    Text(
+                      'Visit No : $visitNo',
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.navy),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                  ...noteDetails.map((subNote) {
+                    final noteText = subNote['patient_note']?.toString() ?? subNote['notes']?.toString() ?? '';
+                    final dateText = subNote['created']?.toString() ?? '';
+                    return InkWell(
+                      onTap: () {
+                        Get.back();
+                        patientNoteController.text = noteText;
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (dateText.isNotEmpty)
+                              Text(dateText, style: const TextStyle(fontSize: 12, color: AppColors.coolGray)),
+                            const SizedBox(height: 2),
+                            Text(noteText, style: const TextStyle(fontSize: 14, color: AppColors.navy)),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              );
+            } else {
+              final noteText = item['patient_note']?.toString() ?? item['notes']?.toString() ?? '';
+              final dateText = item['created']?.toString() ?? '';
+              return ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(noteText, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.navy)),
+                subtitle: dateText.isNotEmpty ? Text(dateText, style: const TextStyle(fontSize: 12, color: AppColors.coolGray)) : null,
+                onTap: () {
+                  Get.back();
+                  patientNoteController.text = noteText;
+                },
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> showSelfNotesDialog() async {
+    if (patientId.isEmpty) return;
+    try {
+      isLoadingDi.value = true;
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.getSelfNotes,
+        data: {
+          'patient_id': patientId,
+          'appointment_id': bookingId,
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final notesList = response.data['data'] as List<dynamic>? ?? [];
+        _showSelfNotesListDialog('Self Notes', notesList);
+      } else {
+        AppSnackbars.showInfo('Self Notes', 'No self notes found');
+      }
+    } catch (e) {
+      debugPrint('Error fetching self notes: $e');
+      AppSnackbars.showError('Self Notes', 'Failed to fetch self notes');
+    } finally {
+      isLoadingDi.value = false;
+    }
+  }
+
+  void _showSelfNotesListDialog(String title, List<dynamic> notes) {
+    if (notes.isEmpty) {
+      AppSnackbars.showInfo('Self Notes', 'No self notes found');
+      return;
+    }
+
+    AppDialog.show(
+      title: title,
+      body: SizedBox(
+        width: double.maxFinite,
+        child: ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: notes.length,
+          separatorBuilder: (context, index) => const Divider(height: 1),
+          itemBuilder: (context, index) {
+            final item = notes[index];
+            final noteText = item['myself_note']?.toString() ?? item['self_note']?.toString() ?? item['notes']?.toString() ?? '';
+            final dateText = item['created']?.toString() ?? '';
+            return ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(noteText, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.navy)),
+              subtitle: dateText.isNotEmpty ? Text(dateText, style: const TextStyle(fontSize: 12, color: AppColors.coolGray)) : null,
+              onTap: () {
+                Get.back();
+                selfNoteController.text = noteText;
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> showEventsDetailDialog() async {
+    if (patientId.isEmpty) return;
+    try {
+      isLoadingDi.value = true;
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.getEventDetails,
+        data: {
+          'patient_id': patientId,
+          'appointment_id': bookingId,
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final eventsList = response.data['data'] as List<dynamic>? ?? [];
+        _showEventsListDialog('Event Detail', eventsList);
+      } else {
+        AppSnackbars.showInfo('Event Detail', 'No event details found');
+      }
+    } catch (e) {
+      debugPrint('Error fetching event details: $e');
+      AppSnackbars.showError('Event Detail', 'Failed to fetch event details');
+    } finally {
+      isLoadingDi.value = false;
+    }
+  }
+
+  void _showEventsListDialog(String title, List<dynamic> events) {
+    if (events.isEmpty) {
+      AppSnackbars.showInfo('Event Detail', 'No event details found');
+      return;
+    }
+
+    AppDialog.show(
+      title: title,
+      body: SizedBox(
+        width: double.maxFinite,
+        child: ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: events.length,
+          separatorBuilder: (context, index) => const Divider(height: 16, thickness: 1),
+          itemBuilder: (context, index) {
+            final item = events[index];
+            final created = item['created']?.toString() ?? '';
+            final eventStr = item['event']?.toString() ?? '';
+            final eventDetailsStr = item['event_details']?.toString() ?? '';
+            final medicinesStr = item['medicines']?.toString() ?? '';
+            final investigationsStr = item['investigations']?.toString() ?? '';
+            final saltReductionStr = item['salt_reduction']?.toString() ?? '';
+            final exerciseStr = item['exercise']?.toString() ?? '';
+
+            final hasCompliance = medicinesStr.isNotEmpty ||
+                investigationsStr.isNotEmpty ||
+                saltReductionStr.isNotEmpty ||
+                exerciseStr.isNotEmpty;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (created.isNotEmpty) ...[
+                  Text(
+                    created,
+                    style: const TextStyle(fontSize: 12, color: AppColors.coolGray),
+                  ),
+                  const SizedBox(height: 8),
+                ],
+                Text(
+                  'Events: ${eventStr.isNotEmpty ? eventStr : '-'}',
+                  style: const TextStyle(fontSize: 14, color: AppColors.navy),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Event Detail: ${eventDetailsStr.isNotEmpty ? eventDetailsStr : '-'}',
+                  style: const TextStyle(fontSize: 14, color: AppColors.navy),
+                ),
+                if (hasCompliance) ...[
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Compliance to',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.navy),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Medicines: ${medicinesStr.isNotEmpty ? medicinesStr : '-'}',
+                    style: const TextStyle(fontSize: 14, color: AppColors.navy),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Investigations: ${investigationsStr.isNotEmpty ? investigationsStr : '-'}',
+                    style: const TextStyle(fontSize: 14, color: AppColors.navy),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Salt Reduction: ${saltReductionStr.isNotEmpty ? saltReductionStr : '-'}',
+                    style: const TextStyle(fontSize: 14, color: AppColors.navy),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Exercise: ${exerciseStr.isNotEmpty ? exerciseStr : '-'}',
+                    style: const TextStyle(fontSize: 14, color: AppColors.navy),
+                  ),
+                ],
+                const SizedBox(height: 8),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> showEcgDialog() async {
+    if (patientId.isEmpty) return;
+    try {
+      isLoadingDi.value = true;
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.getEcg,
+        data: {
+          'patient_id': patientId,
+          'appointment_id': bookingId,
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final ecgList = response.data['data'] as List<dynamic>? ?? [];
+        _showEcgListDialog('ECG', ecgList);
+      } else {
+        AppSnackbars.showInfo('ECG', 'No ECG records found');
+      }
+    } catch (e) {
+      debugPrint('Error fetching ECG list: $e');
+      AppSnackbars.showError('ECG', 'Failed to fetch ECG records');
+    } finally {
+      isLoadingDi.value = false;
+    }
+  }
+
+  void _showEcgListDialog(String title, List<dynamic> list) {
+    if (list.isEmpty) {
+      AppSnackbars.showInfo('ECG', 'No ECG records found');
+      return;
+    }
+
+    AppDialog.show(
+      title: title,
+      body: SizedBox(
+        width: double.maxFinite,
+        child: ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: list.length,
+          separatorBuilder: (context, index) => const Divider(height: 16, thickness: 1),
+          itemBuilder: (context, index) {
+            final item = list[index];
+            final created = item['created']?.toString() ?? '';
+            final rhythm = item['ecg_rhythm']?.toString() ?? '';
+            final stSeg = item['st_segment']?.toString() ?? '';
+            final stLevel = item['st_segment_level']?.toString() ?? '';
+            final sv2Rv5 = item['sv2_rv5']?.toString() ?? '';
+            final impression = item['ecg_impression']?.toString() ?? '';
+
+            final stText = stLevel.isNotEmpty ? '$stSeg , $stLevel' : stSeg;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (created.isNotEmpty) ...[
+                  Text(
+                    created,
+                    style: const TextStyle(fontSize: 12, color: AppColors.coolGray),
+                  ),
+                  const SizedBox(height: 6),
+                ],
+                if (rhythm.isNotEmpty) ...[
+                  Text(
+                    'Rhythm : $rhythm',
+                    style: const TextStyle(fontSize: 14, color: AppColors.navy),
+                  ),
+                  const SizedBox(height: 4),
+                ],
+                if (stSeg.isNotEmpty) ...[
+                  Text(
+                    'ST Segment : $stText',
+                    style: const TextStyle(fontSize: 14, color: AppColors.navy),
+                  ),
+                  const SizedBox(height: 4),
+                ],
+                if (sv2Rv5.isNotEmpty) ...[
+                  Text(
+                    'SV2+RV5 : $sv2Rv5',
+                    style: const TextStyle(fontSize: 14, color: AppColors.navy),
+                  ),
+                  const SizedBox(height: 4),
+                ],
+                if (impression.isNotEmpty) ...[
+                  Text(
+                    'ECG Expression : $impression',
+                    style: const TextStyle(fontSize: 14, color: AppColors.navy),
+                  ),
+                  const SizedBox(height: 4),
+                ],
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> showBpDialog() async {
+    if (patientId.isEmpty) return;
+    try {
+      isLoadingDi.value = true;
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.getBp,
+        data: {
+          'patient_id': patientId,
+          'appointment_id': bookingId,
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final bpList = response.data['data'] as List<dynamic>? ?? [];
+        _showBpListDialog('BP', bpList);
+      } else {
+        AppSnackbars.showInfo('BP', 'No Target BP records found');
+      }
+    } catch (e) {
+      debugPrint('Error fetching BP list: $e');
+      AppSnackbars.showError('BP', 'Failed to fetch Target BP records');
+    } finally {
+      isLoadingDi.value = false;
+    }
+  }
+
+  void _showBpListDialog(String title, List<dynamic> list) {
+    if (list.isEmpty) {
+      AppSnackbars.showInfo('BP', 'No Target BP records found');
+      return;
+    }
+
+    AppDialog.show(
+      title: title,
+      body: SizedBox(
+        width: double.maxFinite,
+        child: ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: list.length,
+          separatorBuilder: (context, index) => const Divider(height: 16, thickness: 1),
+          itemBuilder: (context, index) {
+            final item = list[index];
+            final created = item['created']?.toString() ?? '';
+            final systolic = item['bp_systolic']?.toString() ?? item['systolic']?.toString() ?? '';
+            final diastolic = item['bp_diastolic']?.toString() ?? item['diastolic']?.toString() ?? '';
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (created.isNotEmpty) ...[
+                  Text(
+                    created,
+                    style: const TextStyle(fontSize: 12, color: AppColors.coolGray),
+                  ),
+                  const SizedBox(height: 6),
+                ],
+                Text(
+                  'Target BP : $systolic / $diastolic',
+                  style: const TextStyle(fontSize: 14, color: AppColors.navy),
+                ),
+                const SizedBox(height: 4),
+              ],
+            );
+          },
+        ),
+      ),
+    );
   }
 }

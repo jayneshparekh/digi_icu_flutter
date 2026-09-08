@@ -1,6 +1,7 @@
 import 'package:digi_icu_flutter/controllers/serving_patient_controller.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:digi_icu_flutter/views/screens/serving_patient_dashboard_view.dart';
+import 'package:digi_icu_flutter/views/screens/serving_patient_di_view.dart';
 import 'package:digi_icu_flutter/views/screens/serving_patient_graph_view.dart';
 import 'package:digi_icu_flutter/views/screens/serving_patient_prescription_view.dart';
 import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
@@ -87,7 +88,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
   }) {
     return Obx(() {
       final isSelected = controller.currentTab.value == tabName;
-      final bg = isSelected ? const Color(0xFFFF5722) : AppColors.teal;
+      final bg = isSelected ? AppColors.warning : AppColors.teal;
       return Expanded(
         child: Tooltip(
           message: tooltip,
@@ -265,7 +266,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                         case 'Form':
                           return Center(child: Text('form_placeholder'.tr, style: TextStyle(fontSize: 16, color: AppColors.medicalGray)));
                         case 'DI':
-                          return Center(child: Text('di_placeholder'.tr, style: TextStyle(fontSize: 16, color: AppColors.medicalGray)));
+                          return const ServingPatientDiView();
                         case 'Reports':
                           return Center(child: Text('reports_placeholder'.tr, style: TextStyle(fontSize: 16, color: AppColors.medicalGray)));
                         default:

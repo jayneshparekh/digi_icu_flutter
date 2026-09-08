@@ -18,6 +18,7 @@ class ApiEndpoints {
   static const String patientDetails = 'api/v2/Patient/pt_details';
   static const String quickForm = 'api/v2/Patient/quick_form';
   static const String prescriptionList = 'api/v2/Patient/prescription_list';
+  static const String getReport = 'api/v2/Patient/get_reports';
   
   // ==========================================
   // Doctor Endpoints
@@ -37,6 +38,18 @@ class ApiEndpoints {
   static const String getMedicines = 'api/v2/Doctor/get_medicines';
   static const String addPatientPrescription = 'api/v2/Doctor/add_patient_prescription';
   static const String getPersonalisedTT = 'api/v2/Doctor/get_personalised_tt';
+  static const String addPatientNotes = 'api/v2/Doctor/add_patient_notes';
+  static const String addSelfNotes = 'api/v2/Doctor/add_self_notes';
+  static const String addEvent = 'api/v2/Doctor/add_event';
+  static const String addEcg = 'api/v2/Doctor/add_ecg';
+  static const String addBp = 'api/v2/Doctor/add_bp';
+  static const String addTmt = 'api/v2/Doctor/add_tmt';
+  static const String getPatientNotes = 'api/v2/Doctor/get_patient_notes';
+  static const String getSelfNotes = 'api/v2/Doctor/get_self_notes';
+  static const String getEventDetails = 'api/v2/Doctor/get_event';
+  static const String getTemplates = 'api/v2/Doctor/get_template';
+  static const String getEcg = 'api/v2/Doctor/get_ecg';
+  static const String getBp = 'api/v2/Doctor/get_bp';
 
   // ==========================================
   // Admin Endpoints
