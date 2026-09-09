@@ -105,7 +105,12 @@ class AppDialog extends StatelessWidget {
                       width: 110,
                       child: AppPrimaryButton(
                         label: confirmLabel!,
-                        onPressed: onConfirm,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          if (onConfirm != null) {
+                            onConfirm!();
+                          }
+                        },
                         isLoading: isConfirmLoading,
                         height: 38,
                         borderRadius: 6,

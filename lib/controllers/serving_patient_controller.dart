@@ -74,7 +74,7 @@ class ServingPatientController extends GetxController {
 
   // Doctor Interpretation (DI) tab state & data
   final RxString selectedTopDiTab = 'Notes'.obs; // Notes, Self Notes, Event
-  final RxString selectedBottomDiTab = 'ECG'.obs; // ECG, Target BP, TMT
+  final RxString selectedBottomDiTab = ''.obs; // ECG, Target BP, TMT
   final RxBool isLoadingDi = false.obs;
   final RxString diagnosisText = ''.obs;
 
@@ -205,8 +205,269 @@ class ServingPatientController extends GetxController {
     } else if (tab == 'Prescription' && prescriptionList.isEmpty) {
       fetchDoctorPrescription(prescriptionType.value);
     } else if (tab == 'DI') {
+      selectedTopDiTab.value = 'Notes';
+      selectedBottomDiTab.value = '';
       fetchDiagnosisData();
       fetchEcgReport();
+    } else if (tab == 'Reports') {
+      fetchReportCounts();
+    }
+  }
+
+  // Reports Tab State
+  final RxBool isLoadingReports = false.obs;
+  final RxMap<String, dynamic> reportCountsData = <String, dynamic>{}.obs;
+
+  // Folder Detail Screen State
+  final RxString selectedFolderReportName = ''.obs; // Empty means showing Folders Grid
+  final RxBool isLoadingFolderReports = false.obs;
+  final RxList<dynamic> folderReportsList = <dynamic>[].obs;
+
+  Future<void> fetchReportCounts() async {
+    if (patientId.isEmpty) return;
+    isLoadingReports.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.countReports,
+        data: {'patient_id': patientId},
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        if (response.data['status'] == 'success') {
+          reportCountsData.value = Map<String, dynamic>.from(response.data);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching report counts: $e');
+    } finally {
+      isLoadingReports.value = false;
+    }
+  }
+
+  Future<void> fetchFolderReports(String reportName) async {
+    if (patientId.isEmpty) return;
+    selectedFolderReportName.value = reportName;
+    isLoadingFolderReports.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.getReport,
+        data: {
+          'patient_id': patientId,
+          'report_name': reportName,
+          'user_type': userType.value,
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        if (response.data['status'] == 'success') {
+          final list = response.data['data'] as List<dynamic>? ?? [];
+          folderReportsList.value = list.reversed.toList();
+        } else {
+          folderReportsList.clear();
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching folder reports: $e');
+      folderReportsList.clear();
+    } finally {
+      isLoadingFolderReports.value = false;
+    }
+  }
+
+  Future<void> uploadReportFile({
+    required String reportName,
+    required String filePath,
+    String remarks = '',
+  }) async {
+    if (patientId.isEmpty || filePath.isEmpty) return;
+    isLoadingReports.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final fileName = filePath.split('/').last;
+      final isPdf = fileName.toLowerCase().endsWith('.pdf');
+
+      final formData = dio.FormData.fromMap({
+        'patient_id': patientId,
+        'report_name': reportName,
+        'admit_id': '0',
+        'report_from': 'Direct',
+        'report_from_id': '',
+        'uploaded_by': userType.value,
+        'uploaded_by_id': doctorId,
+        'other_name': remarks,
+        if (!isPdf)
+          'report[]': await dio.MultipartFile.fromFile(filePath, filename: fileName)
+        else
+          'report_pdf': await dio.MultipartFile.fromFile(filePath, filename: fileName),
+      });
+
+      final response = await apiClient.post(
+        ApiEndpoints.uploadReport,
+        data: formData,
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final msg = response.data['msg']?.toString() ?? 'Report uploaded successfully';
+        if (response.data['status'] == 'success') {
+          AppSnackbars.showSuccess('Success', msg);
+          fetchReportCounts();
+          if (selectedFolderReportName.value.isNotEmpty) {
+            fetchFolderReports(selectedFolderReportName.value);
+          }
+        } else {
+          AppSnackbars.showError('Error', msg);
+        }
+      }
+    } catch (e) {
+      AppSnackbars.showError('Error', 'Failed to upload report: $e');
+    } finally {
+      isLoadingReports.value = false;
+    }
+  }
+
+  Future<void> deleteFolderReport(String reportId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final formData = dio.FormData.fromMap({'report_id': reportId});
+
+      final response = await apiClient.post(
+        ApiEndpoints.deleteReport,
+        data: formData,
+        options: dio.Options(
+          headers: {'Authorization': token},
+          responseType: dio.ResponseType.plain,
+        ),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        dynamic decoded;
+        if (response.data is String) {
+          final strData = (response.data as String).trim();
+          final jsonStart = strData.indexOf('{');
+          final jsonEnd = strData.lastIndexOf('}');
+          if (jsonStart != -1 && jsonEnd != -1 && jsonEnd >= jsonStart) {
+            decoded = jsonDecode(strData.substring(jsonStart, jsonEnd + 1));
+          } else {
+            decoded = jsonDecode(strData);
+          }
+        } else {
+          decoded = response.data;
+        }
+
+        final msg = decoded['msg']?.toString() ?? 'Report deleted successfully';
+        if (decoded['status'] == 'success') {
+          AppSnackbars.showSuccess('Success', msg);
+          fetchReportCounts();
+          if (selectedFolderReportName.value.isNotEmpty) {
+            fetchFolderReports(selectedFolderReportName.value);
+          }
+        } else {
+          AppSnackbars.showError('Error', msg);
+        }
+      }
+    } catch (e) {
+      AppSnackbars.showError('Error', 'Failed to delete report: $e');
+    }
+  }
+
+  Future<void> submitCardiologistReport({
+    required String hypertension,
+    required String diabetics,
+    required String heartAttack,
+    required String stroke,
+    required String thyroid,
+    required String systolicBp,
+    required String diastolicBp,
+    required String symptoms,
+    required String reportId,
+    required String reportImgName,
+  }) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final userType = prefs.getString(AppConstants.prefLoginType) ?? 'doctor';
+      final userId = prefs.getString(AppConstants.prefUserId) ?? '';
+
+      final formData = dio.FormData.fromMap({
+        'patient_id': patientId,
+        'spo2': '',
+        'bsl': '',
+        'bp_systolic': systolicBp,
+        'bp_diastolic': diastolicBp,
+        'heart_rate': '',
+        'temperature': '',
+        'hba1c': '',
+        'total_cholesterol': '',
+        'hdl': '',
+        'triglycrides': '',
+        'payment_status': '',
+        'hypertension': hypertension,
+        'diabetes': diabetics,
+        'thyroid': thyroid,
+        'heart_attack': heartAttack,
+        'stroke': stroke,
+        'symptoms': symptoms,
+        'request_by': userType,
+        'request_by_id': userId,
+        'report_id': reportId,
+        'ecg_image': reportImgName,
+        'institute_name': '',
+        'institute_logo': '',
+        'ecg_type': 'Upload Report',
+        'is_for_reporting': '',
+      });
+
+      final response = await apiClient.post(
+        ApiEndpoints.addEcgFranchiseData,
+        data: formData,
+        options: dio.Options(
+          headers: {'Authorization': token},
+          responseType: dio.ResponseType.plain,
+        ),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        dynamic decoded;
+        if (response.data is String) {
+          final strData = (response.data as String).trim();
+          final jsonStart = strData.indexOf('{');
+          final jsonEnd = strData.lastIndexOf('}');
+          if (jsonStart != -1 && jsonEnd != -1 && jsonEnd >= jsonStart) {
+            decoded = jsonDecode(strData.substring(jsonStart, jsonEnd + 1));
+          } else {
+            decoded = jsonDecode(strData);
+          }
+        } else {
+          decoded = response.data;
+        }
+
+        final msg = decoded['msg']?.toString() ?? 'Cardiologist report request submitted successfully';
+        if (decoded['status'] == 'success') {
+          AppSnackbars.showSuccess('Success', msg);
+          if (selectedFolderReportName.value.isNotEmpty) {
+            fetchFolderReports(selectedFolderReportName.value);
+          }
+        } else {
+          AppSnackbars.showError('Error', msg);
+        }
+      } else {
+        AppSnackbars.showError('Error', 'Failed to submit request');
+      }
+    } catch (e) {
+      AppSnackbars.showError('Error', 'Failed to submit request: $e');
     }
   }
 
@@ -1413,6 +1674,91 @@ class ServingPatientController extends GetxController {
                 ],
                 Text(
                   'Target BP : $systolic / $diastolic',
+                  style: const TextStyle(fontSize: 14, color: AppColors.navy),
+                ),
+                const SizedBox(height: 4),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> showTmtDialog() async {
+    if (patientId.isEmpty) return;
+    try {
+      isLoadingDi.value = true;
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.getTmt,
+        data: {
+          'patient_id': patientId,
+          'appointment_id': bookingId,
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final tmtList = response.data['data'] as List<dynamic>? ?? [];
+        _showTmtListDialog('TMT', tmtList);
+      } else {
+        AppSnackbars.showInfo('TMT', 'No TMT records found');
+      }
+    } catch (e) {
+      debugPrint('Error fetching TMT list: $e');
+      AppSnackbars.showError('TMT', 'Failed to fetch TMT records');
+    } finally {
+      isLoadingDi.value = false;
+    }
+  }
+
+  void _showTmtListDialog(String title, List<dynamic> list) {
+    if (list.isEmpty) {
+      AppSnackbars.showInfo('TMT', 'No TMT records found');
+      return;
+    }
+
+    AppDialog.show(
+      title: title,
+      body: SizedBox(
+        width: double.maxFinite,
+        child: ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: list.length,
+          separatorBuilder: (context, index) => const Divider(height: 16, thickness: 1),
+          itemBuilder: (context, index) {
+            final item = list[index];
+            final created = item['created']?.toString() ?? '';
+            final result = item['result']?.toString() ?? item['tmt_details']?.toString() ?? '';
+            final metsStr = item['mets']?.toString() ?? '';
+            final othersStr = item['others']?.toString() ?? item['met_others']?.toString() ?? '';
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (created.isNotEmpty) ...[
+                  Text(
+                    created,
+                    style: const TextStyle(fontSize: 12, color: AppColors.coolGray),
+                  ),
+                  const SizedBox(height: 6),
+                ],
+                Text(
+                  'Result: ${result.isNotEmpty ? result : '-'}',
+                  style: const TextStyle(fontSize: 14, color: AppColors.navy),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'METS: ${metsStr.isNotEmpty ? metsStr : '-'}',
+                  style: const TextStyle(fontSize: 14, color: AppColors.navy),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Other: ${othersStr.isNotEmpty ? othersStr : '-'}',
                   style: const TextStyle(fontSize: 14, color: AppColors.navy),
                 ),
                 const SizedBox(height: 4),

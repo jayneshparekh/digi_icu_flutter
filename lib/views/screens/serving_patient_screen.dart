@@ -4,6 +4,7 @@ import 'package:digi_icu_flutter/views/screens/serving_patient_dashboard_view.da
 import 'package:digi_icu_flutter/views/screens/serving_patient_di_view.dart';
 import 'package:digi_icu_flutter/views/screens/serving_patient_graph_view.dart';
 import 'package:digi_icu_flutter/views/screens/serving_patient_prescription_view.dart';
+import 'package:digi_icu_flutter/views/screens/serving_patient_report_view.dart';
 import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
 import 'package:digi_icu_flutter/views/widgets/patient_rating_dialog.dart';
@@ -268,7 +269,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                         case 'DI':
                           return const ServingPatientDiView();
                         case 'Reports':
-                          return Center(child: Text('reports_placeholder'.tr, style: TextStyle(fontSize: 16, color: AppColors.medicalGray)));
+                          return const ServingPatientReportView();
                         default:
                           return const ServingPatientDashboardView();
                       }

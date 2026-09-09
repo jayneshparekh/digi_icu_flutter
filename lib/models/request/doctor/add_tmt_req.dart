@@ -20,9 +20,9 @@ class AddTmtReq {
       'appointment_id': appointmentId,
       'doctor_id': doctorId,
       'patient_id': patientId,
-      'tmt_details': tmtDetails,
+      'result': tmtDetails,
       'mets': mets,
-      'met_others': metOthers,
+      'others': metOthers,
     };
   }
 }

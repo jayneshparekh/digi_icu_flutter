@@ -19,6 +19,9 @@ class ApiEndpoints {
   static const String quickForm = 'api/v2/Patient/quick_form';
   static const String prescriptionList = 'api/v2/Patient/prescription_list';
   static const String getReport = 'api/v2/Patient/get_reports';
+  static const String countReports = 'api/v2/Patient/count_reports';
+  static const String uploadReport = 'api/v2/Patient/add_report';
+  static const String deleteReport = 'api/v2/Patient/delete_report';
   
   // ==========================================
   // Doctor Endpoints
@@ -50,6 +53,7 @@ class ApiEndpoints {
   static const String getTemplates = 'api/v2/Doctor/get_template';
   static const String getEcg = 'api/v2/Doctor/get_ecg';
   static const String getBp = 'api/v2/Doctor/get_bp';
+  static const String getTmt = 'api/v2/Doctor/get_tmt';
 
   // ==========================================
   // Admin Endpoints
@@ -63,6 +67,7 @@ class ApiEndpoints {
   static const String getPackageCategories = 'api/v2/User/get_package_categories';
   static const String signin = 'api/v2/User/signin';
   static const String updateAppointmentStatus = 'api/v2/User/update_appointment_status';
+  static const String addEcgFranchiseData = 'api/v2/User/add_ecg_franchise_data';
 
   // ==========================================
   // Payment Endpoints

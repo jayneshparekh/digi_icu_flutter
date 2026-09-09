@@ -1,6 +1,5 @@
 import 'package:digi_icu_flutter/controllers/serving_patient_controller.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
-import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_form_section_header.dart';
 import 'package:digi_icu_flutter/views/widgets/app_labeled_text_field.dart';
 import 'package:digi_icu_flutter/views/widgets/app_primary_button.dart';
@@ -89,7 +88,7 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
               case 'Event':
                 return _buildEventView();
               default:
-                return _buildNotesView();
+                return const SizedBox.shrink();
             }
           }),
 
@@ -119,7 +118,7 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
               case 'TMT':
                 return _buildTmtView();
               default:
-                return _buildEcgView(context);
+                return const SizedBox.shrink();
             }
           }),
         ],
@@ -132,7 +131,13 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
     final bg = isSelected ? AppColors.warning : AppColors.teal;
     return Expanded(
       child: GestureDetector(
-        onTap: () => controller.selectedTopDiTab.value = tabKey,
+        onTap: () {
+          if (controller.selectedTopDiTab.value == tabKey) {
+            controller.selectedTopDiTab.value = '';
+          } else {
+            controller.selectedTopDiTab.value = tabKey;
+          }
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
@@ -157,7 +162,13 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
     final bg = isSelected ? AppColors.warning : AppColors.teal;
     return Expanded(
       child: GestureDetector(
-        onTap: () => controller.selectedBottomDiTab.value = tabKey,
+        onTap: () {
+          if (controller.selectedBottomDiTab.value == tabKey) {
+            controller.selectedBottomDiTab.value = '';
+          } else {
+            controller.selectedBottomDiTab.value = tabKey;
+          }
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
@@ -869,15 +880,7 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
-                onTap: () {
-                  AppDialog.show(
-                    title: 'tmt'.tr,
-                    body: Text(
-                      'Result: ${controller.tmtResult.value}\nMETS: ${controller.metsController.text}',
-                      style: const TextStyle(color: AppColors.navy),
-                    ),
-                  );
-                },
+                onTap: () => controller.showTmtDialog(),
                 child: Text(
                   'view_all'.tr,
                   style: const TextStyle(

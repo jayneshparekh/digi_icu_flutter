@@ -83,6 +83,7 @@ class AppTranslations extends Translations {
           'mom_dad_package': 'My Mom - Dad',
           'all_package': 'All Package',
           'upload_report': 'Upload Report',
+          'consult_cardiologist': 'Report from Cardiologist',
           'ecg_report': 'ECG Report',
           'sugar_report': 'Sugar',
           'old_medicines': 'Old Medicines',
