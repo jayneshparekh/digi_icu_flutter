@@ -8,6 +8,7 @@ class PrescriptionRowTile extends StatelessWidget {
   final String date;
   final VoidCallback onTap;
   final Color backgroundColor;
+  final String labelPrefix;
 
   const PrescriptionRowTile({
     super.key,
@@ -16,6 +17,7 @@ class PrescriptionRowTile extends StatelessWidget {
     required this.date,
     required this.onTap,
     this.backgroundColor = AppColors.teal,
+    this.labelPrefix = 'Visit no: ',
   });
 
   @override
@@ -45,10 +47,10 @@ class PrescriptionRowTile extends StatelessWidget {
                   ),
                 ),
 
-                // Visit number (e.g. "Visit no: 23")
+                // Visit / Form number (e.g. "Visit no: 23" or "Form ID: 23")
                 Expanded(
                   child: Text(
-                    visitNo.isNotEmpty ? 'Visit no: $visitNo' : 'Visit',
+                    visitNo.isNotEmpty ? '$labelPrefix$visitNo' : '',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: AppColors.white,

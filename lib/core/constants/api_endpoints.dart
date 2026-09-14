@@ -54,6 +54,11 @@ class ApiEndpoints {
   static const String getEcg = 'api/v2/Doctor/get_ecg';
   static const String getBp = 'api/v2/Doctor/get_bp';
   static const String getTmt = 'api/v2/Doctor/get_tmt';
+  static const String quickFormsList = 'api/v2/Doctor/quick_forms_list';
+  static const String getQuickForm = 'api/v2/Doctor/get_quick_form';
+  static const String updateQuickForm = 'api/v2/Doctor/update_quick_form';
+  static const String medicalFormsList = 'api/v2/Doctor/medical_forms_list';
+  static const String updateMedicalForm = 'api/v2/Doctor/update_medical_form';
 
   // ==========================================
   // Admin Endpoints
