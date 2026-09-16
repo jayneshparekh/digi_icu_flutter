@@ -11,7 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
 
 import 'package:digi_icu_flutter/views/screens/serving_patient_medical_form_view.dart';
+import 'package:digi_icu_flutter/views/screens/serving_patient_clinical_form_screen.dart';
 import 'package:digi_icu_flutter/views/widgets/prescription_row_tile.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 
 class ServingPatientFormTabView extends StatefulWidget {
   const ServingPatientFormTabView({super.key});
@@ -22,14 +24,14 @@ class ServingPatientFormTabView extends StatefulWidget {
 
 class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
   final ApiClient _apiClient = ApiClient();
-  String selectedHeaderTab = 'Quick';
+  String selectedHeaderTab = 'Clinical';
   bool isLoading = false;
   List<Map<String, dynamic>> formList = [];
 
   @override
   void initState() {
     super.initState();
-    fetchQuickFormList();
+    fetchClinicalFormList();
   }
 
   String _getPatientId() {
@@ -135,6 +137,53 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
     }
   }
 
+  Future<void> fetchClinicalFormList() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final patientId = _getPatientId();
+      final Response response = await _apiClient.post(
+        ApiEndpoints.clinicalFormsList,
+        data: QuickFormListReq(patientId: patientId).toJson(),
+      );
+      if (response.statusCode == 200 && response.data != null) {
+        final formResponse = FormListResponse.fromJson(
+          Map<String, dynamic>.from(response.data as Map),
+        );
+        if (formResponse.status == 'success') {
+          setState(() {
+            final sorted = formResponse.data.reversed.toList()..sort((a,b) => (int.tryParse(b.id.toString()) ?? 0).compareTo(int.tryParse(a.id.toString()) ?? 0));
+            formList = sorted.map((item) => {
+              'id': item.id,
+              'patient_note': item.patientNote,
+              'created': item.created,
+              'appointment_id': item.appointmentId,
+              'first_name': item.firstName,
+              'last_name': item.lastName,
+            }).toList();
+          });
+        } else {
+          setState(() {
+            formList = [];
+          });
+        }
+      } else {
+        setState(() {
+          formList = [];
+        });
+      }
+    } catch (_) {
+      setState(() {
+        formList = [];
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   Widget _buildHeaderButton(String label, String tabKey, bool isSelected) {
     return Padding(
       padding: const EdgeInsets.only(right: 4.0),
@@ -147,6 +196,8 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
             fetchQuickFormList();
           } else if (tabKey == 'Medical') {
             fetchMedicalFormList();
+          } else if (tabKey == 'Clinical') {
+            fetchClinicalFormList();
           } else {
             setState(() {
               formList = [];
@@ -213,13 +264,32 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
                       color: AppColors.navy,
                     ),
                   ),
-                  if (selectedHeaderTab != 'Medical')
+                  if (selectedHeaderTab != 'Medical' && selectedHeaderTab != 'Clinical')
                     ElevatedButton.icon(
                       onPressed: () {
                         if (selectedHeaderTab == 'Quick') {
                           Get.to(() => const ServingPatientQuickFormView(), arguments: {'formId': null});
+                        } else if (selectedHeaderTab == 'Medical') {
+                          Get.to(() => const ServingPatientMedicalFormView(), arguments: {'formId': null})?.then((res) {
+                            if (res != null) {
+                              fetchMedicalFormList();
+                            }
+                          });
+                        } else if (selectedHeaderTab == 'Clinical') {
+                          Get.to(() => const ServingPatientClinicalFormScreen(), arguments: {
+                            'patientId': _getPatientId(),
+                            'patientName': Get.isRegistered<ServingPatientController>() ? Get.find<ServingPatientController>().fullName : '',
+                            'doctorId': Get.isRegistered<ServingPatientController>() ? Get.find<ServingPatientController>().doctorId : '',
+                            'doctorName': '',
+                            'formType': 'Clinical Form',
+                          })?.then((res) {
+                            if (res != null) {
+                              AppSnackbars.showSuccess('success'.tr, 'form_submitted'.tr);
+                              fetchClinicalFormList();
+                            }
+                          });
                         } else {
-                          Get.rawSnackbar(message: 'Opening $selectedHeaderTab Form');
+                          AppSnackbars.showInfo('info'.tr, 'Opening $selectedHeaderTab Form');
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -266,9 +336,25 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
                             if (selectedHeaderTab == 'Quick') {
                               Get.to(() => const ServingPatientQuickFormView(), arguments: {'formId': item['id']});
                             } else if (selectedHeaderTab == 'Medical') {
-                              Get.to(() => const ServingPatientMedicalFormView(), arguments: {'formId': item['id']});
+                              Get.to(() => const ServingPatientMedicalFormView(), arguments: {'formId': item['id']})?.then((res) {
+                                if (res != null) {
+                                  fetchMedicalFormList();
+                                }
+                              });
+                            } else if (selectedHeaderTab == 'Clinical') {
+                              Get.to(() => const ServingPatientClinicalFormScreen(), arguments: {
+                                'patientId': _getPatientId(),
+                                'formId': item['id'],
+                                'patientName': Get.isRegistered<ServingPatientController>() ? Get.find<ServingPatientController>().fullName : '',
+                                'doctorId': Get.isRegistered<ServingPatientController>() ? Get.find<ServingPatientController>().doctorId : '',
+                              })?.then((res) {
+                                if (res != null) {
+                                  AppSnackbars.showSuccess('success'.tr, 'form_submitted'.tr);
+                                  fetchClinicalFormList();
+                                }
+                              });
                             } else {
-                              Get.rawSnackbar(message: 'Viewing Record');
+                              AppSnackbars.showInfo('info'.tr, 'Viewing Record');
                             }
                           },
                         );

@@ -168,6 +168,64 @@ class MedicalFormDataModel {
   final String? created;
   final String? updated;
 
+  // Section 3: Family History
+  final String? familyMemberHeartAttack;
+  final String? familyMemberHeartAttackWho;
+  final String? heartAttackFatherAge;
+  final String? heartAttackMotherAge;
+  final String? heartAttackBrotherAge;
+  final String? heartAttackSisterAge;
+  final String? heartAttackGrandparentsAge;
+  final String? familyHeartAttackFrequency;
+
+  final String? familyMemberStroke;
+  final String? familyMemberStrokeWho;
+  final String? strokeFatherAge;
+  final String? strokeMotherAge;
+  final String? strokeBrotherAge;
+  final String? strokeSisterAge;
+  final String? strokeGrandparentsAge;
+  final String? familyStrokeFrequency;
+
+  final String? familyMemberAngioplasty;
+  final String? familyMemberAngioplastyWho;
+  final String? angioplastyFatherAge;
+  final String? angioplastyMotherAge;
+  final String? angioplastyBrotherAge;
+  final String? angioplastySisterAge;
+  final String? angioplastyGrandparentsAge;
+  final String? angioplastyComments;
+
+  final String? familyMemberDied;
+  final String? familyMemberDiedWho;
+  final String? diedFatherAge;
+  final String? diedMotherAge;
+  final String? diedBrotherAge;
+  final String? diedSisterAge;
+  final String? diedGrandparentsAge;
+  final String? familyMemberDiedReason;
+
+  // Section 4: Personal Habits
+  final String? smoke;
+  final String? dailyCigaretteCount;
+  final String? smokeStopBefore;
+  final String? alcohol;
+  final String? extraSalt;
+  final String? familyMemberCount;
+  final String? morningWalk;
+  final String? yoga;
+
+  // Section 5: Vitals & Evaluation
+  final String? height;
+  final String? weight;
+  final String? bpSystolic;
+  final String? bpDiastolic;
+  final String? otherInfo;
+  final String? otherInfoName;
+  final String? firstEvaluationImpression;
+  final String? otherCare;
+  final String? otherCareComments;
+
   MedicalFormDataModel({
     this.id,
     this.patientId,
@@ -300,6 +358,55 @@ class MedicalFormDataModel {
     this.otherSurgName3,
     this.created,
     this.updated,
+    this.familyMemberHeartAttack,
+    this.familyMemberHeartAttackWho,
+    this.heartAttackFatherAge,
+    this.heartAttackMotherAge,
+    this.heartAttackBrotherAge,
+    this.heartAttackSisterAge,
+    this.heartAttackGrandparentsAge,
+    this.familyHeartAttackFrequency,
+    this.familyMemberStroke,
+    this.familyMemberStrokeWho,
+    this.strokeFatherAge,
+    this.strokeMotherAge,
+    this.strokeBrotherAge,
+    this.strokeSisterAge,
+    this.strokeGrandparentsAge,
+    this.familyStrokeFrequency,
+    this.familyMemberAngioplasty,
+    this.familyMemberAngioplastyWho,
+    this.angioplastyFatherAge,
+    this.angioplastyMotherAge,
+    this.angioplastyBrotherAge,
+    this.angioplastySisterAge,
+    this.angioplastyGrandparentsAge,
+    this.angioplastyComments,
+    this.familyMemberDied,
+    this.familyMemberDiedWho,
+    this.diedFatherAge,
+    this.diedMotherAge,
+    this.diedBrotherAge,
+    this.diedSisterAge,
+    this.diedGrandparentsAge,
+    this.familyMemberDiedReason,
+    this.smoke,
+    this.dailyCigaretteCount,
+    this.smokeStopBefore,
+    this.alcohol,
+    this.extraSalt,
+    this.familyMemberCount,
+    this.morningWalk,
+    this.yoga,
+    this.height,
+    this.weight,
+    this.bpSystolic,
+    this.bpDiastolic,
+    this.otherInfo,
+    this.otherInfoName,
+    this.firstEvaluationImpression,
+    this.otherCare,
+    this.otherCareComments,
   });
 
   factory MedicalFormDataModel.fromJson(Map<String, dynamic> json) {
@@ -435,6 +542,55 @@ class MedicalFormDataModel {
       otherSurgName3: json['other_surg_name_3']?.toString(),
       created: json['created']?.toString(),
       updated: json['updated']?.toString(),
+      familyMemberHeartAttack: json['family_member_heart_attack']?.toString(),
+      familyMemberHeartAttackWho: json['family_member_heart_attack_who']?.toString(),
+      heartAttackFatherAge: json['heart_attack_father_age']?.toString(),
+      heartAttackMotherAge: json['heart_attack_mother_age']?.toString(),
+      heartAttackBrotherAge: json['heart_attack_brother_age']?.toString(),
+      heartAttackSisterAge: json['heart_attack_sister_age']?.toString(),
+      heartAttackGrandparentsAge: json['heart_attack_grandparents_age']?.toString(),
+      familyHeartAttackFrequency: json['family_heart_attack_frequency']?.toString(),
+      familyMemberStroke: json['family_member_stroke']?.toString(),
+      familyMemberStrokeWho: json['family_member_stroke_who']?.toString(),
+      strokeFatherAge: json['stroke_father_age']?.toString(),
+      strokeMotherAge: json['stroke_mother_age']?.toString(),
+      strokeBrotherAge: json['stroke_brother_age']?.toString(),
+      strokeSisterAge: json['stroke_sister_age']?.toString(),
+      strokeGrandparentsAge: json['stroke_grandparents_age']?.toString(),
+      familyStrokeFrequency: json['family_stroke_frequency']?.toString(),
+      familyMemberAngioplasty: json['family_member_angioplasty']?.toString(),
+      familyMemberAngioplastyWho: json['family_member_angioplasty_who']?.toString(),
+      angioplastyFatherAge: json['angioplasty_father_age']?.toString(),
+      angioplastyMotherAge: json['angioplasty_mother_age']?.toString(),
+      angioplastyBrotherAge: json['angioplasty_brother_age']?.toString(),
+      angioplastySisterAge: json['angioplasty_sister_age']?.toString(),
+      angioplastyGrandparentsAge: json['angioplasty_grandparents_age']?.toString(),
+      angioplastyComments: json['angioplasty_comments']?.toString(),
+      familyMemberDied: json['family_member_died']?.toString(),
+      familyMemberDiedWho: json['family_member_died_who']?.toString(),
+      diedFatherAge: json['died_father_age']?.toString(),
+      diedMotherAge: json['died_mother_age']?.toString(),
+      diedBrotherAge: json['died_brother_age']?.toString(),
+      diedSisterAge: json['died_sister_age']?.toString(),
+      diedGrandparentsAge: json['died_grandparents_age']?.toString(),
+      familyMemberDiedReason: json['family_member_died_reason']?.toString(),
+      smoke: json['smoke']?.toString(),
+      dailyCigaretteCount: json['daily_cigarette_count']?.toString(),
+      smokeStopBefore: json['smoke_stop_before']?.toString(),
+      alcohol: json['alcohol']?.toString(),
+      extraSalt: json['extra_salt']?.toString(),
+      familyMemberCount: json['family_member_count']?.toString(),
+      morningWalk: json['morning_walk']?.toString(),
+      yoga: json['yoga']?.toString(),
+      height: json['height']?.toString(),
+      weight: json['weight']?.toString(),
+      bpSystolic: json['bp_systolic']?.toString(),
+      bpDiastolic: json['bp_diastolic']?.toString(),
+      otherInfo: json['other_info']?.toString(),
+      otherInfoName: json['other_info_name']?.toString(),
+      firstEvaluationImpression: json['first_evaluation_impression']?.toString(),
+      otherCare: json['other_care']?.toString(),
+      otherCareComments: json['other_care_comments']?.toString(),
     );
   }
 }

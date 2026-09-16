@@ -1,4 +1,4 @@
-﻿class ClinicalFormDetailsModel {
+class ClinicalFormDetailsModel {
   String place;
   String systolic1;
   String diastolic1;
@@ -29,6 +29,8 @@
   String ecgImage1;
   String ecgImage2;
   String ecgImage3;
+  String ecgImage4;
+  String ecgImage5;
   String thyroid;
   String t3;
   String t4;
@@ -40,6 +42,8 @@
   String investigationImage1;
   String investigationImage2;
   String investigationImage3;
+  String investigationImage4;
+  String investigationImage5;
 
   // Section 3 parameters
   String improvement;
@@ -104,6 +108,8 @@
     this.ecgImage1 = '',
     this.ecgImage2 = '',
     this.ecgImage3 = '',
+    this.ecgImage4 = '',
+    this.ecgImage5 = '',
     this.thyroid = '',
     this.t3 = '',
     this.t4 = '',
@@ -115,6 +121,8 @@
     this.investigationImage1 = '',
     this.investigationImage2 = '',
     this.investigationImage3 = '',
+    this.investigationImage4 = '',
+    this.investigationImage5 = '',
     // Section 3
     this.improvement = '',
     this.chestPain = '',
@@ -226,78 +234,90 @@
   }
 
   factory ClinicalFormDetailsModel.fromJson(Map<String, dynamic> json) {
+    String getVal(List<String> keys, [String defaultValue = '']) {
+      for (final k in keys) {
+        if (json.containsKey(k) && json[k] != null) {
+          final str = json[k].toString().trim();
+          if (str.isNotEmpty) return str;
+        }
+      }
+      return defaultValue;
+    }
+
     return ClinicalFormDetailsModel(
-      place: json['place']?.toString() ?? 'Home',
-      systolic1: json['systolic1']?.toString() ?? '',
-      diastolic1: json['diastolic1']?.toString() ?? '',
-      heartRate1: json['heartRate1']?.toString() ?? '',
-      height: json['height']?.toString() ?? '',
-      weight: json['weight']?.toString() ?? '',
-      spo2: json['spo2']?.toString() ?? '',
-      spo2Details: json['spo2Details']?.toString() ?? '',
-      bmi: json['bmi']?.toString() ?? '',
-      bpApparatus: json['bpApparatus']?.toString() ?? '',
-      checkSugar: json['checkSugar']?.toString() ?? '',
-      fasting: json['fasting']?.toString() ?? '',
-      afterFood: json['afterFood']?.toString() ?? '',
-      random: json['random']?.toString() ?? '',
-      creatinine: json['creatinine']?.toString() ?? '',
-      totalCholesterol: json['totalCholesterol']?.toString() ?? '',
-      hdl: json['hdl']?.toString() ?? '',
-      ldl: json['ldl']?.toString() ?? '',
-      vldl: json['vldl']?.toString() ?? '',
-      hba1c: json['hba1c']?.toString() ?? '',
-      hba1cDate: json['hba1cDate']?.toString() ?? '',
-      urineAlbumin: json['urineAlbumin']?.toString() ?? '',
-      urineAlbuminReport: json['urineAlbuminReport']?.toString() ?? '',
-      ecg: json['ecg']?.toString() ?? '',
-      ecgPdf: json['ecgPdf']?.toString() ?? '',
-      ecgImage1: json['ecgImage1']?.toString() ?? '',
-      ecgImage2: json['ecgImage2']?.toString() ?? '',
-      ecgImage3: json['ecgImage3']?.toString() ?? '',
-      thyroid: json['thyroid']?.toString() ?? '',
-      t3: json['t3']?.toString() ?? '',
-      t4: json['t4']?.toString() ?? '',
-      tsh: json['tsh']?.toString() ?? '',
-      uricAcid: json['uricAcid']?.toString() ?? '',
-      otherInvestigations: json['otherInvestigations']?.toString() ?? '',
-      investigationDetails: json['investigationDetails']?.toString() ?? '',
-      investigations: json['investigations']?.toString() ?? '',
-      investigationImage1: json['investigationImage1']?.toString() ?? '',
-      investigationImage2: json['investigationImage2']?.toString() ?? '',
-      investigationImage3: json['investigationImage3']?.toString() ?? '',
+      place: getVal(['place'], 'Home'),
+      systolic1: getVal(['systolic1', 'systolic_1']),
+      diastolic1: getVal(['diastolic1', 'diastolic_1']),
+      heartRate1: getVal(['heartRate1', 'heart_rate_1', 'heart_rate1']),
+      height: getVal(['height']),
+      weight: getVal(['weight']),
+      spo2: getVal(['spo2']),
+      spo2Details: getVal(['spo2Details', 'spo2_details', 'spo2_value']),
+      bmi: getVal(['bmi']),
+      bpApparatus: getVal(['bpApparatus', 'bp_apparatus', 'have_bp_apparatus', 'have_bp_appratus']),
+      checkSugar: getVal(['checkSugar', 'check_sugar']),
+      fasting: getVal(['fasting', 'fasting_bsl']),
+      afterFood: getVal(['afterFood', 'after_food', 'after_food_bsl']),
+      random: getVal(['random', 'random_bsl']),
+      creatinine: getVal(['creatinine']),
+      totalCholesterol: getVal(['totalCholesterol', 'total_cholesterol']),
+      hdl: getVal(['hdl']),
+      ldl: getVal(['ldl']),
+      vldl: getVal(['vldl']),
+      hba1c: getVal(['hba1c']),
+      hba1cDate: getVal(['hba1cDate', 'hba1c_date']),
+      urineAlbumin: getVal(['urineAlbumin', 'urine_albumin']),
+      urineAlbuminReport: getVal(['urineAlbuminReport', 'urine_albumin_report']),
+      ecg: getVal(['ecg']),
+      ecgPdf: getVal(['ecgPdf', 'ecg_pdf']),
+      ecgImage1: getVal(['ecgImage1', 'ecg_image_1']),
+      ecgImage2: getVal(['ecgImage2', 'ecg_image_2']),
+      ecgImage3: getVal(['ecgImage3', 'ecg_image_3']),
+      ecgImage4: getVal(['ecgImage4', 'ecg_image_4']),
+      ecgImage5: getVal(['ecgImage5', 'ecg_image_5']),
+      thyroid: getVal(['thyroid']),
+      t3: getVal(['t3']),
+      t4: getVal(['t4']),
+      tsh: getVal(['tsh']),
+      uricAcid: getVal(['uricAcid', 'uric_acid']),
+      otherInvestigations: getVal(['otherInvestigations', 'other_investigations']),
+      investigationDetails: getVal(['investigationDetails', 'investigation_details']),
+      investigations: getVal(['investigations']),
+      investigationImage1: getVal(['investigationImage1', 'investigation_image_1']),
+      investigationImage2: getVal(['investigationImage2', 'investigation_image_2']),
+      investigationImage3: getVal(['investigationImage3', 'investigation_image_3']),
       // Section 3
-      improvement: json['improvement']?.toString() ?? '',
-      chestPain: json['chestPain']?.toString() ?? '',
-      chestPainSweating: json['chestPainSweating']?.toString() ?? '',
-      breathlessness: json['breathlessness']?.toString() ?? '',
-      breathlessWhile: json['breathlessWhile']?.toString() ?? '',
-      palpitations: json['palpitations']?.toString() ?? '',
-      giddiness: json['giddiness']?.toString() ?? '',
-      headache: json['headache']?.toString() ?? '',
-      dizziness: json['dizziness']?.toString() ?? '',
-      dizzinessSystolic: json['dizzinessSystolic']?.toString() ?? '',
-      dizzinessDiaStolic: json['dizzinessDiaStolic']?.toString() ?? '',
-      otherSymptoms: json['otherSymptoms']?.toString() ?? '',
-      otherSymptomsDetails: json['otherSymptomsDetails']?.toString() ?? '',
-      systolic2: json['systolic2']?.toString() ?? '',
-      diastolic2: json['diastolic2']?.toString() ?? '',
-      heartRate2: json['heartRate2']?.toString() ?? '',
-      bleedingEpisode: json['bleedingEpisode']?.toString() ?? '',
+      improvement: getVal(['improvement']),
+      chestPain: getVal(['chestPain', 'chest_pain']),
+      chestPainSweating: getVal(['chestPainSweating', 'chest_pain_sweating']),
+      breathlessness: getVal(['breathlessness', 'breathless']),
+      breathlessWhile: getVal(['breathlessWhile', 'breathless_while']),
+      palpitations: getVal(['palpitations']),
+      giddiness: getVal(['giddiness']),
+      headache: getVal(['headache']),
+      dizziness: getVal(['dizziness']),
+      dizzinessSystolic: getVal(['dizzinessSystolic', 'dizziness_systolic']),
+      dizzinessDiaStolic: getVal(['dizzinessDiaStolic', 'dizziness_diastolic']),
+      otherSymptoms: getVal(['otherSymptoms', 'other_symptoms']),
+      otherSymptomsDetails: getVal(['otherSymptomsDetails', 'other_symptom_details', 'other_symptoms_details']),
+      systolic2: getVal(['systolic2', 'systolic_2']),
+      diastolic2: getVal(['diastolic2', 'diastolic_2']),
+      heartRate2: getVal(['heartRate2', 'heart_rate_2', 'heart_rate2']),
+      bleedingEpisode: getVal(['bleedingEpisode', 'bleeding_episode']),
       // Section 4
-      smoking: json['smoking']?.toString() ?? '',
-      alcohol: json['alcohol']?.toString() ?? '',
-      reduceSalt: json['reduceSalt']?.toString() ?? '',
-      exercise: json['exercise']?.toString() ?? '',
-      inStress: json['inStress']?.toString() ?? '',
-      missMedicine: json['missMedicine']?.toString() ?? '',
-      lastHospitalization: json['lastHospitalization']?.toString() ?? '',
-      hospitalizationReason: json['hospitalizationReason']?.toString() ?? '',
-      remindMedicine: json['remindMedicine']?.toString() ?? 'No',
-      setAlarm: json['setAlarm']?.toString() ?? 'No',
-      systolic3: json['systolic3']?.toString() ?? '',
-      diastolic3: json['diastolic3']?.toString() ?? '',
-      heartRate3: json['heartRate3']?.toString() ?? '',
+      smoking: getVal(['smoking']),
+      alcohol: getVal(['alcohol']),
+      reduceSalt: getVal(['reduceSalt', 'reduce_salt']),
+      exercise: getVal(['exercise']),
+      inStress: getVal(['inStress', 'in_stress']),
+      missMedicine: getVal(['missMedicine', 'miss_medicine']),
+      lastHospitalization: getVal(['lastHospitalization', 'last_hospitalization']),
+      hospitalizationReason: getVal(['hospitalizationReason', 'hospitalization_reason']),
+      remindMedicine: getVal(['remindMedicine', 'remind_medicine'], 'No'),
+      setAlarm: getVal(['setAlarm', 'set_alarm'], 'No'),
+      systolic3: getVal(['systolic3', 'systolic_3']),
+      diastolic3: getVal(['diastolic3', 'diastolic_3']),
+      heartRate3: getVal(['heartRate3', 'heart_rate_3', 'heart_rate3']),
     );
   }
 }

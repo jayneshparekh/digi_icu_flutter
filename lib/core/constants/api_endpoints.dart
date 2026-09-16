@@ -59,6 +59,9 @@ class ApiEndpoints {
   static const String updateQuickForm = 'api/v2/Doctor/update_quick_form';
   static const String medicalFormsList = 'api/v2/Doctor/medical_forms_list';
   static const String updateMedicalForm = 'api/v2/Doctor/update_medical_form';
+  static const String clinicalFormsList = 'api/v2/Doctor/clinical_forms_list';
+  static const String getClinicalForm = 'api/v2/Doctor/get_clinical_form';
+  static const String updateClinicalForm = 'api/v2/Doctor/update_clinical_form';
 
   // ==========================================
   // Admin Endpoints

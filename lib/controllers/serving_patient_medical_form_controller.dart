@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:digi_icu_flutter/controllers/serving_patient_controller.dart';
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
@@ -164,6 +165,115 @@ class ServingPatientMedicalFormController extends GetxController {
   final surgeryName1Ctrl = TextEditingController();
   final surgeryName2Ctrl = TextEditingController();
   final surgeryName3Ctrl = TextEditingController();
+
+  // Section 2 Extensions
+  final heartAttackStatus = 'No Records'.obs; // Acute, Recent, Old, No Records
+  final strokeStatus = 'No Records'.obs; // Acute, Recent, Old, No Records
+  final kidneyFailureStatus = 'No Records'.obs; // Acute, Chronic, No Records
+  final kidneyFailureDialysis = 'Regular'.obs; // Regular, Sometimes
+  final angioplastyStents = 'I'.obs; // I, II, III, IV
+  final angioplastyBrilinta = 'No'.obs; // Yes, No
+  final angioplastyClopilet = 'No'.obs; // Yes, No
+  final angioplastyPrasita = 'No'.obs; // Yes, No
+  final allergicToCardiacDiabetic = 'No'.obs; // Yes, No
+  final bleedingSeverity = 'Mild'.obs; // Mild, Moderate, Severe
+  final canAspirinContinue = 'No'.obs; // Yes, No
+
+  // Surgery Type Checkboxes
+  final surgeryAbdominal = false.obs;
+  final surgeryNeuro = false.obs;
+  final surgeryCardiac = false.obs;
+  final surgeryOrtho = false.obs;
+  final surgeryGynaec = false.obs;
+  final surgeryVascular = false.obs;
+  final surgeryCancer = false.obs;
+  final surgeryTumor = false.obs;
+  final surgeryENT = false.obs;
+
+  // ================= SECTION 3: FAMILY HISTORY =================
+  // 1. Family Heart Attack
+  final hasFamilyHeartAttack = 'No'.obs;
+  final famHeartAttackFather = false.obs;
+  final famHeartAttackFatherAgeCtrl = TextEditingController();
+  final famHeartAttackMother = false.obs;
+  final famHeartAttackMotherAgeCtrl = TextEditingController();
+  final famHeartAttackBrother = false.obs;
+  final famHeartAttackBrotherAgeCtrl = TextEditingController();
+  final famHeartAttackSister = false.obs;
+  final famHeartAttackSisterAgeCtrl = TextEditingController();
+  final famHeartAttackGrandparents = false.obs;
+  final famHeartAttackGrandparentsAgeCtrl = TextEditingController();
+  final famHeartAttackSignificance = 'Significant'.obs;
+
+  // 2. Family Stroke
+  final hasFamilyStroke = 'No'.obs;
+  final famStrokeFather = false.obs;
+  final famStrokeFatherAgeCtrl = TextEditingController();
+  final famStrokeMother = false.obs;
+  final famStrokeMotherAgeCtrl = TextEditingController();
+  final famStrokeBrother = false.obs;
+  final famStrokeBrotherAgeCtrl = TextEditingController();
+  final famStrokeSister = false.obs;
+  final famStrokeSisterAgeCtrl = TextEditingController();
+  final famStrokeGrandparents = false.obs;
+  final famStrokeGrandparentsAgeCtrl = TextEditingController();
+  final famStrokeSignificance = 'Significant'.obs;
+
+  // 3. Family Angioplasty
+  final hasFamilyAngioplasty = 'No'.obs;
+  final famAngioplastyFather = false.obs;
+  final famAngioplastyFatherAgeCtrl = TextEditingController();
+  final famAngioplastyMother = false.obs;
+  final famAngioplastyMotherAgeCtrl = TextEditingController();
+  final famAngioplastyBrother = false.obs;
+  final famAngioplastyBrotherAgeCtrl = TextEditingController();
+  final famAngioplastySister = false.obs;
+  final famAngioplastySisterAgeCtrl = TextEditingController();
+  final famAngioplastyGrandparents = false.obs;
+  final famAngioplastyGrandparentsAgeCtrl = TextEditingController();
+  final famAngioplastySignificance = 'Significant'.obs;
+  final famAngioplastyCommentsCtrl = TextEditingController();
+
+  // 4. Family Sudden Death
+  final hasFamilySuddenDeath = 'No'.obs;
+  final famDiedFather = false.obs;
+  final famDiedFatherAgeCtrl = TextEditingController();
+  final famDiedMother = false.obs;
+  final famDiedMotherAgeCtrl = TextEditingController();
+  final famDiedBrother = false.obs;
+  final famDiedBrotherAgeCtrl = TextEditingController();
+  final famDiedSister = false.obs;
+  final famDiedSisterAgeCtrl = TextEditingController();
+  final famDiedGrandparents = false.obs;
+  final famDiedGrandparentsAgeCtrl = TextEditingController();
+  final famDiedReasonCtrl = TextEditingController();
+  final famDiedReasonRadio = 'Heart Attack'.obs; // Heart Attack, Stroke, Accident, Other, Reason don't know
+  final famDiedSignificance = 'Significant'.obs;
+
+  // ================= SECTION 4: PERSONAL HABITS =================
+  final smokeHabit = 'No'.obs; // Yes, No, Ex-Smoker
+  final dailyCigaretteCountCtrl = TextEditingController();
+  final smokeStopBeforeYears = 'Less than 6 months'.obs;
+
+  final alcoholHabit = 'No'.obs; // Yes, No, Ex-Alcoholic, Not Disclosed
+  final extraSaltHabit = 'No'.obs;
+  final familyMembersCountCtrl = TextEditingController();
+  final morningWalkHabit = 'No'.obs;
+  final yogaHabit = 'No'.obs;
+
+  // ================= SECTION 5: VITALS & EVALUATION =================
+  final heightCtrl = TextEditingController();
+  final weightCtrl = TextEditingController();
+  final bpSystolicCtrl = TextEditingController();
+  final bpDiastolicCtrl = TextEditingController();
+
+  final hasOtherInfo = 'No'.obs;
+  final otherInfoCtrl = TextEditingController();
+
+  final evaluationNoteCtrl = TextEditingController();
+
+  final hasOtherCare = 'No'.obs;
+  final otherCareDetailsCtrl = TextEditingController();
 
   static const List<String> validYearsOptions = [
     'Select',
@@ -426,15 +536,104 @@ class ServingPatientMedicalFormController extends GetxController {
           allergyMedName3Ctrl.text = d.allergyMedName3 ?? '';
           allergyMedCount.value = _calcCount(d.allergyMedName1, d.allergyMedName2, d.allergyMedName3);
 
-          // 7. Bleeding Tendency
-          hasBleedingTendency.value = d.bleedingTendency ?? 'No';
+          // Section 2 Extensions
+          strokeStatus.value = d.strokeStatus ?? 'No Records';
+          kidneyFailureStatus.value = d.kidneyFailureStatus ?? 'No Records';
+          kidneyFailureDialysis.value = d.dialysis ?? 'No';
+          angioplastyStents.value = (d.stent != null && d.stent!.isNotEmpty) ? d.stent! : 'I';
+          angioplastyBrilinta.value = d.brilinta ?? 'No';
+          angioplastyClopilet.value = d.clopilet ?? 'No';
+          angioplastyPrasita.value = d.prasita ?? 'No';
 
-          // 8. Other Surgery / Treatment
-          hasOtherSurgery.value = d.otherSurgery ?? 'No';
-          surgeryName1Ctrl.text = d.otherSurgName1 ?? '';
-          surgeryName2Ctrl.text = d.otherSurgName2 ?? '';
-          surgeryName3Ctrl.text = d.otherSurgName3 ?? '';
-          surgeryMedCount.value = _calcCount(d.otherSurgName1, d.otherSurgName2, d.otherSurgName3);
+          // ================= SECTION 3: FAMILY HISTORY =================
+          // 1. Family Heart Attack
+          hasFamilyHeartAttack.value = (d.familyMemberHeartAttack != null && d.familyMemberHeartAttack!.isNotEmpty)
+              ? d.familyMemberHeartAttack!
+              : 'No';
+          final htnWho = (d.familyMemberHeartAttackWho ?? '').toLowerCase();
+          famHeartAttackFather.value = htnWho.contains('father');
+          famHeartAttackFatherAgeCtrl.text = d.heartAttackFatherAge ?? '';
+          famHeartAttackMother.value = htnWho.contains('mother');
+          famHeartAttackMotherAgeCtrl.text = d.heartAttackMotherAge ?? '';
+          famHeartAttackBrother.value = htnWho.contains('brother');
+          famHeartAttackBrotherAgeCtrl.text = d.heartAttackBrotherAge ?? '';
+          famHeartAttackSister.value = htnWho.contains('sister');
+          famHeartAttackSisterAgeCtrl.text = d.heartAttackSisterAge ?? '';
+          famHeartAttackGrandparents.value = htnWho.contains('grandparents') || htnWho.contains('grand parents');
+          famHeartAttackGrandparentsAgeCtrl.text = d.heartAttackGrandparentsAge ?? '';
+          famHeartAttackSignificance.value = d.familyHeartAttackFrequency ?? 'Significant';
+
+          // 2. Family Stroke
+          hasFamilyStroke.value = (d.familyMemberStroke != null && d.familyMemberStroke!.isNotEmpty)
+              ? d.familyMemberStroke!
+              : 'No';
+          final strokeWho = (d.familyMemberStrokeWho ?? '').toLowerCase();
+          famStrokeFather.value = strokeWho.contains('father');
+          famStrokeFatherAgeCtrl.text = d.strokeFatherAge ?? '';
+          famStrokeMother.value = strokeWho.contains('mother');
+          famStrokeMotherAgeCtrl.text = d.strokeMotherAge ?? '';
+          famStrokeBrother.value = strokeWho.contains('brother');
+          famStrokeBrotherAgeCtrl.text = d.strokeBrotherAge ?? '';
+          famStrokeSister.value = strokeWho.contains('sister');
+          famStrokeSisterAgeCtrl.text = d.strokeSisterAge ?? '';
+          famStrokeGrandparents.value = strokeWho.contains('grandparents') || strokeWho.contains('grand parents');
+          famStrokeGrandparentsAgeCtrl.text = d.strokeGrandparentsAge ?? '';
+          famStrokeSignificance.value = d.familyStrokeFrequency ?? 'Significant';
+
+          // 3. Family Angioplasty
+          hasFamilyAngioplasty.value = (d.familyMemberAngioplasty != null && d.familyMemberAngioplasty!.isNotEmpty)
+              ? d.familyMemberAngioplasty!
+              : 'No';
+          final angioWho = (d.familyMemberAngioplastyWho ?? '').toLowerCase();
+          famAngioplastyFather.value = angioWho.contains('father');
+          famAngioplastyFatherAgeCtrl.text = d.angioplastyFatherAge ?? '';
+          famAngioplastyMother.value = angioWho.contains('mother');
+          famAngioplastyMotherAgeCtrl.text = d.angioplastyMotherAge ?? '';
+          famAngioplastyBrother.value = angioWho.contains('brother');
+          famAngioplastyBrotherAgeCtrl.text = d.angioplastyBrotherAge ?? '';
+          famAngioplastySister.value = angioWho.contains('sister');
+          famAngioplastySisterAgeCtrl.text = d.angioplastySisterAge ?? '';
+          famAngioplastyGrandparents.value = angioWho.contains('grandparents') || angioWho.contains('grand parents');
+          famAngioplastyGrandparentsAgeCtrl.text = d.angioplastyGrandparentsAge ?? '';
+          famAngioplastyCommentsCtrl.text = d.angioplastyComments ?? '';
+
+          // 4. Family Sudden Death
+          hasFamilySuddenDeath.value = (d.familyMemberDied != null && d.familyMemberDied!.isNotEmpty)
+              ? d.familyMemberDied!
+              : 'No';
+          final diedWho = (d.familyMemberDiedWho ?? '').toLowerCase();
+          famDiedFather.value = diedWho.contains('father');
+          famDiedFatherAgeCtrl.text = d.diedFatherAge ?? '';
+          famDiedMother.value = diedWho.contains('mother');
+          famDiedMotherAgeCtrl.text = d.diedMotherAge ?? '';
+          famDiedBrother.value = diedWho.contains('brother');
+          famDiedBrotherAgeCtrl.text = d.diedBrotherAge ?? '';
+          famDiedSister.value = diedWho.contains('sister');
+          famDiedSisterAgeCtrl.text = d.diedSisterAge ?? '';
+          famDiedGrandparents.value = diedWho.contains('grandparents') || diedWho.contains('grand parents');
+          famDiedGrandparentsAgeCtrl.text = d.diedGrandparentsAge ?? '';
+          famDiedReasonCtrl.text = d.familyMemberDiedReason ?? '';
+
+          // ================= SECTION 4: PERSONAL HABITS =================
+          smokeHabit.value = d.smoke ?? 'No';
+          dailyCigaretteCountCtrl.text = d.dailyCigaretteCount ?? '';
+          smokeStopBeforeYears.value = _normalizeYears(d.smokeStopBefore);
+          alcoholHabit.value = d.alcohol ?? 'No';
+          extraSaltHabit.value = d.extraSalt ?? 'No';
+          familyMembersCountCtrl.text = d.familyMemberCount ?? '';
+          morningWalkHabit.value = d.morningWalk ?? 'No';
+          yogaHabit.value = d.yoga ?? 'No';
+
+          // ================= SECTION 5: VITALS & EVALUATION =================
+          heightCtrl.text = d.height ?? '';
+          weightCtrl.text = d.weight ?? '';
+          bpSystolicCtrl.text = d.bpSystolic ?? '';
+          bpDiastolicCtrl.text = d.bpDiastolic ?? '';
+          hasOtherInfo.value = d.otherInfo ?? 'No';
+          otherInfoCtrl.text = d.otherInfoName ?? '';
+          evaluationNoteCtrl.text = d.firstEvaluationImpression ?? '';
+          hasOtherCare.value = d.otherCare ?? 'No';
+          otherCareDetailsCtrl.text = d.otherCareComments ?? '';
         }
       }
     } catch (e) {
@@ -442,6 +641,36 @@ class ServingPatientMedicalFormController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  String _buildWhoString({
+    required bool father,
+    required bool mother,
+    required bool brother,
+    required bool sister,
+    required bool grandparents,
+  }) {
+    final list = <String>[];
+    if (father) list.add('Father');
+    if (mother) list.add('Mother');
+    if (brother) list.add('Brother');
+    if (sister) list.add('Sister');
+    if (grandparents) list.add('Grandparents');
+    return list.join(', ');
+  }
+
+  String _buildSurgeryTypeString() {
+    final list = <String>[];
+    if (surgeryAbdominal.value) list.add('Abdominal');
+    if (surgeryNeuro.value) list.add('Neuro');
+    if (surgeryCardiac.value) list.add('Cardiac');
+    if (surgeryOrtho.value) list.add('Ortho');
+    if (surgeryGynaec.value) list.add('Gynaec');
+    if (surgeryVascular.value) list.add('Vascular');
+    if (surgeryCancer.value) list.add('Cancer');
+    if (surgeryTumor.value) list.add('Tumor');
+    if (surgeryENT.value) list.add('ENT');
+    return list.join(' ');
   }
 
   Future<void> submitUpdateMedicalForm() async {
@@ -498,7 +727,7 @@ class ServingPatientMedicalFormController extends GetxController {
         'heart_attack': hasHeartAttack.value,
         'heart_atk_when': heartAttackYears.value == 'Select' ? '' : heartAttackYears.value,
         'heart_atk_med': heartAttackOnMedicine.value,
-        'heart_atk_status': '',
+        'heart_atk_status': heartAttackStatus.value,
         'heart_atk_med_name_1': heartAttackMedName1Ctrl.text.trim(),
         'heart_atk_med_name_2': heartAttackMedName2Ctrl.text.trim(),
         'heart_atk_med_name_3': heartAttackMedName3Ctrl.text.trim(),
@@ -509,7 +738,7 @@ class ServingPatientMedicalFormController extends GetxController {
         'stroke': hasStroke.value,
         'stroke_when': strokeYears.value == 'Select' ? '' : strokeYears.value,
         'stroke_med': strokeOnMedicine.value,
-        'stroke_status': '',
+        'stroke_status': strokeStatus.value,
         'stroke_med_name_1': strokeMedName1Ctrl.text.trim(),
         'stroke_med_name_2': strokeMedName2Ctrl.text.trim(),
         'stroke_med_name_3': strokeMedName3Ctrl.text.trim(),
@@ -520,9 +749,9 @@ class ServingPatientMedicalFormController extends GetxController {
         'kidney_failure': hasKidneyFailure.value,
         'kidney_fail_when': kidneyFailureYears.value == 'Select' ? '' : kidneyFailureYears.value,
         'kidney_fail_med': kidneyFailureOnMedicine.value,
-        'kidney_failure_status': '',
-        'dialysis': '',
-        'dialysis_frequency': '',
+        'kidney_failure_status': kidneyFailureStatus.value,
+        'dialysis': kidneyFailureDialysis.value,
+        'dialysis_frequency': kidneyFailureDialysis.value,
         'kidney_fail_med_name_1': kidneyFailureMedName1Ctrl.text.trim(),
         'kidney_fail_med_name_2': kidneyFailureMedName2Ctrl.text.trim(),
         'kidney_fail_med_name_3': kidneyFailureMedName3Ctrl.text.trim(),
@@ -533,10 +762,10 @@ class ServingPatientMedicalFormController extends GetxController {
         'angioplasty': hasAngioplasty.value,
         'angioplasty_when': angioplastyYears.value == 'Select' ? '' : angioplastyYears.value,
         'angioplasty_med': angioplastyOnMedicine.value,
-        'stent': '',
-        'brilinta': '',
-        'clopilet': '',
-        'prasita': '',
+        'stent': angioplastyStents.value,
+        'brilinta': angioplastyBrilinta.value,
+        'clopilet': angioplastyClopilet.value,
+        'prasita': angioplastyPrasita.value,
         'angioplasty_med_name_1': angioplastyMedName1Ctrl.text.trim(),
         'angioplasty_med_name_2': angioplastyMedName2Ctrl.text.trim(),
         'angioplasty_med_name_3': angioplastyMedName3Ctrl.text.trim(),
@@ -555,20 +784,102 @@ class ServingPatientMedicalFormController extends GetxController {
         'bypass_surg_med_freq_3': bypassMedFreq3.value,
 
         'med_allergy': hasAllergy.value,
-        'allergic_to': '',
+        'allergic_to': allergicToCardiacDiabetic.value,
         'allergy_med_name_1': allergyMedName1Ctrl.text.trim(),
         'allergy_med_name_2': allergyMedName2Ctrl.text.trim(),
         'allergy_med_name_3': allergyMedName3Ctrl.text.trim(),
 
         'bleeding_tendency': hasBleedingTendency.value,
-        'bleeding_frequency': '',
-        'on_medicine': '',
+        'bleeding_frequency': bleedingSeverity.value,
+        'on_medicine': canAspirinContinue.value,
 
         'other_surgery': hasOtherSurgery.value,
-        'surgery_type': '',
+        'surgery_type': _buildSurgeryTypeString(),
         'other_surg_name_1': surgeryName1Ctrl.text.trim(),
         'other_surg_name_2': surgeryName2Ctrl.text.trim(),
         'other_surg_name_3': surgeryName3Ctrl.text.trim(),
+
+        // Section 3: Family History
+        'family_member_heart_attack': hasFamilyHeartAttack.value,
+        'family_member_heart_attack_who': _buildWhoString(
+          father: famHeartAttackFather.value,
+          mother: famHeartAttackMother.value,
+          brother: famHeartAttackBrother.value,
+          sister: famHeartAttackSister.value,
+          grandparents: famHeartAttackGrandparents.value,
+        ),
+        'heart_attack_father_age': famHeartAttackFatherAgeCtrl.text.trim(),
+        'heart_attack_mother_age': famHeartAttackMotherAgeCtrl.text.trim(),
+        'heart_attack_brother_age': famHeartAttackBrotherAgeCtrl.text.trim(),
+        'heart_attack_sister_age': famHeartAttackSisterAgeCtrl.text.trim(),
+        'heart_attack_grandparents_age': famHeartAttackGrandparentsAgeCtrl.text.trim(),
+        'family_heart_attack_frequency': famHeartAttackSignificance.value,
+
+        'family_member_stroke': hasFamilyStroke.value,
+        'family_member_stroke_who': _buildWhoString(
+          father: famStrokeFather.value,
+          mother: famStrokeMother.value,
+          brother: famStrokeBrother.value,
+          sister: famStrokeSister.value,
+          grandparents: famStrokeGrandparents.value,
+        ),
+        'stroke_father_age': famStrokeFatherAgeCtrl.text.trim(),
+        'stroke_mother_age': famStrokeMotherAgeCtrl.text.trim(),
+        'stroke_brother_age': famStrokeBrotherAgeCtrl.text.trim(),
+        'stroke_sister_age': famStrokeSisterAgeCtrl.text.trim(),
+        'stroke_grandparents_age': famStrokeGrandparentsAgeCtrl.text.trim(),
+        'family_stroke_frequency': famStrokeSignificance.value,
+
+        'family_member_angioplasty': hasFamilyAngioplasty.value,
+        'family_member_angioplasty_who': _buildWhoString(
+          father: famAngioplastyFather.value,
+          mother: famAngioplastyMother.value,
+          brother: famAngioplastyBrother.value,
+          sister: famAngioplastySister.value,
+          grandparents: famAngioplastyGrandparents.value,
+        ),
+        'angioplasty_father_age': famAngioplastyFatherAgeCtrl.text.trim(),
+        'angioplasty_mother_age': famAngioplastyMotherAgeCtrl.text.trim(),
+        'angioplasty_brother_age': famAngioplastyBrotherAgeCtrl.text.trim(),
+        'angioplasty_sister_age': famAngioplastySisterAgeCtrl.text.trim(),
+        'angioplasty_grandparents_age': famAngioplastyGrandparentsAgeCtrl.text.trim(),
+        'angioplasty_comments': famAngioplastyCommentsCtrl.text.trim(),
+
+        'family_member_died': hasFamilySuddenDeath.value,
+        'family_member_died_who': _buildWhoString(
+          father: famDiedFather.value,
+          mother: famDiedMother.value,
+          brother: famDiedBrother.value,
+          sister: famDiedSister.value,
+          grandparents: famDiedGrandparents.value,
+        ),
+        'died_father_age': famDiedFatherAgeCtrl.text.trim(),
+        'died_mother_age': famDiedMotherAgeCtrl.text.trim(),
+        'died_brother_age': famDiedBrotherAgeCtrl.text.trim(),
+        'died_sister_age': famDiedSisterAgeCtrl.text.trim(),
+        'died_grandparents_age': famDiedGrandparentsAgeCtrl.text.trim(),
+        'family_member_died_reason': famDiedReasonRadio.value,
+
+        // Section 4: Personal Habits
+        'smoke': smokeHabit.value,
+        'daily_cigarette_count': dailyCigaretteCountCtrl.text.trim(),
+        'smoke_stop_before': smokeStopBeforeYears.value == 'Select' ? '' : smokeStopBeforeYears.value,
+        'alcohol': alcoholHabit.value,
+        'extra_salt': extraSaltHabit.value,
+        'family_member_count': familyMembersCountCtrl.text.trim(),
+        'morning_walk': morningWalkHabit.value,
+        'yoga': yogaHabit.value,
+
+        // Section 5: Vitals & Evaluation
+        'height': heightCtrl.text.trim(),
+        'weight': weightCtrl.text.trim(),
+        'bp_systolic': bpSystolicCtrl.text.trim(),
+        'bp_diastolic': bpDiastolicCtrl.text.trim(),
+        'other_info': hasOtherInfo.value,
+        'other_info_name': otherInfoCtrl.text.trim(),
+        'first_evaluation_impression': evaluationNoteCtrl.text.trim(),
+        'other_care': hasOtherCare.value,
+        'other_care_comments': otherCareDetailsCtrl.text.trim(),
       };
 
       // Attach file uploads
@@ -627,9 +938,31 @@ class ServingPatientMedicalFormController extends GetxController {
         data: formData,
       );
 
-      if (response.statusCode == 200) {
-        AppSnackbars.showSuccess('success'.tr, 'medical_form_updated_successfully'.tr);
-        Get.back(result: true);
+      if (response.statusCode == 200 && response.data != null) {
+        Map<String, dynamic> body = {};
+        if (response.data is Map) {
+          body = Map<String, dynamic>.from(response.data as Map);
+        } else if (response.data is String) {
+          try {
+            final parsed = jsonDecode(response.data as String);
+            if (parsed is Map) {
+              body = Map<String, dynamic>.from(parsed);
+            }
+          } catch (_) {}
+        }
+
+        final statusStr = body['status']?.toString().toLowerCase() ?? '';
+        final isSuccess = statusStr == 'success' || statusStr == 'true' || body['status'] == true || statusStr.isEmpty;
+        final msg = body['msg']?.toString() ?? body['message']?.toString() ?? 'medical_form_updated_successfully'.tr;
+
+        if (isSuccess) {
+          Get.back(result: true);
+          AppSnackbars.showSuccess('success'.tr, msg);
+          return;
+        } else {
+          AppSnackbars.showError('error'.tr, msg);
+          return;
+        }
       } else {
         AppSnackbars.showError('error'.tr, 'something_went_wrong'.tr);
       }
@@ -708,6 +1041,42 @@ class ServingPatientMedicalFormController extends GetxController {
     surgeryName1Ctrl.dispose();
     surgeryName2Ctrl.dispose();
     surgeryName3Ctrl.dispose();
+
+    famHeartAttackFatherAgeCtrl.dispose();
+    famHeartAttackMotherAgeCtrl.dispose();
+    famHeartAttackBrotherAgeCtrl.dispose();
+    famHeartAttackSisterAgeCtrl.dispose();
+    famHeartAttackGrandparentsAgeCtrl.dispose();
+
+    famStrokeFatherAgeCtrl.dispose();
+    famStrokeMotherAgeCtrl.dispose();
+    famStrokeBrotherAgeCtrl.dispose();
+    famStrokeSisterAgeCtrl.dispose();
+    famStrokeGrandparentsAgeCtrl.dispose();
+
+    famAngioplastyFatherAgeCtrl.dispose();
+    famAngioplastyMotherAgeCtrl.dispose();
+    famAngioplastyBrotherAgeCtrl.dispose();
+    famAngioplastySisterAgeCtrl.dispose();
+    famAngioplastyGrandparentsAgeCtrl.dispose();
+    famAngioplastyCommentsCtrl.dispose();
+
+    famDiedFatherAgeCtrl.dispose();
+    famDiedMotherAgeCtrl.dispose();
+    famDiedBrotherAgeCtrl.dispose();
+    famDiedSisterAgeCtrl.dispose();
+    famDiedGrandparentsAgeCtrl.dispose();
+    famDiedReasonCtrl.dispose();
+
+    dailyCigaretteCountCtrl.dispose();
+    familyMembersCountCtrl.dispose();
+    heightCtrl.dispose();
+    weightCtrl.dispose();
+    bpSystolicCtrl.dispose();
+    bpDiastolicCtrl.dispose();
+    otherInfoCtrl.dispose();
+    evaluationNoteCtrl.dispose();
+    otherCareDetailsCtrl.dispose();
     super.onClose();
   }
 }
