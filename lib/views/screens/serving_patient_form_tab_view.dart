@@ -231,7 +231,7 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
       children: [
         Column(
           children: [
-            // Top Horizontal Header Tabs matching Android FormFragment.kt
+            // Top Horizontal Header Tabs
             Container(
               color: AppColors.white,
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),

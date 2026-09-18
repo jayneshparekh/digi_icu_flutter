@@ -1,6 +1,7 @@
 import 'package:digi_icu_flutter/controllers/serving_patient_controller.dart';
 import 'package:digi_icu_flutter/controllers/serving_patient_dashboard_controller.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:digi_icu_flutter/models/response/doctors/dashboard_details_response.dart';
 import 'package:digi_icu_flutter/views/widgets/serving_patient_dashboard_card.dart';
 import 'package:flutter/material.dart';
@@ -740,9 +741,9 @@ class ServingPatientDashboardView extends StatelessWidget {
                       onPressed: () async {
                         final val = hba1cValueController.text.trim();
                         if (val.isEmpty || apiFormattedDate.isEmpty) {
-                          Get.rawSnackbar(
-                            message: 'fill_hba1c_date'.tr,
-                            backgroundColor: AppColors.error,
+                          AppSnackbars.showError(
+                            'validation_error'.tr,
+                            'fill_hba1c_date'.tr,
                           );
                           return;
                         }

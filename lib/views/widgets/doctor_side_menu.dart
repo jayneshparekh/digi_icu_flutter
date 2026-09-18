@@ -30,7 +30,7 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Teal status bar area using SafeArea padding — works across all Android versions and orientations
+            // Top status bar padding area
             Container(
               color: AppColors.teal,
               child: SafeArea(

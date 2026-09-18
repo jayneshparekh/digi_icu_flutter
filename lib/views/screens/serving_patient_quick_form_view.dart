@@ -193,7 +193,7 @@ class ServingPatientQuickFormView extends StatelessWidget {
                   keyboardType: TextInputType.number,
                 ),
 
-                // 4. Episode Symptoms (Image Buttons matching Android source)
+                // 4. Episode Symptoms Selection
                 AppFormSectionHeader(title: 'episode_symptoms'.tr),
                 const SizedBox(height: 12),
                 Obx(

@@ -1,5 +1,5 @@
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
-import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:digi_icu_flutter/core/constants/app_constants.dart';
 import 'package:digi_icu_flutter/models/response/doctors/diagnosis_response.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
@@ -385,7 +385,7 @@ class DiagnosisController extends GetxController {
     } else {
       // Submit/Add custom slot
       if (otherControllers[index].text.trim().isEmpty) {
-        Get.rawSnackbar(message: 'Please enter a diagnosis value.', backgroundColor: AppColors.error);
+        AppSnackbars.showError('Validation Error', 'Please enter a diagnosis value.');
         return;
       }
       otherSlotsAdded[index] = true;
@@ -568,19 +568,19 @@ class DiagnosisController extends GetxController {
         if (statusVal == 'success') {
           // Navigate back first to ensure the screen closes and triggers any then() callbacks
           Get.back();
-          Get.rawSnackbar(
-            message: msgVal.isNotEmpty ? msgVal : 'Diagnosis updated successfully.',
-            backgroundColor: AppColors.success,
+          AppSnackbars.showSuccess(
+            'Success',
+            msgVal.isNotEmpty ? msgVal : 'Diagnosis updated successfully.',
           );
         } else {
-          Get.rawSnackbar(
-            message: msgVal.isNotEmpty ? msgVal : 'Failed to save diagnosis.',
-            backgroundColor: AppColors.error,
+          AppSnackbars.showError(
+            'Error',
+            msgVal.isNotEmpty ? msgVal : 'Failed to save diagnosis.',
           );
         }
       }
     } catch (e) {
-      Get.rawSnackbar(message: 'Error saving diagnosis: $e', backgroundColor: AppColors.error);
+      AppSnackbars.showError('Error', 'Error saving diagnosis: $e');
     } finally {
       isLoading.value = false;
     }

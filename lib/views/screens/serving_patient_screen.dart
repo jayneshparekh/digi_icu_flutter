@@ -9,6 +9,7 @@ import 'package:digi_icu_flutter/views/screens/serving_patient_report_view.dart'
 import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
 import 'package:digi_icu_flutter/views/widgets/patient_rating_dialog.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -244,31 +245,33 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                             children: [
                               _buildTopActionButton(
                                 svgName: 'ic_refer',
-                                onTap: () => Get.rawSnackbar(
-                                  message: 'refer_clicked'.tr,
+                                onTap: () => AppSnackbars.showInfo(
+                                  'info'.tr,
+                                  'refer_clicked'.tr,
                                 ),
                               ),
                               _buildTopActionButton(
                                 svgName: 'ic_leader_call',
-                                onTap: () => Get.rawSnackbar(
-                                  message: 'leader_call_clicked'.tr,
+                                onTap: () => AppSnackbars.showInfo(
+                                  'info'.tr,
+                                  'leader_call_clicked'.tr,
                                 ),
                                 bg: AppColors.error,
                               ),
                               _buildTopActionButton(
                                 svgName: 'ic_baseline_phone_24',
-                                onTap: () =>
-                                    Get.rawSnackbar(message: 'call_clicked'.tr),
+                                onTap: () => AppSnackbars.showInfo(
+                                  'info'.tr,
+                                  'call_clicked'.tr,
+                                ),
                               ),
                               _buildTopActionButton(
-                                svgName: 'ic_baseline_admit_24',
-                                onTap: () => Get.rawSnackbar(
-                                  message: 'admit_clicked'.tr,
-                                ),
-                                bg: controller.isAdmitted == '1'
-                                    ? AppColors.error
-                                    : AppColors.teal,
-                              ),
+                                                              svgName: 'ic_baseline_admit_24',
+                                                              onTap: () => controller.openAdmitDialog(),
+                                                              bg: controller.isAdmitted.value == '1'
+                                                                  ? AppColors.error
+                                                                  : AppColors.teal,
+                                                            ),
                               _buildTopActionButton(
                                 svgName: 'ic_hold',
                                 onTap: () => controller.showHoldReasonDialog(),
@@ -295,14 +298,16 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                             ),
                             _buildTopActionButton(
                               svgName: 'ic_start_video_call',
-                              onTap: () => Get.rawSnackbar(
-                                message: 'start_video_call_clicked'.tr,
+                              onTap: () => AppSnackbars.showInfo(
+                                'info'.tr,
+                                'start_video_call_clicked'.tr,
                               ),
                             ),
                             _buildTopActionButton(
                               svgName: 'ic_incoming_call',
-                              onTap: () => Get.rawSnackbar(
-                                message: 'join_call_clicked'.tr,
+                              onTap: () => AppSnackbars.showInfo(
+                                'info'.tr,
+                                'join_call_clicked'.tr,
                               ),
                             ),
                             _buildTopActionButton(

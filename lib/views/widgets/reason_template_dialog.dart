@@ -2,9 +2,8 @@ import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-/// Flutter port of Android's reasonDialog().
-/// Shows a list of template holding_reasons, inserts selected into [controller].
-/// Returns body widget for use inside AppDialog.show().
+/// Displays a list of template holding reasons and inserts the selected template into [controller].
+/// Designed for rendering inside [AppDialog.show].
 class ReasonTemplateDialog extends StatefulWidget {
   final List<dynamic> templates;
   final TextEditingController controller;

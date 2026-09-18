@@ -36,7 +36,7 @@ class ServingPatientQuickFormController extends GetxController {
   final weightCtrl = TextEditingController();
   final weightError = ''.obs;
 
-  // 4. Episode Symptoms (10 PNG Buttons matching Android source)
+  // 4. Episode Symptoms State
   final isBreathlessness = false.obs;
   final isChestPain = false.obs;
   final isChestPainSweating = false.obs;

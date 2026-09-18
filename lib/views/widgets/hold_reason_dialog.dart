@@ -3,7 +3,7 @@ import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-/// Predefined hold reasons matching Android's R.array.hold_reason.
+/// Predefined hold reasons available for selection when putting an appointment on hold.
 const List<String> holdReasons = [
   'Patient Not Available',
   'Asked to check BP',
@@ -19,8 +19,8 @@ const List<String> holdReasons = [
   'Other',
 ];
 
-/// Flutter port of Android's HoldReasonDialog.
-/// Uses AppDialog pattern: returns body widget, shown via AppDialog.show().
+/// Dialog widget for selecting or specifying a reason for placing a patient appointment on hold.
+/// Rendered within [AppDialog.show].
 class HoldReasonDialog extends StatefulWidget {
   final Function(String reason, String ptStatus) onSubmit;
   final String status; // e.g. "In Process" or "Served"

@@ -1,4 +1,5 @@
-﻿import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -237,10 +238,7 @@ class ManagePatientsController extends GetxController {
       await launchUrl(url);
     } catch (e) {
       debugPrint('Dialer launch error: $e');
-      Get.rawSnackbar(
-        message: 'Could not open dialer: $e',
-        duration: const Duration(seconds: 4),
-      );
+      AppSnackbars.showError('Error', 'Could not open dialer: $e');
     }
   }
 

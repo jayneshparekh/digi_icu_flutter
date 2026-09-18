@@ -15,6 +15,7 @@ import 'package:digi_icu_flutter/models/request/doctor/add_referral_notes_req.da
 import 'package:digi_icu_flutter/models/request/doctor/add_doctor_visit_notes_req.dart';
 import 'package:digi_icu_flutter/models/request/doctor/hold_quick_appointment_req.dart';
 import 'package:digi_icu_flutter/models/request/user/change_appointment_status_req.dart';
+import 'package:digi_icu_flutter/models/request/user/admit_patient_request_model.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
 import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
@@ -22,6 +23,9 @@ import 'package:digi_icu_flutter/views/widgets/hold_reason_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/reason_template_dialog.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:digi_icu_flutter/views/widgets/patient_rating_dialog.dart';
+import 'package:digi_icu_flutter/views/widgets/admit_selection_dialog.dart';
+import 'package:digi_icu_flutter/views/widgets/pre_admit_dialog.dart';
+import 'package:digi_icu_flutter/views/widgets/ipd_admit_dialog.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,31 +38,62 @@ class ServingPatientController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
 
   // Navigation / screen arguments
-  late final String patientId;
-  late final String fullName;
-  late final String age;
-  late final String gender;
-  late final String mhcId;
-  late final String bookingId;
-  late final String mobileNo;
-  late final String note;
-  late final String selectTab;
-  late final String status;
-  late final String leaderName;
-  late final String leaderMobNo;
-  late final String isRefer;
-  late final String doctorHomeServiceId;
-  late final String doctorId;
-  late final String isAdmitted;
-  late final String videoUrl;
-  late final String clinicalFormStatus;
-  late final String medicalFormStatus;
-  late final String instituteId;
-  late final String qrCode;
-  late final bool fromPatient;
-  late final String isFrom;
+    late final String patientId;
+    late final String fullName;
+    late final String age;
+    late final String gender;
+    late final String mhcId;
+    late final String bookingId;
+    late final String mobileNo;
+    late final String note;
+    late final String selectTab;
+    late final String status;
+    late final String leaderName;
+    late final String leaderMobNo;
+    late final String isRefer;
+    late final String doctorHomeServiceId;
+    late final String doctorId;
+        late final RxString isAdmitted = ''.obs;
+        late final String videoUrl;
+    late final String clinicalFormStatus;
+        late final String medicalFormStatus;
+        late final String instituteId;
+        late final String qrCode;
+        late final bool fromPatient;
+        late final String isFrom;
+        // Admit fields
+        final RxString selectedInstituteId = ''.obs;
+        final RxString selectedInstituteName = ''.obs;
+        final RxBool isDayCare = false.obs;
+        // Doctor selection for admit
+        final RxString selectedAdmitDoctorId = ''.obs;
+        final RxString selectedAdmitDoctor = ''.obs;
+        final RxList<dynamic> admitDoctors = <dynamic>[].obs;
+        // Place/Ward/Bed selection
+        final RxString selectedAdmitPlace = ''.obs;
+        final RxString selectedAdmitWard = ''.obs;
+        final RxString selectedAdmitBed = ''.obs;
+        final RxList<dynamic> admitWardOptions = <dynamic>[].obs;
+        final RxList<dynamic> admitBedOptions = <dynamic>[].obs;
+        // Form fields
+        final RxString approxCost = ''.obs;
+        final RxString approxDays = ''.obs;
+        final RxString admissionAmount = ''.obs;
+        final RxString admissionDate = ''.obs;
+        final RxString admissionTime = ''.obs;
+        final RxString dischargeDate = ''.obs;
+        final RxString dischargeTime = ''.obs;
+        final RxString advanceAmount = ''.obs;
+        final RxString admissionPaymentStatus = ''.obs;
+        final RxString admissionPaymentMode = ''.obs;
+        final RxString advancePaymentStatus = ''.obs;
+        final RxString advancePaymentMode = ''.obs;
+        final RxString admissionTransactionId = ''.obs;
+        final RxString advanceTransactionId = ''.obs;
+        final RxString admissionNotes = ''.obs;
+        final RxString referralDoctor = ''.obs;
 
-  // Active Center tab state
+        // Active Center tab state
   final RxString currentTab = 'Dashboard'.obs;
 
   // Patient detail properties
@@ -164,8 +199,8 @@ class ServingPatientController extends GetxController {
     isRefer = args['isRefer']?.toString() ?? '';
     doctorHomeServiceId = args['doctor_home_service_id']?.toString() ?? '';
     doctorId = args['doctorId']?.toString() ?? '';
-    isAdmitted = args['isAdmitted']?.toString() ?? '';
-    videoUrl = args['videoUrl']?.toString() ?? '';
+        isAdmitted.value = args['isAdmitted']?.toString() ?? '';
+        videoUrl = args['videoUrl']?.toString() ?? '';
     clinicalFormStatus = args['clinical_form_status']?.toString() ?? '';
     medicalFormStatus = args['medical_form_status']?.toString() ?? '';
     instituteId = args['instituteId']?.toString() ?? '';
@@ -179,9 +214,211 @@ class ServingPatientController extends GetxController {
   }
 
   Future<void> _loadUserType() async {
-    final prefs = await SharedPreferences.getInstance();
-    userType.value = prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
-  }
+      final prefs = await SharedPreferences.getInstance();
+      userType.value = prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
+    }
+
+    // ==========================================
+    // Admit Patient Functionality
+    // ==========================================
+
+    /// Validates admission prerequisites and opens the Admit Selection Dialog.
+    /// Workflow:
+    /// - If already admitted -> notify user via snackbar
+    /// - If medical form incomplete -> notify user via snackbar
+    /// - If clinical form incomplete -> notify user via snackbar
+    /// - Otherwise -> open AdmitSelectionDialog
+    Future<void> openAdmitDialog() async {
+          // If already admitted
+          if (isAdmitted.value == '1') {
+            AppSnackbars.showError('Error', 'Patient is already admitted');
+            return;
+          }
+          // If medical form not completed
+          if (medicalFormStatus == '0') {
+            AppSnackbars.showError('Error', 'Please complete the medical form to proceed with the patient\'s admission');
+            return;
+          }
+          // If clinical form not completed
+          if (clinicalFormStatus == '0') {
+            AppSnackbars.showError('Error', 'Please complete the clinical form to proceed with the patient\'s admission');
+            return;
+          }
+          // Show admission selection dialog
+          _showAdmitSelectionDialog();
+        }
+
+    /// Shows the Admit Selection Dialog with two options: Admit Request vs Admit.
+    void _showAdmitSelectionDialog() {
+      Get.dialog(
+        AdmitSelectionDialog(),
+        barrierDismissible: false,
+      );
+    }
+
+    /// Submits the Admit Request API call (addAdmitPatientRequest).
+      /// Maps the response and shows result snackbar.
+      Future<void> submitAdmitRequest() async {
+            try {
+              final prefs = await SharedPreferences.getInstance();
+              final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+              final response = await apiClient.post(
+                ApiEndpoints.addAdmitPatientRequest,
+                data: {
+                  'patient_id': patientId,
+                  'doctor_id': doctorId,
+                },
+                options: dio.Options(
+                  headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                  },
+                ),
+              );
+
+              if (response.statusCode == 200 && response.data != null) {
+                final msg = response.data['msg']?.toString() ?? 'Admit request submitted';
+                if (response.data['status'] == 'success') {
+                  AppSnackbars.showSuccess('Success', msg);
+                } else {
+                  AppSnackbars.showError('Error', msg);
+                }
+              } else {
+                AppSnackbars.showError('Error', 'Failed to submit admit request');
+              }
+            } catch (e) {
+              AppSnackbars.showError('Error', 'Failed to submit admit request: $e');
+            }
+          }
+
+    /// Opens the Pre-Admit Dialog to select institute and set day-care option.
+    Future<void> openPreAdmitDialog() async {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+        // Fetch institute amenities (for day-care toggle)
+        final resp = await apiClient.post(
+          ApiEndpoints.getInstituteAmenities,
+          data: {'institute_id': instituteId},
+          options: dio.Options(headers: {'Authorization': token}),
+        );
+
+        if (resp.statusCode == 200 && resp.data != null) {
+          Get.dialog(
+            PreAdmitDialog(
+              institutes: resp.data['data'] ?? [],
+              onSubmit: () async {
+                Get.back(); // close pre-admit
+                // Open IPD admit dialog
+                await openIpdAdmitDialog();
+              },
+            ),
+            barrierDismissible: false,
+          );
+        } else {
+          AppSnackbars.showError('Error', 'Failed to fetch institute data');
+        }
+      } catch (e) {
+        AppSnackbars.showError('Error', 'Failed to open pre-admit dialog: $e');
+      }
+    }
+
+    /// Opens the IPD Admit Dialog (full admit form with bed selection, etc.).
+    Future<void> openIpdAdmitDialog() async {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+        // Fetch institute amenities and bed data
+        final amenitiesResp = await apiClient.post(
+          ApiEndpoints.getInstituteAmenities,
+          data: {'institute_id': instituteId},
+          options: dio.Options(headers: {'Authorization': token}),
+        );
+
+        final bedsResp = await apiClient.post(
+          ApiEndpoints.getBeds,
+          data: {'institute_id': instituteId},
+          options: dio.Options(headers: {'Authorization': token}),
+        );
+
+        if (amenitiesResp.statusCode == 200 && bedsResp.statusCode == 200) {
+          Get.dialog(
+            IpdAdmitDialog(
+              instituteAmenities: amenitiesResp.data['data'] ?? [],
+              beds: bedsResp.data['data'] ?? [],
+              onSubmit: () async {
+                Get.back(); // close IPD admit
+                // Final admit submission
+                await submitAdmit();
+              },
+            ),
+            barrierDismissible: false,
+          );
+        } else {
+          AppSnackbars.showError('Error', 'Failed to fetch admit data');
+        }
+      } catch (e) {
+        AppSnackbars.showError('Error', 'Failed to open IPD admit dialog: $e');
+      }
+    }
+
+    /// Final submit: builds the full AdmitPatientRequestModel and calls the admit API.
+        Future<void> submitAdmit() async {
+          try {
+            final prefs = await SharedPreferences.getInstance();
+            final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+            final req = AdmitPatientRequestModel(
+              patientId: patientId,
+              appointmentId: bookingId,
+              doctorId: doctorId,
+              admitDate: admissionDate.value,
+              admitTime: admissionTime.value,
+              dischargeDate: dischargeDate.value,
+              dischargeTime: dischargeTime.value,
+              approxCost: approxCost.value,
+              approxDays: approxDays.value,
+              admissionAmount: admissionAmount.value,
+              admissionChargesStatus: admissionPaymentStatus.value,
+              admissionChargesMode: admissionPaymentMode.value,
+              admissionTransactionId: admissionTransactionId.value,
+              advanceAmount: advanceAmount.value,
+              advancePaymentStatus: advancePaymentStatus.value,
+              advancePaymentMode: advancePaymentMode.value,
+              advanceTransactionId: advanceTransactionId.value,
+              place: selectedAdmitPlace.value,
+              admitBy: selectedAdmitDoctor.value,
+              admitById: selectedAdmitDoctorId.value,
+            );
+
+            final response = await apiClient.post(
+              ApiEndpoints.admitPatient,
+              data: req.toJson(),
+              options: dio.Options(headers: {'Authorization': token}),
+            );
+
+            if (response.statusCode == 200 && response.data != null) {
+              final msg = response.data['msg']?.toString() ?? 'Admission completed';
+              if (response.data['status'] == 'success') {
+                isAdmitted.value = '1';
+                AppSnackbars.showSuccess('Success', msg);
+                // Rebuild screen - button will now show error red
+                // controller will need to notify listeners
+              } else {
+                AppSnackbars.showError('Error', msg);
+              }
+            } else {
+              AppSnackbars.showError('Error', 'Failed to submit admission');
+            }
+          } catch (e) {
+            AppSnackbars.showError('Error', 'Failed to submit admission: $e');
+          }
+        }
+
+    // ... rest of existing methods continue after this point
 
   Future<void> fetchPatientDetails() async {
     if (patientId.isEmpty || bookingId.isEmpty) return;
@@ -844,27 +1081,21 @@ class ServingPatientController extends GetxController {
 
       if (response.statusCode == 200 && response.data != null) {
         if (response.data['status'] == 'success') {
-          Get.rawSnackbar(
-            message:
-                response.data['msg']?.toString() ??
-                'Appointment status updated.',
-            backgroundColor: AppColors.success,
+          AppSnackbars.showSuccess(
+            'Success',
+            response.data['msg']?.toString() ?? 'Appointment status updated.',
           );
           Get.offAllNamed('/patient-list');
         } else {
-          Get.rawSnackbar(
-            message:
-                response.data['msg']?.toString() ??
+          AppSnackbars.showError(
+            'Error',
+            response.data['msg']?.toString() ??
                 'Failed to update appointment status.',
-            backgroundColor: AppColors.error,
           );
         }
       }
     } catch (e) {
-      Get.rawSnackbar(
-        message: 'Error updating status: $e',
-        backgroundColor: AppColors.error,
-      );
+      AppSnackbars.showError('Error', 'Error updating status: $e');
     } finally {
       isLoadingDetails.value = false;
     }
@@ -875,19 +1106,16 @@ class ServingPatientController extends GetxController {
   // ==========================================
 
   /// Show the "Reason for Hold" dialog.
-  /// Port of Android's `holdDialog()` (HoldReasonDialog fragment) for normal
-  /// appointments, and `showQuickAppointmentHoldDialog()` for QuickAppointments.
+  /// Handles both standard appointments and QuickAppointments.
   void showHoldReasonDialog() {
-    // QuickAppointment uses the simpler Android dialog — spinner + other text,
-    // no keep-on-same-status, no template button.
+    // QuickAppointment uses a simplified hold dialog structure
     if (isFrom == 'QuickAppointment') {
       _showQuickAppointmentHoldDialog();
       return;
     }
 
-    // Shared controller for "Other" reason text, wired between the
-    // HoldReasonDialog and the Template list dialog — mirrors Android's
-    // EditText that's passed by reference to onGetReasonTemplateClick().
+    // Shared controller for "Other" reason text, passed between the hold reason dialog
+    // and the template list dialog.
     _otherReasonController = TextEditingController();
     _otherReasonControllerInitialized = true;
     AppDialog.show(
@@ -901,9 +1129,7 @@ class ServingPatientController extends GetxController {
     );
   }
 
-  /// Port of Android's `showQuickAppointmentHoldDialog()`:
-  /// AlertDialog with a spinner + optional "Other" EditText, no templates,
-  /// calls holdQuickAppointment() on OK.
+  /// Displays the QuickAppointment hold selection dialog.
   void _showQuickAppointmentHoldDialog() {
     String selectedReason = holdReasons.first;
     final otherReasonController = TextEditingController();
@@ -1019,7 +1245,7 @@ class ServingPatientController extends GetxController {
   bool _otherReasonControllerInitialized = false;
 
   /// Show the Reason templates list dialog (fetches via getTemplates API,
-  /// type = "Reason"). Port of Android's `getReasonTemplate()`.
+  /// type = "Reason").
   Future<void> _showReasonTemplateDialog() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -1047,7 +1273,7 @@ class ServingPatientController extends GetxController {
     }
   }
 
-  /// Renders the template list dialog. Port of Android's `reasonDialog()`.
+  /// Renders the template list dialog.
   void _showReasonTemplatesListDialog(List<dynamic> templates) {
     AppDialog.show(
       title: 'templates'.tr,
@@ -1059,7 +1285,6 @@ class ServingPatientController extends GetxController {
   }
 
   /// Perform the actual hold API call, depending on appointment type.
-  /// Port of Android's `onChangeAppointmentStatusClick()` / `holdQuickAppointment()`.
   Future<void> _performHold(String reason, String ptStatus) async {
     if (isFrom == 'QuickAppointment') {
       await _holdQuickAppointment(reason);
@@ -1109,7 +1334,6 @@ class ServingPatientController extends GetxController {
   }
 
   /// Update appointment status to hold: POST v2/User/update_appointment_status.
-  /// Port of Android's `changeAppointmentStatus()` (UserService).
   Future<void> _changeAppointmentStatus(String reason, String ptStatus) async {
     isLoadingDetails.value = true;
     try {
@@ -1135,18 +1359,14 @@ class ServingPatientController extends GetxController {
         if (response.data['status'] == 'success') {
           AppSnackbars.showSuccess('Success', msg);
 
-          // Port of Android's changeAppointmentStatus() success branch:
-          // status != "2" && isRefer == "1" → referral note dialog,
-          // else navigate back to patient list.
+          // Check if referral note dialog is required vs navigating back
           if (!kIsWeb && ptStatus != '2' && isRefer == '1') {
             _dialogReferralNote();
           } else {
             Get.offAllNamed('/patient-list');
           }
         } else {
-          // Port of Android's changeAppointmentStatus() failure branch:
-          // msg == "Doctor Home Visit" && status != "2" && doctorHomeServiceId != "0"
-          // → home visit note dialog; otherwise show error (eventDialog).
+          // Check if home visit note dialog is required for doctor home visits
           if (msg == 'Doctor Home Visit' &&
               !kIsWeb &&
               ptStatus != '2' &&
@@ -1165,8 +1385,7 @@ class ServingPatientController extends GetxController {
     }
   }
 
-  /// Port of Android's `dialogReferralNote()` (ReferralNoteDialog flow).
-  /// Shows a referral-note input dialog that calls add_referral_notes API.
+  /// Displays a dialog for adding referral notes.
   void _dialogReferralNote() {
     final noteController = TextEditingController();
     AppDialog.show(
@@ -1230,8 +1449,7 @@ class ServingPatientController extends GetxController {
     );
   }
 
-  /// Port of Android's `dialogHomeVisitNote()` (HomeVisitNoteDialog flow).
-  /// Shows a home-visit note input dialog that calls add_home_visit_notes API.
+  /// Displays a dialog for adding home visit notes.
   void _dialogHomeVisitNote() {
     final noteController = TextEditingController();
     AppDialog.show(
@@ -1295,7 +1513,7 @@ class ServingPatientController extends GetxController {
     );
   }
 
-  /// Port of Android's `addReferralNotes()`: POST v2/Doctor/add_referral_notes.
+  /// Submits referral notes via POST v2/Doctor/add_referral_notes.
   Future<void> _addReferralNotes(String referralNote) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -1327,7 +1545,7 @@ class ServingPatientController extends GetxController {
     }
   }
 
-  /// Port of Android's `addDoctorVisitNotes()`: POST v2/Doctor/add_home_visit_notes.
+  /// Submits doctor visit notes via POST v2/Doctor/add_home_visit_notes.
   Future<void> _addDoctorVisitNotes(String homeVisitNote) async {
     try {
       final prefs = await SharedPreferences.getInstance();

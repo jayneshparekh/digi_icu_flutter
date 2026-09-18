@@ -145,7 +145,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
     final isAvailable = doctor.availability == 'Available';
     final docName = '${doctor.firstName} ${doctor.lastName}';
 
-    // Button text determination matching Android Adapter logic
+    // Determine action button title based on doctor status and clinical form state
     String btnText = 'take_appointment'.tr;
     if (doctor.bookingStatus == '2') {
       btnText = 'i_am_ready'.tr;

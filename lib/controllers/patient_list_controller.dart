@@ -1,5 +1,5 @@
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
-import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -175,10 +175,7 @@ class PatientListController extends GetxController {
       await launchUrl(url);
     } catch (e) {
       debugPrint('Dialer launch error: $e');
-      Get.rawSnackbar(
-        message: 'Could not open dialer: $e',
-        duration: const Duration(seconds: 4),
-      );
+      AppSnackbars.showError('Error', 'Could not open dialer: $e');
     }
   }
 
@@ -201,34 +198,24 @@ class PatientListController extends GetxController {
         final resStatus = response.data['status']?.toString() ?? '';
         final resMsg = response.data['msg']?.toString() ?? '';
         if (resStatus == 'success') {
-          Get.rawSnackbar(
-            message: resMsg.isNotEmpty ? resMsg : 'Patient confirmed successfully.',
-            backgroundColor: AppColors.success,
-            duration: const Duration(seconds: 2),
+          AppSnackbars.showSuccess(
+            'Success',
+            resMsg.isNotEmpty ? resMsg : 'Patient confirmed successfully.',
           );
           return true;
         } else {
-          Get.rawSnackbar(
-            message: resMsg.isNotEmpty ? resMsg : 'Failed to confirm patient.',
-            backgroundColor: AppColors.error,
-            duration: const Duration(seconds: 3),
+          AppSnackbars.showError(
+            'Error',
+            resMsg.isNotEmpty ? resMsg : 'Failed to confirm patient.',
           );
           return false;
         }
       } else {
-        Get.rawSnackbar(
-          message: 'Server error: ${response.statusCode}',
-          backgroundColor: AppColors.error,
-          duration: const Duration(seconds: 3),
-        );
+        AppSnackbars.showError('Error', 'Server error: ${response.statusCode}');
         return false;
       }
     } catch (e) {
-      Get.rawSnackbar(
-        message: 'Connection error: $e',
-        backgroundColor: AppColors.error,
-        duration: const Duration(seconds: 3),
-      );
+      AppSnackbars.showError('Error', 'Connection error: $e');
       return false;
     }
   }

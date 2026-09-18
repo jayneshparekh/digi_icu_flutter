@@ -1,5 +1,6 @@
-﻿import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -130,20 +131,7 @@ class LoginController extends GetxController {
   }
 
   void _showErrorSnackbar(String message) {
-    Get.rawSnackbar(
-      messageText: Text(
-        message,
-        style: TextStyle(
-          color: AppColors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      backgroundColor: AppColors.error,
-      snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
-      borderRadius: 8,
-      duration: const Duration(seconds: 4),
-    );
+    AppSnackbars.showError('Error', message);
   }
 }
 

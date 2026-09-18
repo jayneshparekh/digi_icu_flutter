@@ -54,10 +54,8 @@ class _PatientRatingDialogState extends State<PatientRatingDialog> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
-          // Radio Buttons 1 to 5 inside RadioGroup wrapper (to satisfy AGENTS.md rule 9)
+          // Radio Buttons 1 to 5 rating selection
           Obx(() {
-            // Rule 9: Do NOT use groupValue and onChanged directly on Radio List Tiles,
-            // wrap in RadioGroup ancestor.
             return RadioGroup<String>(
               groupValue: selectedRating.value,
               onChanged: (val) {
