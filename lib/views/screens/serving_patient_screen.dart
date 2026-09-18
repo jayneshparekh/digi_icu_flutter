@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-
 class ServingPatientScreen extends GetView<ServingPatientController> {
   const ServingPatientScreen({super.key});
 
@@ -37,15 +36,31 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                       qrCodeUrl,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) =>
-                          const Center(child: Icon(Icons.qr_code, size: 100, color: AppColors.medicalGray)),
+                          const Center(
+                            child: Icon(
+                              Icons.qr_code,
+                              size: 100,
+                              color: AppColors.medicalGray,
+                            ),
+                          ),
                     )
-                  : const Center(child: Icon(Icons.qr_code, size: 100, color: AppColors.medicalGray)),
+                  : const Center(
+                      child: Icon(
+                        Icons.qr_code,
+                        size: 100,
+                        color: AppColors.medicalGray,
+                      ),
+                    ),
             ),
           ),
           const SizedBox(height: 16),
           Text(
             '${'mhc_id_label'.tr}${controller.mhcId}',
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.navy),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: AppColors.navy,
+            ),
           ),
         ],
       ),
@@ -74,7 +89,10 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
             padding: const EdgeInsets.all(8.0),
             child: SvgPicture.asset(
               'assets/icons/svg/$svgName.svg',
-              colorFilter: const ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                AppColors.white,
+                BlendMode.srcIn,
+              ),
               fit: BoxFit.contain,
             ),
           ),
@@ -103,7 +121,10 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                 padding: const EdgeInsets.all(12.0),
                 child: SvgPicture.asset(
                   'assets/icons/svg/$svgName.svg',
-                  colorFilter: const ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+                  colorFilter: const ColorFilter.mode(
+                    AppColors.white,
+                    BlendMode.srcIn,
+                  ),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -120,8 +141,12 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
       backgroundColor: AppColors.lightGray,
       body: SafeArea(
         child: Obx(() {
-          final isPatientView = controller.userType.value == 'Patient' || controller.fromPatient;
-          final hideHoldAndFinish = controller.selectTab == 'Served' || controller.status == 'Served' || controller.isFrom == 'Direct Patient Call';
+          final isPatientView =
+              controller.userType.value == 'Patient' || controller.fromPatient;
+          final hideHoldAndFinish =
+              controller.selectTab == 'Served' ||
+              controller.status == 'Served' ||
+              controller.isFrom == 'Direct Patient Call';
 
           return Stack(
             children: [
@@ -141,17 +166,24 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                                 onTap: () {
                                   Get.dialog(
                                     PatientRatingDialog(
-                                      initialRating: controller.patientRating.value,
-                                      onSubmit: (ratingVal) => controller.addRating(ratingVal),
+                                      initialRating:
+                                          controller.patientRating.value,
+                                      onSubmit: (ratingVal) =>
+                                          controller.addRating(ratingVal),
                                     ),
                                   );
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: AppColors.medicalGray),
+                                    border: Border.all(
+                                      color: AppColors.medicalGray,
+                                    ),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0,
+                                    vertical: 8.0,
+                                  ),
                                   child: Text(
                                     '${controller.fullName} / ${controller.age} / ${controller.gender} / ${controller.mhcId} / ★ ${controller.patientRating.value}'
                                         .toUpperCase(),
@@ -168,12 +200,17 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                             const SizedBox(width: 8),
                             // QR Code Thumbnail
                             GestureDetector(
-                              onTap: () => _showEnlargedQRCode(context, controller.qrCode),
+                              onTap: () => _showEnlargedQRCode(
+                                context,
+                                controller.qrCode,
+                              ),
                               child: Container(
                                 width: 38,
                                 height: 38,
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: AppColors.medicalGray),
+                                  border: Border.all(
+                                    color: AppColors.medicalGray,
+                                  ),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: ClipRRect(
@@ -182,10 +219,19 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                                       ? Image.network(
                                           controller.qrCode,
                                           fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) =>
-                                              Icon(Icons.qr_code, size: 24, color: AppColors.navy),
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  Icon(
+                                                    Icons.qr_code,
+                                                    size: 24,
+                                                    color: AppColors.navy,
+                                                  ),
                                         )
-                                      : Icon(Icons.qr_code, size: 24, color: AppColors.navy),
+                                      : Icon(
+                                          Icons.qr_code,
+                                          size: 24,
+                                          color: AppColors.navy,
+                                        ),
                                 ),
                               ),
                             ),
@@ -198,25 +244,34 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                             children: [
                               _buildTopActionButton(
                                 svgName: 'ic_refer',
-                                onTap: () => Get.rawSnackbar(message: 'refer_clicked'.tr),
+                                onTap: () => Get.rawSnackbar(
+                                  message: 'refer_clicked'.tr,
+                                ),
                               ),
                               _buildTopActionButton(
                                 svgName: 'ic_leader_call',
-                                onTap: () => Get.rawSnackbar(message: 'leader_call_clicked'.tr),
+                                onTap: () => Get.rawSnackbar(
+                                  message: 'leader_call_clicked'.tr,
+                                ),
                                 bg: AppColors.error,
                               ),
                               _buildTopActionButton(
                                 svgName: 'ic_baseline_phone_24',
-                                onTap: () => Get.rawSnackbar(message: 'call_clicked'.tr),
+                                onTap: () =>
+                                    Get.rawSnackbar(message: 'call_clicked'.tr),
                               ),
                               _buildTopActionButton(
                                 svgName: 'ic_baseline_admit_24',
-                                onTap: () => Get.rawSnackbar(message: 'admit_clicked'.tr),
-                                bg: controller.isAdmitted == '1' ? AppColors.error : AppColors.teal,
+                                onTap: () => Get.rawSnackbar(
+                                  message: 'admit_clicked'.tr,
+                                ),
+                                bg: controller.isAdmitted == '1'
+                                    ? AppColors.error
+                                    : AppColors.teal,
                               ),
                               _buildTopActionButton(
                                 svgName: 'ic_hold',
-                                onTap: () => Get.rawSnackbar(message: 'hold_clicked'.tr),
+                                onTap: () => controller.showHoldReasonDialog(),
                                 visible: !hideHoldAndFinish,
                               ),
                             ],
@@ -234,19 +289,25 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                             _buildTopActionButton(
                               svgName: 'ic_home',
                               onTap: () => Get.back(),
-                              visible: !isPatientView && controller.status == 'Served',
+                              visible:
+                                  !isPatientView &&
+                                  controller.status == 'Served',
                             ),
                             _buildTopActionButton(
                               svgName: 'ic_start_video_call',
-                              onTap: () => Get.rawSnackbar(message: 'start_video_call_clicked'.tr),
+                              onTap: () => Get.rawSnackbar(
+                                message: 'start_video_call_clicked'.tr,
+                              ),
                             ),
                             _buildTopActionButton(
                               svgName: 'ic_incoming_call',
-                              onTap: () => Get.rawSnackbar(message: 'join_call_clicked'.tr),
+                              onTap: () => Get.rawSnackbar(
+                                message: 'join_call_clicked'.tr,
+                              ),
                             ),
                             _buildTopActionButton(
                               svgName: 'ic_finish',
-                              onTap: () => Get.rawSnackbar(message: 'finish_clicked'.tr),
+                              onTap: () => controller.onFinishButtonPressed(),
                               visible: !isPatientView && !hideHoldAndFinish,
                             ),
                           ],
@@ -280,12 +341,36 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                   if (!isPatientView)
                     Row(
                       children: [
-                        _buildBottomTabItem(tabName: 'Dashboard', svgName: 'ic_dashboard', tooltip: 'Dashboard'),
-                        _buildBottomTabItem(tabName: 'Graph', svgName: 'ic_graph', tooltip: 'Graph'),
-                        _buildBottomTabItem(tabName: 'Prescription', svgName: 'ic_prescription', tooltip: 'Prescription'),
-                        _buildBottomTabItem(tabName: 'Form', svgName: 'ic_my_forms', tooltip: 'Form'),
-                        _buildBottomTabItem(tabName: 'DI', svgName: 'ic_doctor_interpretation', tooltip: 'DI'),
-                        _buildBottomTabItem(tabName: 'Reports', svgName: 'ic_reports', tooltip: 'Reports'),
+                        _buildBottomTabItem(
+                          tabName: 'Dashboard',
+                          svgName: 'ic_dashboard',
+                          tooltip: 'Dashboard',
+                        ),
+                        _buildBottomTabItem(
+                          tabName: 'Graph',
+                          svgName: 'ic_graph',
+                          tooltip: 'Graph',
+                        ),
+                        _buildBottomTabItem(
+                          tabName: 'Prescription',
+                          svgName: 'ic_prescription',
+                          tooltip: 'Prescription',
+                        ),
+                        _buildBottomTabItem(
+                          tabName: 'Form',
+                          svgName: 'ic_my_forms',
+                          tooltip: 'Form',
+                        ),
+                        _buildBottomTabItem(
+                          tabName: 'DI',
+                          svgName: 'ic_doctor_interpretation',
+                          tooltip: 'DI',
+                        ),
+                        _buildBottomTabItem(
+                          tabName: 'Reports',
+                          svgName: 'ic_reports',
+                          tooltip: 'Reports',
+                        ),
                       ],
                     ),
                 ],

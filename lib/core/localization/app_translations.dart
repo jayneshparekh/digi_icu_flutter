@@ -458,6 +458,21 @@ class AppTranslations extends Translations {
           'di_placeholder': 'Doctor Interpretation Placeholder',
           'reports_placeholder': 'Reports Folder Placeholder',
 
+          // Hold Reason Dialog
+          'reason_for_hold': 'Reason for Hold',
+          'hold_reason': 'Hold Reason',
+          'enter_reason': 'Enter reason...',
+          'keep_on_same_status': 'Keep on same status',
+          'templates': 'Templates',
+          'validation_error': 'Validation Error',
+          'please_select_reason': 'Please select or enter a reason',
+          'referral_note': 'Referral Note',
+          'home_visit_note': 'Home Visit Note',
+          'enter_referral_note': 'Enter referral note...',
+          'enter_home_visit_note': 'Enter home visit note...',
+          'please_enter_note': 'Please enter a note',
+          'hold_appointment': 'Hold Appointment',
+
           // Choose Form Option Dialog
           'choose_consultation_type': 'Choose Consultation Type',
           'no_forms_available': 'No forms available',

@@ -47,4 +47,4 @@ app.*.map.json
 # Agent customization rules
 .agents/
 .planning/
-
+PROJECT_ANALYSIS.md

@@ -11,10 +11,18 @@ import 'package:digi_icu_flutter/models/request/doctor/add_event_req.dart';
 import 'package:digi_icu_flutter/models/request/doctor/add_ecg_req.dart';
 import 'package:digi_icu_flutter/models/request/doctor/add_bp_req.dart';
 import 'package:digi_icu_flutter/models/request/doctor/add_tmt_req.dart';
+import 'package:digi_icu_flutter/models/request/doctor/add_referral_notes_req.dart';
+import 'package:digi_icu_flutter/models/request/doctor/add_doctor_visit_notes_req.dart';
+import 'package:digi_icu_flutter/models/request/doctor/hold_quick_appointment_req.dart';
+import 'package:digi_icu_flutter/models/request/user/change_appointment_status_req.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
 import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
+import 'package:digi_icu_flutter/views/widgets/hold_reason_dialog.dart';
+import 'package:digi_icu_flutter/views/widgets/reason_template_dialog.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:digi_icu_flutter/views/widgets/patient_rating_dialog.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
@@ -83,7 +91,8 @@ class ServingPatientController extends GetxController {
   final TextEditingController selfNoteController = TextEditingController();
 
   // DI - Event State
-  final RxString eventType = 'None'.obs; // None, Hospitalisation, Non-Hospitalisation, Death
+  final RxString eventType =
+      'None'.obs; // None, Hospitalisation, Non-Hospitalisation, Death
   final RxString deathType = 'Sudden death noncardiac'.obs;
   final RxString medicinesEffect = 'Good'.obs;
   final RxString askedInvestigations = 'NA'.obs;
@@ -103,7 +112,8 @@ class ServingPatientController extends GetxController {
   final RxBool cbICH = false.obs;
   final RxBool cbAkI = false.obs;
   final RxBool cbHospitalizationOther = false.obs;
-  final TextEditingController hospitalizationOtherController = TextEditingController();
+  final TextEditingController hospitalizationOtherController =
+      TextEditingController();
 
   // Non-Hospitalisation Checkboxes
   final RxBool cbPostural = false.obs;
@@ -118,12 +128,17 @@ class ServingPatientController extends GetxController {
   final RxString stSegmentLevel = 'Select…'.obs;
   final TextEditingController sv2Rv5Controller = TextEditingController();
   final RxString ecgImpression = 'Normal'.obs;
-  final TextEditingController otherInterpretationController = TextEditingController();
+  final TextEditingController otherInterpretationController =
+      TextEditingController();
   final RxString ecgReportImageUrl = ''.obs;
 
   // DI - Target BP State
-  final TextEditingController systolicController = TextEditingController(text: '120');
-  final TextEditingController diastolicController = TextEditingController(text: '80');
+  final TextEditingController systolicController = TextEditingController(
+    text: '120',
+  );
+  final TextEditingController diastolicController = TextEditingController(
+    text: '80',
+  );
 
   // DI - TMT State
   final RxString tmtResult = 'Positive'.obs;
@@ -132,7 +147,6 @@ class ServingPatientController extends GetxController {
 
   @override
   void onInit() {
-
     super.onInit();
     final args = Get.arguments as Map<String, dynamic>? ?? {};
     patientId = args['patientId']?.toString() ?? '';
@@ -178,10 +192,7 @@ class ServingPatientController extends GetxController {
 
       final response = await apiClient.post(
         ApiEndpoints.patientDetails,
-        data: {
-          'patient_id': patientId,
-          'appointment_id': bookingId,
-        },
+        data: {'patient_id': patientId, 'appointment_id': bookingId},
         options: dio.Options(headers: {'Authorization': token}),
       );
 
@@ -200,7 +211,10 @@ class ServingPatientController extends GetxController {
 
   void changeTab(String tab) {
     currentTab.value = tab;
-    if (tab == 'Graph' && bpGraphList.isEmpty && sugarGraphList.isEmpty && otherGraphList.isEmpty) {
+    if (tab == 'Graph' &&
+        bpGraphList.isEmpty &&
+        sugarGraphList.isEmpty &&
+        otherGraphList.isEmpty) {
       fetchGraphData();
     } else if (tab == 'Prescription' && prescriptionList.isEmpty) {
       fetchDoctorPrescription(prescriptionType.value);
@@ -219,7 +233,8 @@ class ServingPatientController extends GetxController {
   final RxMap<String, dynamic> reportCountsData = <String, dynamic>{}.obs;
 
   // Folder Detail Screen State
-  final RxString selectedFolderReportName = ''.obs; // Empty means showing Folders Grid
+  final RxString selectedFolderReportName =
+      ''.obs; // Empty means showing Folders Grid
   final RxBool isLoadingFolderReports = false.obs;
   final RxList<dynamic> folderReportsList = <dynamic>[].obs;
 
@@ -306,9 +321,15 @@ class ServingPatientController extends GetxController {
         'uploaded_by_id': doctorId,
         'other_name': remarks,
         if (!isPdf)
-          'report[]': await dio.MultipartFile.fromFile(filePath, filename: fileName)
+          'report[]': await dio.MultipartFile.fromFile(
+            filePath,
+            filename: fileName,
+          )
         else
-          'report_pdf': await dio.MultipartFile.fromFile(filePath, filename: fileName),
+          'report_pdf': await dio.MultipartFile.fromFile(
+            filePath,
+            filename: fileName,
+          ),
       });
 
       final response = await apiClient.post(
@@ -318,7 +339,8 @@ class ServingPatientController extends GetxController {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        final msg = response.data['msg']?.toString() ?? 'Report uploaded successfully';
+        final msg =
+            response.data['msg']?.toString() ?? 'Report uploaded successfully';
         if (response.data['status'] == 'success') {
           AppSnackbars.showSuccess('Success', msg);
           fetchReportCounts();
@@ -454,7 +476,9 @@ class ServingPatientController extends GetxController {
           decoded = response.data;
         }
 
-        final msg = decoded['msg']?.toString() ?? 'Cardiologist report request submitted successfully';
+        final msg =
+            decoded['msg']?.toString() ??
+            'Cardiologist report request submitted successfully';
         if (decoded['status'] == 'success') {
           AppSnackbars.showSuccess('Success', msg);
           if (selectedFolderReportName.value.isNotEmpty) {
@@ -481,17 +505,16 @@ class ServingPatientController extends GetxController {
 
       final response = await apiClient.post(
         ApiEndpoints.prescriptionList,
-        data: {
-          'patient_id': patientId,
-          'type': type,
-        },
+        data: {'patient_id': patientId, 'type': type},
         options: dio.Options(headers: {'Authorization': token}),
       );
 
       if (response.statusCode == 200 && response.data != null) {
         if (response.data['status'] == 'success') {
-          prescriptionList.value = response.data['data'] as List<dynamic>? ?? [];
-          lastAppointmentId.value = response.data['last_appointment_id']?.toString() ?? '';
+          prescriptionList.value =
+              response.data['data'] as List<dynamic>? ?? [];
+          lastAppointmentId.value =
+              response.data['last_appointment_id']?.toString() ?? '';
         } else {
           prescriptionList.clear();
         }
@@ -512,10 +535,7 @@ class ServingPatientController extends GetxController {
 
       final response = await apiClient.post(
         ApiEndpoints.getMedicines,
-        data: {
-          'appointment_id': id,
-          'type': '',
-        },
+        data: {'appointment_id': id, 'type': ''},
         options: dio.Options(headers: {'Authorization': token}),
       );
 
@@ -532,7 +552,10 @@ class ServingPatientController extends GetxController {
     return null;
   }
 
-  Future<void> sharePrescriptionPdf(String createdDate, Map<String, dynamic> data) async {
+  Future<void> sharePrescriptionPdf(
+    String createdDate,
+    Map<String, dynamic> data,
+  ) async {
     try {
       isLoadingDetails.value = true;
       final prefs = await SharedPreferences.getInstance();
@@ -540,12 +563,16 @@ class ServingPatientController extends GetxController {
 
       // Format summary text
       final medicinesList = data['data'] as List<dynamic>? ?? [];
-      String shareText = 'Prescription Date: $createdDate\nPatient: $fullName ($mhcId)\n';
+      String shareText =
+          'Prescription Date: $createdDate\nPatient: $fullName ($mhcId)\n';
       if (medicinesList.isNotEmpty) {
         shareText += '\nMedicines:';
         for (final med in medicinesList) {
           final subMeds = med['medicines'] as List<dynamic>? ?? [];
-          final medNames = subMeds.map((m) => m['medicine_name']?.toString() ?? '').where((n) => n.isNotEmpty).join(', ');
+          final medNames = subMeds
+              .map((m) => m['medicine_name']?.toString() ?? '')
+              .where((n) => n.isNotEmpty)
+              .join(', ');
           final freq = med['frequency']?.toString() ?? '';
           final days = med['days']?.toString() ?? '';
           shareText += '\n- $medNames (Freq: $freq, Days: $days)';
@@ -561,7 +588,9 @@ class ServingPatientController extends GetxController {
           options: dio.Options(headers: {'Authorization': token}),
         );
         if (diagRes.statusCode == 200 && diagRes.data != null) {
-          final diagObj = diagRes.data is String ? jsonDecode(diagRes.data) : diagRes.data;
+          final diagObj = diagRes.data is String
+              ? jsonDecode(diagRes.data)
+              : diagRes.data;
           if (diagObj['status'] == 'success' && diagObj['data'] != null) {
             diagnosisText = diagObj['data']['diagnosis']?.toString() ?? '';
           }
@@ -603,10 +632,18 @@ class ServingPatientController extends GetxController {
             AppSnackbars.showError('Prescription', 'PDF link not found.');
           }
         } else {
-          AppSnackbars.showError('Prescription', resMap['msg']?.toString() ?? resMap['message']?.toString() ?? 'Failed to share prescription.');
+          AppSnackbars.showError(
+            'Prescription',
+            resMap['msg']?.toString() ??
+                resMap['message']?.toString() ??
+                'Failed to share prescription.',
+          );
         }
       } else {
-        AppSnackbars.showError('Prescription', 'Failed to generate prescription PDF.');
+        AppSnackbars.showError(
+          'Prescription',
+          'Failed to generate prescription PDF.',
+        );
       }
     } catch (e) {
       debugPrint('Error sharing prescription PDF: $e');
@@ -620,7 +657,8 @@ class ServingPatientController extends GetxController {
     try {
       final dioClient = dio.Dio();
       final tempDir = await getTemporaryDirectory();
-      final fileName = 'prescription_${bookingId.isNotEmpty ? bookingId : 'file'}.pdf';
+      final fileName =
+          'prescription_${bookingId.isNotEmpty ? bookingId : 'file'}.pdf';
       final filePath = '${tempDir.path}/$fileName';
 
       await dioClient.download(pdfUrl, filePath);
@@ -644,17 +682,11 @@ class ServingPatientController extends GetxController {
     }
   }
 
-
-
   Future<void> fetchGraphData() async {
     if (patientId.isEmpty) return;
     isLoadingGraph.value = true;
     try {
-      await Future.wait([
-        fetchBPGraph(),
-        fetchSugarGraph(),
-        fetchOtherGraph(),
-      ]);
+      await Future.wait([fetchBPGraph(), fetchSugarGraph(), fetchOtherGraph()]);
     } finally {
       isLoadingGraph.value = false;
     }
@@ -735,30 +767,30 @@ class ServingPatientController extends GetxController {
 
       final response = await apiClient.post(
         ApiEndpoints.addRating,
-        data: {
-          'patient_id': patientId,
-          'rating': ratingValue,
-        },
+        data: {'patient_id': patientId, 'rating': ratingValue},
         options: dio.Options(headers: {'Authorization': token}),
       );
 
       if (response.statusCode == 200 && response.data != null) {
         if (response.data['status'] == 'success') {
           patientRating.value = ratingValue;
-          Get.rawSnackbar(
-            message: response.data['msg']?.toString() ?? 'Rating added successfully.',
-            backgroundColor: AppColors.success,
+          AppSnackbars.showSuccess(
+            'Success',
+            response.data['msg']?.toString() ?? 'Rating added successfully.',
           );
           _showFinishAppointmentDialog();
         } else {
-          Get.rawSnackbar(
-            message: response.data['msg']?.toString() ?? 'Failed to add rating.',
-            backgroundColor: AppColors.error,
+          AppSnackbars.showError(
+            'Error',
+            response.data['msg']?.toString() ?? 'Failed to add rating.',
           );
         }
       }
     } catch (e) {
-      Get.rawSnackbar(message: 'Error adding rating: $e', backgroundColor: AppColors.error);
+      AppSnackbars.showError(
+        'Error',
+        'Error adding rating: $e',
+      );
     } finally {
       isLoadingDetails.value = false;
     }
@@ -772,7 +804,10 @@ class ServingPatientController extends GetxController {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.medicalGray)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: AppColors.medicalGray),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -787,7 +822,10 @@ class ServingPatientController extends GetxController {
     );
   }
 
-  Future<void> changeAppointmentStatus(String reason, String statusValue) async {
+  Future<void> changeAppointmentStatus(
+    String reason,
+    String statusValue,
+  ) async {
     isLoadingDetails.value = true;
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -807,21 +845,519 @@ class ServingPatientController extends GetxController {
       if (response.statusCode == 200 && response.data != null) {
         if (response.data['status'] == 'success') {
           Get.rawSnackbar(
-            message: response.data['msg']?.toString() ?? 'Appointment status updated.',
+            message:
+                response.data['msg']?.toString() ??
+                'Appointment status updated.',
             backgroundColor: AppColors.success,
           );
           Get.offAllNamed('/patient-list');
         } else {
           Get.rawSnackbar(
-            message: response.data['msg']?.toString() ?? 'Failed to update appointment status.',
+            message:
+                response.data['msg']?.toString() ??
+                'Failed to update appointment status.',
             backgroundColor: AppColors.error,
           );
         }
       }
     } catch (e) {
-      Get.rawSnackbar(message: 'Error updating status: $e', backgroundColor: AppColors.error);
+      Get.rawSnackbar(
+        message: 'Error updating status: $e',
+        backgroundColor: AppColors.error,
+      );
     } finally {
       isLoadingDetails.value = false;
+    }
+  }
+
+  // ==========================================
+  // Hold Appointment Functionality
+  // ==========================================
+
+  /// Show the "Reason for Hold" dialog.
+  /// Port of Android's `holdDialog()` (HoldReasonDialog fragment) for normal
+  /// appointments, and `showQuickAppointmentHoldDialog()` for QuickAppointments.
+  void showHoldReasonDialog() {
+    // QuickAppointment uses the simpler Android dialog — spinner + other text,
+    // no keep-on-same-status, no template button.
+    if (isFrom == 'QuickAppointment') {
+      _showQuickAppointmentHoldDialog();
+      return;
+    }
+
+    // Shared controller for "Other" reason text, wired between the
+    // HoldReasonDialog and the Template list dialog — mirrors Android's
+    // EditText that's passed by reference to onGetReasonTemplateClick().
+    _otherReasonController = TextEditingController();
+    _otherReasonControllerInitialized = true;
+    AppDialog.show(
+      title: 'reason_for_hold'.tr,
+      body: HoldReasonDialog(
+        status: status,
+        onSubmit: (reason, ptStatus) => _performHold(reason, ptStatus),
+        onGetReasonTemplateClick: () => _showReasonTemplateDialog(),
+        otherReasonController: _otherReasonController,
+      ),
+    );
+  }
+
+  /// Port of Android's `showQuickAppointmentHoldDialog()`:
+  /// AlertDialog with a spinner + optional "Other" EditText, no templates,
+  /// calls holdQuickAppointment() on OK.
+  void _showQuickAppointmentHoldDialog() {
+    String selectedReason = holdReasons.first;
+    final otherReasonController = TextEditingController();
+    bool isOtherSelected = false;
+
+    AppDialog.show(
+      title: 'hold_appointment'.tr,
+      body: StatefulBuilder(
+        builder: (context, setDialogState) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DropdownButtonFormField<String>(
+                initialValue: selectedReason,
+                isExpanded: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                ),
+                items: holdReasons
+                    .map(
+                      (reason) => DropdownMenuItem<String>(
+                        value: reason,
+                        child: Text(reason),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (val) {
+                  setDialogState(() {
+                    selectedReason = val ?? holdReasons.first;
+                    isOtherSelected = selectedReason == 'Other';
+                  });
+                },
+              ),
+              if (isOtherSelected) ...[
+                const SizedBox(height: 8),
+                TextField(
+                  controller: otherReasonController,
+                  decoration: InputDecoration(
+                    hintText: 'enter_reason'.tr,
+                    border: const OutlineInputBorder(),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      otherReasonController.dispose();
+                      Get.back();
+                    },
+                    child: Text(
+                      'cancel'.tr,
+                      style: const TextStyle(
+                        color: AppColors.error,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      final reason = isOtherSelected
+                          ? (otherReasonController.text.trim().isEmpty
+                                ? 'Other'
+                                : otherReasonController.text.trim())
+                          : selectedReason;
+                      otherReasonController.dispose();
+                      Get.back();
+                      _holdQuickAppointment(reason);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.teal,
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                    ),
+                    child: Text(
+                      'submit'.tr,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  /// Shared TextEditingController for the hold-reason "Other" field.
+  /// Created fresh each time the dialog opens (cleared on close).
+  late TextEditingController _otherReasonController;
+
+  @override
+  void onClose() {
+    if (_otherReasonControllerInitialized) {
+      _otherReasonController.dispose();
+    }
+    super.onClose();
+  }
+
+  /// Tracks whether the shared "Other" reason controller was created.
+  bool _otherReasonControllerInitialized = false;
+
+  /// Show the Reason templates list dialog (fetches via getTemplates API,
+  /// type = "Reason"). Port of Android's `getReasonTemplate()`.
+  Future<void> _showReasonTemplateDialog() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final response = await apiClient.post(
+        ApiEndpoints.getTemplates,
+        data: {'doctor_id': doctorId, 'type': 'Reason'},
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final dataList = response.data['data'] as List<dynamic>? ?? [];
+        if (dataList.isEmpty) {
+          AppSnackbars.showInfo('Templates', 'No templates available');
+          return;
+        }
+        _showReasonTemplatesListDialog(dataList);
+      } else {
+        AppSnackbars.showError('Templates', 'No templates found');
+      }
+    } catch (e) {
+      debugPrint('Error fetching reason templates: $e');
+      AppSnackbars.showError('Templates', 'Failed to fetch templates');
+    }
+  }
+
+  /// Renders the template list dialog. Port of Android's `reasonDialog()`.
+  void _showReasonTemplatesListDialog(List<dynamic> templates) {
+    AppDialog.show(
+      title: 'templates'.tr,
+      body: ReasonTemplateDialog(
+        templates: templates,
+        controller: _otherReasonController,
+      ),
+    );
+  }
+
+  /// Perform the actual hold API call, depending on appointment type.
+  /// Port of Android's `onChangeAppointmentStatusClick()` / `holdQuickAppointment()`.
+  Future<void> _performHold(String reason, String ptStatus) async {
+    if (isFrom == 'QuickAppointment') {
+      await _holdQuickAppointment(reason);
+    } else {
+      await _changeAppointmentStatus(reason, ptStatus);
+    }
+  }
+
+  /// Hold endpoint for Quick Appointment: POST v2/Doctor/hold_quick_appointment.
+  Future<void> _holdQuickAppointment(String reason) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final userId = prefs.getString(AppConstants.prefUserId) ?? '';
+      final userTypeStr =
+          prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
+
+      final req = HoldQuickAppointmentReq(
+        patientId: patientId,
+        remarks: reason,
+        userId: userId,
+        userType: userTypeStr,
+      );
+
+      final response = await apiClient.post(
+        ApiEndpoints.holdQuickAppointment,
+        data: req.toJson(),
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final msg =
+            response.data['msg']?.toString() ?? 'Appointment put on hold';
+        if (response.data['status'] == 'success') {
+          AppSnackbars.showSuccess('Success', msg);
+          Get.offAllNamed('/patient-list');
+        } else {
+          AppSnackbars.showError('Error', msg);
+        }
+      } else {
+        AppSnackbars.showError('Error', 'Failed to hold appointment.');
+      }
+    } catch (e) {
+      debugPrint('Error holding quick appointment: $e');
+      AppSnackbars.showError('Error', 'Failed to hold appointment.');
+    }
+  }
+
+  /// Update appointment status to hold: POST v2/User/update_appointment_status.
+  /// Port of Android's `changeAppointmentStatus()` (UserService).
+  Future<void> _changeAppointmentStatus(String reason, String ptStatus) async {
+    isLoadingDetails.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final req = ChangeAppointmentStatusReq(
+        appointmentId: bookingId,
+        status: '2',
+        holdReason: reason,
+        patientId: patientId,
+      );
+
+      final response = await apiClient.post(
+        ApiEndpoints.updateAppointmentStatus,
+        data: req.toJson(),
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final msg =
+            response.data['msg']?.toString() ?? 'Appointment status updated.';
+        if (response.data['status'] == 'success') {
+          AppSnackbars.showSuccess('Success', msg);
+
+          // Port of Android's changeAppointmentStatus() success branch:
+          // status != "2" && isRefer == "1" → referral note dialog,
+          // else navigate back to patient list.
+          if (!kIsWeb && ptStatus != '2' && isRefer == '1') {
+            _dialogReferralNote();
+          } else {
+            Get.offAllNamed('/patient-list');
+          }
+        } else {
+          // Port of Android's changeAppointmentStatus() failure branch:
+          // msg == "Doctor Home Visit" && status != "2" && doctorHomeServiceId != "0"
+          // → home visit note dialog; otherwise show error (eventDialog).
+          if (msg == 'Doctor Home Visit' &&
+              !kIsWeb &&
+              ptStatus != '2' &&
+              doctorHomeServiceId != '0') {
+            _dialogHomeVisitNote();
+          } else {
+            AppSnackbars.showError('Error', msg);
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Error changing appointment status: $e');
+      AppSnackbars.showError('Error', 'Failed to update status.');
+    } finally {
+      isLoadingDetails.value = false;
+    }
+  }
+
+  /// Port of Android's `dialogReferralNote()` (ReferralNoteDialog flow).
+  /// Shows a referral-note input dialog that calls add_referral_notes API.
+  void _dialogReferralNote() {
+    final noteController = TextEditingController();
+    AppDialog.show(
+      title: 'referral_note'.tr,
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextField(
+            controller: noteController,
+            maxLines: 3,
+            decoration: InputDecoration(
+              hintText: 'enter_referral_note'.tr,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 10,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () => Get.back(),
+                child: Text(
+                  'cancel'.tr,
+                  style: const TextStyle(color: AppColors.error, fontSize: 16),
+                ),
+              ),
+              const SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: () {
+                  final note = noteController.text.trim();
+                  if (note.isNotEmpty) {
+                    Get.back();
+                    _addReferralNotes(note);
+                  } else {
+                    AppSnackbars.showError(
+                      'validation_error'.tr,
+                      'please_enter_note'.tr,
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.teal,
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                ),
+                child: Text(
+                  'submit'.tr,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Port of Android's `dialogHomeVisitNote()` (HomeVisitNoteDialog flow).
+  /// Shows a home-visit note input dialog that calls add_home_visit_notes API.
+  void _dialogHomeVisitNote() {
+    final noteController = TextEditingController();
+    AppDialog.show(
+      title: 'home_visit_note'.tr,
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextField(
+            controller: noteController,
+            maxLines: 3,
+            decoration: InputDecoration(
+              hintText: 'enter_home_visit_note'.tr,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 10,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () => Get.back(),
+                child: Text(
+                  'cancel'.tr,
+                  style: const TextStyle(color: AppColors.error, fontSize: 16),
+                ),
+              ),
+              const SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: () {
+                  final note = noteController.text.trim();
+                  if (note.isNotEmpty) {
+                    Get.back();
+                    _addDoctorVisitNotes(note);
+                  } else {
+                    AppSnackbars.showError(
+                      'validation_error'.tr,
+                      'please_enter_note'.tr,
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.teal,
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                ),
+                child: Text(
+                  'submit'.tr,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Port of Android's `addReferralNotes()`: POST v2/Doctor/add_referral_notes.
+  Future<void> _addReferralNotes(String referralNote) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final req = AddReferralNotesReq(
+        appointmentId: bookingId,
+        referralNotes: referralNote,
+      );
+
+      final response = await apiClient.post(
+        ApiEndpoints.addReferralNotes,
+        data: req.toJson(),
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final msg = response.data['msg']?.toString() ?? '';
+        if (response.data['status'] == 'success') {
+          AppSnackbars.showSuccess('Success', msg);
+          Get.offAllNamed('/patient-list');
+        } else {
+          AppSnackbars.showError('Error', msg);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error adding referral notes: $e');
+      AppSnackbars.showError('Error', 'Failed to add referral notes.');
+    }
+  }
+
+  /// Port of Android's `addDoctorVisitNotes()`: POST v2/Doctor/add_home_visit_notes.
+  Future<void> _addDoctorVisitNotes(String homeVisitNote) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final req = AddDoctorVisitNotesReq(
+        appointmentId: bookingId,
+        visitNotes: homeVisitNote,
+        homeServiceId: doctorHomeServiceId,
+      );
+
+      final response = await apiClient.post(
+        ApiEndpoints.addHomeVisitNotes,
+        data: req.toJson(),
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final msg = response.data['msg']?.toString() ?? '';
+        if (response.data['status'] == 'success') {
+          AppSnackbars.showSuccess('Success', msg);
+          // success + navigates back to the patient list.
+          Get.offAllNamed('/patient-list');
+        } else {
+          AppSnackbars.showError('Error', msg);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error adding home visit notes: $e');
+      AppSnackbars.showError('Error', 'Failed to add home visit notes.');
     }
   }
 
@@ -841,8 +1377,10 @@ class ServingPatientController extends GetxController {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        if (response.data['status'] == 'success' && response.data['data'] != null) {
-          diagnosisText.value = response.data['data']['diagnosis']?.toString() ?? '';
+        if (response.data['status'] == 'success' &&
+            response.data['data'] != null) {
+          diagnosisText.value =
+              response.data['data']['diagnosis']?.toString() ?? '';
         }
       }
     } catch (e) {
@@ -866,7 +1404,9 @@ class ServingPatientController extends GetxController {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        if (response.data['status'] == 'success' && response.data['data'] != null && (response.data['data'] as List).isNotEmpty) {
+        if (response.data['status'] == 'success' &&
+            response.data['data'] != null &&
+            (response.data['data'] as List).isNotEmpty) {
           final lastReport = (response.data['data'] as List).last;
           ecgReportImageUrl.value = lastReport['report_img']?.toString() ?? '';
         }
@@ -902,7 +1442,8 @@ class ServingPatientController extends GetxController {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        final msg = response.data['msg']?.toString() ?? 'Note added successfully';
+        final msg =
+            response.data['msg']?.toString() ?? 'Note added successfully';
         if (response.data['status'] == 'success') {
           AppSnackbars.showSuccess('Success', msg);
           patientNoteController.clear();
@@ -943,7 +1484,8 @@ class ServingPatientController extends GetxController {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        final msg = response.data['msg']?.toString() ?? 'Self note added successfully';
+        final msg =
+            response.data['msg']?.toString() ?? 'Self note added successfully';
         if (response.data['status'] == 'success') {
           AppSnackbars.showSuccess('Success', msg);
           selfNoteController.clear();
@@ -976,7 +1518,8 @@ class ServingPatientController extends GetxController {
       if (cbPIH.value) detailsList.add('PIH');
       if (cbICH.value) detailsList.add('ICH');
       if (cbAkI.value) detailsList.add('AkI');
-      if (cbHospitalizationOther.value && hospitalizationOtherController.text.trim().isNotEmpty) {
+      if (cbHospitalizationOther.value &&
+          hospitalizationOtherController.text.trim().isNotEmpty) {
         detailsList.add(hospitalizationOtherController.text.trim());
       }
       eventDetailsStr = detailsList.join(', ');
@@ -985,7 +1528,8 @@ class ServingPatientController extends GetxController {
       if (cbPostural.value) detailsList.add('Postural Hypotension');
       if (cbSVT.value) detailsList.add('SVT');
       if (cbBleeding.value) detailsList.add('Bleeding');
-      if (cbNonHospOther.value && nonHospOtherController.text.trim().isNotEmpty) {
+      if (cbNonHospOther.value &&
+          nonHospOtherController.text.trim().isNotEmpty) {
         detailsList.add(nonHospOtherController.text.trim());
       }
       eventDetailsStr = detailsList.join(', ');
@@ -1017,7 +1561,8 @@ class ServingPatientController extends GetxController {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        final msg = response.data['msg']?.toString() ?? 'Event added successfully';
+        final msg =
+            response.data['msg']?.toString() ?? 'Event added successfully';
         if (response.data['status'] == 'success') {
           AppSnackbars.showSuccess('Success', msg);
         } else {
@@ -1078,7 +1623,10 @@ class ServingPatientController extends GetxController {
     final diastolic = diastolicController.text.trim();
 
     if (systolic.isEmpty || diastolic.isEmpty) {
-      AppSnackbars.showError('Error', 'Please enter both Systolic and Diastolic values');
+      AppSnackbars.showError(
+        'Error',
+        'Please enter both Systolic and Diastolic values',
+      );
       return;
     }
 
@@ -1138,7 +1686,8 @@ class ServingPatientController extends GetxController {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        final msg = response.data['msg']?.toString() ?? 'TMT saved successfully';
+        final msg =
+            response.data['msg']?.toString() ?? 'TMT saved successfully';
         if (response.data['status'] == 'success') {
           AppSnackbars.showSuccess('Success', msg);
         } else {
@@ -1164,10 +1713,7 @@ class ServingPatientController extends GetxController {
 
       final response = await apiClient.post(
         ApiEndpoints.getTemplates,
-        data: {
-          'doctor_id': doctorId,
-          'type': 'Notes',
-        },
+        data: {'doctor_id': doctorId, 'type': 'Notes'},
         options: dio.Options(headers: {'Authorization': token}),
       );
 
@@ -1202,11 +1748,18 @@ class ServingPatientController extends GetxController {
           separatorBuilder: (context, index) => const Divider(height: 1),
           itemBuilder: (context, index) {
             final item = templates[index];
-            final noteText = item['notes']?.toString() ?? item['patient_note']?.toString() ?? item['template']?.toString() ?? '';
+            final noteText =
+                item['notes']?.toString() ??
+                item['patient_note']?.toString() ??
+                item['template']?.toString() ??
+                '';
             final displayText = '${index + 1}. $noteText';
             return ListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text(displayText, style: const TextStyle(fontSize: 14, color: AppColors.navy)),
+              title: Text(
+                displayText,
+                style: const TextStyle(fontSize: 14, color: AppColors.navy),
+              ),
               onTap: () {
                 Get.back();
                 final currentText = patientNoteController.text.trim();
@@ -1232,9 +1785,7 @@ class ServingPatientController extends GetxController {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
-      final formData = dio.FormData.fromMap({
-        'patient_id': patientId,
-      });
+      final formData = dio.FormData.fromMap({'patient_id': patientId});
 
       final response = await apiClient.post(
         ApiEndpoints.getPatientNotes,
@@ -1270,7 +1821,8 @@ class ServingPatientController extends GetxController {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: notes.length,
-          separatorBuilder: (context, index) => const Divider(height: 16, thickness: 1),
+          separatorBuilder: (context, index) =>
+              const Divider(height: 16, thickness: 1),
           itemBuilder: (context, index) {
             final item = notes[index];
             final visitNo = item['visit_no']?.toString() ?? '';
@@ -1283,12 +1835,19 @@ class ServingPatientController extends GetxController {
                   if (visitNo.isNotEmpty) ...[
                     Text(
                       'Visit No : $visitNo',
-                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.navy),
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.navy,
+                      ),
                     ),
                     const SizedBox(height: 8),
                   ],
                   ...noteDetails.map((subNote) {
-                    final noteText = subNote['patient_note']?.toString() ?? subNote['notes']?.toString() ?? '';
+                    final noteText =
+                        subNote['patient_note']?.toString() ??
+                        subNote['notes']?.toString() ??
+                        '';
                     final dateText = subNote['created']?.toString() ?? '';
                     return InkWell(
                       onTap: () {
@@ -1301,9 +1860,21 @@ class ServingPatientController extends GetxController {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             if (dateText.isNotEmpty)
-                              Text(dateText, style: const TextStyle(fontSize: 12, color: AppColors.coolGray)),
+                              Text(
+                                dateText,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.coolGray,
+                                ),
+                              ),
                             const SizedBox(height: 2),
-                            Text(noteText, style: const TextStyle(fontSize: 14, color: AppColors.navy)),
+                            Text(
+                              noteText,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: AppColors.navy,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -1312,12 +1883,30 @@ class ServingPatientController extends GetxController {
                 ],
               );
             } else {
-              final noteText = item['patient_note']?.toString() ?? item['notes']?.toString() ?? '';
+              final noteText =
+                  item['patient_note']?.toString() ??
+                  item['notes']?.toString() ??
+                  '';
               final dateText = item['created']?.toString() ?? '';
               return ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: Text(noteText, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.navy)),
-                subtitle: dateText.isNotEmpty ? Text(dateText, style: const TextStyle(fontSize: 12, color: AppColors.coolGray)) : null,
+                title: Text(
+                  noteText,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.navy,
+                  ),
+                ),
+                subtitle: dateText.isNotEmpty
+                    ? Text(
+                        dateText,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.coolGray,
+                        ),
+                      )
+                    : null,
                 onTap: () {
                   Get.back();
                   patientNoteController.text = noteText;
@@ -1339,10 +1928,7 @@ class ServingPatientController extends GetxController {
 
       final response = await apiClient.post(
         ApiEndpoints.getSelfNotes,
-        data: {
-          'patient_id': patientId,
-          'appointment_id': bookingId,
-        },
+        data: {'patient_id': patientId, 'appointment_id': bookingId},
         options: dio.Options(headers: {'Authorization': token}),
       );
 
@@ -1377,12 +1963,31 @@ class ServingPatientController extends GetxController {
           separatorBuilder: (context, index) => const Divider(height: 1),
           itemBuilder: (context, index) {
             final item = notes[index];
-            final noteText = item['myself_note']?.toString() ?? item['self_note']?.toString() ?? item['notes']?.toString() ?? '';
+            final noteText =
+                item['myself_note']?.toString() ??
+                item['self_note']?.toString() ??
+                item['notes']?.toString() ??
+                '';
             final dateText = item['created']?.toString() ?? '';
             return ListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text(noteText, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.navy)),
-              subtitle: dateText.isNotEmpty ? Text(dateText, style: const TextStyle(fontSize: 12, color: AppColors.coolGray)) : null,
+              title: Text(
+                noteText,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.navy,
+                ),
+              ),
+              subtitle: dateText.isNotEmpty
+                  ? Text(
+                      dateText,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.coolGray,
+                      ),
+                    )
+                  : null,
               onTap: () {
                 Get.back();
                 selfNoteController.text = noteText;
@@ -1403,10 +2008,7 @@ class ServingPatientController extends GetxController {
 
       final response = await apiClient.post(
         ApiEndpoints.getEventDetails,
-        data: {
-          'patient_id': patientId,
-          'appointment_id': bookingId,
-        },
+        data: {'patient_id': patientId, 'appointment_id': bookingId},
         options: dio.Options(headers: {'Authorization': token}),
       );
 
@@ -1438,7 +2040,8 @@ class ServingPatientController extends GetxController {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: events.length,
-          separatorBuilder: (context, index) => const Divider(height: 16, thickness: 1),
+          separatorBuilder: (context, index) =>
+              const Divider(height: 16, thickness: 1),
           itemBuilder: (context, index) {
             final item = events[index];
             final created = item['created']?.toString() ?? '';
@@ -1449,7 +2052,8 @@ class ServingPatientController extends GetxController {
             final saltReductionStr = item['salt_reduction']?.toString() ?? '';
             final exerciseStr = item['exercise']?.toString() ?? '';
 
-            final hasCompliance = medicinesStr.isNotEmpty ||
+            final hasCompliance =
+                medicinesStr.isNotEmpty ||
                 investigationsStr.isNotEmpty ||
                 saltReductionStr.isNotEmpty ||
                 exerciseStr.isNotEmpty;
@@ -1460,7 +2064,10 @@ class ServingPatientController extends GetxController {
                 if (created.isNotEmpty) ...[
                   Text(
                     created,
-                    style: const TextStyle(fontSize: 12, color: AppColors.coolGray),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.coolGray,
+                    ),
                   ),
                   const SizedBox(height: 8),
                 ],
@@ -1477,7 +2084,11 @@ class ServingPatientController extends GetxController {
                   const SizedBox(height: 12),
                   const Text(
                     'Compliance to',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.navy),
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.navy,
+                    ),
                   ),
                   const SizedBox(height: 6),
                   Text(
@@ -1518,10 +2129,7 @@ class ServingPatientController extends GetxController {
 
       final response = await apiClient.post(
         ApiEndpoints.getEcg,
-        data: {
-          'patient_id': patientId,
-          'appointment_id': bookingId,
-        },
+        data: {'patient_id': patientId, 'appointment_id': bookingId},
         options: dio.Options(headers: {'Authorization': token}),
       );
 
@@ -1553,7 +2161,8 @@ class ServingPatientController extends GetxController {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: list.length,
-          separatorBuilder: (context, index) => const Divider(height: 16, thickness: 1),
+          separatorBuilder: (context, index) =>
+              const Divider(height: 16, thickness: 1),
           itemBuilder: (context, index) {
             final item = list[index];
             final created = item['created']?.toString() ?? '';
@@ -1571,7 +2180,10 @@ class ServingPatientController extends GetxController {
                 if (created.isNotEmpty) ...[
                   Text(
                     created,
-                    style: const TextStyle(fontSize: 12, color: AppColors.coolGray),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.coolGray,
+                    ),
                   ),
                   const SizedBox(height: 6),
                 ],
@@ -1620,10 +2232,7 @@ class ServingPatientController extends GetxController {
 
       final response = await apiClient.post(
         ApiEndpoints.getBp,
-        data: {
-          'patient_id': patientId,
-          'appointment_id': bookingId,
-        },
+        data: {'patient_id': patientId, 'appointment_id': bookingId},
         options: dio.Options(headers: {'Authorization': token}),
       );
 
@@ -1655,12 +2264,19 @@ class ServingPatientController extends GetxController {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: list.length,
-          separatorBuilder: (context, index) => const Divider(height: 16, thickness: 1),
+          separatorBuilder: (context, index) =>
+              const Divider(height: 16, thickness: 1),
           itemBuilder: (context, index) {
             final item = list[index];
             final created = item['created']?.toString() ?? '';
-            final systolic = item['bp_systolic']?.toString() ?? item['systolic']?.toString() ?? '';
-            final diastolic = item['bp_diastolic']?.toString() ?? item['diastolic']?.toString() ?? '';
+            final systolic =
+                item['bp_systolic']?.toString() ??
+                item['systolic']?.toString() ??
+                '';
+            final diastolic =
+                item['bp_diastolic']?.toString() ??
+                item['diastolic']?.toString() ??
+                '';
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1668,7 +2284,10 @@ class ServingPatientController extends GetxController {
                 if (created.isNotEmpty) ...[
                   Text(
                     created,
-                    style: const TextStyle(fontSize: 12, color: AppColors.coolGray),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.coolGray,
+                    ),
                   ),
                   const SizedBox(height: 6),
                 ],
@@ -1694,10 +2313,7 @@ class ServingPatientController extends GetxController {
 
       final response = await apiClient.post(
         ApiEndpoints.getTmt,
-        data: {
-          'patient_id': patientId,
-          'appointment_id': bookingId,
-        },
+        data: {'patient_id': patientId, 'appointment_id': bookingId},
         options: dio.Options(headers: {'Authorization': token}),
       );
 
@@ -1729,13 +2345,20 @@ class ServingPatientController extends GetxController {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: list.length,
-          separatorBuilder: (context, index) => const Divider(height: 16, thickness: 1),
+          separatorBuilder: (context, index) =>
+              const Divider(height: 16, thickness: 1),
           itemBuilder: (context, index) {
             final item = list[index];
             final created = item['created']?.toString() ?? '';
-            final result = item['result']?.toString() ?? item['tmt_details']?.toString() ?? '';
+            final result =
+                item['result']?.toString() ??
+                item['tmt_details']?.toString() ??
+                '';
             final metsStr = item['mets']?.toString() ?? '';
-            final othersStr = item['others']?.toString() ?? item['met_others']?.toString() ?? '';
+            final othersStr =
+                item['others']?.toString() ??
+                item['met_others']?.toString() ??
+                '';
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1743,7 +2366,10 @@ class ServingPatientController extends GetxController {
                 if (created.isNotEmpty) ...[
                   Text(
                     created,
-                    style: const TextStyle(fontSize: 12, color: AppColors.coolGray),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.coolGray,
+                    ),
                   ),
                   const SizedBox(height: 6),
                 ],
@@ -1768,5 +2394,160 @@ class ServingPatientController extends GetxController {
         ),
       ),
     );
+  }
+
+  Future<void> serveQuickAppointment() async {
+    isLoadingDetails.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final userId = prefs.getString(AppConstants.prefUserId) ?? '';
+      final userTypeStr =
+          prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
+      final response = await apiClient.post(
+        ApiEndpoints.serveQuickAppointment,
+        data: {
+          'patient_id': patientId,
+          'user_id': userId,
+          'user_type': userTypeStr,
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+      if (response.statusCode == 200 && response.data != null) {
+        if (response.data['status'] == 'success') {
+          AppSnackbars.showSuccess(
+            'Success',
+            response.data['msg']?.toString() ?? 'Appointment served',
+          );
+          Get.offAllNamed('/patient-list');
+        } else {
+          AppSnackbars.showError(
+            'Error',
+            response.data['msg']?.toString() ?? 'Failed to serve appointment',
+          );
+        }
+      } else {
+        AppSnackbars.showError('Error', 'Failed to serve appointment');
+      }
+    } catch (e) {
+      AppSnackbars.showError('Error', 'Failed to serve appointment: $e');
+    } finally {
+      isLoadingDetails.value = false;
+    }
+  }
+
+  Future<void> serveAndNextQuickAppointment() async {
+    isLoadingDetails.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final userId = prefs.getString(AppConstants.prefUserId) ?? '';
+      final userTypeStr =
+          prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
+      final instituteId = this.instituteId;
+      final response = await apiClient.post(
+        ApiEndpoints.serveAndNextQuickAppointment,
+        data: {
+          'patient_id': patientId,
+          'doctor_id': userId,
+          'institute_id': instituteId,
+          'user_id': userId,
+          'user_type': userTypeStr,
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+      if (response.statusCode == 200 && response.data != null) {
+        if (response.data['status'] == 'success') {
+          AppSnackbars.showSuccess(
+            'Success',
+            response.data['msg']?.toString() ?? 'Appointment served',
+          );
+          final hasNext = response.data['hasNext'] ?? false;
+          if (hasNext && response.data['nextPatient'] != null) {
+            final nextPatient = response.data['nextPatient'];
+            final clinicalFormStatus = nextPatient['clinicalFormStatus'];
+            if (clinicalFormStatus == 0 || clinicalFormStatus == '0') {
+              final args = {
+                'patientId': nextPatient['patientId'] ?? '',
+                'fullName': nextPatient['patientName'] ?? '',
+                'age': nextPatient['age'] ?? '',
+                'gender': nextPatient['gender'] ?? '',
+                'mhcId': nextPatient['mhcId'] ?? '',
+                'doctorId': doctorId,
+                'doctorName': fullName,
+                'instituteId': instituteId,
+                'status': 'Served',
+                'clinical_form_status': '0',
+                'medical_form_status': '0',
+                'isFrom': 'Direct Patient Call',
+              };
+              Get.offAllNamed('/diagnosis', arguments: args);
+            } else {
+              Get.offAllNamed('/patient-list');
+            }
+          } else {
+            Get.offAllNamed('/patient-list');
+          }
+        } else {
+          AppSnackbars.showError(
+            'Error',
+            response.data['msg']?.toString() ?? 'Failed to serve appointment',
+          );
+        }
+      } else {
+        AppSnackbars.showError('Error', 'Failed to serve appointment');
+      }
+    } catch (e) {
+      AppSnackbars.showError('Error', 'Failed to serve appointment: $e');
+    } finally {
+      isLoadingDetails.value = false;
+    }
+  }
+
+  Future<void> onFinishButtonPressed() async {
+    if (isFrom == 'QuickAppointment') {
+      Get.dialog(
+        AlertDialog(
+          title: const Text('Serve Appointment'),
+          content: Text('Are you sure you want to serve $fullName?'),
+          actions: [
+            ElevatedButton(
+              onPressed: () async {
+                Get.back();
+                await serveQuickAppointment();
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal),
+              child: const Text('Serve'),
+            ),
+            const SizedBox(width: 16),
+            ElevatedButton(
+              onPressed: () async {
+                Get.back();
+                await serveAndNextQuickAppointment();
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal),
+              child: const Text('Serve & Next'),
+            ),
+            const SizedBox(width: 16),
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('Cancel'),
+            ),
+          ],
+        ),
+        barrierDismissible: false,
+      );
+    } else {
+      if (patientRating.value.isEmpty || patientRating.value == '0') {
+        Get.dialog(
+          PatientRatingDialog(
+            initialRating: patientRating.value,
+            onSubmit: (ratingVal) => addRating(ratingVal),
+          ),
+        );
+      } else {
+        _showFinishAppointmentDialog();
+      }
+    }
   }
 }

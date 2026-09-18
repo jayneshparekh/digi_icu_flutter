@@ -57,11 +57,16 @@ class ApiEndpoints {
   static const String quickFormsList = 'api/v2/Doctor/quick_forms_list';
   static const String getQuickForm = 'api/v2/Doctor/get_quick_form';
   static const String updateQuickForm = 'api/v2/Doctor/update_quick_form';
+  static const String holdQuickAppointment = 'api/v2/Doctor/hold_quick_appointment';
+  static const String addReferralNotes = 'api/v2/Doctor/add_referral_notes';
+  static const String addHomeVisitNotes = 'api/v2/Doctor/add_home_visit_notes';
   static const String medicalFormsList = 'api/v2/Doctor/medical_forms_list';
   static const String updateMedicalForm = 'api/v2/Doctor/update_medical_form';
   static const String clinicalFormsList = 'api/v2/Doctor/clinical_forms_list';
   static const String getClinicalForm = 'api/v2/Doctor/get_clinical_form';
   static const String updateClinicalForm = 'api/v2/Doctor/update_clinical_form';
+  static const String serveQuickAppointment = 'api/v2/Doctor/serve_quick_appointment';
+  static const String serveAndNextQuickAppointment = 'api/v2/Doctor/serve_and_next_quick_appointment';
 
   // ==========================================
   // Admin Endpoints
