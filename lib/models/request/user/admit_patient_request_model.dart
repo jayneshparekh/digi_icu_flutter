@@ -1,4 +1,5 @@
 class AdmitPatientRequestModel {
+  final String? instituteId;
   final String? patientId;
   final String? appointmentId;
   final String? doctorId;
@@ -26,6 +27,7 @@ class AdmitPatientRequestModel {
   final String instituteMobile;
 
   const AdmitPatientRequestModel({
+    this.instituteId,
     this.patientId,
     this.appointmentId,
     this.doctorId,
@@ -54,6 +56,7 @@ class AdmitPatientRequestModel {
   });
 
   Map<String, dynamic> toJson() => {
+        'institute_id': instituteId,
         'patient_id': patientId,
         'appointment_id': appointmentId,
         'doctor_id': doctorId,

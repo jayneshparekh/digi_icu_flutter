@@ -65,6 +65,8 @@ class ServingPatientController extends GetxController {
         final RxString selectedInstituteId = ''.obs;
         final RxString selectedInstituteName = ''.obs;
         final RxBool isDayCare = false.obs;
+        final RxBool isDayCareAvailable = false.obs;
+        final RxString dayCareOption = 'others'.obs;
         // Doctor selection for admit
         final RxString selectedAdmitDoctorId = ''.obs;
         final RxString selectedAdmitDoctor = ''.obs;
@@ -229,24 +231,24 @@ class ServingPatientController extends GetxController {
     /// - If clinical form incomplete -> notify user via snackbar
     /// - Otherwise -> open AdmitSelectionDialog
     Future<void> openAdmitDialog() async {
-          // If already admitted
-          if (isAdmitted.value == '1') {
-            AppSnackbars.showError('Error', 'Patient is already admitted');
-            return;
-          }
-          // If medical form not completed
-          if (medicalFormStatus == '0') {
-            AppSnackbars.showError('Error', 'Please complete the medical form to proceed with the patient\'s admission');
-            return;
-          }
-          // If clinical form not completed
-          if (clinicalFormStatus == '0') {
-            AppSnackbars.showError('Error', 'Please complete the clinical form to proceed with the patient\'s admission');
-            return;
-          }
-          // Show admission selection dialog
-          _showAdmitSelectionDialog();
-        }
+      // If already admitted
+      if (isAdmitted.value == '1') {
+        AppSnackbars.showError('Error', 'Patient is already admitted');
+        return;
+      }
+      // If medical form not completed
+      if (medicalFormStatus == '0') {
+        AppSnackbars.showError('Error', 'Please complete the medical form to proceed with the patient\'s admission');
+        return;
+      }
+      // If clinical form not completed
+      if (clinicalFormStatus == '0') {
+        AppSnackbars.showError('Error', 'Please complete the clinical form to proceed with the patient\'s admission');
+        return;
+      }
+      // Show admission selection dialog
+      _showAdmitSelectionDialog();
+    }
 
     /// Shows the Admit Selection Dialog with two options: Admit Request vs Admit.
     void _showAdmitSelectionDialog() {
@@ -256,70 +258,207 @@ class ServingPatientController extends GetxController {
       );
     }
 
+    /// Shows confirmation dialog before submitting Admit Request (addAdmitPatientRequest).
+    void confirmAndSubmitAdmitRequest() {
+      Get.dialog(
+        AlertDialog(
+          title: const Text('Admit Patient Request'),
+          content: const Text('Are you sure you want to put an admit request for this patient?'),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal),
+              onPressed: () {
+                Get.back();
+                submitAdmitRequest();
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        ),
+        barrierDismissible: false,
+      );
+    }
+
     /// Submits the Admit Request API call (addAdmitPatientRequest).
-      /// Maps the response and shows result snackbar.
-      Future<void> submitAdmitRequest() async {
-            try {
-              final prefs = await SharedPreferences.getInstance();
-              final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+    /// Maps the response and shows result snackbar.
+    Future<void> submitAdmitRequest() async {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
-              final response = await apiClient.post(
-                ApiEndpoints.addAdmitPatientRequest,
-                data: {
-                  'patient_id': patientId,
-                  'doctor_id': doctorId,
-                },
-                options: dio.Options(
-                  headers: {
-                    'Authorization': token,
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                  },
-                ),
-              );
+        final response = await apiClient.post(
+          ApiEndpoints.addAdmitPatientRequest,
+          data: {
+            'patient_id': patientId,
+            'doctor_id': doctorId,
+          },
+          options: dio.Options(
+            headers: {
+              'Authorization': token,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          ),
+        );
 
-              if (response.statusCode == 200 && response.data != null) {
-                final msg = response.data['msg']?.toString() ?? 'Admit request submitted';
-                if (response.data['status'] == 'success') {
-                  AppSnackbars.showSuccess('Success', msg);
-                } else {
-                  AppSnackbars.showError('Error', msg);
-                }
-              } else {
-                AppSnackbars.showError('Error', 'Failed to submit admit request');
-              }
-            } catch (e) {
-              AppSnackbars.showError('Error', 'Failed to submit admit request: $e');
-            }
+        if (response.statusCode == 200 && response.data != null) {
+          final msg = response.data['msg']?.toString() ?? 'Admit request submitted';
+          if (response.data['status'] == 'success') {
+            AppSnackbars.showSuccess('Success', msg);
+          } else {
+            AppSnackbars.showError('Error', msg);
           }
+        } else {
+          AppSnackbars.showError('Error', 'Failed to submit admit request');
+        }
+      } catch (e) {
+        AppSnackbars.showError('Error', 'Failed to submit admit request: $e');
+      }
+    }
+
+    /// Checks patient diagnosis status via get_patient_diagnosis API.
+    /// If diagnosis exists (status == 'success'), prompts confirmation dialog and opens PreAdmitDialog.
+    /// If diagnosis is missing (status != 'success'), shows error snackbar and redirects to DiagnosisScreen.
+    Future<void> getDiagnosisAndProceed() async {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+        final response = await apiClient.post(
+          ApiEndpoints.getPatientDiagnosis,
+          data: {'patient_id': patientId},
+          options: dio.Options(headers: {'Authorization': token}),
+        );
+
+        if (response.statusCode == 200 && response.data != null) {
+          if (response.data['status'] == 'success') {
+            _showAdmitConfirmationDialog();
+          } else {
+            final msg = response.data['msg']?.toString() ?? 'Please record patient diagnosis to proceed with admission.';
+            AppSnackbars.showError('Error', msg);
+            Get.toNamed('/diagnosis', arguments: {
+              'patient_id': patientId,
+              'bookingId': bookingId,
+            });
+          }
+        } else {
+          AppSnackbars.showError('Error', 'Failed to check patient diagnosis');
+        }
+      } catch (e) {
+        AppSnackbars.showError('Error', 'Failed to check patient diagnosis: $e');
+      }
+    }
+
+    /// Displays confirmation dialog ("Are you sure you want to admit $fullName?")
+    void _showAdmitConfirmationDialog() {
+      Get.dialog(
+        AlertDialog(
+          title: const Text('Confirmation!'),
+          content: Text('Are you sure you want to admit ${fullName.isNotEmpty ? fullName : 'this patient'}?'),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('No'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal),
+              onPressed: () {
+                Get.back();
+                openPreAdmitDialog();
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        ),
+        barrierDismissible: false,
+      );
+    }
+
+    /// Checks day care availability for the selected institute using get_institute_amenities API.
+    Future<void> checkDayCareAvailability(String instId) async {
+      if (instId.isEmpty) return;
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+        final resp = await apiClient.post(
+          ApiEndpoints.getInstituteAmenities,
+          data: {'institute_id': instId},
+          options: dio.Options(headers: {'Authorization': token}),
+        );
+
+        if (resp.statusCode == 200 && resp.data != null && resp.data['status'] == 'success') {
+          final dayCareVal = resp.data['day_care']?.toString() ??
+              resp.data['data']?[0]?['day_care']?.toString() ?? '0';
+          final available = dayCareVal != '0';
+          isDayCareAvailable.value = available;
+          if (available) {
+            isDayCare.value = true;
+            dayCareOption.value = 'day_care';
+          } else {
+            isDayCare.value = false;
+            dayCareOption.value = 'others';
+          }
+        } else {
+          isDayCareAvailable.value = false;
+          isDayCare.value = false;
+          dayCareOption.value = 'others';
+        }
+      } catch (e) {
+        debugPrint('Error checking day care availability: $e');
+        isDayCareAvailable.value = false;
+        isDayCare.value = false;
+        dayCareOption.value = 'others';
+      }
+    }
 
     /// Opens the Pre-Admit Dialog to select institute and set day-care option.
     Future<void> openPreAdmitDialog() async {
       try {
         final prefs = await SharedPreferences.getInstance();
         final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+        final userId = prefs.getString(AppConstants.prefUserId) ?? doctorId;
+        var role = prefs.getString(AppConstants.prefLoginType) ?? userType.value;
+        if (role == 'Digi Icu Nurse' || role == 'Duty Doctor') {
+          role = 'Nurse';
+        }
 
-        // Fetch institute amenities (for day-care toggle)
+        // Fetch user's institutes list for dropdown using get_institute API
         final resp = await apiClient.post(
-          ApiEndpoints.getInstituteAmenities,
-          data: {'institute_id': instituteId},
+          ApiEndpoints.getInstitute,
+          data: {
+            'user_id': userId,
+            'user_type': role.isNotEmpty ? role : 'Doctor',
+          },
           options: dio.Options(headers: {'Authorization': token}),
         );
 
-        if (resp.statusCode == 200 && resp.data != null) {
-          Get.dialog(
-            PreAdmitDialog(
-              institutes: resp.data['data'] ?? [],
-              onSubmit: () async {
-                Get.back(); // close pre-admit
-                // Open IPD admit dialog
-                await openIpdAdmitDialog();
-              },
-            ),
-            barrierDismissible: false,
-          );
-        } else {
-          AppSnackbars.showError('Error', 'Failed to fetch institute data');
+        List<dynamic> instituteList = [];
+        if (resp.statusCode == 200 && resp.data != null && resp.data['status'] == 'success') {
+          instituteList = resp.data['data'] ?? [];
         }
+
+        // If API returns list, use it; otherwise fallback to single institute argument if available
+        if (instituteList.isEmpty && instituteId.isNotEmpty) {
+          instituteList = [
+            {'institute_id': instituteId, 'id': instituteId, 'institute_name': selectedInstituteName.value.isNotEmpty ? selectedInstituteName.value : 'Default Institute'}
+          ];
+        }
+
+        Get.dialog(
+          PreAdmitDialog(
+            institutes: instituteList,
+            onSubmit: () async {
+              Get.back(); // close pre-admit
+              // Open IPD admit dialog
+              await openIpdAdmitDialog();
+            },
+          ),
+          barrierDismissible: false,
+        );
       } catch (e) {
         AppSnackbars.showError('Error', 'Failed to open pre-admit dialog: $e');
       }
@@ -331,24 +470,25 @@ class ServingPatientController extends GetxController {
         final prefs = await SharedPreferences.getInstance();
         final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
-        // Fetch institute amenities and bed data
+        final targetInstituteId = selectedInstituteId.value.isNotEmpty ? selectedInstituteId.value : instituteId;
+
+        if (targetInstituteId.isEmpty) {
+          AppSnackbars.showError('Error', 'Please select an institute first');
+          return;
+        }
+
+        // Fetch institute amenities data
         final amenitiesResp = await apiClient.post(
           ApiEndpoints.getInstituteAmenities,
-          data: {'institute_id': instituteId},
+          data: {'institute_id': targetInstituteId},
           options: dio.Options(headers: {'Authorization': token}),
         );
 
-        final bedsResp = await apiClient.post(
-          ApiEndpoints.getBeds,
-          data: {'institute_id': instituteId},
-          options: dio.Options(headers: {'Authorization': token}),
-        );
-
-        if (amenitiesResp.statusCode == 200 && bedsResp.statusCode == 200) {
+        if (amenitiesResp.statusCode == 200 && amenitiesResp.data != null) {
           Get.dialog(
             IpdAdmitDialog(
               instituteAmenities: amenitiesResp.data['data'] ?? [],
-              beds: bedsResp.data['data'] ?? [],
+              beds: const [],
               onSubmit: () async {
                 Get.back(); // close IPD admit
                 // Final admit submission
@@ -358,7 +498,7 @@ class ServingPatientController extends GetxController {
             barrierDismissible: false,
           );
         } else {
-          AppSnackbars.showError('Error', 'Failed to fetch admit data');
+          AppSnackbars.showError('Error', 'Failed to fetch institute data');
         }
       } catch (e) {
         AppSnackbars.showError('Error', 'Failed to open IPD admit dialog: $e');
@@ -366,57 +506,61 @@ class ServingPatientController extends GetxController {
     }
 
     /// Final submit: builds the full AdmitPatientRequestModel and calls the admit API.
-        Future<void> submitAdmit() async {
-          try {
-            final prefs = await SharedPreferences.getInstance();
-            final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+    Future<void> submitAdmit() async {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+        final currentUserType = prefs.getString(AppConstants.prefLoginType) ?? userType.value;
+        final currentUserId = prefs.getString(AppConstants.prefUserId) ?? doctorId;
 
-            final req = AdmitPatientRequestModel(
-              patientId: patientId,
-              appointmentId: bookingId,
-              doctorId: doctorId,
-              admitDate: admissionDate.value,
-              admitTime: admissionTime.value,
-              dischargeDate: dischargeDate.value,
-              dischargeTime: dischargeTime.value,
-              approxCost: approxCost.value,
-              approxDays: approxDays.value,
-              admissionAmount: admissionAmount.value,
-              admissionChargesStatus: admissionPaymentStatus.value,
-              admissionChargesMode: admissionPaymentMode.value,
-              admissionTransactionId: admissionTransactionId.value,
-              advanceAmount: advanceAmount.value,
-              advancePaymentStatus: advancePaymentStatus.value,
-              advancePaymentMode: advancePaymentMode.value,
-              advanceTransactionId: advanceTransactionId.value,
-              place: selectedAdmitPlace.value,
-              admitBy: selectedAdmitDoctor.value,
-              admitById: selectedAdmitDoctorId.value,
-            );
+        final targetInstituteId = selectedInstituteId.value.isNotEmpty ? selectedInstituteId.value : instituteId;
 
-            final response = await apiClient.post(
-              ApiEndpoints.admitPatient,
-              data: req.toJson(),
-              options: dio.Options(headers: {'Authorization': token}),
-            );
+        final req = AdmitPatientRequestModel(
+          instituteId: targetInstituteId,
+          patientId: patientId,
+          appointmentId: bookingId,
+          doctorId: doctorId,
+          referralDoctor: referralDoctor.value,
+          admitDate: admissionDate.value,
+          admitTime: admissionTime.value,
+          dischargeDate: dischargeDate.value,
+          dischargeTime: dischargeTime.value,
+          approxCost: approxCost.value,
+          approxDays: approxDays.value,
+          admissionAmount: admissionAmount.value,
+          admissionChargesStatus: admissionPaymentStatus.value,
+          admissionChargesMode: admissionPaymentMode.value,
+          admissionTransactionId: admissionTransactionId.value,
+          advanceAmount: advanceAmount.value,
+          advancePaymentStatus: advancePaymentStatus.value,
+          advancePaymentMode: advancePaymentMode.value,
+          advanceTransactionId: advanceTransactionId.value,
+          place: selectedAdmitPlace.value,
+          admitBy: currentUserType.isNotEmpty ? currentUserType : 'Doctor',
+          admitById: currentUserId.isNotEmpty ? currentUserId : doctorId,
+        );
 
-            if (response.statusCode == 200 && response.data != null) {
-              final msg = response.data['msg']?.toString() ?? 'Admission completed';
-              if (response.data['status'] == 'success') {
-                isAdmitted.value = '1';
-                AppSnackbars.showSuccess('Success', msg);
-                // Rebuild screen - button will now show error red
-                // controller will need to notify listeners
-              } else {
-                AppSnackbars.showError('Error', msg);
-              }
-            } else {
-              AppSnackbars.showError('Error', 'Failed to submit admission');
-            }
-          } catch (e) {
-            AppSnackbars.showError('Error', 'Failed to submit admission: $e');
+        final response = await apiClient.post(
+          ApiEndpoints.admitPatientFromWeb,
+          data: req.toJson(),
+          options: dio.Options(headers: {'Authorization': token}),
+        );
+
+        if (response.statusCode == 200 && response.data != null) {
+          final msg = response.data['msg']?.toString() ?? 'Admission completed';
+          if (response.data['status'] == 'success') {
+            isAdmitted.value = '1';
+            AppSnackbars.showSuccess('Success', msg);
+          } else {
+            AppSnackbars.showError('Error', msg);
           }
+        } else {
+          AppSnackbars.showError('Error', 'Failed to submit admission');
         }
+      } catch (e) {
+        AppSnackbars.showError('Error', 'Failed to submit admission: $e');
+      }
+    }
 
     // ... rest of existing methods continue after this point
 

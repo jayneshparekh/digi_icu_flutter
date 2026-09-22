@@ -52,15 +52,38 @@ class IpdAdmitDialog extends StatelessWidget {
         ? instituteAmenities[0]['institute_name']?.toString() ?? ''
         : '';
 
-    return AlertDialog(
+    return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      title: Text('admit'.tr),
-      content: SingleChildScrollView(
+      child: Container(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.9,
+          maxHeight: MediaQuery.of(context).size.height * 0.85,
+        ),
+        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Institute (display only)
-            Text(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'admit'.tr,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Get.back(),
+                ),
+              ],
+            ),
+            const Divider(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Institute (display only)
+                    Text(
               instituteName,
               style: const TextStyle(
                 fontSize: 16,
@@ -78,8 +101,9 @@ class IpdAdmitDialog extends StatelessWidget {
                     contentPadding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
-                  initialValue: controller.selectedAdmitDoctorId.value.isNotEmpty
-                      ? controller.selectedAdmitDoctor.value
+                  initialValue: controller.selectedAdmitDoctorId.value.isNotEmpty &&
+                          controller.admitDoctors.any((d) => d['doctor_id']?.toString() == controller.selectedAdmitDoctorId.value)
+                      ? controller.selectedAdmitDoctorId.value
                       : null,
                   hint: Text('please_select_doctor'.tr),
                   items: controller.admitDoctors.map((doc) {
@@ -410,181 +434,352 @@ class IpdAdmitDialog extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            // Transaction IDs
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'admission_transaction_id'.tr,
-                      border: OutlineInputBorder(),
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    // Discharge Date & Time
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'discharge_date'.tr,
+                              hintText: 'YYYY-MM-DD',
+                              border: const OutlineInputBorder(),
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            ),
+                            onChanged: (value) => dischargeDate.value = value,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'discharge_time'.tr,
+                              hintText: 'HH:MM',
+                              border: const OutlineInputBorder(),
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            ),
+                            onChanged: (value) => dischargeTime.value = value,
+                          ),
+                        ),
+                      ],
                     ),
-                    onChanged: (value) =>
-                        admissionTransactionId.value = value,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'advance_transaction_id'.tr,
-                      border: OutlineInputBorder(),
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    ),
-                    onChanged: (value) =>
-                        advanceTransactionId.value = value,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            // Place / Ward / Bed Selection (dynamic based on institute amenities)
-            Obx(() => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Place Selection
-                    DropdownButtonFormField<String>(
-                      isExpanded: true,
+                    const SizedBox(height: 12),
+                    // Admission Amount & Status/Mode
+                    TextFormField(
                       decoration: InputDecoration(
-                        labelText: 'place'.tr,
-                        border: OutlineInputBorder(),
+                        labelText: 'admission_amount'.tr,
+                        border: const OutlineInputBorder(),
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       ),
-                      initialValue: selectedPlace.value.isNotEmpty
-                          ? selectedPlace.value
-                          : null,
-                      hint: Text('please_select'.tr),
-                      items: (_getUniquePlaces(instituteAmenities))
-                          .map((place) => DropdownMenuItem<String>(
-                                value: place,
-                                child: Text(place),
-                              ))
-                          .toList(),
-                      onChanged: (value) {
-                        selectedPlace.value = value ?? '';
-                        selectedWard.value = '';
-                        selectedBed.value = '';
-                        // Fetch wards for this place
-                        _fetchWardsForPlace(controller, apiClient, value ?? '');
-                      },
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) => admissionAmount.value = value,
                     ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Obx(() => DropdownButtonFormField<String>(
+                                isExpanded: true,
+                                decoration: InputDecoration(
+                                  labelText: 'payment_status'.tr,
+                                  border: const OutlineInputBorder(),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                ),
+                                initialValue: admissionPaymentStatus.value.isNotEmpty
+                                    ? admissionPaymentStatus.value
+                                    : null,
+                                hint: Text('status'.tr),
+                                items: ['Pending', 'Paid', 'Partial']
+                                    .map((status) => DropdownMenuItem<String>(
+                                          value: status,
+                                          child: Text(status),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) =>
+                                    admissionPaymentStatus.value = value ?? '',
+                              )),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Obx(() => DropdownButtonFormField<String>(
+                                isExpanded: true,
+                                decoration: InputDecoration(
+                                  labelText: 'payment_mode'.tr,
+                                  border: const OutlineInputBorder(),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                ),
+                                initialValue: admissionPaymentMode.value.isNotEmpty
+                                    ? admissionPaymentMode.value
+                                    : null,
+                                hint: Text('mode'.tr),
+                                items: ['Cash', 'Online', 'Card', 'UPI']
+                                    .map((mode) => DropdownMenuItem<String>(
+                                          value: mode,
+                                          child: Text(mode),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) =>
+                                    admissionPaymentMode.value = value ?? '',
+                              )),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Obx(() => admissionPaymentMode.value == 'Online' ||
+                            admissionPaymentMode.value == 'UPI' ||
+                            admissionPaymentMode.value == 'Card'
+                        ? TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'transaction_id'.tr,
+                              border: const OutlineInputBorder(),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
+                            ),
+                            onChanged: (value) =>
+                                admissionTransactionId.value = value,
+                          )
+                        : const SizedBox.shrink()),
                     const SizedBox(height: 12),
-                    // Ward Selection
-                    Obx(() => DropdownButtonFormField<String>(
-                          isExpanded: true,
-                          decoration: InputDecoration(
-                            labelText: 'ward'.tr,
-                            border: OutlineInputBorder(),
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          ),
-                          initialValue: selectedWard.value.isNotEmpty
-                              ? selectedWard.value
-                              : null,
-                          hint: Text('please_select'.tr),
-                          items: controller.admitWardOptions.map((ward) =>
-                              DropdownMenuItem<String>(
-                                value: ward,
-                                child: Text(ward),
-                              ))
-                          .toList(),
-                          onChanged: (value) {
-                            selectedWard.value = value ?? '';
-                            selectedBed.value = '';
-                            // Fetch beds for this ward
-                            _fetchBedsForWard(controller, apiClient,
-                                selectedPlace.value, value ?? '');
-                          },
+                    // Advance Amount & Status/Mode
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'advance_amount'.tr,
+                        border: const OutlineInputBorder(),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) => advanceAmount.value = value,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Obx(() => DropdownButtonFormField<String>(
+                                isExpanded: true,
+                                decoration: InputDecoration(
+                                  labelText: 'advance_status'.tr,
+                                  border: const OutlineInputBorder(),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                ),
+                                initialValue: advancePaymentStatus.value.isNotEmpty
+                                    ? advancePaymentStatus.value
+                                    : null,
+                                hint: Text('status'.tr),
+                                items: ['Pending', 'Paid', 'Partial']
+                                    .map((status) => DropdownMenuItem<String>(
+                                          value: status,
+                                          child: Text(status),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) =>
+                                    advancePaymentStatus.value = value ?? '',
+                              )),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Obx(() => DropdownButtonFormField<String>(
+                                isExpanded: true,
+                                decoration: InputDecoration(
+                                  labelText: 'advance_mode'.tr,
+                                  border: const OutlineInputBorder(),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                ),
+                                initialValue: advancePaymentMode.value.isNotEmpty
+                                    ? advancePaymentMode.value
+                                    : null,
+                                hint: Text('mode'.tr),
+                                items: ['Cash', 'Online', 'Card', 'UPI']
+                                    .map((mode) => DropdownMenuItem<String>(
+                                          value: mode,
+                                          child: Text(mode),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) =>
+                                    advancePaymentMode.value = value ?? '',
+                              )),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Obx(() => advancePaymentMode.value == 'Online' ||
+                            advancePaymentMode.value == 'UPI' ||
+                            advancePaymentMode.value == 'Card'
+                        ? TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'advance_transaction_id'.tr,
+                              border: const OutlineInputBorder(),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
+                            ),
+                            onChanged: (value) => advanceTransactionId.value = value,
+                          )
+                        : const SizedBox.shrink()),
+                    const SizedBox(height: 16),
+                    // Place / Ward / Bed Selection (dynamic based on institute amenities)
+                    Obx(() => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Place Selection
+                            DropdownButtonFormField<String>(
+                              isExpanded: true,
+                              decoration: InputDecoration(
+                                labelText: 'place'.tr,
+                                border: const OutlineInputBorder(),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
+                              ),
+                              initialValue: selectedPlace.value.isNotEmpty
+                                  ? selectedPlace.value
+                                  : null,
+                              hint: Text('please_select'.tr),
+                              items: (_getUniquePlaces(instituteAmenities))
+                                  .map((place) => DropdownMenuItem<String>(
+                                        value: place,
+                                        child: Text(place),
+                                      ))
+                                  .toList(),
+                              onChanged: (value) {
+                                selectedPlace.value = value ?? '';
+                                selectedWard.value = '';
+                                selectedBed.value = '';
+                                _fetchWardsForPlace(controller, apiClient, value ?? '');
+                              },
+                            ),
+                            const SizedBox(height: 12),
+                            // Ward Selection
+                            Obx(() {
+                              final String? wardVal = selectedWard.value.isNotEmpty &&
+                                      controller.admitWardOptions.contains(selectedWard.value)
+                                  ? selectedWard.value
+                                  : null;
+                              return DropdownButtonFormField<String>(
+                                isExpanded: true,
+                                decoration: InputDecoration(
+                                  labelText: 'ward'.tr,
+                                  border: const OutlineInputBorder(),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                ),
+                                initialValue: wardVal,
+                                hint: Text('please_select'.tr),
+                                items: controller.admitWardOptions
+                                    .map((ward) => DropdownMenuItem<String>(
+                                          value: ward,
+                                          child: Text(ward),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  selectedWard.value = value ?? '';
+                                  selectedBed.value = '';
+                                  _fetchBedsForWard(controller, apiClient,
+                                      selectedPlace.value, value ?? '');
+                                },
+                              );
+                            }),
+                            const SizedBox(height: 12),
+                            // Bed Selection
+                            Obx(() {
+                              final String? bedVal = selectedBed.value.isNotEmpty &&
+                                      controller.admitBedOptions.contains(selectedBed.value)
+                                  ? selectedBed.value
+                                  : null;
+                              return DropdownButtonFormField<String>(
+                                isExpanded: true,
+                                decoration: InputDecoration(
+                                  labelText: 'bed'.tr,
+                                  border: const OutlineInputBorder(),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                ),
+                                initialValue: bedVal,
+                                hint: Text('please_select'.tr),
+                                items: controller.admitBedOptions
+                                    .map((bed) => DropdownMenuItem<String>(
+                                          value: bed,
+                                          child: Text(bed),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) => selectedBed.value = value ?? '',
+                              );
+                            }),
+                          ],
                         )),
-                    const SizedBox(height: 12),
-                    // Bed Selection
-                    Obx(() => DropdownButtonFormField<String>(
-                          isExpanded: true,
-                          decoration: InputDecoration(
-                            labelText: 'bed'.tr,
-                            border: OutlineInputBorder(),
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          ),
-                          initialValue: selectedBed.value.isNotEmpty
-                              ? selectedBed.value
-                              : null,
-                          hint: Text('please_select'.tr),
-                          items: controller.admitBedOptions.map((bed) =>
-                              DropdownMenuItem<String>(
-                                value: bed,
-                                child: Text(bed),
-                              ))
-                          .toList(),
-                          onChanged: (value) => selectedBed.value = value ?? '',
-                        )),
+                    const SizedBox(height: 16),
+                    // Admission Notes
+                    TextFormField(
+                      controller: admissionNotesController,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        labelText: 'admission_notes'.tr,
+                        border: const OutlineInputBorder(),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      ),
+                      onChanged: (value) => admissionNotes.value = value,
+                    ),
                   ],
-                )),
-            const SizedBox(height: 16),
-            // Admission Notes
-            TextFormField(
-              controller: admissionNotesController,
-              maxLines: 3,
-              decoration: InputDecoration(
-                labelText: 'admission_notes'.tr,
-                border: OutlineInputBorder(),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                ),
               ),
-              onChanged: (value) => admissionNotes.value = value,
+            ),
+            const Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Get.back(),
+                  child: Text('cancel'.tr),
+                ),
+                const SizedBox(width: 8),
+                Obx(() => ElevatedButton(
+                      onPressed: selectedPlace.value.isNotEmpty &&
+                              selectedWard.value.isNotEmpty &&
+                              selectedBed.value.isNotEmpty
+                          ? () {
+                              controller.selectedAdmitPlace.value = selectedPlace.value;
+                              controller.selectedAdmitWard.value = selectedWard.value;
+                              controller.selectedAdmitBed.value = selectedBed.value;
+                              controller.approxCost.value = approxCost.value;
+                              controller.approxDays.value = approxDays.value;
+                              controller.admissionAmount.value = admissionAmount.value;
+                              controller.admissionDate.value = admissionDate.value;
+                              controller.admissionTime.value = admissionTime.value;
+                              controller.dischargeDate.value = dischargeDate.value;
+                              controller.dischargeTime.value = dischargeTime.value;
+                              controller.advanceAmount.value = advanceAmount.value;
+                              controller.admissionPaymentStatus.value =
+                                  admissionPaymentStatus.value;
+                              controller.admissionPaymentMode.value =
+                                  admissionPaymentMode.value;
+                              controller.advancePaymentStatus.value =
+                                  advancePaymentStatus.value;
+                              controller.advancePaymentMode.value = advancePaymentMode.value;
+                              controller.admissionTransactionId.value =
+                                  admissionTransactionId.value;
+                              controller.advanceTransactionId.value =
+                                  advanceTransactionId.value;
+                              controller.admissionNotes.value = admissionNotes.value;
+                              controller.referralDoctor.value = referralDoctor.value;
+                              Get.back();
+                              onSubmit();
+                            }
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.teal,
+                      ),
+                      child: Text('submit'.tr),
+                    )),
+              ],
             ),
           ],
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Get.back(),
-          child: Text('cancel'.tr),
-        ),
-        Obx(() => ElevatedButton(
-              onPressed: selectedPlace.value.isNotEmpty &&
-                      selectedWard.value.isNotEmpty &&
-                      selectedBed.value.isNotEmpty
-                  ? () {
-                      // Update controller with selected values
-                      controller.selectedAdmitPlace.value = selectedPlace.value;
-                      controller.selectedAdmitWard.value = selectedWard.value;
-                      controller.selectedAdmitBed.value = selectedBed.value;
-                      controller.approxCost.value = approxCost.value;
-                      controller.approxDays.value = approxDays.value;
-                      controller.admissionAmount.value = admissionAmount.value;
-                      controller.admissionDate.value = admissionDate.value;
-                      controller.admissionTime.value = admissionTime.value;
-                      controller.dischargeDate.value = dischargeDate.value;
-                      controller.dischargeTime.value = dischargeTime.value;
-                      controller.advanceAmount.value = advanceAmount.value;
-                      controller.admissionPaymentStatus.value =
-                          admissionPaymentStatus.value;
-                      controller.admissionPaymentMode.value =
-                          admissionPaymentMode.value;
-                      controller.advancePaymentStatus.value =
-                          advancePaymentStatus.value;
-                      controller.advancePaymentMode.value = advancePaymentMode.value;
-                      controller.admissionTransactionId.value =
-                          admissionTransactionId.value;
-                      controller.advanceTransactionId.value =
-                          advanceTransactionId.value;
-                      controller.admissionNotes.value = admissionNotes.value;
-                      controller.referralDoctor.value = referralDoctor.value;
-                      Get.back();
-                      onSubmit();
-                    }
-                  : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.teal,
-              ),
-              child: Text('submit'.tr),
-            )),
-      ],
     );
   }
 
@@ -608,10 +803,13 @@ class IpdAdmitDialog extends StatelessWidget {
       final prefs = await SharedPreferences.getInstance();
       final token =
           prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final targetInstituteId = controller.selectedInstituteId.value.isNotEmpty
+          ? controller.selectedInstituteId.value
+          : controller.instituteId;
       final resp = await apiClient.post(
         ApiEndpoints.whereAdmit,
         data: {
-          'institute_id': controller.selectedInstituteId.value,
+          'institute_id': targetInstituteId,
           'place': place,
         },
         options: dio.Options(headers: {'Authorization': token}),
@@ -636,12 +834,15 @@ class IpdAdmitDialog extends StatelessWidget {
       final prefs = await SharedPreferences.getInstance();
       final token =
           prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final targetInstituteId = controller.selectedInstituteId.value.isNotEmpty
+          ? controller.selectedInstituteId.value
+          : controller.instituteId;
       final resp = await apiClient.post(
         ApiEndpoints.getBeds,
         data: {
-          'institute_id': controller.selectedInstituteId.value,
-          'place': place,
-          'ward': ward,
+          'admit_in': place,
+          'institute_id': targetInstituteId,
+          'name': ward,
         },
         options: dio.Options(headers: {'Authorization': token}),
       );

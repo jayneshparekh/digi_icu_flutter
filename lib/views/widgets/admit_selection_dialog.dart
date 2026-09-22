@@ -23,7 +23,7 @@ class AdmitSelectionDialog extends StatelessWidget {
               title: Text('admit_request'.tr),
               onTap: () {
                 Get.back();
-                controller.submitAdmitRequest();
+                controller.confirmAndSubmitAdmitRequest();
               },
             ),
             ListTile(
@@ -32,7 +32,7 @@ class AdmitSelectionDialog extends StatelessWidget {
               title: Text('admit'.tr),
               onTap: () {
                 Get.back();
-                controller.openPreAdmitDialog();
+                controller.getDiagnosisAndProceed();
               },
             ),
           ],

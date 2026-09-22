@@ -82,9 +82,9 @@ class ApiEndpoints {
   static const String signin = 'api/v2/User/signin';
   static const String updateAppointmentStatus = 'api/v2/User/update_appointment_status';
   static const String addEcgFranchiseData = 'api/v2/User/add_ecg_franchise_data';
-  static const String admitPatient = 'api/v2/User/admit_patient';
   static const String whereAdmit = 'api/v2/User/where_admit';
   static const String getBeds = 'api/v2/User/get_beds';
+  static const String getInstitute = 'api/v2/User/get_institute';
 
   // ==========================================
   // Payment Endpoints
@@ -100,4 +100,9 @@ class ApiEndpoints {
   // IPDPatient Endpoints
   // ==========================================
   static const String addAdmitPatientRequest = 'web/IPDPatients/add_admit_patient_request';
+
+  // ==========================================
+  // Institute Endpoints
+  // ==========================================
+  static const String admitPatientFromWeb = 'v2/Institute/admit_patient_from_web';
 }
