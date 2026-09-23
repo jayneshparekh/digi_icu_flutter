@@ -79,7 +79,8 @@ class _AppSpeechInputWidgetState extends State<AppSpeechInputWidget> {
   void initState() {
     super.initState();
     _speech = stt.SpeechToText();
-    _languages = widget.supportedLanguages ??
+    _languages =
+        widget.supportedLanguages ??
         [
           SpeechLanguage(name: 'lang_english'.tr, localeId: 'en_IN'),
           SpeechLanguage(name: 'lang_hindi'.tr, localeId: 'hi_IN'),
@@ -129,7 +130,8 @@ class _AppSpeechInputWidgetState extends State<AppSpeechInputWidget> {
           final prefix = targetLocaleId.split('_').first.toLowerCase();
           final match = systemLocales.firstWhere(
             (loc) => loc.localeId.toLowerCase().startsWith(prefix),
-            orElse: () => stt.LocaleName(targetLocaleId, _selectedLanguage.name),
+            orElse: () =>
+                stt.LocaleName(targetLocaleId, _selectedLanguage.name),
           );
           return match.localeId;
         }

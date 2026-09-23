@@ -1,4 +1,4 @@
-﻿class GetOrderRequest {
+class GetOrderRequest {
   final String userId;
   final int packageId;
   final String amount;
@@ -16,12 +16,11 @@
   });
 
   Map<String, dynamic> toJson() => {
-        'user_id': userId,
-        'package_id': packageId,
-        'amount': amount,
-        'payment_by': paymentBy,
-        'payment_by_id': paymentById,
-        'payment_for': paymentFor,
-      };
+    'user_id': userId,
+    'package_id': packageId,
+    'amount': amount,
+    'payment_by': paymentBy,
+    'payment_by_id': paymentById,
+    'payment_for': paymentFor,
+  };
 }
-

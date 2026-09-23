@@ -134,6 +134,3 @@ class LoginController extends GetxController {
     AppSnackbars.showError('Error', message);
   }
 }
-
-
-

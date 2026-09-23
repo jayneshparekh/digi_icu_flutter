@@ -67,7 +67,10 @@ class RazorpayService {
     try {
       _razorpay.open(options);
     } catch (e) {
-      AppSnackbars.showError('Payment Error', 'Unable to initiate payment. Please try again.');
+      AppSnackbars.showError(
+        'Payment Error',
+        'Unable to initiate payment. Please try again.',
+      );
     }
   }
 
@@ -88,4 +91,3 @@ class RazorpayService {
     _razorpay.clear();
   }
 }
-

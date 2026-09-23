@@ -3,16 +3,14 @@ class QuickFormDetailResponse {
   final String msg;
   final QuickFormData? data;
 
-  QuickFormDetailResponse({
-    required this.status,
-    required this.msg,
-    this.data,
-  });
+  QuickFormDetailResponse({required this.status, required this.msg, this.data});
 
   factory QuickFormDetailResponse.fromJson(Map<String, dynamic> json) {
     QuickFormData? formData;
     if (json['data'] != null && json['data'] is Map) {
-      formData = QuickFormData.fromJson(Map<String, dynamic>.from(json['data'] as Map));
+      formData = QuickFormData.fromJson(
+        Map<String, dynamic>.from(json['data'] as Map),
+      );
     }
     return QuickFormDetailResponse(
       status: json['status']?.toString() ?? '',

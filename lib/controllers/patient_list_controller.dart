@@ -63,7 +63,10 @@ class PatientListController extends GetxController {
   }
 
   /// Fetches statuswise patients list from API
-  Future<void> fetchPatients({bool isLoadMore = false, String search = ''}) async {
+  Future<void> fetchPatients({
+    bool isLoadMore = false,
+    String search = '',
+  }) async {
     if (isLoadMore) {
       if (isLoadMoreLoading.value || !hasMore.value) return;
       isLoadMoreLoading.value = true;
@@ -127,7 +130,8 @@ class PatientListController extends GetxController {
       } else {
         if (!isLoadMore) {
           patients.clear();
-          errorMessage.value = 'Failed to load patients: ${response.statusCode}';
+          errorMessage.value =
+              'Failed to load patients: ${response.statusCode}';
         }
         hasMore.value = false;
       }
@@ -180,17 +184,17 @@ class PatientListController extends GetxController {
   }
 
   /// Confirms doctor consultation for a patient
-  Future<bool> confirmConsultPatientPost(String appointmentId, String type) async {
+  Future<bool> confirmConsultPatientPost(
+    String appointmentId,
+    String type,
+  ) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
         ApiEndpoints.confirmConsultPatientPost,
-        data: {
-          'appointment_id': appointmentId,
-          'type': type,
-        },
+        data: {'appointment_id': appointmentId, 'type': type},
         options: dio.Options(headers: {'Authorization': token}),
       );
 
@@ -227,7 +231,10 @@ class PatientListController extends GetxController {
         ConfirmPatientDialog(
           patient: patient,
           onConfirm: () async {
-            final success = await confirmConsultPatientPost(patient.id, 'doctor_verify');
+            final success = await confirmConsultPatientPost(
+              patient.id,
+              'doctor_verify',
+            );
             if (success) {
               fetchPatients(search: searchController.text);
               _navigateToServingPatient(patient);
@@ -244,7 +251,9 @@ class PatientListController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
 
-    final fullName = '${patient.firstName} ${patient.midName.isNotEmpty ? '${patient.midName[0]} ' : ''}${patient.lastName}'.trim();
+    final fullName =
+        '${patient.firstName} ${patient.midName.isNotEmpty ? '${patient.midName[0]} ' : ''}${patient.lastName}'
+            .trim();
 
     final gender = patient.gender == 'Male'
         ? 'M'
@@ -277,5 +286,3 @@ class PatientListController extends GetxController {
     Get.toNamed('/serving-patient', arguments: args);
   }
 }
-
-

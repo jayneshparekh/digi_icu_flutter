@@ -42,11 +42,8 @@ class AppNetworkAvatar extends StatelessWidget {
     return Image.asset(
       fallbackAsset,
       fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) => Icon(
-        Icons.person,
-        size: 48,
-        color: AppColors.medicalGray,
-      ),
+      errorBuilder: (context, error, stackTrace) =>
+          Icon(Icons.person, size: 48, color: AppColors.medicalGray),
     );
   }
 }

@@ -54,11 +54,9 @@ class AppPrimaryButton extends StatelessWidget {
               )
             : Text(
                 label,
-                style: labelStyle ??
-                    const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                style:
+                    labelStyle ??
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
       ),
     );

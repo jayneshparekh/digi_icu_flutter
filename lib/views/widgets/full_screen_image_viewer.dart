@@ -14,12 +14,13 @@ class FullScreenImageViewer extends StatelessWidget {
   });
 
   /// Helper static method to show the full-screen image viewer overlay.
-  static Future<void> show(BuildContext context, String imageUrl, {String title = 'Prescription Image'}) {
+  static Future<void> show(
+    BuildContext context,
+    String imageUrl, {
+    String title = 'Prescription Image',
+  }) {
     return Get.dialog<void>(
-      FullScreenImageViewer(
-        imageUrl: imageUrl,
-        title: title,
-      ),
+      FullScreenImageViewer(imageUrl: imageUrl, title: title),
     );
   }
 
@@ -33,7 +34,11 @@ class FullScreenImageViewer extends StatelessWidget {
           iconTheme: const IconThemeData(color: AppColors.white),
           title: Text(
             title,
-            style: const TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              color: AppColors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           actions: [
             IconButton(
@@ -56,7 +61,8 @@ class FullScreenImageViewer extends StatelessWidget {
                 return Center(
                   child: CircularProgressIndicator(
                     value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                        ? loadingProgress.cumulativeBytesLoaded /
+                              (loadingProgress.expectedTotalBytes ?? 1)
                         : null,
                     color: AppColors.teal,
                   ),
@@ -66,7 +72,11 @@ class FullScreenImageViewer extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.broken_image, size: 64, color: AppColors.coolGray),
+                    Icon(
+                      Icons.broken_image,
+                      size: 64,
+                      color: AppColors.coolGray,
+                    ),
                     SizedBox(height: 8),
                     Text(
                       'Failed to load image',

@@ -4,8 +4,6 @@ class QuickFormListReq {
   QuickFormListReq({required this.patientId});
 
   Map<String, dynamic> toJson() {
-    return {
-      'patient_id': patientId,
-    };
+    return {'patient_id': patientId};
   }
 }

@@ -53,7 +53,10 @@ class ServingPatientMedicalFormView extends StatelessWidget {
       body: Stack(
         children: [
           SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 12.0,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -142,20 +145,33 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                   children: [
                     Text(
                       'q_cholesterol'.tr,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.navy,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Obx(
                       () => RadioGroup<String>(
                         groupValue: controller.hasCholesterol.value,
-                        onChanged: (val) => controller.hasCholesterol.value = val ?? 'No',
+                        onChanged: (val) =>
+                            controller.hasCholesterol.value = val ?? 'No',
                         child: Column(
-                          children: ['Yes', 'No', "Don't Know"].map((opt) => Row(
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt == "Don't Know" ? 'dont_know'.tr : opt.toLowerCase().tr),
-                            ],
-                          )).toList(),
+                          children: ['Yes', 'No', "Don't Know"]
+                              .map(
+                                (opt) => Row(
+                                  children: [
+                                    AppRadio<String>(value: opt),
+                                    Text(
+                                      opt == "Don't Know"
+                                          ? 'dont_know'.tr
+                                          : opt.toLowerCase().tr,
+                                    ),
+                                  ],
+                                ),
+                              )
+                              .toList(),
                         ),
                       ),
                     ),
@@ -169,21 +185,30 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                   children: [
                     Text(
                       'q_asthma'.tr,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.navy,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Obx(
                       () => RadioGroup<String>(
                         groupValue: controller.hasAsthma.value,
-                        onChanged: (val) => controller.hasAsthma.value = val ?? 'No',
+                        onChanged: (val) =>
+                            controller.hasAsthma.value = val ?? 'No',
                         child: Row(
-                          children: ['Yes', 'No'].map((opt) => Row(
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt.toLowerCase().tr),
-                              const SizedBox(width: 24),
-                            ],
-                          )).toList(),
+                          children: ['Yes', 'No']
+                              .map(
+                                (opt) => Row(
+                                  children: [
+                                    AppRadio<String>(value: opt),
+                                    Text(opt.toLowerCase().tr),
+                                    const SizedBox(width: 24),
+                                  ],
+                                ),
+                              )
+                              .toList(),
                         ),
                       ),
                     ),
@@ -192,45 +217,75 @@ class ServingPatientMedicalFormView extends StatelessWidget {
 
                 // 6. Pregnancy details (Female only)
                 Obx(() {
-                  if (!controller.showPregnancySection) return const SizedBox.shrink();
+                  if (!controller.showPregnancySection) {
+                    return const SizedBox.shrink();
+                  }
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Divider(height: 24),
                       Text(
                         'q_pregnant'.tr,
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.navy,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       RadioGroup<String>(
                         groupValue: controller.isPregnant.value,
-                        onChanged: (val) => controller.isPregnant.value = val ?? 'No',
+                        onChanged: (val) =>
+                            controller.isPregnant.value = val ?? 'No',
                         child: Row(
-                          children: ['Yes', 'No', 'May be'].map((opt) => Row(
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt == 'May be' ? 'may_be'.tr : opt.toLowerCase().tr),
-                              const SizedBox(width: 16),
-                            ],
-                          )).toList(),
+                          children: ['Yes', 'No', 'May be']
+                              .map(
+                                (opt) => Row(
+                                  children: [
+                                    AppRadio<String>(value: opt),
+                                    Text(
+                                      opt == 'May be'
+                                          ? 'may_be'.tr
+                                          : opt.toLowerCase().tr,
+                                    ),
+                                    const SizedBox(width: 16),
+                                  ],
+                                ),
+                              )
+                              .toList(),
                         ),
                       ),
                       const SizedBox(height: 12),
                       Text(
                         'pregnancy_details'.tr,
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.navy,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       RadioGroup<String>(
                         groupValue: controller.duringPregnancy.value,
-                        onChanged: (val) => controller.duringPregnancy.value = val ?? 'None',
+                        onChanged: (val) =>
+                            controller.duringPregnancy.value = val ?? 'None',
                         child: Column(
-                          children: ['Hypertension', 'Diabetes', 'Both', 'None'].map((opt) => Row(
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt == 'Both' ? 'both'.tr : opt == 'None' ? 'none'.tr : opt),
-                            ],
-                          )).toList(),
+                          children: ['Hypertension', 'Diabetes', 'Both', 'None']
+                              .map(
+                                (opt) => Row(
+                                  children: [
+                                    AppRadio<String>(value: opt),
+                                    Text(
+                                      opt == 'Both'
+                                          ? 'both'.tr
+                                          : opt == 'None'
+                                          ? 'none'.tr
+                                          : opt,
+                                    ),
+                                  ],
+                                ),
+                              )
+                              .toList(),
                         ),
                       ),
                     ],
@@ -272,22 +327,41 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 8),
-                      Text('heart_attack_status_q'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 4),
-                      Obx(() => RadioGroup<String>(
-                        groupValue: controller.heartAttackStatus.value,
-                        onChanged: (val) => controller.heartAttackStatus.value = val ?? 'No Records',
-                        child: Wrap(
-                          children: ['Acute', 'Recent', 'Old', 'No Records'].map((opt) => Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt == 'No Records' ? 'no_records'.tr : opt.toLowerCase().tr),
-                              const SizedBox(width: 12),
-                            ],
-                          )).toList(),
+                      Text(
+                        'heart_attack_status_q'.tr,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: AppColors.coolGray,
+                          fontWeight: FontWeight.bold,
                         ),
-                      )),
+                      ),
+                      const SizedBox(height: 4),
+                      Obx(
+                        () => RadioGroup<String>(
+                          groupValue: controller.heartAttackStatus.value,
+                          onChanged: (val) =>
+                              controller.heartAttackStatus.value =
+                                  val ?? 'No Records',
+                          child: Wrap(
+                            children: ['Acute', 'Recent', 'Old', 'No Records']
+                                .map(
+                                  (opt) => Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      AppRadio<String>(value: opt),
+                                      Text(
+                                        opt == 'No Records'
+                                            ? 'no_records'.tr
+                                            : opt.toLowerCase().tr,
+                                      ),
+                                      const SizedBox(width: 12),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -319,22 +393,40 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 8),
-                      Text('stroke_status_q'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 4),
-                      Obx(() => RadioGroup<String>(
-                        groupValue: controller.strokeStatus.value,
-                        onChanged: (val) => controller.strokeStatus.value = val ?? 'No Records',
-                        child: Wrap(
-                          children: ['Acute', 'Recent', 'Old', 'No Records'].map((opt) => Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt == 'No Records' ? 'no_records'.tr : opt.toLowerCase().tr),
-                              const SizedBox(width: 12),
-                            ],
-                          )).toList(),
+                      Text(
+                        'stroke_status_q'.tr,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: AppColors.coolGray,
+                          fontWeight: FontWeight.bold,
                         ),
-                      )),
+                      ),
+                      const SizedBox(height: 4),
+                      Obx(
+                        () => RadioGroup<String>(
+                          groupValue: controller.strokeStatus.value,
+                          onChanged: (val) => controller.strokeStatus.value =
+                              val ?? 'No Records',
+                          child: Wrap(
+                            children: ['Acute', 'Recent', 'Old', 'No Records']
+                                .map(
+                                  (opt) => Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      AppRadio<String>(value: opt),
+                                      Text(
+                                        opt == 'No Records'
+                                            ? 'no_records'.tr
+                                            : opt.toLowerCase().tr,
+                                      ),
+                                      const SizedBox(width: 12),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -366,38 +458,78 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 8),
-                      Text('kidney_failure_status_q'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 4),
-                      Obx(() => RadioGroup<String>(
-                        groupValue: controller.kidneyFailureStatus.value,
-                        onChanged: (val) => controller.kidneyFailureStatus.value = val ?? 'No Records',
-                        child: Wrap(
-                          children: ['Acute', 'Chronic', 'No Records'].map((opt) => Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt == 'Chronic' ? 'chronic'.tr : opt == 'No Records' ? 'no_records'.tr : opt.toLowerCase().tr),
-                              const SizedBox(width: 12),
-                            ],
-                          )).toList(),
+                      Text(
+                        'kidney_failure_status_q'.tr,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: AppColors.coolGray,
+                          fontWeight: FontWeight.bold,
                         ),
-                      )),
+                      ),
+                      const SizedBox(height: 4),
+                      Obx(
+                        () => RadioGroup<String>(
+                          groupValue: controller.kidneyFailureStatus.value,
+                          onChanged: (val) =>
+                              controller.kidneyFailureStatus.value =
+                                  val ?? 'No Records',
+                          child: Wrap(
+                            children: ['Acute', 'Chronic', 'No Records']
+                                .map(
+                                  (opt) => Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      AppRadio<String>(value: opt),
+                                      Text(
+                                        opt == 'Chronic'
+                                            ? 'chronic'.tr
+                                            : opt == 'No Records'
+                                            ? 'no_records'.tr
+                                            : opt.toLowerCase().tr,
+                                      ),
+                                      const SizedBox(width: 12),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 8),
-                      Text('on_dialysis_q'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 4),
-                      Obx(() => RadioGroup<String>(
-                        groupValue: controller.kidneyFailureDialysis.value,
-                        onChanged: (val) => controller.kidneyFailureDialysis.value = val ?? 'Regular',
-                        child: Row(
-                          children: ['Regular', 'Sometimes'].map((opt) => Row(
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt == 'Sometimes' ? 'sometimes'.tr : opt.toLowerCase().tr),
-                              const SizedBox(width: 16),
-                            ],
-                          )).toList(),
+                      Text(
+                        'on_dialysis_q'.tr,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: AppColors.coolGray,
+                          fontWeight: FontWeight.bold,
                         ),
-                      )),
+                      ),
+                      const SizedBox(height: 4),
+                      Obx(
+                        () => RadioGroup<String>(
+                          groupValue: controller.kidneyFailureDialysis.value,
+                          onChanged: (val) =>
+                              controller.kidneyFailureDialysis.value =
+                                  val ?? 'Regular',
+                          child: Row(
+                            children: ['Regular', 'Sometimes']
+                                .map(
+                                  (opt) => Row(
+                                    children: [
+                                      AppRadio<String>(value: opt),
+                                      Text(
+                                        opt == 'Sometimes'
+                                            ? 'sometimes'.tr
+                                            : opt.toLowerCase().tr,
+                                      ),
+                                      const SizedBox(width: 16),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -429,66 +561,124 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 8),
-                      Text('stents_q'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray, fontWeight: FontWeight.bold)),
+                      Text(
+                        'stents_q'.tr,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: AppColors.coolGray,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       const SizedBox(height: 4),
-                      Obx(() => RadioGroup<String>(
-                        groupValue: controller.angioplastyStents.value,
-                        onChanged: (val) => controller.angioplastyStents.value = val ?? 'I',
-                        child: Row(
-                          children: ['I', 'II', 'III', 'IV'].map((opt) => Row(
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt),
-                              const SizedBox(width: 16),
-                            ],
-                          )).toList(),
+                      Obx(
+                        () => RadioGroup<String>(
+                          groupValue: controller.angioplastyStents.value,
+                          onChanged: (val) =>
+                              controller.angioplastyStents.value = val ?? 'I',
+                          child: Row(
+                            children: ['I', 'II', 'III', 'IV']
+                                .map(
+                                  (opt) => Row(
+                                    children: [
+                                      AppRadio<String>(value: opt),
+                                      Text(opt),
+                                      const SizedBox(width: 16),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ),
                         ),
-                      )),
+                      ),
                       const SizedBox(height: 8),
-                      Text('brilinta'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray, fontWeight: FontWeight.bold)),
-                      Obx(() => RadioGroup<String>(
-                        groupValue: controller.angioplastyBrilinta.value,
-                        onChanged: (val) => controller.angioplastyBrilinta.value = val ?? 'No',
-                        child: Row(
-                          children: ['Yes', 'No'].map((opt) => Row(
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt.toLowerCase().tr),
-                              const SizedBox(width: 16),
-                            ],
-                          )).toList(),
+                      Text(
+                        'brilinta'.tr,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: AppColors.coolGray,
+                          fontWeight: FontWeight.bold,
                         ),
-                      )),
+                      ),
+                      Obx(
+                        () => RadioGroup<String>(
+                          groupValue: controller.angioplastyBrilinta.value,
+                          onChanged: (val) =>
+                              controller.angioplastyBrilinta.value =
+                                  val ?? 'No',
+                          child: Row(
+                            children: ['Yes', 'No']
+                                .map(
+                                  (opt) => Row(
+                                    children: [
+                                      AppRadio<String>(value: opt),
+                                      Text(opt.toLowerCase().tr),
+                                      const SizedBox(width: 16),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 8),
-                      Text('clopilet'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray, fontWeight: FontWeight.bold)),
-                      Obx(() => RadioGroup<String>(
-                        groupValue: controller.angioplastyClopilet.value,
-                        onChanged: (val) => controller.angioplastyClopilet.value = val ?? 'No',
-                        child: Row(
-                          children: ['Yes', 'No'].map((opt) => Row(
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt.toLowerCase().tr),
-                              const SizedBox(width: 16),
-                            ],
-                          )).toList(),
+                      Text(
+                        'clopilet'.tr,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: AppColors.coolGray,
+                          fontWeight: FontWeight.bold,
                         ),
-                      )),
+                      ),
+                      Obx(
+                        () => RadioGroup<String>(
+                          groupValue: controller.angioplastyClopilet.value,
+                          onChanged: (val) =>
+                              controller.angioplastyClopilet.value =
+                                  val ?? 'No',
+                          child: Row(
+                            children: ['Yes', 'No']
+                                .map(
+                                  (opt) => Row(
+                                    children: [
+                                      AppRadio<String>(value: opt),
+                                      Text(opt.toLowerCase().tr),
+                                      const SizedBox(width: 16),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 8),
-                      Text('prasita'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray, fontWeight: FontWeight.bold)),
-                      Obx(() => RadioGroup<String>(
-                        groupValue: controller.angioplastyPrasita.value,
-                        onChanged: (val) => controller.angioplastyPrasita.value = val ?? 'No',
-                        child: Row(
-                          children: ['Yes', 'No'].map((opt) => Row(
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt.toLowerCase().tr),
-                              const SizedBox(width: 16),
-                            ],
-                          )).toList(),
+                      Text(
+                        'prasita'.tr,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: AppColors.coolGray,
+                          fontWeight: FontWeight.bold,
                         ),
-                      )),
+                      ),
+                      Obx(
+                        () => RadioGroup<String>(
+                          groupValue: controller.angioplastyPrasita.value,
+                          onChanged: (val) =>
+                              controller.angioplastyPrasita.value = val ?? 'No',
+                          child: Row(
+                            children: ['Yes', 'No']
+                                .map(
+                                  (opt) => Row(
+                                    children: [
+                                      AppRadio<String>(value: opt),
+                                      Text(opt.toLowerCase().tr),
+                                      const SizedBox(width: 16),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -525,52 +715,87 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                   children: [
                     Text(
                       'q_allergy'.tr,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.navy,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Obx(
                       () => RadioGroup<String>(
                         groupValue: controller.hasAllergy.value,
-                        onChanged: (val) => controller.hasAllergy.value = val ?? 'No',
+                        onChanged: (val) =>
+                            controller.hasAllergy.value = val ?? 'No',
                         child: Row(
-                          children: ['Yes', 'No'].map((opt) => Row(
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt.toLowerCase().tr),
-                              const SizedBox(width: 24),
-                            ],
-                          )).toList(),
+                          children: ['Yes', 'No']
+                              .map(
+                                (opt) => Row(
+                                  children: [
+                                    AppRadio<String>(value: opt),
+                                    Text(opt.toLowerCase().tr),
+                                    const SizedBox(width: 24),
+                                  ],
+                                ),
+                              )
+                              .toList(),
                         ),
                       ),
                     ),
                     Obx(() {
-                      if (controller.hasAllergy.value != 'Yes') return const SizedBox.shrink();
+                      if (controller.hasAllergy.value != 'Yes') {
+                        return const SizedBox.shrink();
+                      }
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 8),
-                          Text('Allergic to Cardiac / Diabetic Medicine?', style: const TextStyle(fontSize: 13, color: AppColors.coolGray, fontWeight: FontWeight.bold)),
+                          Text(
+                            'Allergic to Cardiac / Diabetic Medicine?',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.coolGray,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           const SizedBox(height: 4),
                           RadioGroup<String>(
-                            groupValue: controller.allergicToCardiacDiabetic.value,
-                            onChanged: (val) => controller.allergicToCardiacDiabetic.value = val ?? 'No',
+                            groupValue:
+                                controller.allergicToCardiacDiabetic.value,
+                            onChanged: (val) =>
+                                controller.allergicToCardiacDiabetic.value =
+                                    val ?? 'No',
                             child: Row(
-                              children: ['Yes', 'No'].map((opt) => Row(
-                                children: [
-                                  AppRadio<String>(value: opt),
-                                  Text(opt.toLowerCase().tr),
-                                  const SizedBox(width: 16),
-                                ],
-                              )).toList(),
+                              children: ['Yes', 'No']
+                                  .map(
+                                    (opt) => Row(
+                                      children: [
+                                        AppRadio<String>(value: opt),
+                                        Text(opt.toLowerCase().tr),
+                                        const SizedBox(width: 16),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
                             ),
                           ),
                           const SizedBox(height: 12),
                           if (controller.allergyMedCount.value == 0)
                             Center(
                               child: TextButton.icon(
-                                onPressed: () => controller.allergyMedCount.value = 1,
-                                icon: const Icon(Icons.add, color: AppColors.teal),
-                                label: Text('add_medicine'.tr, style: const TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold)),
+                                onPressed: () =>
+                                    controller.allergyMedCount.value = 1,
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: AppColors.teal,
+                                ),
+                                label: Text(
+                                  'add_medicine'.tr,
+                                  style: const TextStyle(
+                                    color: AppColors.teal,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
                           if (controller.allergyMedCount.value >= 1) ...[
@@ -579,7 +804,10 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                               decoration: InputDecoration(
                                 hintText: 'enter_medicine_name'.tr,
                                 border: const OutlineInputBorder(),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 8,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -590,7 +818,10 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                               decoration: InputDecoration(
                                 hintText: 'enter_medicine_name_2'.tr,
                                 border: const OutlineInputBorder(),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 8,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -601,18 +832,32 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                               decoration: InputDecoration(
                                 hintText: 'enter_medicine_name_3'.tr,
                                 border: const OutlineInputBorder(),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 8,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 8),
                           ],
-                          if (controller.allergyMedCount.value > 0 && controller.allergyMedCount.value < 3)
+                          if (controller.allergyMedCount.value > 0 &&
+                              controller.allergyMedCount.value < 3)
                             Align(
                               alignment: Alignment.centerRight,
                               child: TextButton.icon(
-                                onPressed: () => controller.allergyMedCount.value++,
-                                icon: const Icon(Icons.add, color: AppColors.teal),
-                                label: Text('add_more'.tr, style: const TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold)),
+                                onPressed: () =>
+                                    controller.allergyMedCount.value++,
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: AppColors.teal,
+                                ),
+                                label: Text(
+                                  'add_more'.tr,
+                                  style: const TextStyle(
+                                    color: AppColors.teal,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
                         ],
@@ -628,59 +873,102 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                   children: [
                     Text(
                       'q_bleeding_tendencies'.tr,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.navy,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Obx(
                       () => RadioGroup<String>(
                         groupValue: controller.hasBleedingTendency.value,
-                        onChanged: (val) => controller.hasBleedingTendency.value = val ?? 'No',
+                        onChanged: (val) =>
+                            controller.hasBleedingTendency.value = val ?? 'No',
                         child: Row(
-                          children: ['Yes', 'No'].map((opt) => Row(
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt.toLowerCase().tr),
-                              const SizedBox(width: 24),
-                            ],
-                          )).toList(),
+                          children: ['Yes', 'No']
+                              .map(
+                                (opt) => Row(
+                                  children: [
+                                    AppRadio<String>(value: opt),
+                                    Text(opt.toLowerCase().tr),
+                                    const SizedBox(width: 24),
+                                  ],
+                                ),
+                              )
+                              .toList(),
                         ),
                       ),
                     ),
                     Obx(() {
-                      if (controller.hasBleedingTendency.value != 'Yes') return const SizedBox.shrink();
+                      if (controller.hasBleedingTendency.value != 'Yes') {
+                        return const SizedBox.shrink();
+                      }
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 8),
-                          Text('bleeding_severity_q'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray, fontWeight: FontWeight.bold)),
+                          Text(
+                            'bleeding_severity_q'.tr,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.coolGray,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           const SizedBox(height: 4),
                           RadioGroup<String>(
                             groupValue: controller.bleedingSeverity.value,
-                            onChanged: (val) => controller.bleedingSeverity.value = val ?? 'Mild',
+                            onChanged: (val) =>
+                                controller.bleedingSeverity.value =
+                                    val ?? 'Mild',
                             child: Row(
-                              children: ['Mild', 'Moderate', 'Severe'].map((opt) => Row(
-                                children: [
-                                  AppRadio<String>(value: opt),
-                                  Text(opt == 'Mild' ? 'mild'.tr : opt == 'Moderate' ? 'moderate'.tr : 'severe'.tr),
-                                  const SizedBox(width: 16),
-                                ],
-                              )).toList(),
+                              children: ['Mild', 'Moderate', 'Severe']
+                                  .map(
+                                    (opt) => Row(
+                                      children: [
+                                        AppRadio<String>(value: opt),
+                                        Text(
+                                          opt == 'Mild'
+                                              ? 'mild'.tr
+                                              : opt == 'Moderate'
+                                              ? 'moderate'.tr
+                                              : 'severe'.tr,
+                                        ),
+                                        const SizedBox(width: 16),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Text('can_aspirin_continue_q'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray, fontWeight: FontWeight.bold)),
+                          Text(
+                            'can_aspirin_continue_q'.tr,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.coolGray,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           const SizedBox(height: 4),
                           RadioGroup<String>(
                             groupValue: controller.canAspirinContinue.value,
-                            onChanged: (val) => controller.canAspirinContinue.value = val ?? 'No',
+                            onChanged: (val) =>
+                                controller.canAspirinContinue.value =
+                                    val ?? 'No',
                             child: Row(
-                              children: ['Yes', 'No'].map((opt) => Row(
-                                children: [
-                                  AppRadio<String>(value: opt),
-                                  Text(opt.toLowerCase().tr),
-                                  const SizedBox(width: 16),
-                                ],
-                              )).toList(),
+                              children: ['Yes', 'No']
+                                  .map(
+                                    (opt) => Row(
+                                      children: [
+                                        AppRadio<String>(value: opt),
+                                        Text(opt.toLowerCase().tr),
+                                        const SizedBox(width: 16),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
                             ),
                           ),
                         ],
@@ -696,54 +984,109 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                   children: [
                     Text(
                       'q_other_surgery'.tr,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.navy,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Obx(
                       () => RadioGroup<String>(
                         groupValue: controller.hasOtherSurgery.value,
-                        onChanged: (val) => controller.hasOtherSurgery.value = val ?? 'No',
+                        onChanged: (val) =>
+                            controller.hasOtherSurgery.value = val ?? 'No',
                         child: Row(
-                          children: ['Yes', 'No'].map((opt) => Row(
-                            children: [
-                              AppRadio<String>(value: opt),
-                              Text(opt.toLowerCase().tr),
-                              const SizedBox(width: 24),
-                            ],
-                          )).toList(),
+                          children: ['Yes', 'No']
+                              .map(
+                                (opt) => Row(
+                                  children: [
+                                    AppRadio<String>(value: opt),
+                                    Text(opt.toLowerCase().tr),
+                                    const SizedBox(width: 24),
+                                  ],
+                                ),
+                              )
+                              .toList(),
                         ),
                       ),
                     ),
                     Obx(() {
-                      if (controller.hasOtherSurgery.value != 'Yes') return const SizedBox.shrink();
+                      if (controller.hasOtherSurgery.value != 'Yes') {
+                        return const SizedBox.shrink();
+                      }
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 8),
-                          Text('surgery_category_q'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray, fontWeight: FontWeight.bold)),
+                          Text(
+                            'surgery_category_q'.tr,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.coolGray,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           const SizedBox(height: 4),
                           Wrap(
                             spacing: 12,
                             runSpacing: 4,
                             children: [
-                              _buildCheckboxItem('abdominal'.tr, controller.surgeryAbdominal),
-                              _buildCheckboxItem('neuro'.tr, controller.surgeryNeuro),
-                              _buildCheckboxItem('Cardiac', controller.surgeryCardiac),
-                              _buildCheckboxItem('ortho'.tr, controller.surgeryOrtho),
-                              _buildCheckboxItem('gynaec'.tr, controller.surgeryGynaec),
-                              _buildCheckboxItem('vascular'.tr, controller.surgeryVascular),
-                              _buildCheckboxItem('cancer'.tr, controller.surgeryCancer),
-                              _buildCheckboxItem('tumor'.tr, controller.surgeryTumor),
-                              _buildCheckboxItem('ent'.tr, controller.surgeryENT),
+                              _buildCheckboxItem(
+                                'abdominal'.tr,
+                                controller.surgeryAbdominal,
+                              ),
+                              _buildCheckboxItem(
+                                'neuro'.tr,
+                                controller.surgeryNeuro,
+                              ),
+                              _buildCheckboxItem(
+                                'Cardiac',
+                                controller.surgeryCardiac,
+                              ),
+                              _buildCheckboxItem(
+                                'ortho'.tr,
+                                controller.surgeryOrtho,
+                              ),
+                              _buildCheckboxItem(
+                                'gynaec'.tr,
+                                controller.surgeryGynaec,
+                              ),
+                              _buildCheckboxItem(
+                                'vascular'.tr,
+                                controller.surgeryVascular,
+                              ),
+                              _buildCheckboxItem(
+                                'cancer'.tr,
+                                controller.surgeryCancer,
+                              ),
+                              _buildCheckboxItem(
+                                'tumor'.tr,
+                                controller.surgeryTumor,
+                              ),
+                              _buildCheckboxItem(
+                                'ent'.tr,
+                                controller.surgeryENT,
+                              ),
                             ],
                           ),
                           const SizedBox(height: 12),
                           if (controller.surgeryMedCount.value == 0)
                             Center(
                               child: TextButton.icon(
-                                onPressed: () => controller.surgeryMedCount.value = 1,
-                                icon: const Icon(Icons.add, color: AppColors.teal),
-                                label: Text('add_surgery'.tr, style: const TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold)),
+                                onPressed: () =>
+                                    controller.surgeryMedCount.value = 1,
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: AppColors.teal,
+                                ),
+                                label: Text(
+                                  'add_surgery'.tr,
+                                  style: const TextStyle(
+                                    color: AppColors.teal,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
                           if (controller.surgeryMedCount.value >= 1) ...[
@@ -752,7 +1095,10 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                               decoration: InputDecoration(
                                 hintText: 'enter_surgery_name'.tr,
                                 border: const OutlineInputBorder(),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 8,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -763,7 +1109,10 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                               decoration: InputDecoration(
                                 hintText: 'enter_surgery_name_2'.tr,
                                 border: const OutlineInputBorder(),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 8,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -774,18 +1123,32 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                               decoration: InputDecoration(
                                 hintText: 'enter_surgery_name_3'.tr,
                                 border: const OutlineInputBorder(),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 8,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 8),
                           ],
-                          if (controller.surgeryMedCount.value > 0 && controller.surgeryMedCount.value < 3)
+                          if (controller.surgeryMedCount.value > 0 &&
+                              controller.surgeryMedCount.value < 3)
                             Align(
                               alignment: Alignment.centerRight,
                               child: TextButton.icon(
-                                onPressed: () => controller.surgeryMedCount.value++,
-                                icon: const Icon(Icons.add, color: AppColors.teal),
-                                label: Text('add_more'.tr, style: const TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold)),
+                                onPressed: () =>
+                                    controller.surgeryMedCount.value++,
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: AppColors.teal,
+                                ),
+                                label: Text(
+                                  'add_more'.tr,
+                                  style: const TextStyle(
+                                    color: AppColors.teal,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
                         ],
@@ -797,30 +1160,43 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                 const SizedBox(height: 28),
 
                 // ================= SECTION 3: FAMILY HISTORY =================
-                AppFormSectionHeader(
-                  subtitle: '',
-                  title: 'sec3_title'.tr,
-                ),
+                AppFormSectionHeader(subtitle: '', title: 'sec3_title'.tr),
                 const SizedBox(height: 12),
 
                 // 1. Family Heart Attack
-                Text('family_heart_attack_q'.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                Text(
+                  'family_heart_attack_q'.tr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Obx(() => RadioGroup<String>(
-                      groupValue: controller.hasFamilyHeartAttack.value,
-                      onChanged: (val) => controller.hasFamilyHeartAttack.value = val ?? 'No',
-                      child: Row(
-                        children: ['Yes', 'No'].map((opt) => Row(
-                          children: [
-                            AppRadio<String>(value: opt),
-                            Text(opt.toLowerCase().tr),
-                            const SizedBox(width: 24),
-                          ],
-                        )).toList(),
-                      ),
-                    )),
+                Obx(
+                  () => RadioGroup<String>(
+                    groupValue: controller.hasFamilyHeartAttack.value,
+                    onChanged: (val) =>
+                        controller.hasFamilyHeartAttack.value = val ?? 'No',
+                    child: Row(
+                      children: ['Yes', 'No']
+                          .map(
+                            (opt) => Row(
+                              children: [
+                                AppRadio<String>(value: opt),
+                                Text(opt.toLowerCase().tr),
+                                const SizedBox(width: 24),
+                              ],
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
                 Obx(() {
-                  if (controller.hasFamilyHeartAttack.value != 'Yes') return const SizedBox.shrink();
+                  if (controller.hasFamilyHeartAttack.value != 'Yes') {
+                    return const SizedBox.shrink();
+                  }
                   return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Column(
@@ -828,29 +1204,53 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                       children: [
                         AppFamilyMemberSelector(
                           fatherSelected: controller.famHeartAttackFather,
-                          fatherAgeController: controller.famHeartAttackFatherAgeCtrl,
+                          fatherAgeController:
+                              controller.famHeartAttackFatherAgeCtrl,
                           motherSelected: controller.famHeartAttackMother,
-                          motherAgeController: controller.famHeartAttackMotherAgeCtrl,
+                          motherAgeController:
+                              controller.famHeartAttackMotherAgeCtrl,
                           brotherSelected: controller.famHeartAttackBrother,
-                          brotherAgeController: controller.famHeartAttackBrotherAgeCtrl,
+                          brotherAgeController:
+                              controller.famHeartAttackBrotherAgeCtrl,
                           sisterSelected: controller.famHeartAttackSister,
-                          sisterAgeController: controller.famHeartAttackSisterAgeCtrl,
-                          grandparentsSelected: controller.famHeartAttackGrandparents,
-                          grandparentsAgeController: controller.famHeartAttackGrandparentsAgeCtrl,
+                          sisterAgeController:
+                              controller.famHeartAttackSisterAgeCtrl,
+                          grandparentsSelected:
+                              controller.famHeartAttackGrandparents,
+                          grandparentsAgeController:
+                              controller.famHeartAttackGrandparentsAgeCtrl,
                         ),
                         const SizedBox(height: 8),
-                        Text('fh_significance'.tr, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                        Text(
+                          'fh_significance'.tr,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                          ),
+                        ),
                         RadioGroup<String>(
-                          groupValue: controller.famHeartAttackSignificance.value,
-                          onChanged: (val) => controller.famHeartAttackSignificance.value = val ?? 'Significant',
+                          groupValue:
+                              controller.famHeartAttackSignificance.value,
+                          onChanged: (val) =>
+                              controller.famHeartAttackSignificance.value =
+                                  val ?? 'Significant',
                           child: Row(
-                            children: ['Significant', 'Non-Significant'].map((opt) => Row(
-                              children: [
-                                AppRadio<String>(value: opt),
-                                Text(opt == 'Significant' ? 'fh_significant'.tr : 'fh_non_significant'.tr),
-                                const SizedBox(width: 16),
-                              ],
-                            )).toList(),
+                            children: ['Significant', 'Non-Significant']
+                                .map(
+                                  (opt) => Row(
+                                    children: [
+                                      AppRadio<String>(value: opt),
+                                      Text(
+                                        opt == 'Significant'
+                                            ? 'fh_significant'.tr
+                                            : 'fh_non_significant'.tr,
+                                      ),
+                                      const SizedBox(width: 16),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
                           ),
                         ),
                       ],
@@ -860,23 +1260,39 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                 const Divider(height: 24),
 
                 // 2. Family Stroke
-                Text('family_stroke_q'.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                Text(
+                  'family_stroke_q'.tr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Obx(() => RadioGroup<String>(
-                      groupValue: controller.hasFamilyStroke.value,
-                      onChanged: (val) => controller.hasFamilyStroke.value = val ?? 'No',
-                      child: Row(
-                        children: ['Yes', 'No'].map((opt) => Row(
-                          children: [
-                            AppRadio<String>(value: opt),
-                            Text(opt.toLowerCase().tr),
-                            const SizedBox(width: 24),
-                          ],
-                        )).toList(),
-                      ),
-                    )),
+                Obx(
+                  () => RadioGroup<String>(
+                    groupValue: controller.hasFamilyStroke.value,
+                    onChanged: (val) =>
+                        controller.hasFamilyStroke.value = val ?? 'No',
+                    child: Row(
+                      children: ['Yes', 'No']
+                          .map(
+                            (opt) => Row(
+                              children: [
+                                AppRadio<String>(value: opt),
+                                Text(opt.toLowerCase().tr),
+                                const SizedBox(width: 24),
+                              ],
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
                 Obx(() {
-                  if (controller.hasFamilyStroke.value != 'Yes') return const SizedBox.shrink();
+                  if (controller.hasFamilyStroke.value != 'Yes') {
+                    return const SizedBox.shrink();
+                  }
                   return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Column(
@@ -884,29 +1300,52 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                       children: [
                         AppFamilyMemberSelector(
                           fatherSelected: controller.famStrokeFather,
-                          fatherAgeController: controller.famStrokeFatherAgeCtrl,
+                          fatherAgeController:
+                              controller.famStrokeFatherAgeCtrl,
                           motherSelected: controller.famStrokeMother,
-                          motherAgeController: controller.famStrokeMotherAgeCtrl,
+                          motherAgeController:
+                              controller.famStrokeMotherAgeCtrl,
                           brotherSelected: controller.famStrokeBrother,
-                          brotherAgeController: controller.famStrokeBrotherAgeCtrl,
+                          brotherAgeController:
+                              controller.famStrokeBrotherAgeCtrl,
                           sisterSelected: controller.famStrokeSister,
-                          sisterAgeController: controller.famStrokeSisterAgeCtrl,
-                          grandparentsSelected: controller.famStrokeGrandparents,
-                          grandparentsAgeController: controller.famStrokeGrandparentsAgeCtrl,
+                          sisterAgeController:
+                              controller.famStrokeSisterAgeCtrl,
+                          grandparentsSelected:
+                              controller.famStrokeGrandparents,
+                          grandparentsAgeController:
+                              controller.famStrokeGrandparentsAgeCtrl,
                         ),
                         const SizedBox(height: 8),
-                        Text('fh_significance'.tr, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                        Text(
+                          'fh_significance'.tr,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                          ),
+                        ),
                         RadioGroup<String>(
                           groupValue: controller.famStrokeSignificance.value,
-                          onChanged: (val) => controller.famStrokeSignificance.value = val ?? 'Significant',
+                          onChanged: (val) =>
+                              controller.famStrokeSignificance.value =
+                                  val ?? 'Significant',
                           child: Row(
-                            children: ['Significant', 'Non-Significant'].map((opt) => Row(
-                              children: [
-                                AppRadio<String>(value: opt),
-                                Text(opt == 'Significant' ? 'fh_significant'.tr : 'fh_non_significant'.tr),
-                                const SizedBox(width: 16),
-                              ],
-                            )).toList(),
+                            children: ['Significant', 'Non-Significant']
+                                .map(
+                                  (opt) => Row(
+                                    children: [
+                                      AppRadio<String>(value: opt),
+                                      Text(
+                                        opt == 'Significant'
+                                            ? 'fh_significant'.tr
+                                            : 'fh_non_significant'.tr,
+                                      ),
+                                      const SizedBox(width: 16),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
                           ),
                         ),
                       ],
@@ -916,23 +1355,39 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                 const Divider(height: 24),
 
                 // 3. Family Angioplasty
-                Text('family_angioplasty_q'.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                Text(
+                  'family_angioplasty_q'.tr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Obx(() => RadioGroup<String>(
-                      groupValue: controller.hasFamilyAngioplasty.value,
-                      onChanged: (val) => controller.hasFamilyAngioplasty.value = val ?? 'No',
-                      child: Row(
-                        children: ['Yes', 'No'].map((opt) => Row(
-                          children: [
-                            AppRadio<String>(value: opt),
-                            Text(opt.toLowerCase().tr),
-                            const SizedBox(width: 24),
-                          ],
-                        )).toList(),
-                      ),
-                    )),
+                Obx(
+                  () => RadioGroup<String>(
+                    groupValue: controller.hasFamilyAngioplasty.value,
+                    onChanged: (val) =>
+                        controller.hasFamilyAngioplasty.value = val ?? 'No',
+                    child: Row(
+                      children: ['Yes', 'No']
+                          .map(
+                            (opt) => Row(
+                              children: [
+                                AppRadio<String>(value: opt),
+                                Text(opt.toLowerCase().tr),
+                                const SizedBox(width: 24),
+                              ],
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
                 Obx(() {
-                  if (controller.hasFamilyAngioplasty.value != 'Yes') return const SizedBox.shrink();
+                  if (controller.hasFamilyAngioplasty.value != 'Yes') {
+                    return const SizedBox.shrink();
+                  }
                   return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Column(
@@ -940,32 +1395,57 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                       children: [
                         AppFamilyMemberSelector(
                           fatherSelected: controller.famAngioplastyFather,
-                          fatherAgeController: controller.famAngioplastyFatherAgeCtrl,
+                          fatherAgeController:
+                              controller.famAngioplastyFatherAgeCtrl,
                           motherSelected: controller.famAngioplastyMother,
-                          motherAgeController: controller.famAngioplastyMotherAgeCtrl,
+                          motherAgeController:
+                              controller.famAngioplastyMotherAgeCtrl,
                           brotherSelected: controller.famAngioplastyBrother,
-                          brotherAgeController: controller.famAngioplastyBrotherAgeCtrl,
+                          brotherAgeController:
+                              controller.famAngioplastyBrotherAgeCtrl,
                           sisterSelected: controller.famAngioplastySister,
-                          sisterAgeController: controller.famAngioplastySisterAgeCtrl,
-                          grandparentsSelected: controller.famAngioplastyGrandparents,
-                          grandparentsAgeController: controller.famAngioplastyGrandparentsAgeCtrl,
+                          sisterAgeController:
+                              controller.famAngioplastySisterAgeCtrl,
+                          grandparentsSelected:
+                              controller.famAngioplastyGrandparents,
+                          grandparentsAgeController:
+                              controller.famAngioplastyGrandparentsAgeCtrl,
                         ),
                         const SizedBox(height: 8),
-                        Text('fh_significance'.tr, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.navy)),
-                        RadioGroup<String>(
-                          groupValue: controller.famAngioplastySignificance.value,
-                          onChanged: (val) => controller.famAngioplastySignificance.value = val ?? 'Significant',
-                          child: Row(
-                            children: ['Significant', 'Non-Significant'].map((opt) => Row(
-                              children: [
-                                AppRadio<String>(value: opt),
-                                Text(opt == 'Significant' ? 'fh_significant'.tr : 'fh_non_significant'.tr),
-                                const SizedBox(width: 16),
-                              ],
-                            )).toList(),
+                        Text(
+                          'fh_significance'.tr,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
                           ),
                         ),
-                        if (controller.famAngioplastySignificance.value == 'Significant') ...[
+                        RadioGroup<String>(
+                          groupValue:
+                              controller.famAngioplastySignificance.value,
+                          onChanged: (val) =>
+                              controller.famAngioplastySignificance.value =
+                                  val ?? 'Significant',
+                          child: Row(
+                            children: ['Significant', 'Non-Significant']
+                                .map(
+                                  (opt) => Row(
+                                    children: [
+                                      AppRadio<String>(value: opt),
+                                      Text(
+                                        opt == 'Significant'
+                                            ? 'fh_significant'.tr
+                                            : 'fh_non_significant'.tr,
+                                      ),
+                                      const SizedBox(width: 16),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                        if (controller.famAngioplastySignificance.value ==
+                            'Significant') ...[
                           const SizedBox(height: 8),
                           AppLabeledTextField(
                             controller: controller.famAngioplastyCommentsCtrl,
@@ -979,23 +1459,39 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                 const Divider(height: 24),
 
                 // 4. Family Sudden Death
-                Text('family_died_q'.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                Text(
+                  'family_died_q'.tr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Obx(() => RadioGroup<String>(
-                      groupValue: controller.hasFamilySuddenDeath.value,
-                      onChanged: (val) => controller.hasFamilySuddenDeath.value = val ?? 'No',
-                      child: Row(
-                        children: ['Yes', 'No'].map((opt) => Row(
-                          children: [
-                            AppRadio<String>(value: opt),
-                            Text(opt.toLowerCase().tr),
-                            const SizedBox(width: 24),
-                          ],
-                        )).toList(),
-                      ),
-                    )),
+                Obx(
+                  () => RadioGroup<String>(
+                    groupValue: controller.hasFamilySuddenDeath.value,
+                    onChanged: (val) =>
+                        controller.hasFamilySuddenDeath.value = val ?? 'No',
+                    child: Row(
+                      children: ['Yes', 'No']
+                          .map(
+                            (opt) => Row(
+                              children: [
+                                AppRadio<String>(value: opt),
+                                Text(opt.toLowerCase().tr),
+                                const SizedBox(width: 24),
+                              ],
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
                 Obx(() {
-                  if (controller.hasFamilySuddenDeath.value != 'Yes') return const SizedBox.shrink();
+                  if (controller.hasFamilySuddenDeath.value != 'Yes') {
+                    return const SizedBox.shrink();
+                  }
                   return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Column(
@@ -1007,50 +1503,93 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                           motherSelected: controller.famDiedMother,
                           motherAgeController: controller.famDiedMotherAgeCtrl,
                           brotherSelected: controller.famDiedBrother,
-                          brotherAgeController: controller.famDiedBrotherAgeCtrl,
+                          brotherAgeController:
+                              controller.famDiedBrotherAgeCtrl,
                           sisterSelected: controller.famDiedSister,
                           sisterAgeController: controller.famDiedSisterAgeCtrl,
                           grandparentsSelected: controller.famDiedGrandparents,
-                          grandparentsAgeController: controller.famDiedGrandparentsAgeCtrl,
+                          grandparentsAgeController:
+                              controller.famDiedGrandparentsAgeCtrl,
                         ),
                         const SizedBox(height: 8),
-                        Text('sudden_death_reason'.tr, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.navy)),
-                        const SizedBox(height: 4),
-                        Obx(() => RadioGroup<String>(
-                          groupValue: controller.famDiedReasonRadio.value,
-                          onChanged: (val) => controller.famDiedReasonRadio.value = val ?? 'Heart Attack',
-                          child: Wrap(
-                            children: ['Heart Attack', 'Stroke', 'Accident', 'Other', "Reason don't know"].map((opt) => Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                AppRadio<String>(value: opt),
-                                Text(opt == 'Heart Attack'
-                                    ? 'heart_attack'.tr
-                                    : opt == 'Stroke'
-                                        ? 'stroke'.tr
-                                        : opt == 'Other'
-                                            ? 'other'.tr
-                                            : opt == "Reason don't know"
-                                                ? 'reason_dont_know'.tr
-                                                : opt),
-                                const SizedBox(width: 12),
-                              ],
-                            )).toList(),
+                        Text(
+                          'sudden_death_reason'.tr,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
                           ),
-                        )),
+                        ),
+                        const SizedBox(height: 4),
+                        Obx(
+                          () => RadioGroup<String>(
+                            groupValue: controller.famDiedReasonRadio.value,
+                            onChanged: (val) =>
+                                controller.famDiedReasonRadio.value =
+                                    val ?? 'Heart Attack',
+                            child: Wrap(
+                              children:
+                                  [
+                                        'Heart Attack',
+                                        'Stroke',
+                                        'Accident',
+                                        'Other',
+                                        "Reason don't know",
+                                      ]
+                                      .map(
+                                        (opt) => Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            AppRadio<String>(value: opt),
+                                            Text(
+                                              opt == 'Heart Attack'
+                                                  ? 'heart_attack'.tr
+                                                  : opt == 'Stroke'
+                                                  ? 'stroke'.tr
+                                                  : opt == 'Other'
+                                                  ? 'other'.tr
+                                                  : opt == "Reason don't know"
+                                                  ? 'reason_dont_know'.tr
+                                                  : opt,
+                                            ),
+                                            const SizedBox(width: 12),
+                                          ],
+                                        ),
+                                      )
+                                      .toList(),
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 8),
-                        Text('fh_significance'.tr, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                        Text(
+                          'fh_significance'.tr,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                          ),
+                        ),
                         RadioGroup<String>(
                           groupValue: controller.famDiedSignificance.value,
-                          onChanged: (val) => controller.famDiedSignificance.value = val ?? 'Significant',
+                          onChanged: (val) =>
+                              controller.famDiedSignificance.value =
+                                  val ?? 'Significant',
                           child: Row(
-                            children: ['Significant', 'Non-Significant'].map((opt) => Row(
-                              children: [
-                                AppRadio<String>(value: opt),
-                                Text(opt == 'Significant' ? 'fh_significant'.tr : 'fh_non_significant'.tr),
-                                const SizedBox(width: 16),
-                              ],
-                            )).toList(),
+                            children: ['Significant', 'Non-Significant']
+                                .map(
+                                  (opt) => Row(
+                                    children: [
+                                      AppRadio<String>(value: opt),
+                                      Text(
+                                        opt == 'Significant'
+                                            ? 'fh_significant'.tr
+                                            : 'fh_non_significant'.tr,
+                                      ),
+                                      const SizedBox(width: 16),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
                           ),
                         ),
                       ],
@@ -1060,27 +1599,49 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                 const SizedBox(height: 28),
 
                 // ================= SECTION 4: PERSONAL HABITS =================
-                AppFormSectionHeader(
-                  subtitle: '',
-                  title: 'sec4_title'.tr,
-                ),
+                AppFormSectionHeader(subtitle: '', title: 'sec4_title'.tr),
                 const SizedBox(height: 12),
 
                 // 1. Smoking
-                Text('do_you_smoke'.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                Text(
+                  'do_you_smoke'.tr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Obx(() => RadioGroup<String>(
-                      groupValue: controller.smokeHabit.value,
-                      onChanged: (val) => controller.smokeHabit.value = val ?? 'No',
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(children: [AppRadio<String>(value: 'Yes'), Text('yes'.tr)]),
-                          Row(children: [AppRadio<String>(value: 'No'), Text('no'.tr)]),
-                          Row(children: [AppRadio<String>(value: 'Ex-Smoker'), Text('ex_smoker'.tr)]),
-                        ],
-                      ),
-                    )),
+                Obx(
+                  () => RadioGroup<String>(
+                    groupValue: controller.smokeHabit.value,
+                    onChanged: (val) =>
+                        controller.smokeHabit.value = val ?? 'No',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            AppRadio<String>(value: 'Yes'),
+                            Text('yes'.tr),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            AppRadio<String>(value: 'No'),
+                            Text('no'.tr),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            AppRadio<String>(value: 'Ex-Smoker'),
+                            Text('ex_smoker'.tr),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 Obx(() {
                   if (controller.smokeHabit.value == 'Yes') {
                     return Padding(
@@ -1098,7 +1659,13 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('stopped_before'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray)),
+                          Text(
+                            'stopped_before'.tr,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.coolGray,
+                            ),
+                          ),
                           const SizedBox(height: 4),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -1110,10 +1677,23 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                               child: DropdownButton<String>(
                                 value: controller.smokeStopBeforeYears.value,
                                 isExpanded: true,
-                                items: ['Less than 6 months', '1 Year', '2 Years', 'More than 5 Years']
-                                    .map((v) => DropdownMenuItem(value: v, child: Text(v)))
-                                    .toList(),
-                                onChanged: (val) => controller.smokeStopBeforeYears.value = val ?? 'Less than 6 months',
+                                items:
+                                    [
+                                          'Less than 6 months',
+                                          '1 Year',
+                                          '2 Years',
+                                          'More than 5 Years',
+                                        ]
+                                        .map(
+                                          (v) => DropdownMenuItem(
+                                            value: v,
+                                            child: Text(v),
+                                          ),
+                                        )
+                                        .toList(),
+                                onChanged: (val) =>
+                                    controller.smokeStopBeforeYears.value =
+                                        val ?? 'Less than 6 months',
                               ),
                             ),
                           ),
@@ -1126,41 +1706,87 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                 const Divider(height: 24),
 
                 // 2. Alcohol
-                Text('do_you_take_alcohol'.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                Text(
+                  'do_you_take_alcohol'.tr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Obx(() => RadioGroup<String>(
-                      groupValue: controller.alcoholHabit.value,
-                      onChanged: (val) => controller.alcoholHabit.value = val ?? 'No',
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(children: [AppRadio<String>(value: 'Yes'), Text('yes'.tr)]),
-                          Row(children: [AppRadio<String>(value: 'No'), Text('no'.tr)]),
-                          Row(children: [AppRadio<String>(value: 'Ex-Alcoholic'), Text('ex_alcoholic'.tr)]),
-                          Row(children: [AppRadio<String>(value: 'Not Disclosed'), Text('not_disclosed'.tr)]),
-                        ],
-                      ),
-                    )),
+                Obx(
+                  () => RadioGroup<String>(
+                    groupValue: controller.alcoholHabit.value,
+                    onChanged: (val) =>
+                        controller.alcoholHabit.value = val ?? 'No',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            AppRadio<String>(value: 'Yes'),
+                            Text('yes'.tr),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            AppRadio<String>(value: 'No'),
+                            Text('no'.tr),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            AppRadio<String>(value: 'Ex-Alcoholic'),
+                            Text('ex_alcoholic'.tr),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            AppRadio<String>(value: 'Not Disclosed'),
+                            Text('not_disclosed'.tr),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 const Divider(height: 24),
 
                 // 3. Extra Salt
-                Text('do_you_use_extra_salt_in_food'.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                Text(
+                  'do_you_use_extra_salt_in_food'.tr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Obx(() => RadioGroup<String>(
-                      groupValue: controller.extraSaltHabit.value,
-                      onChanged: (val) => controller.extraSaltHabit.value = val ?? 'No',
-                      child: Row(
-                        children: ['Yes', 'No'].map((opt) => Row(
-                          children: [
-                            AppRadio<String>(value: opt),
-                            Text(opt.toLowerCase().tr),
-                            const SizedBox(width: 24),
-                          ],
-                        )).toList(),
-                      ),
-                    )),
+                Obx(
+                  () => RadioGroup<String>(
+                    groupValue: controller.extraSaltHabit.value,
+                    onChanged: (val) =>
+                        controller.extraSaltHabit.value = val ?? 'No',
+                    child: Row(
+                      children: ['Yes', 'No']
+                          .map(
+                            (opt) => Row(
+                              children: [
+                                AppRadio<String>(value: opt),
+                                Text(opt.toLowerCase().tr),
+                                const SizedBox(width: 24),
+                              ],
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
                 Obx(() {
-                  if (controller.extraSaltHabit.value != 'Yes') return const SizedBox.shrink();
+                  if (controller.extraSaltHabit.value != 'Yes') {
+                    return const SizedBox.shrink();
+                  }
                   return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: AppLabeledTextField(
@@ -1173,46 +1799,71 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                 const Divider(height: 24),
 
                 // 4. Morning Walk
-                Text('morning_walk_q'.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                Text(
+                  'morning_walk_q'.tr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Obx(() => RadioGroup<String>(
-                      groupValue: controller.morningWalkHabit.value,
-                      onChanged: (val) => controller.morningWalkHabit.value = val ?? 'No',
-                      child: Row(
-                        children: ['Yes', 'No'].map((opt) => Row(
-                          children: [
-                            AppRadio<String>(value: opt),
-                            Text(opt.toLowerCase().tr),
-                            const SizedBox(width: 24),
-                          ],
-                        )).toList(),
-                      ),
-                    )),
+                Obx(
+                  () => RadioGroup<String>(
+                    groupValue: controller.morningWalkHabit.value,
+                    onChanged: (val) =>
+                        controller.morningWalkHabit.value = val ?? 'No',
+                    child: Row(
+                      children: ['Yes', 'No']
+                          .map(
+                            (opt) => Row(
+                              children: [
+                                AppRadio<String>(value: opt),
+                                Text(opt.toLowerCase().tr),
+                                const SizedBox(width: 24),
+                              ],
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
                 const Divider(height: 24),
 
                 // 5. Yoga
-                Text('yoga_q'.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                Text(
+                  'yoga_q'.tr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Obx(() => RadioGroup<String>(
-                      groupValue: controller.yogaHabit.value,
-                      onChanged: (val) => controller.yogaHabit.value = val ?? 'No',
-                      child: Row(
-                        children: ['Yes', 'No'].map((opt) => Row(
-                          children: [
-                            AppRadio<String>(value: opt),
-                            Text(opt.toLowerCase().tr),
-                            const SizedBox(width: 24),
-                          ],
-                        )).toList(),
-                      ),
-                    )),
+                Obx(
+                  () => RadioGroup<String>(
+                    groupValue: controller.yogaHabit.value,
+                    onChanged: (val) =>
+                        controller.yogaHabit.value = val ?? 'No',
+                    child: Row(
+                      children: ['Yes', 'No']
+                          .map(
+                            (opt) => Row(
+                              children: [
+                                AppRadio<String>(value: opt),
+                                Text(opt.toLowerCase().tr),
+                                const SizedBox(width: 24),
+                              ],
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 28),
 
                 // ================= SECTION 5: VITALS & EVALUATION =================
-                AppFormSectionHeader(
-                  subtitle: '',
-                  title: 'sec5_title'.tr,
-                ),
+                AppFormSectionHeader(subtitle: '', title: 'sec5_title'.tr),
                 const SizedBox(height: 12),
 
                 // Height & Weight
@@ -1240,7 +1891,14 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Last Known BP Reading
-                Text('your_last_known_bp_reading'.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                Text(
+                  'your_last_known_bp_reading'.tr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -1266,23 +1924,39 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Any Other Info
-                Text('any_other_info'.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                Text(
+                  'any_other_info'.tr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Obx(() => RadioGroup<String>(
-                      groupValue: controller.hasOtherInfo.value,
-                      onChanged: (val) => controller.hasOtherInfo.value = val ?? 'No',
-                      child: Row(
-                        children: ['Yes', 'No'].map((opt) => Row(
-                          children: [
-                            AppRadio<String>(value: opt),
-                            Text(opt.toLowerCase().tr),
-                            const SizedBox(width: 24),
-                          ],
-                        )).toList(),
-                      ),
-                    )),
+                Obx(
+                  () => RadioGroup<String>(
+                    groupValue: controller.hasOtherInfo.value,
+                    onChanged: (val) =>
+                        controller.hasOtherInfo.value = val ?? 'No',
+                    child: Row(
+                      children: ['Yes', 'No']
+                          .map(
+                            (opt) => Row(
+                              children: [
+                                AppRadio<String>(value: opt),
+                                Text(opt.toLowerCase().tr),
+                                const SizedBox(width: 24),
+                              ],
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
                 Obx(() {
-                  if (controller.hasOtherInfo.value != 'Yes') return const SizedBox.shrink();
+                  if (controller.hasOtherInfo.value != 'Yes') {
+                    return const SizedBox.shrink();
+                  }
                   return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: AppLabeledTextField(
@@ -1302,23 +1976,39 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Other Care Needed
-                Text('other_care_q'.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                Text(
+                  'other_care_q'.tr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Obx(() => RadioGroup<String>(
-                      groupValue: controller.hasOtherCare.value,
-                      onChanged: (val) => controller.hasOtherCare.value = val ?? 'No',
-                      child: Row(
-                        children: ['Yes', 'No'].map((opt) => Row(
-                          children: [
-                            AppRadio<String>(value: opt),
-                            Text(opt.toLowerCase().tr),
-                            const SizedBox(width: 24),
-                          ],
-                        )).toList(),
-                      ),
-                    )),
+                Obx(
+                  () => RadioGroup<String>(
+                    groupValue: controller.hasOtherCare.value,
+                    onChanged: (val) =>
+                        controller.hasOtherCare.value = val ?? 'No',
+                    child: Row(
+                      children: ['Yes', 'No']
+                          .map(
+                            (opt) => Row(
+                              children: [
+                                AppRadio<String>(value: opt),
+                                Text(opt.toLowerCase().tr),
+                                const SizedBox(width: 24),
+                              ],
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
                 Obx(() {
-                  if (controller.hasOtherCare.value != 'Yes') return const SizedBox.shrink();
+                  if (controller.hasOtherCare.value != 'Yes') {
+                    return const SizedBox.shrink();
+                  }
                   return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: AppLabeledTextField(
@@ -1386,7 +2076,11 @@ class ServingPatientMedicalFormView extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: AppColors.navy,
+          ),
         ),
         const SizedBox(height: 4),
         Obx(
@@ -1395,212 +2089,290 @@ class ServingPatientMedicalFormView extends StatelessWidget {
             onChanged: (val) => hasCondition.value = val ?? 'No',
             child: allowDontKnow
                 ? Column(
-                    children: ['Yes', 'No', "New Diagnosis"].map((opt) => Row(
-                      children: [
-                        AppRadio<String>(value: opt),
-                        Text(opt == "New Diagnosis" ? 'new_diagnosis'.tr : opt.toLowerCase().tr),
-                      ],
-                    )).toList(),
+                    children: ['Yes', 'No', "New Diagnosis"]
+                        .map(
+                          (opt) => Row(
+                            children: [
+                              AppRadio<String>(value: opt),
+                              Text(
+                                opt == "New Diagnosis"
+                                    ? 'new_diagnosis'.tr
+                                    : opt.toLowerCase().tr,
+                              ),
+                            ],
+                          ),
+                        )
+                        .toList(),
                   )
                 : Row(
-                    children: ['Yes', 'No'].map((opt) => Row(
-                      children: [
-                        AppRadio<String>(value: opt),
-                        Text(opt.toLowerCase().tr),
-                        const SizedBox(width: 24),
-                      ],
-                    )).toList(),
+                    children: ['Yes', 'No']
+                        .map(
+                          (opt) => Row(
+                            children: [
+                              AppRadio<String>(value: opt),
+                              Text(opt.toLowerCase().tr),
+                              const SizedBox(width: 24),
+                            ],
+                          ),
+                        )
+                        .toList(),
                   ),
           ),
         ),
-              Obx(() {
-                if (hasCondition.value != 'Yes') return const SizedBox.shrink();
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ?customSubWidgets,
-                    const SizedBox(height: 12),
-                    Text('since_how_many_years'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray)),
-                    const SizedBox(height: 4),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.medicalGray),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: yearsDropdownOptions.contains(yearsSince.value)
-                              ? yearsSince.value
-                              : 'Select',
-                          isExpanded: true,
-                          items: yearsDropdownOptions
-                              .map((v) => DropdownMenuItem(
-                                    value: v,
-                                    child: Text(v == 'Select' ? 'select'.tr : v),
-                                  ))
-                              .toList(),
-                          onChanged: (val) => yearsSince.value = val ?? 'Select',
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text('are_you_on_medicines'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray)),
-                    const SizedBox(height: 4),
-                    RadioGroup<String>(
-                      groupValue: onMedicine.value,
-                      onChanged: (val) => onMedicine.value = val ?? 'No',
-                      child: Row(
-                        children: ['Yes', 'No'].map((opt) => Row(
+        Obx(() {
+          if (hasCondition.value != 'Yes') return const SizedBox.shrink();
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ?customSubWidgets,
+              const SizedBox(height: 12),
+              Text(
+                'since_how_many_years'.tr,
+                style: const TextStyle(fontSize: 13, color: AppColors.coolGray),
+              ),
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.medicalGray),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: yearsDropdownOptions.contains(yearsSince.value)
+                        ? yearsSince.value
+                        : 'Select',
+                    isExpanded: true,
+                    items: yearsDropdownOptions
+                        .map(
+                          (v) => DropdownMenuItem(
+                            value: v,
+                            child: Text(v == 'Select' ? 'select'.tr : v),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (val) => yearsSince.value = val ?? 'Select',
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'are_you_on_medicines'.tr,
+                style: const TextStyle(fontSize: 13, color: AppColors.coolGray),
+              ),
+              const SizedBox(height: 4),
+              RadioGroup<String>(
+                groupValue: onMedicine.value,
+                onChanged: (val) => onMedicine.value = val ?? 'No',
+                child: Row(
+                  children: ['Yes', 'No']
+                      .map(
+                        (opt) => Row(
                           children: [
                             AppRadio<String>(value: opt),
                             Text(opt.toLowerCase().tr),
                             const SizedBox(width: 24),
                           ],
-                        )).toList(),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+              if (onMedicine.value == 'Yes') ...[
+                const SizedBox(height: 12),
+                // Dynamic Medicines Fields
+                if (medCount.value == 0)
+                  Center(
+                    child: TextButton.icon(
+                      onPressed: () => medCount.value = 1,
+                      icon: const Icon(Icons.add, color: AppColors.teal),
+                      label: Text(
+                        'add_medicine'.tr,
+                        style: const TextStyle(
+                          color: AppColors.teal,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    if (onMedicine.value == 'Yes') ...[
-                      const SizedBox(height: 12),
-                      // Dynamic Medicines Fields
-                      if (medCount.value == 0)
-                        Center(
-                          child: TextButton.icon(
-                            onPressed: () => medCount.value = 1,
-                            icon: const Icon(Icons.add, color: AppColors.teal),
-                            label: Text('add_medicine'.tr, style: const TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold)),
-                          ),
+                  ),
+                if (medCount.value >= 1) ...[
+                  _buildMedicineRow(
+                    medName1,
+                    medFreq1,
+                    'enter_name_of_medicine'.tr,
+                  ),
+                  const SizedBox(height: 8),
+                ],
+                if (medCount.value >= 2) ...[
+                  _buildMedicineRow(
+                    medName2,
+                    medFreq2,
+                    'enter_name_of_medicine_2'.tr,
+                  ),
+                  const SizedBox(height: 8),
+                ],
+                if (medCount.value >= 3) ...[
+                  _buildMedicineRow(
+                    medName3,
+                    medFreq3,
+                    'enter_name_of_medicine_3'.tr,
+                  ),
+                  const SizedBox(height: 8),
+                ],
+                if (medCount.value > 0 && medCount.value < 3)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      onPressed: () => medCount.value++,
+                      icon: const Icon(Icons.add, color: AppColors.teal),
+                      label: Text(
+                        'add_more'.tr,
+                        style: const TextStyle(
+                          color: AppColors.teal,
+                          fontWeight: FontWeight.bold,
                         ),
-                      if (medCount.value >= 1) ...[
-                        _buildMedicineRow(medName1, medFreq1, 'enter_name_of_medicine'.tr),
-                        const SizedBox(height: 8),
-                      ],
-                      if (medCount.value >= 2) ...[
-                        _buildMedicineRow(medName2, medFreq2, 'enter_name_of_medicine_2'.tr),
-                        const SizedBox(height: 8),
-                      ],
-                      if (medCount.value >= 3) ...[
-                        _buildMedicineRow(medName3, medFreq3, 'enter_name_of_medicine_3'.tr),
-                        const SizedBox(height: 8),
-                      ],
-                      if (medCount.value > 0 && medCount.value < 3)
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton.icon(
-                            onPressed: () => medCount.value++,
-                            icon: const Icon(Icons.add, color: AppColors.teal),
-                            label: Text('add_more'.tr, style: const TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold)),
-                          ),
-                        ),
+                      ),
+                    ),
+                  ),
 
-                      // Upload Images Section
-                      const SizedBox(height: 12),
-                      Text('or_upload_report'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 6),
-                      if (networkImages.isNotEmpty || reportsList.isNotEmpty) ...[
-                        SizedBox(
-                          height: 80,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              ...networkImages.map((url) => Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    width: 80,
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: AppColors.medicalGray),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Image.network(
-                                        url,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (_, _, _) => const Center(
-                                          child: Icon(Icons.broken_image, size: 24, color: AppColors.coolGray),
-                                        ),
-                                      ),
-                                    ),
-                                  )),
-                              ...reportsList.asMap().entries.map((entry) {
-                                final index = entry.key;
-                                final file = entry.value;
-                                return Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(right: 8),
-                                      width: 80,
-                                      height: 80,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: AppColors.medicalGray),
-                                        borderRadius: BorderRadius.circular(8),
-                                        image: DecorationImage(
-                                          image: FileImage(file),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 2,
-                                      right: 10,
-                                      child: InkWell(
-                                        onTap: () => reportsList.removeAt(index),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(2),
-                                          decoration: const BoxDecoration(
-                                            color: AppColors.error,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: const Icon(Icons.close, size: 14, color: AppColors.white),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                      ],
-                      if (reportsList.length + networkImages.length < 3)
-                        Row(
-                          children: [
-                            ElevatedButton.icon(
-                              onPressed: () => _showImageSourceDialog(typeKey, controller),
-                              icon: const Icon(Icons.upload_file, size: 18),
-                              label: Text('select_file'.tr),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.lightGray,
-                                foregroundColor: AppColors.navy,
-                                elevation: 0,
+                // Upload Images Section
+                const SizedBox(height: 12),
+                Text(
+                  'or_upload_report'.tr,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppColors.coolGray,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                if (networkImages.isNotEmpty || reportsList.isNotEmpty) ...[
+                  SizedBox(
+                    height: 80,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        ...networkImages.map(
+                          (url) => Container(
+                            margin: const EdgeInsets.only(right: 8),
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColors.medicalGray),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                url,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, _, _) => const Center(
+                                  child: Icon(
+                                    Icons.broken_image,
+                                    size: 24,
+                                    color: AppColors.coolGray,
+                                  ),
+                                ),
                               ),
                             ),
-                          ],
+                          ),
                         ),
+                        ...reportsList.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final file = entry.value;
+                          return Stack(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(right: 8),
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: AppColors.medicalGray,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                  image: DecorationImage(
+                                    image: FileImage(file),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 2,
+                                right: 10,
+                                child: InkWell(
+                                  onTap: () => reportsList.removeAt(index),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.error,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.close,
+                                      size: 14,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
+                if (reportsList.length + networkImages.length < 3)
+                  Row(
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () =>
+                            _showImageSourceDialog(typeKey, controller),
+                        icon: const Icon(Icons.upload_file, size: 18),
+                        label: Text('select_file'.tr),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.lightGray,
+                          foregroundColor: AppColors.navy,
+                          elevation: 0,
+                        ),
+                      ),
+                    ],
+                  ),
 
-                      if (!hideRegularQuestion) ...[
-                        const SizedBox(height: 12),
-                        Text('do_you_take_medicines_regularly'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray)),
-                        const SizedBox(height: 4),
-                        RadioGroup<String>(
-                          groupValue: medicineRegular.value,
-                          onChanged: (val) => medicineRegular.value = val ?? 'No',
-                          child: Row(
-                            children: ['Yes', 'No'].map((opt) => Row(
+                if (!hideRegularQuestion) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    'do_you_take_medicines_regularly'.tr,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppColors.coolGray,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  RadioGroup<String>(
+                    groupValue: medicineRegular.value,
+                    onChanged: (val) => medicineRegular.value = val ?? 'No',
+                    child: Row(
+                      children: ['Yes', 'No']
+                          .map(
+                            (opt) => Row(
                               children: [
                                 AppRadio<String>(value: opt),
                                 Text(opt.toLowerCase().tr),
                                 const SizedBox(width: 24),
                               ],
-                            )).toList(),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ],
-                );
-              }),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ],
+              ],
+            ],
+          );
+        }),
       ],
     );
   }
@@ -1610,7 +2382,13 @@ class ServingPatientMedicalFormView extends StatelessWidget {
     RxString freqValue,
     String hint,
   ) {
-    const freqOptions = ['One Time', 'Two Time', 'Three Time', 'Four Time', 'SOS'];
+    const freqOptions = [
+      'One Time',
+      'Two Time',
+      'Three Time',
+      'Four Time',
+      'SOS',
+    ];
 
     return Row(
       children: [
@@ -1622,7 +2400,10 @@ class ServingPatientMedicalFormView extends StatelessWidget {
               hintText: hint,
               hintStyle: const TextStyle(fontSize: 12),
               border: const OutlineInputBorder(),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 8,
+              ),
             ),
           ),
         ),
@@ -1637,24 +2418,28 @@ class ServingPatientMedicalFormView extends StatelessWidget {
             child: DropdownButtonHideUnderline(
               child: Obx(
                 () => DropdownButton<String>(
-                  value: freqOptions.contains(freqValue.value) ? freqValue.value : 'One Time',
+                  value: freqOptions.contains(freqValue.value)
+                      ? freqValue.value
+                      : 'One Time',
                   isExpanded: true,
                   items: freqOptions
-                      .map((v) => DropdownMenuItem(
-                            value: v,
-                            child: Text(
-                              v == 'One Time'
-                                  ? 'one_time'.tr
-                                  : v == 'Two Time'
-                                      ? 'two_times'.tr
-                                      : v == 'Three Time'
-                                          ? 'three_times'.tr
-                                          : v == 'Four Time'
-                                              ? 'four_times'.tr
-                                              : v,
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ))
+                      .map(
+                        (v) => DropdownMenuItem(
+                          value: v,
+                          child: Text(
+                            v == 'One Time'
+                                ? 'one_time'.tr
+                                : v == 'Two Time'
+                                ? 'two_times'.tr
+                                : v == 'Three Time'
+                                ? 'three_times'.tr
+                                : v == 'Four Time'
+                                ? 'four_times'.tr
+                                : v,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      )
                       .toList(),
                   onChanged: (val) => freqValue.value = val ?? 'One Time',
                 ),
@@ -1667,25 +2452,33 @@ class ServingPatientMedicalFormView extends StatelessWidget {
   }
 
   Widget _buildCheckboxItem(String label, RxBool valueObs) {
-    return Obx(() => InkWell(
-          onTap: () => valueObs.value = !valueObs.value,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Checkbox(
-                value: valueObs.value,
-                onChanged: (val) => valueObs.value = val ?? false,
-                activeColor: AppColors.teal,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                visualDensity: VisualDensity.compact,
-              ),
-              Text(label, style: const TextStyle(fontSize: 13, color: AppColors.navy)),
-            ],
-          ),
-        ));
+    return Obx(
+      () => InkWell(
+        onTap: () => valueObs.value = !valueObs.value,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Checkbox(
+              value: valueObs.value,
+              onChanged: (val) => valueObs.value = val ?? false,
+              activeColor: AppColors.teal,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              visualDensity: VisualDensity.compact,
+            ),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 13, color: AppColors.navy),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  void _showImageSourceDialog(String typeKey, ServingPatientMedicalFormController controller) {
+  void _showImageSourceDialog(
+    String typeKey,
+    ServingPatientMedicalFormController controller,
+  ) {
     Get.bottomSheet(
       Container(
         color: AppColors.white,
@@ -1693,7 +2486,10 @@ class ServingPatientMedicalFormView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('choose_image_source'.tr, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(
+              'choose_image_source'.tr,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.photo_library, color: AppColors.teal),

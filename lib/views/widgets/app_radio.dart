@@ -35,6 +35,7 @@ class AppRadioListTile<T> extends StatelessWidget {
   final Widget? title;
   final Widget? subtitle;
   final EdgeInsetsGeometry contentPadding;
+  final bool enabled;
 
   const AppRadioListTile({
     super.key,
@@ -42,6 +43,7 @@ class AppRadioListTile<T> extends StatelessWidget {
     this.title,
     this.subtitle,
     this.contentPadding = EdgeInsets.zero,
+    this.enabled = true,
   });
 
   @override
@@ -53,6 +55,7 @@ class AppRadioListTile<T> extends StatelessWidget {
       activeColor: AppColors.teal,
       contentPadding: contentPadding,
       controlAffinity: ListTileControlAffinity.leading,
+      enabled: enabled,
     );
   }
 }

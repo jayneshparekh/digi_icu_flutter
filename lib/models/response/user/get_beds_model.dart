@@ -4,9 +4,7 @@ class GetBedsModel {
   const GetBedsModel({required this.bedNo});
 
   factory GetBedsModel.fromJson(Map<String, dynamic> json) {
-    return GetBedsModel(
-      bedNo: json['bed_no']?.toString() ?? '',
-    );
+    return GetBedsModel(bedNo: json['bed_no']?.toString() ?? '');
   }
 
   Map<String, dynamic> toJson() => {'bed_no': bedNo};

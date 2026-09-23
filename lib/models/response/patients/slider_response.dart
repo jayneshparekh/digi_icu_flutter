@@ -1,4 +1,4 @@
-﻿class SliderResponse {
+class SliderResponse {
   final String status;
   final List<SliderItem> homeSlider;
   final List<SliderItem> awarenessSlider;
@@ -35,10 +35,7 @@ class SliderItem {
   final String image;
   final String redirectTo;
 
-  SliderItem({
-    required this.image,
-    required this.redirectTo,
-  });
+  SliderItem({required this.image, required this.redirectTo});
 
   factory SliderItem.fromJson(Map<String, dynamic> json) {
     return SliderItem(
@@ -52,10 +49,7 @@ class TextSliderItem {
   final String textMsg;
   final String redirectTo;
 
-  TextSliderItem({
-    required this.textMsg,
-    required this.redirectTo,
-  });
+  TextSliderItem({required this.textMsg, required this.redirectTo});
 
   factory TextSliderItem.fromJson(Map<String, dynamic> json) {
     return TextSliderItem(
@@ -64,4 +58,3 @@ class TextSliderItem {
     );
   }
 }
-

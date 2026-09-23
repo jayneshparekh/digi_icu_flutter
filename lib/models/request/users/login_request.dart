@@ -1,4 +1,4 @@
-﻿class LoginRequest {
+class LoginRequest {
   final String emailId;
   final String password;
   final String token;
@@ -13,4 +13,3 @@
     return {'email_id': emailId, 'password': password, 'token': token};
   }
 }
-

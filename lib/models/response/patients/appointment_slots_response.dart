@@ -1,4 +1,4 @@
-﻿class AppointmentSlotsResponse {
+class AppointmentSlotsResponse {
   final String status;
   final String msg;
   final List<AppointmentSlotModel> data;
@@ -27,10 +27,7 @@ class AppointmentSlotModel {
   final String id;
   final String timeSlot;
 
-  AppointmentSlotModel({
-    required this.id,
-    required this.timeSlot,
-  });
+  AppointmentSlotModel({required this.id, required this.timeSlot});
 
   factory AppointmentSlotModel.fromJson(Map<String, dynamic> json) {
     return AppointmentSlotModel(
@@ -39,4 +36,3 @@ class AppointmentSlotModel {
     );
   }
 }
-

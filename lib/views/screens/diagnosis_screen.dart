@@ -46,11 +46,17 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                 children: [
                   Text(
                     'diagnosis_label'.tr,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.navy),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: AppColors.navy,
+                    ),
                   ),
                   Expanded(
                     child: Text(
-                      controller.rxDiagnosisText.value.isNotEmpty ? controller.rxDiagnosisText.value : 'na'.tr,
+                      controller.rxDiagnosisText.value.isNotEmpty
+                          ? controller.rxDiagnosisText.value
+                          : 'na'.tr,
                       style: TextStyle(fontSize: 14, color: AppColors.navy),
                     ),
                   ),
@@ -60,8 +66,13 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                     onPressed: () => controller.submitDiagnosis(),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.success,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
                     ),
                     child: Icon(Icons.save, color: AppColors.white, size: 20),
                   ),
@@ -82,7 +93,8 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                            onTap: () => controller.cbOtherDiagnosis.value = !controller.cbOtherDiagnosis.value,
+                            onTap: () => controller.cbOtherDiagnosis.value =
+                                !controller.cbOtherDiagnosis.value,
                             child: Row(
                               children: [
                                 Checkbox(
@@ -93,7 +105,13 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                                     }
                                   },
                                 ),
-                                Text('other'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                Text(
+                                  'other'.tr,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -101,9 +119,12 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                             const SizedBox(height: 8),
                             Column(
                               children: List.generate(5, (index) {
-                                if (!controller.otherSlotsVisible[index]) return const SizedBox.shrink();
+                                if (!controller.otherSlotsVisible[index]) {
+                                  return const SizedBox.shrink();
+                                }
 
-                                final isAdded = controller.otherSlotsAdded[index];
+                                final isAdded =
+                                    controller.otherSlotsAdded[index];
 
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 10.0),
@@ -112,23 +133,32 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                                     children: [
                                       Expanded(
                                         child: AppSpeechInputWidget(
-                                          controller: controller.otherControllers[index],
-                                          label: '${'other_diagnosis'.tr} ${index + 1}',
-                                          hintText: 'Type or speak diagnosis...',
+                                          controller: controller
+                                              .otherControllers[index],
+                                          label:
+                                              '${'other_diagnosis'.tr} ${index + 1}',
+                                          hintText:
+                                              'Type or speak diagnosis...',
                                           height: 48,
                                           maxLines: 1,
-                                          onChanged: (_) => controller.compileDiagnosis(),
+                                          onChanged: (_) =>
+                                              controller.compileDiagnosis(),
                                         ),
                                       ),
                                       const SizedBox(width: 8),
                                       Padding(
-                                        padding: const EdgeInsets.only(bottom: 4.0),
+                                        padding: const EdgeInsets.only(
+                                          bottom: 4.0,
+                                        ),
                                         child: GestureDetector(
-                                          onTap: () => controller.toggleOtherSlot(index),
+                                          onTap: () =>
+                                              controller.toggleOtherSlot(index),
                                           child: Container(
                                             padding: const EdgeInsets.all(8),
                                             decoration: BoxDecoration(
-                                              color: isAdded ? AppColors.error : AppColors.success,
+                                              color: isAdded
+                                                  ? AppColors.error
+                                                  : AppColors.success,
                                               shape: BoxShape.circle,
                                             ),
                                             child: Icon(
@@ -155,14 +185,23 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                            onTap: () => controller.cbHypertension.value = !controller.cbHypertension.value,
+                            onTap: () => controller.cbHypertension.value =
+                                !controller.cbHypertension.value,
                             child: Row(
                               children: [
                                 Checkbox(
                                   value: controller.cbHypertension.value,
-                                  onChanged: (val) => controller.cbHypertension.value = val ?? false,
+                                  onChanged: (val) =>
+                                      controller.cbHypertension.value =
+                                          val ?? false,
                                 ),
-                                Text('hypertension'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                Text(
+                                  'hypertension'.tr,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -172,19 +211,49 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                             Wrap(
                               spacing: 16,
                               children: [
-                                _buildCheckbox('essential'.tr, controller.cbHypertensionEssential),
-                                _buildCheckbox('secondary'.tr, controller.cbHypertensionSecondary),
-                                _buildCheckbox('white_coat'.tr, controller.cbHypertensionWhiteCoat),
-                                _buildCheckbox('resistant'.tr, controller.cbBPHypertensionResistant),
-                                _buildCheckbox('pregnancy_induced'.tr, controller.cbHypertensionPregnancy),
-                                _buildCheckbox('malignant'.tr, controller.cbHypertensionMalignant),
-                                _buildCheckbox('htnsive_emergency'.tr, controller.cbHypertensionEmergency),
-                                _buildCheckbox('accelarated'.tr, controller.cbHypertensionAccelarated),
+                                _buildCheckbox(
+                                  'essential'.tr,
+                                  controller.cbHypertensionEssential,
+                                ),
+                                _buildCheckbox(
+                                  'secondary'.tr,
+                                  controller.cbHypertensionSecondary,
+                                ),
+                                _buildCheckbox(
+                                  'white_coat'.tr,
+                                  controller.cbHypertensionWhiteCoat,
+                                ),
+                                _buildCheckbox(
+                                  'resistant'.tr,
+                                  controller.cbBPHypertensionResistant,
+                                ),
+                                _buildCheckbox(
+                                  'pregnancy_induced'.tr,
+                                  controller.cbHypertensionPregnancy,
+                                ),
+                                _buildCheckbox(
+                                  'malignant'.tr,
+                                  controller.cbHypertensionMalignant,
+                                ),
+                                _buildCheckbox(
+                                  'htnsive_emergency'.tr,
+                                  controller.cbHypertensionEmergency,
+                                ),
+                                _buildCheckbox(
+                                  'accelarated'.tr,
+                                  controller.cbHypertensionAccelarated,
+                                ),
                               ],
                             ),
                             const SizedBox(height: 12),
                             // Treatment options radio
-                            Text('treatment_options'.tr, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                            Text(
+                              'treatment_options'.tr,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                              ),
+                            ),
                             const SizedBox(height: 6),
                             RadioGroup<String>(
                               groupValue: controller.selectedHTNTreatment.value,
@@ -195,9 +264,36 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                               },
                               child: Row(
                                 children: [
-                                  Expanded(child: AppRadioListTile<String>(value: 'On Rx', title: Text('on_rx'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: AppRadioListTile<String>(value: 'On Observation', title: Text('on_obs'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: AppRadioListTile<String>(value: 'On Therapeutic', title: Text('on_therapeutic'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'On Rx',
+                                      title: Text(
+                                        'on_rx'.tr,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'On Observation',
+                                      title: Text(
+                                        'on_obs'.tr,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'On Therapeutic',
+                                      title: Text(
+                                        'on_therapeutic'.tr,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -212,14 +308,23 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                            onTap: () => controller.cbDiabetes.value = !controller.cbDiabetes.value,
+                            onTap: () => controller.cbDiabetes.value =
+                                !controller.cbDiabetes.value,
                             child: Row(
                               children: [
                                 Checkbox(
                                   value: controller.cbDiabetes.value,
-                                  onChanged: (val) => controller.cbDiabetes.value = val ?? false,
+                                  onChanged: (val) =>
+                                      controller.cbDiabetes.value =
+                                          val ?? false,
                                 ),
-                                Text('diabetes_label'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                Text(
+                                  'diabetes_label'.tr,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -228,15 +333,36 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                             Wrap(
                               spacing: 16,
                               children: [
-                                _buildCheckbox('type_i'.tr, controller.cbDMType1),
-                                _buildCheckbox('type_ii'.tr, controller.cbDmType2),
-                                _buildCheckbox('prediabetic'.tr, controller.cbPreDiabetic),
-                                _buildCheckbox('pregnancy_induced'.tr, controller.cbDMPregnancy),
-                                _buildCheckbox('diabetic_foot'.tr, controller.cbDiabeticFoot),
+                                _buildCheckbox(
+                                  'type_i'.tr,
+                                  controller.cbDMType1,
+                                ),
+                                _buildCheckbox(
+                                  'type_ii'.tr,
+                                  controller.cbDmType2,
+                                ),
+                                _buildCheckbox(
+                                  'prediabetic'.tr,
+                                  controller.cbPreDiabetic,
+                                ),
+                                _buildCheckbox(
+                                  'pregnancy_induced'.tr,
+                                  controller.cbDMPregnancy,
+                                ),
+                                _buildCheckbox(
+                                  'diabetic_foot'.tr,
+                                  controller.cbDiabeticFoot,
+                                ),
                               ],
                             ),
                             const SizedBox(height: 12),
-                            Text('treatment_options'.tr, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                            Text(
+                              'treatment_options'.tr,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                              ),
+                            ),
                             const SizedBox(height: 6),
                             RadioGroup<String>(
                               groupValue: controller.selectedDMTreatment.value,
@@ -247,10 +373,46 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                               },
                               child: Row(
                                 children: [
-                                  Expanded(child: AppRadioListTile<String>(value: 'On Rx', title: Text('on_rx'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: AppRadioListTile<String>(value: 'On Observation', title: Text('on_obs'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: AppRadioListTile<String>(value: 'On TLS', title: Text('on_tls'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: AppRadioListTile<String>(value: 'On Diet', title: Text('on_diet'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'On Rx',
+                                      title: Text(
+                                        'on_rx'.tr,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'On Observation',
+                                      title: Text(
+                                        'on_obs'.tr,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'On TLS',
+                                      title: Text(
+                                        'on_tls'.tr,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'On Diet',
+                                      title: Text(
+                                        'on_diet'.tr,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -265,14 +427,22 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                            onTap: () => controller.cbStroke.value = !controller.cbStroke.value,
+                            onTap: () => controller.cbStroke.value =
+                                !controller.cbStroke.value,
                             child: Row(
                               children: [
                                 Checkbox(
                                   value: controller.cbStroke.value,
-                                  onChanged: (val) => controller.cbStroke.value = val ?? false,
+                                  onChanged: (val) =>
+                                      controller.cbStroke.value = val ?? false,
                                 ),
-                                Text('stroke_label'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                Text(
+                                  'stroke_label'.tr,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -281,9 +451,18 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                             Wrap(
                               spacing: 16,
                               children: [
-                                _buildCheckbox('acute'.tr, controller.cbStrokeAcute),
-                                _buildCheckbox('recent'.tr, controller.cbStrokeRecent),
-                                _buildCheckbox('old'.tr, controller.cbStrokeOld),
+                                _buildCheckbox(
+                                  'acute'.tr,
+                                  controller.cbStrokeAcute,
+                                ),
+                                _buildCheckbox(
+                                  'recent'.tr,
+                                  controller.cbStrokeRecent,
+                                ),
+                                _buildCheckbox(
+                                  'old'.tr,
+                                  controller.cbStrokeOld,
+                                ),
                               ],
                             ),
                           ],
@@ -297,14 +476,23 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                            onTap: () => controller.cbIschemic.value = !controller.cbIschemic.value,
+                            onTap: () => controller.cbIschemic.value =
+                                !controller.cbIschemic.value,
                             child: Row(
                               children: [
                                 Checkbox(
                                   value: controller.cbIschemic.value,
-                                  onChanged: (val) => controller.cbIschemic.value = val ?? false,
+                                  onChanged: (val) =>
+                                      controller.cbIschemic.value =
+                                          val ?? false,
                                 ),
-                                Text('ischemic_heart_disease'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                Text(
+                                  'ischemic_heart_disease'.tr,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -313,12 +501,30 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                             Wrap(
                               spacing: 16,
                               children: [
-                                _buildCheckbox('acute'.tr, controller.cbIschemicAcute),
-                                _buildCheckbox('recent'.tr, controller.cbIschemicRecent),
-                                _buildCheckbox('ecg_changes'.tr, controller.cbIhdECG),
-                                _buildCheckbox('old'.tr, controller.cbIschemicOld),
-                                _buildCheckbox('nstemi'.tr, controller.cbIschemicNSTEMI),
-                                _buildCheckbox('unstable_angina'.tr, controller.cbUnstableAngina),
+                                _buildCheckbox(
+                                  'acute'.tr,
+                                  controller.cbIschemicAcute,
+                                ),
+                                _buildCheckbox(
+                                  'recent'.tr,
+                                  controller.cbIschemicRecent,
+                                ),
+                                _buildCheckbox(
+                                  'ecg_changes'.tr,
+                                  controller.cbIhdECG,
+                                ),
+                                _buildCheckbox(
+                                  'old'.tr,
+                                  controller.cbIschemicOld,
+                                ),
+                                _buildCheckbox(
+                                  'nstemi'.tr,
+                                  controller.cbIschemicNSTEMI,
+                                ),
+                                _buildCheckbox(
+                                  'unstable_angina'.tr,
+                                  controller.cbUnstableAngina,
+                                ),
                               ],
                             ),
                           ],
@@ -332,14 +538,23 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                            onTap: () => controller.cbCoronary.value = !controller.cbCoronary.value,
+                            onTap: () => controller.cbCoronary.value =
+                                !controller.cbCoronary.value,
                             child: Row(
                               children: [
                                 Checkbox(
                                   value: controller.cbCoronary.value,
-                                  onChanged: (val) => controller.cbCoronary.value = val ?? false,
+                                  onChanged: (val) =>
+                                      controller.cbCoronary.value =
+                                          val ?? false,
                                 ),
-                                Text('cad'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                Text(
+                                  'cad'.tr,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -348,11 +563,26 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                             Wrap(
                               spacing: 16,
                               children: [
-                                _buildCheckbox('post_cabg'.tr, controller.cbCoronaryPostCABG),
-                                _buildCheckbox('dvd'.tr, controller.cbCoronaryDVD),
-                                _buildCheckbox('svd'.tr, controller.cbCoronarySVD),
-                                _buildCheckbox('tvd'.tr, controller.cbCoronaryTVD),
-                                _buildCheckbox('post_pci'.tr, controller.cbCoronaryPostPCI),
+                                _buildCheckbox(
+                                  'post_cabg'.tr,
+                                  controller.cbCoronaryPostCABG,
+                                ),
+                                _buildCheckbox(
+                                  'dvd'.tr,
+                                  controller.cbCoronaryDVD,
+                                ),
+                                _buildCheckbox(
+                                  'svd'.tr,
+                                  controller.cbCoronarySVD,
+                                ),
+                                _buildCheckbox(
+                                  'tvd'.tr,
+                                  controller.cbCoronaryTVD,
+                                ),
+                                _buildCheckbox(
+                                  'post_pci'.tr,
+                                  controller.cbCoronaryPostPCI,
+                                ),
                               ],
                             ),
                           ],
@@ -366,14 +596,22 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                            onTap: () => controller.cbRhythm.value = !controller.cbRhythm.value,
+                            onTap: () => controller.cbRhythm.value =
+                                !controller.cbRhythm.value,
                             child: Row(
                               children: [
                                 Checkbox(
                                   value: controller.cbRhythm.value,
-                                  onChanged: (val) => controller.cbRhythm.value = val ?? false,
+                                  onChanged: (val) =>
+                                      controller.cbRhythm.value = val ?? false,
                                 ),
-                                Text('rhythm_issues'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                Text(
+                                  'rhythm_issues'.tr,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -382,14 +620,38 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                             Wrap(
                               spacing: 16,
                               children: [
-                                _buildCheckbox('brady_arrhythmia'.tr, controller.cbRhythmBrady),
-                                _buildCheckbox('atrial_flutter'.tr, controller.cbRhythmAtrialFlutter),
-                                _buildCheckbox('atrial_fibrillation'.tr, controller.cbRhythmAtrialFibrillation),
-                                _buildCheckbox('sinus_tachycardia'.tr, controller.cbRhythmSinus),
-                                _buildCheckbox('second_degree_heart_block'.tr, controller.cbRhythmBrady2nd),
-                                _buildCheckbox('chb'.tr, controller.cbRhythmBradyCHB),
-                                _buildCheckbox('first_degree_heart_block'.tr, controller.cbRhythmBrady1st),
-                                _buildCheckbox('svt'.tr, controller.cbRhythmSVT),
+                                _buildCheckbox(
+                                  'brady_arrhythmia'.tr,
+                                  controller.cbRhythmBrady,
+                                ),
+                                _buildCheckbox(
+                                  'atrial_flutter'.tr,
+                                  controller.cbRhythmAtrialFlutter,
+                                ),
+                                _buildCheckbox(
+                                  'atrial_fibrillation'.tr,
+                                  controller.cbRhythmAtrialFibrillation,
+                                ),
+                                _buildCheckbox(
+                                  'sinus_tachycardia'.tr,
+                                  controller.cbRhythmSinus,
+                                ),
+                                _buildCheckbox(
+                                  'second_degree_heart_block'.tr,
+                                  controller.cbRhythmBrady2nd,
+                                ),
+                                _buildCheckbox(
+                                  'chb'.tr,
+                                  controller.cbRhythmBradyCHB,
+                                ),
+                                _buildCheckbox(
+                                  'first_degree_heart_block'.tr,
+                                  controller.cbRhythmBrady1st,
+                                ),
+                                _buildCheckbox(
+                                  'svt'.tr,
+                                  controller.cbRhythmSVT,
+                                ),
                               ],
                             ),
                           ],
@@ -403,14 +665,23 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                            onTap: () => controller.cbRetinopathy.value = !controller.cbRetinopathy.value,
+                            onTap: () => controller.cbRetinopathy.value =
+                                !controller.cbRetinopathy.value,
                             child: Row(
                               children: [
                                 Checkbox(
                                   value: controller.cbRetinopathy.value,
-                                  onChanged: (val) => controller.cbRetinopathy.value = val ?? false,
+                                  onChanged: (val) =>
+                                      controller.cbRetinopathy.value =
+                                          val ?? false,
                                 ),
-                                Text('retinopathy'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                Text(
+                                  'retinopathy'.tr,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -419,9 +690,18 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                             Wrap(
                               spacing: 16,
                               children: [
-                                _buildCheckbox('hypertensive'.tr, controller.cbRetinopathyHypertensive),
-                                _buildCheckbox('diabetic'.tr, controller.cbRetinopathyDiabetic),
-                                _buildCheckbox('other'.tr, controller.cbRetinopathyOther),
+                                _buildCheckbox(
+                                  'hypertensive'.tr,
+                                  controller.cbRetinopathyHypertensive,
+                                ),
+                                _buildCheckbox(
+                                  'diabetic'.tr,
+                                  controller.cbRetinopathyDiabetic,
+                                ),
+                                _buildCheckbox(
+                                  'other'.tr,
+                                  controller.cbRetinopathyOther,
+                                ),
                               ],
                             ),
                           ],
@@ -435,9 +715,18 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                         spacing: 16,
                         children: [
                           _buildCheckbox('ckd'.tr, controller.cbHtnCKD),
-                          _buildCheckbox('hypothyroid'.tr, controller.cbHypothyroid),
-                          _buildCheckbox('hyperthyroid'.tr, controller.cbHyperThyroid),
-                          _buildCheckbox('hyperuricemia'.tr, controller.cbHyperuricemia),
+                          _buildCheckbox(
+                            'hypothyroid'.tr,
+                            controller.cbHypothyroid,
+                          ),
+                          _buildCheckbox(
+                            'hyperthyroid'.tr,
+                            controller.cbHyperThyroid,
+                          ),
+                          _buildCheckbox(
+                            'hyperuricemia'.tr,
+                            controller.cbHyperuricemia,
+                          ),
                           _buildCheckbox('pad'.tr, controller.cbPeripheral),
                         ],
                       ),
@@ -449,14 +738,22 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                            onTap: () => controller.cbLV.value = !controller.cbLV.value,
+                            onTap: () =>
+                                controller.cbLV.value = !controller.cbLV.value,
                             child: Row(
                               children: [
                                 Checkbox(
                                   value: controller.cbLV.value,
-                                  onChanged: (val) => controller.cbLV.value = val ?? false,
+                                  onChanged: (val) =>
+                                      controller.cbLV.value = val ?? false,
                                 ),
-                                Text('lvd'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                Text(
+                                  'lvd'.tr,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -471,16 +768,25 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                                     decoration: InputDecoration(
                                       labelText: 'ef_value'.tr,
                                       border: const OutlineInputBorder(),
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 8,
+                                      ),
                                     ),
-                                    onChanged: (_) => controller.compileDiagnosis(),
+                                    onChanged: (_) =>
+                                        controller.compileDiagnosis(),
                                   ),
                                 ),
                                 const SizedBox(width: 8),
                                 ElevatedButton(
                                   onPressed: () => controller.addLvdEf(),
-                                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal),
-                                  child: Text('add'.tr, style: TextStyle(color: AppColors.white)),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.teal,
+                                  ),
+                                  child: Text(
+                                    'add'.tr,
+                                    style: TextStyle(color: AppColors.white),
+                                  ),
                                 ),
                               ],
                             ),
@@ -495,14 +801,22 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                            onTap: () => controller.cbNYHA.value = !controller.cbNYHA.value,
+                            onTap: () => controller.cbNYHA.value =
+                                !controller.cbNYHA.value,
                             child: Row(
                               children: [
                                 Checkbox(
                                   value: controller.cbNYHA.value,
-                                  onChanged: (val) => controller.cbNYHA.value = val ?? false,
+                                  onChanged: (val) =>
+                                      controller.cbNYHA.value = val ?? false,
                                 ),
-                                Text('nyha'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                Text(
+                                  'nyha'.tr,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -517,10 +831,46 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                               },
                               child: Row(
                                 children: [
-                                  Expanded(child: AppRadioListTile<String>(value: 'I', title: const Text('I', style: TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: AppRadioListTile<String>(value: 'II', title: const Text('II', style: TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: AppRadioListTile<String>(value: 'III', title: const Text('III', style: TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: AppRadioListTile<String>(value: 'IV', title: const Text('IV', style: TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'I',
+                                      title: const Text(
+                                        'I',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'II',
+                                      title: const Text(
+                                        'II',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'III',
+                                      title: const Text(
+                                        'III',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'IV',
+                                      title: const Text(
+                                        'IV',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -535,14 +885,23 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                            onTap: () => controller.cbDyslipidemia.value = !controller.cbDyslipidemia.value,
+                            onTap: () => controller.cbDyslipidemia.value =
+                                !controller.cbDyslipidemia.value,
                             child: Row(
                               children: [
                                 Checkbox(
                                   value: controller.cbDyslipidemia.value,
-                                  onChanged: (val) => controller.cbDyslipidemia.value = val ?? false,
+                                  onChanged: (val) =>
+                                      controller.cbDyslipidemia.value =
+                                          val ?? false,
                                 ),
-                                Text('dyslipidemia'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                Text(
+                                  'dyslipidemia'.tr,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -557,10 +916,46 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
                               },
                               child: Row(
                                 children: [
-                                  Expanded(child: AppRadioListTile<String>(value: 'On Rx', title: Text('on_rx'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: AppRadioListTile<String>(value: 'On Observation', title: Text('on_obs'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: AppRadioListTile<String>(value: 'On TLS', title: Text('on_tls'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
-                                  Expanded(child: AppRadioListTile<String>(value: 'On Diet', title: Text('on_diet'.tr, style: const TextStyle(fontSize: 12)), contentPadding: EdgeInsets.zero)),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'On Rx',
+                                      title: Text(
+                                        'on_rx'.tr,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'On Observation',
+                                      title: Text(
+                                        'on_obs'.tr,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'On TLS',
+                                      title: Text(
+                                        'on_tls'.tr,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: AppRadioListTile<String>(
+                                      value: 'On Diet',
+                                      title: Text(
+                                        'on_diet'.tr,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

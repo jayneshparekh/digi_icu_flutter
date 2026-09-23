@@ -42,18 +42,21 @@ class DashboardCard extends StatelessWidget {
                     ? Image.network(
                         iconPath,
                         fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image, color: AppColors.medicalGray),
+                        errorBuilder: (context, error, stackTrace) => Icon(
+                          Icons.broken_image,
+                          color: AppColors.medicalGray,
+                        ),
                       )
                     : iconPath.endsWith('.svg')
-                        ? SvgPicture.asset(
-                            iconPath,
-                            colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-                            fit: BoxFit.contain,
-                          )
-                        : Image.asset(
-                            iconPath,
-                            fit: BoxFit.contain,
-                          ),
+                    ? SvgPicture.asset(
+                        iconPath,
+                        colorFilter: ColorFilter.mode(
+                          iconColor,
+                          BlendMode.srcIn,
+                        ),
+                        fit: BoxFit.contain,
+                      )
+                    : Image.asset(iconPath, fit: BoxFit.contain),
               ),
               const SizedBox(height: 6),
               Text(
@@ -72,5 +75,3 @@ class DashboardCard extends StatelessWidget {
     );
   }
 }
-
-

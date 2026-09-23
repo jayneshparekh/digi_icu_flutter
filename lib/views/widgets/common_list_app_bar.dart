@@ -96,7 +96,10 @@ class CommonListAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onSubmitted: onSearch,
                   decoration: InputDecoration(
                     hintText: 'search_patient'.tr,
-                    hintStyle: TextStyle(color: AppColors.medicalGray, fontSize: 13),
+                    hintStyle: TextStyle(
+                      color: AppColors.medicalGray,
+                      fontSize: 13,
+                    ),
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: 8,
                       vertical: 10,
@@ -133,5 +136,3 @@ class CommonListAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(64);
 }
-
-

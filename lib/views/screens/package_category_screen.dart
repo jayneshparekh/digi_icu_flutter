@@ -26,7 +26,9 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
           final patient = controller.patientName;
           final subtitle = (loggedIn.isNotEmpty && patient.isNotEmpty)
               ? 'Dr. $loggedIn ($patient)'
-              : loggedIn.isNotEmpty ? 'Dr. $loggedIn' : patient;
+              : loggedIn.isNotEmpty
+              ? 'Dr. $loggedIn'
+              : patient;
           return Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +76,10 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                   hintText: 'search'.tr,
                   prefixIcon: Icon(Icons.search, color: AppColors.teal),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                 ),
               ),
             ),
@@ -110,10 +115,13 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
 
                   // Grid of Package Categories
                   Obx(() {
-                    if (controller.isLoading.value && controller.categories.isEmpty) {
+                    if (controller.isLoading.value &&
+                        controller.categories.isEmpty) {
                       return const Center(
                         child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.teal),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.teal,
+                          ),
                         ),
                       );
                     }
@@ -122,7 +130,10 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                       return Center(
                         child: Text(
                           controller.errorMsg.value,
-                          style: TextStyle(color: AppColors.medicalGray, fontSize: 14),
+                          style: TextStyle(
+                            color: AppColors.medicalGray,
+                            fontSize: 14,
+                          ),
                         ),
                       );
                     }
@@ -132,7 +143,10 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                       return Center(
                         child: Text(
                           'no_package_categories_found'.tr,
-                          style: TextStyle(color: AppColors.medicalGray, fontSize: 14),
+                          style: TextStyle(
+                            color: AppColors.medicalGray,
+                            fontSize: 14,
+                          ),
                         ),
                       );
                     }
@@ -140,12 +154,13 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                     return GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                        childAspectRatio: 0.85,
-                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                            childAspectRatio: 0.85,
+                          ),
                       itemCount: list.length,
                       itemBuilder: (context, index) {
                         final category = list[index];
@@ -154,18 +169,21 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                           iconPath: category.image,
                           onTap: () {
                             // Redirect to payment screen for category (to be implemented next)
-                            Get.toNamed('/payment', arguments: {
-                              'medicalForm': controller.medicalForm,
-                              'patientId': controller.patientId,
-                              'userName': controller.patientName,
-                              'userAge': controller.age,
-                              'userGender': controller.gender,
-                              'type': controller.userType,
-                              'leaderId': controller.leaderId,
-                              'packageCategory': category.name,
-                              'packageType': controller.packageType,
-                              'mData': controller.doctorData,
-                            });
+                            Get.toNamed(
+                              '/payment',
+                              arguments: {
+                                'medicalForm': controller.medicalForm,
+                                'patientId': controller.patientId,
+                                'userName': controller.patientName,
+                                'userAge': controller.age,
+                                'userGender': controller.gender,
+                                'type': controller.userType,
+                                'leaderId': controller.leaderId,
+                                'packageCategory': category.name,
+                                'packageType': controller.packageType,
+                                'mData': controller.doctorData,
+                              },
+                            );
                           },
                         );
                       },
@@ -227,7 +245,11 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                   label: 'online_pay'.tr,
                   onPressed: () => controller.initiateOnlinePayment(),
                   backgroundColor: AppColors.white,
-                  labelStyle: const TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold, fontSize: 14),
+                  labelStyle: const TextStyle(
+                    color: AppColors.teal,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
                   width: 110,
                   height: 38,
                   borderRadius: 8,
@@ -281,7 +303,9 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                             decoration: InputDecoration(
                               hintText: 'promo_code'.tr,
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                              ),
                             ),
                           ),
                         ),
@@ -291,7 +315,11 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
                         label: 'submit'.tr,
                         onPressed: () => controller.applyPromoCode(),
                         backgroundColor: AppColors.white,
-                        labelStyle: const TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold, fontSize: 14),
+                        labelStyle: const TextStyle(
+                          color: AppColors.teal,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                         width: 90,
                         height: 38,
                         borderRadius: 8,
@@ -332,5 +360,3 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
     );
   }
 }
-
-

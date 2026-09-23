@@ -5,11 +5,7 @@ class GraphLegendBadge extends StatelessWidget {
   final Color color;
   final String label;
 
-  const GraphLegendBadge({
-    super.key,
-    required this.color,
-    required this.label,
-  });
+  const GraphLegendBadge({super.key, required this.color, required this.label});
 
   @override
   Widget build(BuildContext context) {

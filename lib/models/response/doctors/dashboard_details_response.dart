@@ -13,7 +13,9 @@ class DashboardDetailsResponse {
     return DashboardDetailsResponse(
       status: json['status']?.toString() ?? '',
       msg: json['msg']?.toString() ?? '',
-      data: json['data'] != null ? DashboardTabDataModel.fromJson(json['data']) : null,
+      data: json['data'] != null
+          ? DashboardTabDataModel.fromJson(json['data'])
+          : null,
     );
   }
 }
@@ -72,18 +74,54 @@ class DashboardTabDataModel {
   });
 
   factory DashboardTabDataModel.fromJson(Map<String, dynamic> json) {
-    var whoRiskList = (json['who_ish_risk'] as List?)?.map((e) => e.toString()).toList() ?? [];
-    var whoMsgList = (json['who_msg'] as List?)?.map((e) => e.toString()).toList() ?? [];
+    var whoRiskList =
+        (json['who_ish_risk'] as List?)?.map((e) => e.toString()).toList() ??
+        [];
+    var whoMsgList =
+        (json['who_msg'] as List?)?.map((e) => e.toString()).toList() ?? [];
 
-    var symptomsList = (json['symptoms'] as List?)?.map((e) => DashboardData.fromJson(e)).toList() ?? [];
-    var weightList = (json['weight'] as List?)?.map((e) => DashboardData.fromJson(e)).toList() ?? [];
-    var creatinineList = (json['creatinine'] as List?)?.map((e) => DashboardData.fromJson(e)).toList() ?? [];
-    var cholesterolList = (json['cholesterol'] as List?)?.map((e) => DashboardData.fromJson(e)).toList() ?? [];
-    var sugarList = (json['sugar'] as List?)?.map((e) => DashboardData.fromJson(e)).toList() ?? [];
-    var hba1cList = (json['hba1c'] as List?)?.map((e) => DashboardData.fromJson(e)).toList() ?? [];
-    var urineAlbuminList = (json['urine_albumin'] as List?)?.map((e) => DashboardData.fromJson(e)).toList() ?? [];
+    var symptomsList =
+        (json['symptoms'] as List?)
+            ?.map((e) => DashboardData.fromJson(e))
+            .toList() ??
+        [];
+    var weightList =
+        (json['weight'] as List?)
+            ?.map((e) => DashboardData.fromJson(e))
+            .toList() ??
+        [];
+    var creatinineList =
+        (json['creatinine'] as List?)
+            ?.map((e) => DashboardData.fromJson(e))
+            .toList() ??
+        [];
+    var cholesterolList =
+        (json['cholesterol'] as List?)
+            ?.map((e) => DashboardData.fromJson(e))
+            .toList() ??
+        [];
+    var sugarList =
+        (json['sugar'] as List?)
+            ?.map((e) => DashboardData.fromJson(e))
+            .toList() ??
+        [];
+    var hba1cList =
+        (json['hba1c'] as List?)
+            ?.map((e) => DashboardData.fromJson(e))
+            .toList() ??
+        [];
+    var urineAlbuminList =
+        (json['urine_albumin'] as List?)
+            ?.map((e) => DashboardData.fromJson(e))
+            .toList() ??
+        [];
 
-    var admissionHistoryList = (json['admission_history'] as List? ?? json['admissionHistory'] as List?)?.map((e) => AdmissionHistoryItem.fromJson(e)).toList() ?? [];
+    var admissionHistoryList =
+        (json['admission_history'] as List? ??
+                json['admissionHistory'] as List?)
+            ?.map((e) => AdmissionHistoryItem.fromJson(e))
+            .toList() ??
+        [];
 
     return DashboardTabDataModel(
       appointmentBy: json['appointment_by']?.toString() ?? '',
@@ -118,14 +156,12 @@ class DashboardData {
   final String value;
   final String created;
 
-  DashboardData({
-    required this.value,
-    required this.created,
-  });
+  DashboardData({required this.value, required this.created});
 
   factory DashboardData.fromJson(Map<String, dynamic> json) {
     return DashboardData(
-      value: json['value']?.toString() ?? json['holding_reason']?.toString() ?? '',
+      value:
+          json['value']?.toString() ?? json['holding_reason']?.toString() ?? '',
       created: json['created']?.toString() ?? '',
     );
   }
@@ -148,10 +184,20 @@ class AdmissionHistoryItem {
 
   factory AdmissionHistoryItem.fromJson(Map<String, dynamic> json) {
     return AdmissionHistoryItem(
-      appointmentId: json['appointment_id']?.toString() ?? json['appointmentId']?.toString() ?? '',
-      doctorName: json['doctor_name']?.toString() ?? json['doctorName']?.toString() ?? '',
-      admitDate: json['admit_date']?.toString() ?? json['admitDate']?.toString() ?? '',
-      dischargeDate: json['discharge_date']?.toString() ?? json['dischargeDate']?.toString() ?? '',
+      appointmentId:
+          json['appointment_id']?.toString() ??
+          json['appointmentId']?.toString() ??
+          '',
+      doctorName:
+          json['doctor_name']?.toString() ??
+          json['doctorName']?.toString() ??
+          '',
+      admitDate:
+          json['admit_date']?.toString() ?? json['admitDate']?.toString() ?? '',
+      dischargeDate:
+          json['discharge_date']?.toString() ??
+          json['dischargeDate']?.toString() ??
+          '',
       status: json['status']?.toString() ?? '',
     );
   }

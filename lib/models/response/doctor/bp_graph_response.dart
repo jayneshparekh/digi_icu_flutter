@@ -4,12 +4,7 @@ class BPGraphResponse {
   final List<BPGraphData>? data;
   final TargetBp? targetBp;
 
-  BPGraphResponse({
-    this.status,
-    this.msg,
-    this.data,
-    this.targetBp,
-  });
+  BPGraphResponse({this.status, this.msg, this.data, this.targetBp});
 
   factory BPGraphResponse.fromJson(Map<String, dynamic> json) {
     return BPGraphResponse(

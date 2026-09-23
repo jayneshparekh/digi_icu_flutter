@@ -45,7 +45,8 @@ class TakeAppointmentController extends GetxController {
       userName = args['userName']?.toString() ?? '';
       age = args['userAge']?.toString() ?? '';
       gender = args['userGender']?.toString() ?? '';
-      isFromDoctorHomeService = args['isFromDoctorHomeService'] as bool? ?? false;
+      isFromDoctorHomeService =
+          args['isFromDoctorHomeService'] as bool? ?? false;
       doctorHsReqId = args['doctor_hs_req_id']?.toString() ?? '';
       initialProblem = args['problem']?.toString() ?? '';
       userType = args['type']?.toString() ?? '';
@@ -87,11 +88,7 @@ class TakeAppointmentController extends GetxController {
       // 1. Fetch Slots for today
       final slotsResponse = await apiClient.post(
         ApiEndpoints.getTimeSlotNew,
-        data: {
-          'doctor_id': doctorId,
-          'day': dayName,
-          'date': dateStr,
-        },
+        data: {'doctor_id': doctorId, 'day': dayName, 'date': dateStr},
         options: dio.Options(headers: {'Authorization': token}),
       );
 
@@ -102,7 +99,10 @@ class TakeAppointmentController extends GetxController {
 
       final slotsData = AppointmentSlotsResponse.fromJson(slotsResponse.data);
       if (slotsData.status != 'success' || slotsData.data.isEmpty) {
-        AppSnackbars.showInfo('Doctor Unavailable', 'Doctor has no active slots today');
+        AppSnackbars.showInfo(
+          'Doctor Unavailable',
+          'Doctor has no active slots today',
+        );
         return;
       }
 
@@ -137,7 +137,10 @@ class TakeAppointmentController extends GetxController {
       if (bookResponse.statusCode == 200 && bookResponse.data != null) {
         final res = BookAppointmentResponse.fromJson(bookResponse.data);
         if (res.status == 'success') {
-          AppSnackbars.showSuccess('Success', 'Appointment booked successfully!');
+          AppSnackbars.showSuccess(
+            'Success',
+            'Appointment booked successfully!',
+          );
 
           if (res.defaultFormType.isNotEmpty) {
             Get.dialog(
@@ -145,30 +148,36 @@ class TakeAppointmentController extends GetxController {
                 formTypesString: res.defaultFormType,
                 onSelect: (selectedForm) {
                   if (selectedForm == 'Blood Pressure and Sugar Care') {
-                    Get.toNamed('/clinical-form', arguments: {
-                      'doctorId': doctorId,
-                      'patientId': patientId,
-                      'doctorName': doctorName,
-                      'appointmentId': res.appointmentId,
-                      'place': selectedPlace.value,
-                      'age': age,
-                      'patientName': userName,
-                      'isFromDoctorHomeService': isFromDoctorHomeService,
-                      'speciality': speciality,
-                    });
+                    Get.toNamed(
+                      '/clinical-form',
+                      arguments: {
+                        'doctorId': doctorId,
+                        'patientId': patientId,
+                        'doctorName': doctorName,
+                        'appointmentId': res.appointmentId,
+                        'place': selectedPlace.value,
+                        'age': age,
+                        'patientName': userName,
+                        'isFromDoctorHomeService': isFromDoctorHomeService,
+                        'speciality': speciality,
+                      },
+                    );
                   } else {
                     // Primary Care
-                    Get.toNamed('/primary-care', arguments: {
-                      'doctorId': doctorId,
-                      'patientId': patientId,
-                      'doctorName': doctorName,
-                      'appointmentId': res.appointmentId,
-                      'place': selectedPlace.value,
-                      'age': age,
-                      'patientName': userName,
-                      'isFromDoctorHomeService': isFromDoctorHomeService,
-                      'speciality': speciality,
-                    });
+                    Get.toNamed(
+                      '/primary-care',
+                      arguments: {
+                        'doctorId': doctorId,
+                        'patientId': patientId,
+                        'doctorName': doctorName,
+                        'appointmentId': res.appointmentId,
+                        'place': selectedPlace.value,
+                        'age': age,
+                        'patientName': userName,
+                        'isFromDoctorHomeService': isFromDoctorHomeService,
+                        'speciality': speciality,
+                      },
+                    );
                   }
                 },
               ),
@@ -176,17 +185,20 @@ class TakeAppointmentController extends GetxController {
             );
           } else {
             // Fallback to /primary-care
-            Get.toNamed('/primary-care', arguments: {
-              'doctorId': doctorId,
-              'patientId': patientId,
-              'doctorName': doctorName,
-              'appointmentId': res.appointmentId,
-              'place': selectedPlace.value,
-              'age': age,
-              'patientName': userName,
-              'isFromDoctorHomeService': isFromDoctorHomeService,
-              'speciality': speciality,
-            });
+            Get.toNamed(
+              '/primary-care',
+              arguments: {
+                'doctorId': doctorId,
+                'patientId': patientId,
+                'doctorName': doctorName,
+                'appointmentId': res.appointmentId,
+                'place': selectedPlace.value,
+                'age': age,
+                'patientName': userName,
+                'isFromDoctorHomeService': isFromDoctorHomeService,
+                'speciality': speciality,
+              },
+            );
           }
         } else {
           AppSnackbars.showInfo('Booking Failed', res.msg);
@@ -201,5 +213,3 @@ class TakeAppointmentController extends GetxController {
     }
   }
 }
-
-

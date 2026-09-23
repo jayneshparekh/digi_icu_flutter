@@ -27,7 +27,9 @@ class QuickFormEpisodeButton extends StatelessWidget {
             padding: const EdgeInsets.all(6.0),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isSelected ? AppColors.error.withValues(alpha: 0.1) : AppColors.lightGray,
+              color: isSelected
+                  ? AppColors.error.withValues(alpha: 0.1)
+                  : AppColors.lightGray,
               border: Border.all(
                 color: isSelected ? AppColors.error : AppColors.medicalGray,
                 width: isSelected ? 2.5 : 1.0,

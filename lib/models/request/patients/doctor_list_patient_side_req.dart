@@ -1,4 +1,4 @@
-﻿class DoctorListPatientSideReq {
+class DoctorListPatientSideReq {
   final int page;
   final String patientId;
   final String day;
@@ -23,4 +23,3 @@
     };
   }
 }
-

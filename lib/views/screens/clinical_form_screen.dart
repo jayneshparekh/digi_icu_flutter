@@ -34,18 +34,20 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Obx(() => Text(
-                    controller.isFrom == 'Doctor'
-                        ? controller.patientName
-                        : controller.patientName.isNotEmpty
-                            ? controller.patientName
-                            : 'patient_name_default'.tr,
-                    style: const TextStyle(
-                      color: AppColors.navy,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
+              Obx(
+                () => Text(
+                  controller.isFrom == 'Doctor'
+                      ? controller.patientName
+                      : controller.patientName.isNotEmpty
+                      ? controller.patientName
+                      : 'patient_name_default'.tr,
+                  style: const TextStyle(
+                    color: AppColors.navy,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
               if (controller.doctorName.isNotEmpty)
                 Text(
                   controller.doctorName,
@@ -65,7 +67,10 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
           return Stack(
             children: [
               SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -84,7 +89,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset('assets/images/m_bp.png', width: 65, height: 65),
+                        Image.asset(
+                          'assets/images/m_bp.png',
+                          width: 65,
+                          height: 65,
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
@@ -94,13 +103,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                 children: [
                                   Checkbox(
                                     value: !controller.haveBPApparatus.value,
-                                    onChanged: (val) => controller.toggleBPApparatus(!(val ?? false)),
+                                    onChanged: (val) => controller
+                                        .toggleBPApparatus(!(val ?? false)),
                                     activeColor: AppColors.teal,
                                   ),
                                   Expanded(
                                     child: Text(
                                       'no_bp_apparatus'.tr,
-                                      style: const TextStyle(fontSize: 13, color: AppColors.navy),
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: AppColors.navy,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -111,42 +124,58 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                   children: [
                                     Expanded(
                                       child: TextField(
-                                        controller: controller.systolicController,
+                                        controller:
+                                            controller.systolicController,
                                         keyboardType: TextInputType.number,
                                         decoration: InputDecoration(
                                           labelText: 'systolic_bp'.tr,
                                           border: const OutlineInputBorder(),
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 8,
+                                                vertical: 8,
+                                              ),
                                         ),
                                       ),
                                     ),
                                     const SizedBox(width: 4),
                                     Expanded(
                                       child: TextField(
-                                        controller: controller.diastolicController,
+                                        controller:
+                                            controller.diastolicController,
                                         keyboardType: TextInputType.number,
                                         decoration: InputDecoration(
                                           labelText: 'diastolic_bp'.tr,
                                           border: const OutlineInputBorder(),
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 8,
+                                                vertical: 8,
+                                              ),
                                         ),
                                       ),
                                     ),
                                     const SizedBox(width: 4),
                                     Expanded(
                                       child: TextField(
-                                        controller: controller.pulseRateController,
+                                        controller:
+                                            controller.pulseRateController,
                                         keyboardType: TextInputType.number,
                                         decoration: InputDecoration(
                                           labelText: 'pulse_rate'.tr,
                                           border: const OutlineInputBorder(),
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 8,
+                                                vertical: 8,
+                                              ),
                                         ),
                                       ),
                                     ),
                                     const SizedBox(width: 4),
                                     AppTealIconButton(
-                                      assetPath: 'assets/icons/svg/ic_power_button.svg',
+                                      assetPath:
+                                          'assets/icons/svg/ic_power_button.svg',
                                       onTap: () {},
                                       size: 40,
                                     ),
@@ -166,7 +195,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset('assets/images/ic_spo2.png', width: 65, height: 65),
+                        Image.asset(
+                          'assets/images/ic_spo2.png',
+                          width: 65,
+                          height: 65,
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
@@ -174,7 +207,8 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                             children: [
                               RadioGroup<String>(
                                 groupValue: controller.spo2Choice.value,
-                                onChanged: (val) => controller.selectSpo2Choice(val ?? ''),
+                                onChanged: (val) =>
+                                    controller.selectSpo2Choice(val ?? ''),
                                 child: Row(
                                   children: [
                                     AppRadio<String>(value: 'Yes'),
@@ -196,13 +230,18 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                         decoration: InputDecoration(
                                           labelText: 'spo2'.tr,
                                           border: const OutlineInputBorder(),
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 12,
+                                                vertical: 8,
+                                              ),
                                         ),
                                       ),
                                     ),
                                     const SizedBox(width: 8),
                                     AppTealIconButton(
-                                      assetPath: 'assets/icons/svg/ic_power_button.svg',
+                                      assetPath:
+                                          'assets/icons/svg/ic_power_button.svg',
                                       onTap: () {},
                                       size: 44,
                                     ),
@@ -222,7 +261,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset('assets/images/m_height.png', width: 65, height: 65),
+                        Image.asset(
+                          'assets/images/m_height.png',
+                          width: 65,
+                          height: 65,
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Row(
@@ -234,7 +277,10 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                   decoration: InputDecoration(
                                     labelText: 'height_cm'.tr,
                                     border: const OutlineInputBorder(),
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -246,7 +292,10 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                   decoration: InputDecoration(
                                     labelText: 'weight_kg'.tr,
                                     border: const OutlineInputBorder(),
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -269,7 +318,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Image.asset('assets/images/m_glucometer.png', width: 65, height: 65),
+                        Image.asset(
+                          'assets/images/m_glucometer.png',
+                          width: 65,
+                          height: 65,
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Text(
@@ -290,12 +343,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       children: [
                         Checkbox(
                           value: controller.checkSugarVal.value,
-                          onChanged: (val) => controller.checkSugarVal.value = val ?? false,
+                          onChanged: (val) =>
+                              controller.checkSugarVal.value = val ?? false,
                           activeColor: AppColors.teal,
                         ),
                         Text(
                           'blood_sugar_level'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                          ),
                         ),
                       ],
                     ),
@@ -313,7 +371,10 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                 decoration: InputDecoration(
                                   labelText: 'fasting'.tr,
                                   border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 8,
+                                  ),
                                 ),
                               ),
                             ),
@@ -325,7 +386,10 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                 decoration: InputDecoration(
                                   labelText: 'after_food'.tr,
                                   border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 8,
+                                  ),
                                 ),
                               ),
                             ),
@@ -337,7 +401,10 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                 decoration: InputDecoration(
                                   labelText: 'random'.tr,
                                   border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 8,
+                                  ),
                                 ),
                               ),
                             ),
@@ -358,12 +425,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       children: [
                         Checkbox(
                           value: controller.cbCreatinine.value,
-                          onChanged: (val) => controller.cbCreatinine.value = val ?? false,
+                          onChanged: (val) =>
+                              controller.cbCreatinine.value = val ?? false,
                           activeColor: AppColors.teal,
                         ),
                         Text(
                           'creatinine'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                          ),
                         ),
                       ],
                     ),
@@ -377,10 +449,19 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                           decoration: InputDecoration(
                             labelText: 'creatinine_kidney_function'.tr,
                             border: const OutlineInputBorder(),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
                             suffixIcon: IconButton(
-                              icon: const Icon(Icons.info, color: AppColors.medicalGray),
-                              onPressed: () => _showInfoDialog('Creatinine', 'Creatinine is a chemical waste product that\'s created by your muscle metabolism and to a smaller extent by eating meat. Healthy kidneys filter creatinine and other waste products from your blood.'),
+                              icon: const Icon(
+                                Icons.info,
+                                color: AppColors.medicalGray,
+                              ),
+                              onPressed: () => _showInfoDialog(
+                                'Creatinine',
+                                'Creatinine is a chemical waste product that\'s created by your muscle metabolism and to a smaller extent by eating meat. Healthy kidneys filter creatinine and other waste products from your blood.',
+                              ),
                             ),
                           ),
                         ),
@@ -393,12 +474,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       children: [
                         Checkbox(
                           value: controller.cbHba1c.value,
-                          onChanged: (val) => controller.cbHba1c.value = val ?? false,
+                          onChanged: (val) =>
+                              controller.cbHba1c.value = val ?? false,
                           activeColor: AppColors.teal,
                         ),
                         Text(
                           'hba1c'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                          ),
                         ),
                       ],
                     ),
@@ -415,10 +501,19 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               decoration: InputDecoration(
                                 labelText: 'hba1c'.tr,
                                 border: const OutlineInputBorder(),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
                                 suffixIcon: IconButton(
-                                  icon: const Icon(Icons.info, color: AppColors.medicalGray),
-                                  onPressed: () => _showInfoDialog('HbA1c', 'The HbA1c test shows your average blood sugar level over the past 2 to 3 months. It\'s a common test used to diagnose prediabetes and diabetes.'),
+                                  icon: const Icon(
+                                    Icons.info,
+                                    color: AppColors.medicalGray,
+                                  ),
+                                  onPressed: () => _showInfoDialog(
+                                    'HbA1c',
+                                    'The HbA1c test shows your average blood sugar level over the past 2 to 3 months. It\'s a common test used to diagnose prediabetes and diabetes.',
+                                  ),
                                 ),
                               ),
                             ),
@@ -427,7 +522,9 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               children: [
                                 RadioGroup<String>(
                                   groupValue: controller.hba1cDateChoice.value,
-                                  onChanged: (val) => controller.hba1cDateChoice.value = val ?? '',
+                                  onChanged: (val) =>
+                                      controller.hba1cDateChoice.value =
+                                          val ?? '',
                                   child: Row(
                                     children: [
                                       Row(
@@ -451,19 +548,42 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                   child: GestureDetector(
                                     onTap: () => _showDatePicker(context),
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 10,
+                                      ),
                                       decoration: BoxDecoration(
-                                        border: Border.all(color: AppColors.medicalGray),
+                                        border: Border.all(
+                                          color: AppColors.medicalGray,
+                                        ),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            controller.hba1cDateChoice.value == 'Today' ? 'today'.tr : controller.hba1cDateChoice.value == 'Yesterday' ? 'yesterday'.tr : controller.hba1cDateChoice.value,
-                                            style: const TextStyle(fontSize: 13, color: AppColors.navy),
+                                            controller.hba1cDateChoice.value ==
+                                                    'Today'
+                                                ? 'today'.tr
+                                                : controller
+                                                          .hba1cDateChoice
+                                                          .value ==
+                                                      'Yesterday'
+                                                ? 'yesterday'.tr
+                                                : controller
+                                                      .hba1cDateChoice
+                                                      .value,
+                                            style: const TextStyle(
+                                              fontSize: 13,
+                                              color: AppColors.navy,
+                                            ),
                                           ),
-                                          const Icon(Icons.calendar_today, size: 16, color: AppColors.medicalGray),
+                                          const Icon(
+                                            Icons.calendar_today,
+                                            size: 16,
+                                            color: AppColors.medicalGray,
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -482,12 +602,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       children: [
                         Checkbox(
                           value: controller.cbCholesterol.value,
-                          onChanged: (val) => controller.cbCholesterol.value = val ?? false,
+                          onChanged: (val) =>
+                              controller.cbCholesterol.value = val ?? false,
                           activeColor: AppColors.teal,
                         ),
                         Text(
                           'total_cholesterol'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                          ),
                         ),
                       ],
                     ),
@@ -503,10 +628,19 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               decoration: InputDecoration(
                                 labelText: 'total_cholesterol_lipid'.tr,
                                 border: const OutlineInputBorder(),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
                                 suffixIcon: IconButton(
-                                  icon: const Icon(Icons.info, color: AppColors.medicalGray),
-                                  onPressed: () => _showInfoDialog('Total Cholesterol', 'Total cholesterol is a measure of the total amount of cholesterol in your blood, including LDL (bad) cholesterol and HDL (good) cholesterol.'),
+                                  icon: const Icon(
+                                    Icons.info,
+                                    color: AppColors.medicalGray,
+                                  ),
+                                  onPressed: () => _showInfoDialog(
+                                    'Total Cholesterol',
+                                    'Total cholesterol is a measure of the total amount of cholesterol in your blood, including LDL (bad) cholesterol and HDL (good) cholesterol.',
+                                  ),
                                 ),
                               ),
                             ),
@@ -520,7 +654,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                     decoration: InputDecoration(
                                       labelText: 'hdl'.tr,
                                       border: const OutlineInputBorder(),
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 8,
+                                          ),
                                     ),
                                   ),
                                 ),
@@ -532,7 +670,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                     decoration: InputDecoration(
                                       labelText: 'ldl'.tr,
                                       border: const OutlineInputBorder(),
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 8,
+                                          ),
                                     ),
                                   ),
                                 ),
@@ -544,7 +686,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                     decoration: InputDecoration(
                                       labelText: 'vldl'.tr,
                                       border: const OutlineInputBorder(),
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 8,
+                                          ),
                                     ),
                                   ),
                                 ),
@@ -561,12 +707,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       children: [
                         Checkbox(
                           value: controller.cbUrineAlbumin.value,
-                          onChanged: (val) => controller.cbUrineAlbumin.value = val ?? false,
+                          onChanged: (val) =>
+                              controller.cbUrineAlbumin.value = val ?? false,
                           activeColor: AppColors.teal,
                         ),
                         Text(
                           'urine_albumin'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                          ),
                         ),
                       ],
                     ),
@@ -577,10 +728,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('urine_albumin'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray)),
+                            Text(
+                              'urine_albumin'.tr,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: AppColors.coolGray,
+                              ),
+                            ),
                             RadioGroup<String>(
                               groupValue: controller.urineAlbuminType.value,
-                              onChanged: (val) => controller.urineAlbuminType.value = val ?? '',
+                              onChanged: (val) =>
+                                  controller.urineAlbuminType.value = val ?? '',
                               child: Row(
                                 children: [
                                   Row(
@@ -600,35 +758,77 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               ),
                             ),
                             const SizedBox(height: 8),
-                            if (controller.urineAlbuminType.value == 'Numeric') ...[
+                            if (controller.urineAlbuminType.value ==
+                                'Numeric') ...[
                               TextField(
-                                controller: controller.urineAlbuminNumericController,
+                                controller:
+                                    controller.urineAlbuminNumericController,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                   labelText: 'enter_numeric'.tr,
                                   border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
                                   suffixIcon: IconButton(
-                                    icon: const Icon(Icons.info, color: AppColors.medicalGray),
-                                    onPressed: () => _showInfoDialog('Urine Albumin', 'Urine albumin is a test to detect small amounts of a blood protein (albumin) in your urine. An albumin test helps identify kidney disease.'),
+                                    icon: const Icon(
+                                      Icons.info,
+                                      color: AppColors.medicalGray,
+                                    ),
+                                    onPressed: () => _showInfoDialog(
+                                      'Urine Albumin',
+                                      'Urine albumin is a test to detect small amounts of a blood protein (albumin) in your urine. An albumin test helps identify kidney disease.',
+                                    ),
                                   ),
                                 ),
                               ),
                             ] else ...[
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                ),
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: AppColors.medicalGray),
+                                  border: Border.all(
+                                    color: AppColors.medicalGray,
+                                  ),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
-                                    value: controller.urineAlbuminValueSelected.value,
+                                    value: controller
+                                        .urineAlbuminValueSelected
+                                        .value,
                                     isExpanded: true,
-                                    items: ['Select', 'Negative', 'Trace', 'Positive']
-                                        .map((v) => DropdownMenuItem(value: v, child: Text(v == 'Select' ? 'select'.tr : v == 'Negative' ? 'negative'.tr : v == 'Trace' ? 'trace'.tr : v == 'Positive' ? 'positive'.tr : v)))
-                                        .toList(),
-                                    onChanged: (val) => controller.urineAlbuminValueSelected.value = val ?? 'Select',
+                                    items:
+                                        [
+                                              'Select',
+                                              'Negative',
+                                              'Trace',
+                                              'Positive',
+                                            ]
+                                            .map(
+                                              (v) => DropdownMenuItem(
+                                                value: v,
+                                                child: Text(
+                                                  v == 'Select'
+                                                      ? 'select'.tr
+                                                      : v == 'Negative'
+                                                      ? 'negative'.tr
+                                                      : v == 'Trace'
+                                                      ? 'trace'.tr
+                                                      : v == 'Positive'
+                                                      ? 'positive'.tr
+                                                      : v,
+                                                ),
+                                              ),
+                                            )
+                                            .toList(),
+                                    onChanged: (val) =>
+                                        controller
+                                                .urineAlbuminValueSelected
+                                                .value =
+                                            val ?? 'Select',
                                   ),
                                 ),
                               ),
@@ -644,16 +844,28 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       children: [
                         Checkbox(
                           value: controller.cbEcg.value,
-                          onChanged: (val) => controller.cbEcg.value = val ?? false,
+                          onChanged: (val) =>
+                              controller.cbEcg.value = val ?? false,
                           activeColor: AppColors.teal,
                         ),
                         Text(
                           'ecg'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                          ),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.info, color: AppColors.medicalGray, size: 20),
-                          onPressed: () => _showInfoDialog('ECG', 'An electrocardiogram (ECG) records the electrical signals in your heart. It\'s a common and painless test used to quickly detect heart problems and monitor your heart\'s health.'),
+                          icon: const Icon(
+                            Icons.info,
+                            color: AppColors.medicalGray,
+                            size: 20,
+                          ),
+                          onPressed: () => _showInfoDialog(
+                            'ECG',
+                            'An electrocardiogram (ECG) records the electrical signals in your heart. It\'s a common and painless test used to quickly detect heart problems and monitor your heart\'s health.',
+                          ),
                         ),
                       ],
                     ),
@@ -664,14 +876,26 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('upload_image'.tr, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                            Text(
+                              'upload_image'.tr,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.navy,
+                              ),
+                            ),
                             const SizedBox(height: 8),
                             Row(
                               children: [
                                 Expanded(
                                   child: ElevatedButton.icon(
-                                    onPressed: () => controller.pickEcgImage(ImageSource.gallery),
-                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal, foregroundColor: AppColors.white),
+                                    onPressed: () => controller.pickEcgImage(
+                                      ImageSource.gallery,
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.teal,
+                                      foregroundColor: AppColors.white,
+                                    ),
                                     icon: const Icon(Icons.photo_library),
                                     label: Text('gallery'.tr),
                                   ),
@@ -679,8 +903,13 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: ElevatedButton.icon(
-                                    onPressed: () => controller.pickEcgImage(ImageSource.camera),
-                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal, foregroundColor: AppColors.white),
+                                    onPressed: () => controller.pickEcgImage(
+                                      ImageSource.camera,
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.teal,
+                                      foregroundColor: AppColors.white,
+                                    ),
                                     icon: const Icon(Icons.camera_alt),
                                     label: Text('camera'.tr),
                                   ),
@@ -694,20 +923,32 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                 child: ListView.separated(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: controller.ecgReportImages.length,
-                                  separatorBuilder: (context, index) => const SizedBox(width: 8),
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(width: 8),
                                   itemBuilder: (context, index) {
-                                    final img = controller.ecgReportImages[index];
+                                    final img =
+                                        controller.ecgReportImages[index];
                                     return Stack(
                                       children: [
-                                        Image.file(File(img.path), width: 80, height: 80, fit: BoxFit.cover),
+                                        Image.file(
+                                          File(img.path),
+                                          width: 80,
+                                          height: 80,
+                                          fit: BoxFit.cover,
+                                        ),
                                         Positioned(
                                           top: 0,
                                           right: 0,
                                           child: GestureDetector(
-                                            onTap: () => controller.removeEcgImage(index),
+                                            onTap: () => controller
+                                                .removeEcgImage(index),
                                             child: Container(
                                               color: AppColors.coolGray,
-                                              child: const Icon(Icons.close, color: AppColors.white, size: 16),
+                                              child: const Icon(
+                                                Icons.close,
+                                                color: AppColors.white,
+                                                size: 16,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -718,23 +959,42 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               ),
                             ],
                             const SizedBox(height: 16),
-                            Text('record_ecg'.tr, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                            Text(
+                              'record_ecg'.tr,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.navy,
+                              ),
+                            ),
                             const SizedBox(height: 8),
                             Row(
                               children: [
                                 Expanded(
                                   child: ElevatedButton(
                                     onPressed: () {},
-                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal, foregroundColor: AppColors.white),
-                                    child: Text('short_ecg'.tr, style: const TextStyle(fontSize: 11)),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.teal,
+                                      foregroundColor: AppColors.white,
+                                    ),
+                                    child: Text(
+                                      'short_ecg'.tr,
+                                      style: const TextStyle(fontSize: 11),
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: 6),
                                 Expanded(
                                   child: ElevatedButton(
                                     onPressed: () {},
-                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal, foregroundColor: AppColors.white),
-                                    child: Text('record_12_lead_ecg'.tr, style: const TextStyle(fontSize: 11)),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.teal,
+                                      foregroundColor: AppColors.white,
+                                    ),
+                                    child: Text(
+                                      'record_12_lead_ecg'.tr,
+                                      style: const TextStyle(fontSize: 11),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -744,20 +1004,27 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               height: 120,
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.medicalGray),
+                                border: Border.all(
+                                  color: AppColors.medicalGray,
+                                ),
                                 color: AppColors.lightGray,
                               ),
                               child: GridView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 20,
-                                ),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 20,
+                                    ),
                                 itemCount: 100,
                                 itemBuilder: (context, index) => Container(
                                   decoration: const BoxDecoration(
                                     border: Border(
-                                      bottom: BorderSide(color: AppColors.lightGray),
-                                      right: BorderSide(color: AppColors.lightGray),
+                                      bottom: BorderSide(
+                                        color: AppColors.lightGray,
+                                      ),
+                                      right: BorderSide(
+                                        color: AppColors.lightGray,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -774,12 +1041,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       children: [
                         Checkbox(
                           value: controller.cbThyroid.value,
-                          onChanged: (val) => controller.cbThyroid.value = val ?? false,
+                          onChanged: (val) =>
+                              controller.cbThyroid.value = val ?? false,
                           activeColor: AppColors.teal,
                         ),
                         Text(
                           'thyroid'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                          ),
                         ),
                       ],
                     ),
@@ -796,7 +1068,10 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                 decoration: InputDecoration(
                                   labelText: 't3'.tr,
                                   border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 8,
+                                  ),
                                 ),
                               ),
                             ),
@@ -808,7 +1083,10 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                 decoration: InputDecoration(
                                   labelText: 't4'.tr,
                                   border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 8,
+                                  ),
                                 ),
                               ),
                             ),
@@ -820,7 +1098,10 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                 decoration: InputDecoration(
                                   labelText: 'tsh'.tr,
                                   border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 8,
+                                  ),
                                 ),
                               ),
                             ),
@@ -835,12 +1116,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       children: [
                         Checkbox(
                           value: controller.cbUricAcid.value,
-                          onChanged: (val) => controller.cbUricAcid.value = val ?? false,
+                          onChanged: (val) =>
+                              controller.cbUricAcid.value = val ?? false,
                           activeColor: AppColors.teal,
                         ),
                         Text(
                           'uric_acid'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                          ),
                         ),
                       ],
                     ),
@@ -854,10 +1140,19 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                           decoration: InputDecoration(
                             labelText: 'uric_acid'.tr,
                             border: const OutlineInputBorder(),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
                             suffixIcon: IconButton(
-                              icon: const Icon(Icons.info, color: AppColors.medicalGray),
-                              onPressed: () => _showInfoDialog('Uric Acid', 'Uric acid is a waste product found in blood. It\'s created when the body breaks down chemicals called purines. Most uric acid dissolves in blood, passes through the kidneys and leaves the body in urine.'),
+                              icon: const Icon(
+                                Icons.info,
+                                color: AppColors.medicalGray,
+                              ),
+                              onPressed: () => _showInfoDialog(
+                                'Uric Acid',
+                                'Uric acid is a waste product found in blood. It\'s created when the body breaks down chemicals called purines. Most uric acid dissolves in blood, passes through the kidneys and leaves the body in urine.',
+                              ),
                             ),
                           ),
                         ),
@@ -871,11 +1166,18 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       children: [
                         Text(
                           'other_investigations'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                          ),
                         ),
                         RadioGroup<String>(
-                          groupValue: controller.otherInvestigationsChoice.value,
-                          onChanged: (val) => controller.otherInvestigationsChoice.value = val ?? 'No',
+                          groupValue:
+                              controller.otherInvestigationsChoice.value,
+                          onChanged: (val) =>
+                              controller.otherInvestigationsChoice.value =
+                                  val ?? 'No',
                           child: Row(
                             children: [
                               Row(
@@ -896,7 +1198,8 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                         ),
                       ],
                     ),
-                    if (controller.otherInvestigationsChoice.value == 'Yes') ...[
+                    if (controller.otherInvestigationsChoice.value ==
+                        'Yes') ...[
                       const SizedBox(height: 12),
                       TextField(
                         controller: controller.otherInvestigationsController,
@@ -911,8 +1214,13 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                         children: [
                           Expanded(
                             child: ElevatedButton.icon(
-                              onPressed: () => controller.pickOtherImage(ImageSource.gallery),
-                              style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal, foregroundColor: AppColors.white),
+                              onPressed: () => controller.pickOtherImage(
+                                ImageSource.gallery,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.teal,
+                                foregroundColor: AppColors.white,
+                              ),
                               icon: const Icon(Icons.photo_library),
                               label: Text('gallery'.tr),
                             ),
@@ -920,8 +1228,12 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: ElevatedButton.icon(
-                              onPressed: () => controller.pickOtherImage(ImageSource.camera),
-                              style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal, foregroundColor: AppColors.white),
+                              onPressed: () =>
+                                  controller.pickOtherImage(ImageSource.camera),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.teal,
+                                foregroundColor: AppColors.white,
+                              ),
                               icon: const Icon(Icons.camera_alt),
                               label: Text('camera'.tr),
                             ),
@@ -935,20 +1247,31 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             itemCount: controller.otherReportImages.length,
-                            separatorBuilder: (context, index) => const SizedBox(width: 8),
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(width: 8),
                             itemBuilder: (context, index) {
                               final img = controller.otherReportImages[index];
                               return Stack(
                                 children: [
-                                  Image.file(File(img.path), width: 80, height: 80, fit: BoxFit.cover),
+                                  Image.file(
+                                    File(img.path),
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  ),
                                   Positioned(
                                     top: 0,
                                     right: 0,
                                     child: GestureDetector(
-                                      onTap: () => controller.removeOtherImage(index),
+                                      onTap: () =>
+                                          controller.removeOtherImage(index),
                                       child: Container(
                                         color: AppColors.coolGray,
-                                        child: const Icon(Icons.close, color: AppColors.white, size: 16),
+                                        child: const Icon(
+                                          Icons.close,
+                                          color: AppColors.white,
+                                          size: 16,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -975,7 +1298,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset('assets/images/m_feeling.png', width: 65, height: 65),
+                          Image.asset(
+                            'assets/images/m_feeling.png',
+                            width: 65,
+                            height: 65,
+                          ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -983,21 +1310,49 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'how_feeling_compared'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
                                   groupValue: controller.improvement.value,
-                                  onChanged: (val) => controller.improvement.value = val ?? '',
+                                  onChanged: (val) =>
+                                      controller.improvement.value = val ?? '',
                                   child: Column(
-                                    children: ['Good', 'Better', 'Same', 'More Suffering', 'This is my first consultation']
-                                        .map((option) => Row(
-                                              children: [
-                                                AppRadio<String>(value: option),
-                                                Text(option == 'Good' ? 'good'.tr : option == 'Better' ? 'better'.tr : option == 'Same' ? 'same'.tr : option == 'More Suffering' ? 'more_suffering'.tr : 'first_consultation'.tr),
-                                              ],
-                                            ))
-                                        .toList(),
+                                    children:
+                                        [
+                                              'Good',
+                                              'Better',
+                                              'Same',
+                                              'More Suffering',
+                                              'This is my first consultation',
+                                            ]
+                                            .map(
+                                              (option) => Row(
+                                                children: [
+                                                  AppRadio<String>(
+                                                    value: option,
+                                                  ),
+                                                  Text(
+                                                    option == 'Good'
+                                                        ? 'good'.tr
+                                                        : option == 'Better'
+                                                        ? 'better'.tr
+                                                        : option == 'Same'
+                                                        ? 'same'.tr
+                                                        : option ==
+                                                              'More Suffering'
+                                                        ? 'more_suffering'.tr
+                                                        : 'first_consultation'
+                                                              .tr,
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                            .toList(),
                                   ),
                                 ),
                               ],
@@ -1012,7 +1367,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset('assets/images/m_chest_pain.png', width: 65, height: 65),
+                        Image.asset(
+                          'assets/images/m_chest_pain.png',
+                          width: 65,
+                          height: 65,
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
@@ -1020,12 +1379,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                             children: [
                               Text(
                                 'have_chest_pain'.tr,
-                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.navy,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
                                 groupValue: controller.chestPain.value,
-                                onChanged: (val) => controller.chestPain.value = val ?? '',
+                                onChanged: (val) =>
+                                    controller.chestPain.value = val ?? '',
                                 child: Row(
                                   children: [
                                     AppRadio<String>(value: 'Yes'),
@@ -1040,11 +1404,18 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                 const SizedBox(height: 12),
                                 Text(
                                   'with_sweating'.tr,
-                                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.coolGray),
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.coolGray,
+                                  ),
                                 ),
                                 RadioGroup<String>(
-                                  groupValue: controller.chestPainSweating.value,
-                                  onChanged: (val) => controller.chestPainSweating.value = val ?? '',
+                                  groupValue:
+                                      controller.chestPainSweating.value,
+                                  onChanged: (val) =>
+                                      controller.chestPainSweating.value =
+                                          val ?? '',
                                   child: Row(
                                     children: [
                                       AppRadio<String>(value: 'Yes'),
@@ -1067,7 +1438,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset('assets/images/m_breathing.png', width: 65, height: 65),
+                        Image.asset(
+                          'assets/images/m_breathing.png',
+                          width: 65,
+                          height: 65,
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
@@ -1075,12 +1450,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                             children: [
                               Text(
                                 'difficulty_breathing'.tr,
-                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.navy,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
                                 groupValue: controller.breathlessness.value,
-                                onChanged: (val) => controller.breathlessness.value = val ?? '',
+                                onChanged: (val) =>
+                                    controller.breathlessness.value = val ?? '',
                                 child: Row(
                                   children: [
                                     AppRadio<String>(value: 'Yes'),
@@ -1095,7 +1475,9 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                 const SizedBox(height: 12),
                                 RadioGroup<String>(
                                   groupValue: controller.breathlessWhile.value,
-                                  onChanged: (val) => controller.breathlessWhile.value = val ?? '',
+                                  onChanged: (val) =>
+                                      controller.breathlessWhile.value =
+                                          val ?? '',
                                   child: Row(
                                     children: [
                                       AppRadio<String>(value: 'Walking'),
@@ -1118,7 +1500,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset('assets/images/m_palpitations.png', width: 65, height: 65),
+                        Image.asset(
+                          'assets/images/m_palpitations.png',
+                          width: 65,
+                          height: 65,
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
@@ -1126,12 +1512,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                             children: [
                               Text(
                                 'have_palpitations'.tr,
-                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.navy,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
                                 groupValue: controller.palpitations.value,
-                                onChanged: (val) => controller.palpitations.value = val ?? '',
+                                onChanged: (val) =>
+                                    controller.palpitations.value = val ?? '',
                                 child: Row(
                                   children: [
                                     AppRadio<String>(value: 'Yes'),
@@ -1153,7 +1544,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset('assets/images/m_giddiness.png', width: 65, height: 65),
+                        Image.asset(
+                          'assets/images/m_giddiness.png',
+                          width: 65,
+                          height: 65,
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
@@ -1161,12 +1556,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                             children: [
                               Text(
                                 'have_giddiness'.tr,
-                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.navy,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
                                 groupValue: controller.giddiness.value,
-                                onChanged: (val) => controller.giddiness.value = val ?? '',
+                                onChanged: (val) =>
+                                    controller.giddiness.value = val ?? '',
                                 child: Row(
                                   children: [
                                     AppRadio<String>(value: 'Yes'),
@@ -1188,7 +1588,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset('assets/images/m_headache.png', width: 65, height: 65),
+                        Image.asset(
+                          'assets/images/m_headache.png',
+                          width: 65,
+                          height: 65,
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
@@ -1196,12 +1600,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                             children: [
                               Text(
                                 'have_headache'.tr,
-                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.navy,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
                                 groupValue: controller.headache.value,
-                                onChanged: (val) => controller.headache.value = val ?? '',
+                                onChanged: (val) =>
+                                    controller.headache.value = val ?? '',
                                 child: Row(
                                   children: [
                                     AppRadio<String>(value: 'Yes'),
@@ -1224,7 +1633,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset('assets/images/m_feeling.png', width: 65, height: 65),
+                          Image.asset(
+                            'assets/images/m_feeling.png',
+                            width: 65,
+                            height: 65,
+                          ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -1232,12 +1645,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'dizziness_standing'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
                                   groupValue: controller.dizziness.value,
-                                  onChanged: (val) => controller.dizziness.value = val ?? '',
+                                  onChanged: (val) =>
+                                      controller.dizziness.value = val ?? '',
                                   child: Row(
                                     children: [
                                       AppRadio<String>(value: 'Yes'),
@@ -1261,7 +1679,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset('assets/images/m_bleeding_tendencny.png', width: 65, height: 65),
+                          Image.asset(
+                            'assets/images/m_bleeding_tendencny.png',
+                            width: 65,
+                            height: 65,
+                          ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -1269,12 +1691,18 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'bleeding_episode'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
                                   groupValue: controller.bleedingEpisode.value,
-                                  onChanged: (val) => controller.bleedingEpisode.value = val ?? '',
+                                  onChanged: (val) =>
+                                      controller.bleedingEpisode.value =
+                                          val ?? '',
                                   child: Row(
                                     children: [
                                       AppRadio<String>(value: 'Yes'),
@@ -1297,7 +1725,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset('assets/images/m_feeling.png', width: 65, height: 65),
+                        Image.asset(
+                          'assets/images/m_feeling.png',
+                          width: 65,
+                          height: 65,
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
@@ -1305,12 +1737,19 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                             children: [
                               Text(
                                 'other_symptoms_if_any'.tr,
-                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.navy,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
-                                groupValue: controller.otherSymptomsChoice.value,
-                                onChanged: (val) => controller.otherSymptomsChoice.value = val ?? '',
+                                groupValue:
+                                    controller.otherSymptomsChoice.value,
+                                onChanged: (val) =>
+                                    controller.otherSymptomsChoice.value =
+                                        val ?? '',
                                 child: Row(
                                   children: [
                                     AppRadio<String>(value: 'Yes'),
@@ -1321,13 +1760,16 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                   ],
                                 ),
                               ),
-                              if (controller.otherSymptomsChoice.value == 'Yes') ...[
+                              if (controller.otherSymptomsChoice.value ==
+                                  'Yes') ...[
                                 const SizedBox(height: 8),
                                 TextField(
-                                  controller: controller.otherSymptomsController,
+                                  controller:
+                                      controller.otherSymptomsController,
                                   maxLines: 3,
                                   decoration: InputDecoration(
-                                    labelText: 'enter_details_other_symptoms'.tr,
+                                    labelText:
+                                        'enter_details_other_symptoms'.tr,
                                     border: const OutlineInputBorder(),
                                   ),
                                 ),
@@ -1353,7 +1795,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset('assets/images/m_feeling.png', width: 65, height: 65),
+                          Image.asset(
+                            'assets/images/m_feeling.png',
+                            width: 65,
+                            height: 65,
+                          ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -1361,7 +1807,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'did_you_stop_smoking'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -1376,13 +1826,24 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                     }
                                   },
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: ['Yes', 'No', 'I need help'].map((option) => Row(
-                                      children: [
-                                        AppRadio<String>(value: option),
-                                        Text(option == 'Yes' ? 'yes'.tr : option == 'No' ? 'no'.tr : 'i_need_help'.tr),
-                                      ],
-                                    )).toList(),
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: ['Yes', 'No', 'I need help']
+                                        .map(
+                                          (option) => Row(
+                                            children: [
+                                              AppRadio<String>(value: option),
+                                              Text(
+                                                option == 'Yes'
+                                                    ? 'yes'.tr
+                                                    : option == 'No'
+                                                    ? 'no'.tr
+                                                    : 'i_need_help'.tr,
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                        .toList(),
                                   ),
                                 ),
                               ],
@@ -1398,7 +1859,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset('assets/images/m_feeling.png', width: 65, height: 65),
+                          Image.asset(
+                            'assets/images/m_feeling.png',
+                            width: 65,
+                            height: 65,
+                          ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -1406,7 +1871,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'did_you_stop_alcohol'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -1421,13 +1890,24 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                     }
                                   },
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: ['Yes', 'No', 'I need help'].map((option) => Row(
-                                      children: [
-                                        AppRadio<String>(value: option),
-                                        Text(option == 'Yes' ? 'yes'.tr : option == 'No' ? 'no'.tr : 'i_need_help'.tr),
-                                      ],
-                                    )).toList(),
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: ['Yes', 'No', 'I need help']
+                                        .map(
+                                          (option) => Row(
+                                            children: [
+                                              AppRadio<String>(value: option),
+                                              Text(
+                                                option == 'Yes'
+                                                    ? 'yes'.tr
+                                                    : option == 'No'
+                                                    ? 'no'.tr
+                                                    : 'i_need_help'.tr,
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                        .toList(),
                                   ),
                                 ),
                               ],
@@ -1443,7 +1923,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset('assets/images/m_salt_intake.png', width: 65, height: 65),
+                          Image.asset(
+                            'assets/images/m_salt_intake.png',
+                            width: 65,
+                            height: 65,
+                          ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -1451,12 +1935,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'reduce_salt_intake'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
                                   groupValue: controller.reduceSalt.value,
-                                  onChanged: (val) => controller.reduceSalt.value = val ?? '',
+                                  onChanged: (val) =>
+                                      controller.reduceSalt.value = val ?? '',
                                   child: Row(
                                     children: [
                                       AppRadio<String>(value: 'Yes'),
@@ -1480,7 +1969,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset('assets/images/m_morning_walk.png', width: 65, height: 65),
+                          Image.asset(
+                            'assets/images/m_morning_walk.png',
+                            width: 65,
+                            height: 65,
+                          ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -1488,20 +1981,36 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'morning_walk_daily'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
                                   groupValue: controller.exercise.value,
-                                  onChanged: (val) => controller.exercise.value = val ?? '',
+                                  onChanged: (val) =>
+                                      controller.exercise.value = val ?? '',
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: ['Yes', 'No', 'sometimes missing'].map((option) => Row(
-                                      children: [
-                                        AppRadio<String>(value: option),
-                                        Text(option == 'Yes' ? 'yes'.tr : option == 'No' ? 'no'.tr : 'sometimes_missing'.tr),
-                                      ],
-                                    )).toList(),
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: ['Yes', 'No', 'sometimes missing']
+                                        .map(
+                                          (option) => Row(
+                                            children: [
+                                              AppRadio<String>(value: option),
+                                              Text(
+                                                option == 'Yes'
+                                                    ? 'yes'.tr
+                                                    : option == 'No'
+                                                    ? 'no'.tr
+                                                    : 'sometimes_missing'.tr,
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                        .toList(),
                                   ),
                                 ),
                               ],
@@ -1517,7 +2026,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset('assets/images/m_stress.png', width: 65, height: 65),
+                          Image.asset(
+                            'assets/images/m_stress.png',
+                            width: 65,
+                            height: 65,
+                          ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -1525,12 +2038,17 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'are_you_in_stress'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
                                   groupValue: controller.inStress.value,
-                                  onChanged: (val) => controller.inStress.value = val ?? '',
+                                  onChanged: (val) =>
+                                      controller.inStress.value = val ?? '',
                                   child: Row(
                                     children: [
                                       AppRadio<String>(value: 'Yes'),
@@ -1554,7 +2072,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset('assets/images/m_medicines.png', width: 65, height: 65),
+                          Image.asset(
+                            'assets/images/m_medicines.png',
+                            width: 65,
+                            height: 65,
+                          ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -1562,7 +2084,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'miss_medication_doses'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
@@ -1604,18 +2130,18 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Container(
-                      width: 100,
-                      height: 2,
-                      color: AppColors.teal,
-                    ),
+                    Container(width: 100, height: 2, color: AppColors.teal),
                     const SizedBox(height: 24),
 
                     // --- Last Hospitalization ---
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset('assets/images/m_feeling.png', width: 65, height: 65),
+                        Image.asset(
+                          'assets/images/m_feeling.png',
+                          width: 65,
+                          height: 65,
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
@@ -1623,12 +2149,19 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                             children: [
                               Text(
                                 'last_hospitalization'.tr,
-                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.navy,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               RadioGroup<String>(
-                                groupValue: controller.lastHospitalization.value,
-                                onChanged: (val) => controller.lastHospitalization.value = val ?? '',
+                                groupValue:
+                                    controller.lastHospitalization.value,
+                                onChanged: (val) =>
+                                    controller.lastHospitalization.value =
+                                        val ?? '',
                                 child: Row(
                                   children: [
                                     AppRadio<String>(value: 'Yes'),
@@ -1639,39 +2172,88 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                   ],
                                 ),
                               ),
-                              if (controller.lastHospitalization.value == 'Yes') ...[
+                              if (controller.lastHospitalization.value ==
+                                  'Yes') ...[
                                 const SizedBox(height: 12),
-                                Text('reason_for_hospitalization'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray)),
+                                Text(
+                                  'reason_for_hospitalization'.tr,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: AppColors.coolGray,
+                                  ),
+                                ),
                                 const SizedBox(height: 4),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: AppColors.medicalGray),
+                                    border: Border.all(
+                                      color: AppColors.medicalGray,
+                                    ),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton<String>(
-                                      value: controller.hospitalizationReasonSelected.value,
+                                      value: controller
+                                          .hospitalizationReasonSelected
+                                          .value,
                                       isExpanded: true,
-                                      items: [
-                                        'Select',
-                                        'Heart attack',
-                                        'Heart failure',
-                                        'High blood pressure',
-                                        'Stroke',
-                                        'Diabetes complications',
-                                        'other'
-                                      ].map((v) => DropdownMenuItem(value: v, child: Text(v == 'Select' ? 'select'.tr : v == 'Heart attack' ? 'heart_attack'.tr : v == 'Heart failure' ? 'heart_failure'.tr : v == 'High blood pressure' ? 'high_blood_pressure'.tr : v == 'Stroke' ? 'stroke'.tr : v == 'Diabetes complications' ? 'diabetes_complications'.tr : 'other'.tr))).toList(),
-                                      onChanged: (val) => controller.hospitalizationReasonSelected.value = val ?? 'Select',
+                                      items:
+                                          [
+                                                'Select',
+                                                'Heart attack',
+                                                'Heart failure',
+                                                'High blood pressure',
+                                                'Stroke',
+                                                'Diabetes complications',
+                                                'other',
+                                              ]
+                                              .map(
+                                                (v) => DropdownMenuItem(
+                                                  value: v,
+                                                  child: Text(
+                                                    v == 'Select'
+                                                        ? 'select'.tr
+                                                        : v == 'Heart attack'
+                                                        ? 'heart_attack'.tr
+                                                        : v == 'Heart failure'
+                                                        ? 'heart_failure'.tr
+                                                        : v ==
+                                                              'High blood pressure'
+                                                        ? 'high_blood_pressure'
+                                                              .tr
+                                                        : v == 'Stroke'
+                                                        ? 'stroke'.tr
+                                                        : v ==
+                                                              'Diabetes complications'
+                                                        ? 'diabetes_complications'
+                                                              .tr
+                                                        : 'other'.tr,
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
+                                      onChanged: (val) =>
+                                          controller
+                                                  .hospitalizationReasonSelected
+                                                  .value =
+                                              val ?? 'Select',
                                     ),
                                   ),
                                 ),
-                                if (controller.hospitalizationReasonSelected.value == 'other') ...[
+                                if (controller
+                                        .hospitalizationReasonSelected
+                                        .value ==
+                                    'other') ...[
                                   const SizedBox(height: 12),
                                   TextField(
-                                    controller: controller.hospitalizationReasonCustomController,
+                                    controller: controller
+                                        .hospitalizationReasonCustomController,
                                     decoration: InputDecoration(
-                                      labelText: 'enter_other_hospitalization_reason'.tr,
+                                      labelText:
+                                          'enter_other_hospitalization_reason'
+                                              .tr,
                                       border: const OutlineInputBorder(),
                                     ),
                                   ),
@@ -1689,7 +2271,11 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset('assets/images/m_bp.png', width: 65, height: 65),
+                          Image.asset(
+                            'assets/images/m_bp.png',
+                            width: 65,
+                            height: 65,
+                          ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -1697,43 +2283,62 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                               children: [
                                 Text(
                                   'vitals_bp_measurement'.tr,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
                                 ),
                                 const SizedBox(height: 12),
                                 Row(
                                   children: [
                                     Expanded(
                                       child: TextField(
-                                        controller: controller.systolic3Controller,
+                                        controller:
+                                            controller.systolic3Controller,
                                         keyboardType: TextInputType.number,
                                         decoration: InputDecoration(
                                           labelText: 'systolic'.tr,
                                           border: const OutlineInputBorder(),
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 8,
+                                                vertical: 8,
+                                              ),
                                         ),
                                       ),
                                     ),
                                     const SizedBox(width: 6),
                                     Expanded(
                                       child: TextField(
-                                        controller: controller.diastolic3Controller,
+                                        controller:
+                                            controller.diastolic3Controller,
                                         keyboardType: TextInputType.number,
                                         decoration: InputDecoration(
                                           labelText: 'diastolic'.tr,
                                           border: const OutlineInputBorder(),
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 8,
+                                                vertical: 8,
+                                              ),
                                         ),
                                       ),
                                     ),
                                     const SizedBox(width: 6),
                                     Expanded(
                                       child: TextField(
-                                        controller: controller.heartRate3Controller,
+                                        controller:
+                                            controller.heartRate3Controller,
                                         keyboardType: TextInputType.number,
                                         decoration: InputDecoration(
                                           labelText: 'pulse_rate'.tr,
                                           border: const OutlineInputBorder(),
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 8,
+                                                vertical: 8,
+                                              ),
                                         ),
                                       ),
                                     ),
@@ -1817,7 +2422,9 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
       lastDate: now,
     );
     if (picked != null) {
-      controller.hba1cDateChoice.value = DateFormat('yyyy-MM-dd').format(picked);
+      controller.hba1cDateChoice.value = DateFormat(
+        'yyyy-MM-dd',
+      ).format(picked);
     }
   }
 

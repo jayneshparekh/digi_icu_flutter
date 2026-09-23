@@ -58,10 +58,7 @@ class AppLabeledTextField extends StatelessWidget {
               vertical: 12,
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: AppColors.teal,
-                width: 1.5,
-              ),
+              borderSide: BorderSide(color: AppColors.teal, width: 1.5),
               borderRadius: BorderRadius.circular(8),
             ),
             enabledBorder: OutlineInputBorder(

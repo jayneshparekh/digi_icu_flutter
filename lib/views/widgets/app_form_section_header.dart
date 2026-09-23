@@ -8,11 +8,7 @@ class AppFormSectionHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
 
-  const AppFormSectionHeader({
-    super.key,
-    required this.title,
-    this.subtitle,
-  });
+  const AppFormSectionHeader({super.key, required this.title, this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +17,7 @@ class AppFormSectionHeader extends StatelessWidget {
         if (subtitle != null && subtitle!.isNotEmpty) ...[
           Text(
             subtitle!,
-            style: const TextStyle(
-              fontSize: 14,
-              color: AppColors.coolGray,
-            ),
+            style: const TextStyle(fontSize: 14, color: AppColors.coolGray),
           ),
           const SizedBox(height: 4),
         ],
@@ -37,11 +30,7 @@ class AppFormSectionHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        Container(
-          width: 100,
-          height: 2,
-          color: AppColors.teal,
-        ),
+        Container(width: 100, height: 2, color: AppColors.teal),
       ],
     );
   }

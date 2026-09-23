@@ -31,7 +31,10 @@ class ChooseFormOptionDialog extends StatelessWidget {
         child: forms.isEmpty
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('no_forms_available'.tr, style: const TextStyle(color: AppColors.medicalGray)),
+                child: Text(
+                  'no_forms_available'.tr,
+                  style: const TextStyle(color: AppColors.medicalGray),
+                ),
               )
             : ListView.builder(
                 shrinkWrap: true,
@@ -48,11 +51,16 @@ class ChooseFormOptionDialog extends StatelessWidget {
                       },
                       borderRadius: BorderRadius.circular(8),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 14.0,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.lightGray,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: AppColors.teal.withValues(alpha: 0.2)),
+                          border: Border.all(
+                            color: AppColors.teal.withValues(alpha: 0.2),
+                          ),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,7 +75,11 @@ class ChooseFormOptionDialog extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.teal),
+                            const Icon(
+                              Icons.arrow_forward_ios,
+                              size: 14,
+                              color: AppColors.teal,
+                            ),
                           ],
                         ),
                       ),
@@ -79,5 +91,3 @@ class ChooseFormOptionDialog extends StatelessWidget {
     );
   }
 }
-
-

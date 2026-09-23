@@ -247,7 +247,8 @@ class ServingPatientMedicalFormController extends GetxController {
   final famDiedGrandparents = false.obs;
   final famDiedGrandparentsAgeCtrl = TextEditingController();
   final famDiedReasonCtrl = TextEditingController();
-  final famDiedReasonRadio = 'Heart Attack'.obs; // Heart Attack, Stroke, Accident, Other, Reason don't know
+  final famDiedReasonRadio = 'Heart Attack'
+      .obs; // Heart Attack, Stroke, Accident, Other, Reason don't know
   final famDiedSignificance = 'Significant'.obs;
 
   // ================= SECTION 4: PERSONAL HABITS =================
@@ -313,8 +314,12 @@ class ServingPatientMedicalFormController extends GetxController {
     if (Get.arguments is Map) {
       final args = Get.arguments as Map;
       if (args['formId'] != null) formId.value = args['formId'].toString();
-      if (args['patientId'] != null) patientId.value = args['patientId'].toString();
-      if (args['gender'] != null) patientGender.value = args['gender'].toString();
+      if (args['patientId'] != null) {
+        patientId.value = args['patientId'].toString();
+      }
+      if (args['gender'] != null) {
+        patientGender.value = args['gender'].toString();
+      }
     }
 
     if (patientGender.value.isEmpty) {
@@ -382,7 +387,10 @@ class ServingPatientMedicalFormController extends GetxController {
           final d = res.data!;
 
           // 1. Hypertension
-          hasHypertension.value = (d.hypertension != null && d.hypertension!.isNotEmpty) ? d.hypertension! : 'No';
+          hasHypertension.value =
+              (d.hypertension != null && d.hypertension!.isNotEmpty)
+              ? d.hypertension!
+              : 'No';
           htnYears.value = _normalizeYears(d.htnSince);
           htnOnMedicine.value = d.htnMed ?? 'No';
           htnMedicineRegular.value = d.htnMedRegular ?? 'No';
@@ -392,7 +400,11 @@ class ServingPatientMedicalFormController extends GetxController {
           htnMedFreq1.value = _normalizeFreq(d.htnMedFreq1);
           htnMedFreq2.value = _normalizeFreq(d.htnMedFreq2);
           htnMedFreq3.value = _normalizeFreq(d.htnMedFreq3);
-          htnMedCount.value = _calcCount(d.htnMedName1, d.htnMedName2, d.htnMedName3);
+          htnMedCount.value = _calcCount(
+            d.htnMedName1,
+            d.htnMedName2,
+            d.htnMedName3,
+          );
           htnNetworkImages.assignAll([
             if (d.htnMedImg1?.isNotEmpty == true) d.htnMedImg1!,
             if (d.htnMedImg2?.isNotEmpty == true) d.htnMedImg2!,
@@ -400,7 +412,9 @@ class ServingPatientMedicalFormController extends GetxController {
           ]);
 
           // 2. Diabetes
-          hasDiabetes.value = (d.diabetes != null && d.diabetes!.isNotEmpty) ? d.diabetes! : 'No';
+          hasDiabetes.value = (d.diabetes != null && d.diabetes!.isNotEmpty)
+              ? d.diabetes!
+              : 'No';
           diabetesYears.value = _normalizeYears(d.diaSince);
           diabetesOnMedicine.value = d.diaMed ?? 'No';
           diabetesMedicineRegular.value = d.diaMedRegular ?? 'No';
@@ -410,7 +424,11 @@ class ServingPatientMedicalFormController extends GetxController {
           diabetesMedFreq1.value = _normalizeFreq(d.diaMedFreq1);
           diabetesMedFreq2.value = _normalizeFreq(d.diaMedFreq2);
           diabetesMedFreq3.value = _normalizeFreq(d.diaMedFreq3);
-          diabetesMedCount.value = _calcCount(d.diaMedName1, d.diaMedName2, d.diaMedName3);
+          diabetesMedCount.value = _calcCount(
+            d.diaMedName1,
+            d.diaMedName2,
+            d.diaMedName3,
+          );
           diabetesNetworkImages.assignAll([
             if (d.diaMedImg1?.isNotEmpty == true) d.diaMedImg1!,
             if (d.diaMedImg2?.isNotEmpty == true) d.diaMedImg2!,
@@ -418,7 +436,9 @@ class ServingPatientMedicalFormController extends GetxController {
           ]);
 
           // 3. Thyroid
-          hasThyroid.value = (d.thyroid != null && d.thyroid!.isNotEmpty) ? d.thyroid! : 'No';
+          hasThyroid.value = (d.thyroid != null && d.thyroid!.isNotEmpty)
+              ? d.thyroid!
+              : 'No';
           thyroidYears.value = _normalizeYears(d.thyroidSince);
           thyroidOnMedicine.value = d.thyroidMed ?? 'No';
           thyroidMedicineRegular.value = d.thyroidMedRegular ?? 'No';
@@ -428,7 +448,11 @@ class ServingPatientMedicalFormController extends GetxController {
           thyroidMedFreq1.value = _normalizeFreq(d.thyroidMedFreq1);
           thyroidMedFreq2.value = _normalizeFreq(d.thyroidMedFreq2);
           thyroidMedFreq3.value = _normalizeFreq(d.thyroidMedFreq3);
-          thyroidMedCount.value = _calcCount(d.thyroidMedName1, d.thyroidMedName2, d.thyroidMedName3);
+          thyroidMedCount.value = _calcCount(
+            d.thyroidMedName1,
+            d.thyroidMedName2,
+            d.thyroidMedName3,
+          );
           thyroidNetworkImages.assignAll([
             if (d.thyroidMedImg1?.isNotEmpty == true) d.thyroidMedImg1!,
             if (d.thyroidMedImg2?.isNotEmpty == true) d.thyroidMedImg2!,
@@ -445,7 +469,10 @@ class ServingPatientMedicalFormController extends GetxController {
 
           // ================= SECTION 2 =================
           // 1. Heart Attack
-          hasHeartAttack.value = (d.heartAttack != null && d.heartAttack!.isNotEmpty) ? d.heartAttack! : 'No';
+          hasHeartAttack.value =
+              (d.heartAttack != null && d.heartAttack!.isNotEmpty)
+              ? d.heartAttack!
+              : 'No';
           heartAttackYears.value = _normalizeYears(d.heartAtkWhen);
           heartAttackOnMedicine.value = d.heartAtkMed ?? 'No';
           heartAttackMedName1Ctrl.text = d.heartAtkMedName1 ?? '';
@@ -454,7 +481,11 @@ class ServingPatientMedicalFormController extends GetxController {
           heartAttackMedFreq1.value = _normalizeFreq(d.heartAtkMedFreq1);
           heartAttackMedFreq2.value = _normalizeFreq(d.heartAtkMedFreq2);
           heartAttackMedFreq3.value = _normalizeFreq(d.heartAtkMedFreq3);
-          heartAttackMedCount.value = _calcCount(d.heartAtkMedName1, d.heartAtkMedName2, d.heartAtkMedName3);
+          heartAttackMedCount.value = _calcCount(
+            d.heartAtkMedName1,
+            d.heartAtkMedName2,
+            d.heartAtkMedName3,
+          );
           heartAttackNetworkImages.assignAll([
             if (d.hrtAtkMedImg1?.isNotEmpty == true) d.hrtAtkMedImg1!,
             if (d.hrtAtkMedImg2?.isNotEmpty == true) d.hrtAtkMedImg2!,
@@ -462,7 +493,9 @@ class ServingPatientMedicalFormController extends GetxController {
           ]);
 
           // 2. Stroke
-          hasStroke.value = (d.stroke != null && d.stroke!.isNotEmpty) ? d.stroke! : 'No';
+          hasStroke.value = (d.stroke != null && d.stroke!.isNotEmpty)
+              ? d.stroke!
+              : 'No';
           strokeYears.value = _normalizeYears(d.strokeWhen);
           strokeOnMedicine.value = d.strokeMed ?? 'No';
           strokeMedName1Ctrl.text = d.strokeMedName1 ?? '';
@@ -471,7 +504,11 @@ class ServingPatientMedicalFormController extends GetxController {
           strokeMedFreq1.value = _normalizeFreq(d.strokeMedFreq1);
           strokeMedFreq2.value = _normalizeFreq(d.strokeMedFreq2);
           strokeMedFreq3.value = _normalizeFreq(d.strokeMedFreq3);
-          strokeMedCount.value = _calcCount(d.strokeMedName1, d.strokeMedName2, d.strokeMedName3);
+          strokeMedCount.value = _calcCount(
+            d.strokeMedName1,
+            d.strokeMedName2,
+            d.strokeMedName3,
+          );
           strokeNetworkImages.assignAll([
             if (d.strokeMedImg1?.isNotEmpty == true) d.strokeMedImg1!,
             if (d.strokeMedImg2?.isNotEmpty == true) d.strokeMedImg2!,
@@ -479,7 +516,10 @@ class ServingPatientMedicalFormController extends GetxController {
           ]);
 
           // 3. Kidney Failure
-          hasKidneyFailure.value = (d.kidneyFailure != null && d.kidneyFailure!.isNotEmpty) ? d.kidneyFailure! : 'No';
+          hasKidneyFailure.value =
+              (d.kidneyFailure != null && d.kidneyFailure!.isNotEmpty)
+              ? d.kidneyFailure!
+              : 'No';
           kidneyFailureYears.value = _normalizeYears(d.kidneyFailWhen);
           kidneyFailureOnMedicine.value = d.kidneyFailMed ?? 'No';
           kidneyFailureMedName1Ctrl.text = d.kidneyFailMedName1 ?? '';
@@ -488,7 +528,11 @@ class ServingPatientMedicalFormController extends GetxController {
           kidneyFailureMedFreq1.value = _normalizeFreq(d.kidneyFailMedFreq1);
           kidneyFailureMedFreq2.value = _normalizeFreq(d.kidneyFailMedFreq2);
           kidneyFailureMedFreq3.value = _normalizeFreq(d.kidneyFailMedFreq3);
-          kidneyFailureMedCount.value = _calcCount(d.kidneyFailMedName1, d.kidneyFailMedName2, d.kidneyFailMedName3);
+          kidneyFailureMedCount.value = _calcCount(
+            d.kidneyFailMedName1,
+            d.kidneyFailMedName2,
+            d.kidneyFailMedName3,
+          );
           kidneyFailureNetworkImages.assignAll([
             if (d.kidneyFailMedImg1?.isNotEmpty == true) d.kidneyFailMedImg1!,
             if (d.kidneyFailMedImg2?.isNotEmpty == true) d.kidneyFailMedImg2!,
@@ -496,7 +540,10 @@ class ServingPatientMedicalFormController extends GetxController {
           ]);
 
           // 4. Angioplasty
-          hasAngioplasty.value = (d.angioplasty != null && d.angioplasty!.isNotEmpty) ? d.angioplasty! : 'No';
+          hasAngioplasty.value =
+              (d.angioplasty != null && d.angioplasty!.isNotEmpty)
+              ? d.angioplasty!
+              : 'No';
           angioplastyYears.value = _normalizeYears(d.angioplastyWhen);
           angioplastyOnMedicine.value = d.angioplastyMed ?? 'No';
           angioplastyMedName1Ctrl.text = d.angioplastyMedName1 ?? '';
@@ -505,7 +552,11 @@ class ServingPatientMedicalFormController extends GetxController {
           angioplastyMedFreq1.value = _normalizeFreq(d.angioplastyMedFreq1);
           angioplastyMedFreq2.value = _normalizeFreq(d.angioplastyMedFreq2);
           angioplastyMedFreq3.value = _normalizeFreq(d.angioplastyMedFreq3);
-          angioplastyMedCount.value = _calcCount(d.angioplastyMedName1, d.angioplastyMedName2, d.angioplastyMedName3);
+          angioplastyMedCount.value = _calcCount(
+            d.angioplastyMedName1,
+            d.angioplastyMedName2,
+            d.angioplastyMedName3,
+          );
           angioplastyNetworkImages.assignAll([
             if (d.angioplastyMedImg1?.isNotEmpty == true) d.angioplastyMedImg1!,
             if (d.angioplastyMedImg2?.isNotEmpty == true) d.angioplastyMedImg2!,
@@ -513,7 +564,10 @@ class ServingPatientMedicalFormController extends GetxController {
           ]);
 
           // 5. Bypass Surgery
-          hasBypass.value = (d.bypassSurgery != null && d.bypassSurgery!.isNotEmpty) ? d.bypassSurgery! : 'No';
+          hasBypass.value =
+              (d.bypassSurgery != null && d.bypassSurgery!.isNotEmpty)
+              ? d.bypassSurgery!
+              : 'No';
           bypassYears.value = _normalizeYears(d.bypassSurgWhen);
           bypassOnMedicine.value = d.bypassSurgMed ?? 'No';
           bypassMedName1Ctrl.text = d.bypassSurgMedName1 ?? '';
@@ -522,7 +576,11 @@ class ServingPatientMedicalFormController extends GetxController {
           bypassMedFreq1.value = _normalizeFreq(d.bypassSurgMedFreq1);
           bypassMedFreq2.value = _normalizeFreq(d.bypassSurgMedFreq2);
           bypassMedFreq3.value = _normalizeFreq(d.bypassSurgMedFreq3);
-          bypassMedCount.value = _calcCount(d.bypassSurgMedName1, d.bypassSurgMedName2, d.bypassSurgMedName3);
+          bypassMedCount.value = _calcCount(
+            d.bypassSurgMedName1,
+            d.bypassSurgMedName2,
+            d.bypassSurgMedName3,
+          );
           bypassNetworkImages.assignAll([
             if (d.bypassSurgMedImg1?.isNotEmpty == true) d.bypassSurgMedImg1!,
             if (d.bypassSurgMedImg2?.isNotEmpty == true) d.bypassSurgMedImg2!,
@@ -534,20 +592,28 @@ class ServingPatientMedicalFormController extends GetxController {
           allergyMedName1Ctrl.text = d.allergyMedName1 ?? '';
           allergyMedName2Ctrl.text = d.allergyMedName2 ?? '';
           allergyMedName3Ctrl.text = d.allergyMedName3 ?? '';
-          allergyMedCount.value = _calcCount(d.allergyMedName1, d.allergyMedName2, d.allergyMedName3);
+          allergyMedCount.value = _calcCount(
+            d.allergyMedName1,
+            d.allergyMedName2,
+            d.allergyMedName3,
+          );
 
           // Section 2 Extensions
           strokeStatus.value = d.strokeStatus ?? 'No Records';
           kidneyFailureStatus.value = d.kidneyFailureStatus ?? 'No Records';
           kidneyFailureDialysis.value = d.dialysis ?? 'No';
-          angioplastyStents.value = (d.stent != null && d.stent!.isNotEmpty) ? d.stent! : 'I';
+          angioplastyStents.value = (d.stent != null && d.stent!.isNotEmpty)
+              ? d.stent!
+              : 'I';
           angioplastyBrilinta.value = d.brilinta ?? 'No';
           angioplastyClopilet.value = d.clopilet ?? 'No';
           angioplastyPrasita.value = d.prasita ?? 'No';
 
           // ================= SECTION 3: FAMILY HISTORY =================
           // 1. Family Heart Attack
-          hasFamilyHeartAttack.value = (d.familyMemberHeartAttack != null && d.familyMemberHeartAttack!.isNotEmpty)
+          hasFamilyHeartAttack.value =
+              (d.familyMemberHeartAttack != null &&
+                  d.familyMemberHeartAttack!.isNotEmpty)
               ? d.familyMemberHeartAttack!
               : 'No';
           final htnWho = (d.familyMemberHeartAttackWho ?? '').toLowerCase();
@@ -559,12 +625,17 @@ class ServingPatientMedicalFormController extends GetxController {
           famHeartAttackBrotherAgeCtrl.text = d.heartAttackBrotherAge ?? '';
           famHeartAttackSister.value = htnWho.contains('sister');
           famHeartAttackSisterAgeCtrl.text = d.heartAttackSisterAge ?? '';
-          famHeartAttackGrandparents.value = htnWho.contains('grandparents') || htnWho.contains('grand parents');
-          famHeartAttackGrandparentsAgeCtrl.text = d.heartAttackGrandparentsAge ?? '';
-          famHeartAttackSignificance.value = d.familyHeartAttackFrequency ?? 'Significant';
+          famHeartAttackGrandparents.value =
+              htnWho.contains('grandparents') ||
+              htnWho.contains('grand parents');
+          famHeartAttackGrandparentsAgeCtrl.text =
+              d.heartAttackGrandparentsAge ?? '';
+          famHeartAttackSignificance.value =
+              d.familyHeartAttackFrequency ?? 'Significant';
 
           // 2. Family Stroke
-          hasFamilyStroke.value = (d.familyMemberStroke != null && d.familyMemberStroke!.isNotEmpty)
+          hasFamilyStroke.value =
+              (d.familyMemberStroke != null && d.familyMemberStroke!.isNotEmpty)
               ? d.familyMemberStroke!
               : 'No';
           final strokeWho = (d.familyMemberStrokeWho ?? '').toLowerCase();
@@ -576,12 +647,17 @@ class ServingPatientMedicalFormController extends GetxController {
           famStrokeBrotherAgeCtrl.text = d.strokeBrotherAge ?? '';
           famStrokeSister.value = strokeWho.contains('sister');
           famStrokeSisterAgeCtrl.text = d.strokeSisterAge ?? '';
-          famStrokeGrandparents.value = strokeWho.contains('grandparents') || strokeWho.contains('grand parents');
+          famStrokeGrandparents.value =
+              strokeWho.contains('grandparents') ||
+              strokeWho.contains('grand parents');
           famStrokeGrandparentsAgeCtrl.text = d.strokeGrandparentsAge ?? '';
-          famStrokeSignificance.value = d.familyStrokeFrequency ?? 'Significant';
+          famStrokeSignificance.value =
+              d.familyStrokeFrequency ?? 'Significant';
 
           // 3. Family Angioplasty
-          hasFamilyAngioplasty.value = (d.familyMemberAngioplasty != null && d.familyMemberAngioplasty!.isNotEmpty)
+          hasFamilyAngioplasty.value =
+              (d.familyMemberAngioplasty != null &&
+                  d.familyMemberAngioplasty!.isNotEmpty)
               ? d.familyMemberAngioplasty!
               : 'No';
           final angioWho = (d.familyMemberAngioplastyWho ?? '').toLowerCase();
@@ -593,12 +669,16 @@ class ServingPatientMedicalFormController extends GetxController {
           famAngioplastyBrotherAgeCtrl.text = d.angioplastyBrotherAge ?? '';
           famAngioplastySister.value = angioWho.contains('sister');
           famAngioplastySisterAgeCtrl.text = d.angioplastySisterAge ?? '';
-          famAngioplastyGrandparents.value = angioWho.contains('grandparents') || angioWho.contains('grand parents');
-          famAngioplastyGrandparentsAgeCtrl.text = d.angioplastyGrandparentsAge ?? '';
+          famAngioplastyGrandparents.value =
+              angioWho.contains('grandparents') ||
+              angioWho.contains('grand parents');
+          famAngioplastyGrandparentsAgeCtrl.text =
+              d.angioplastyGrandparentsAge ?? '';
           famAngioplastyCommentsCtrl.text = d.angioplastyComments ?? '';
 
           // 4. Family Sudden Death
-          hasFamilySuddenDeath.value = (d.familyMemberDied != null && d.familyMemberDied!.isNotEmpty)
+          hasFamilySuddenDeath.value =
+              (d.familyMemberDied != null && d.familyMemberDied!.isNotEmpty)
               ? d.familyMemberDied!
               : 'No';
           final diedWho = (d.familyMemberDiedWho ?? '').toLowerCase();
@@ -610,7 +690,9 @@ class ServingPatientMedicalFormController extends GetxController {
           famDiedBrotherAgeCtrl.text = d.diedBrotherAge ?? '';
           famDiedSister.value = diedWho.contains('sister');
           famDiedSisterAgeCtrl.text = d.diedSisterAge ?? '';
-          famDiedGrandparents.value = diedWho.contains('grandparents') || diedWho.contains('grand parents');
+          famDiedGrandparents.value =
+              diedWho.contains('grandparents') ||
+              diedWho.contains('grand parents');
           famDiedGrandparentsAgeCtrl.text = d.diedGrandparentsAge ?? '';
           famDiedReasonCtrl.text = d.familyMemberDiedReason ?? '';
 
@@ -708,7 +790,9 @@ class ServingPatientMedicalFormController extends GetxController {
         'dia_med_regular': diabetesMedicineRegular.value,
 
         'thyroid': hasThyroid.value,
-        'thyroid_since': thyroidYears.value == 'Select' ? '' : thyroidYears.value,
+        'thyroid_since': thyroidYears.value == 'Select'
+            ? ''
+            : thyroidYears.value,
         'thyroid_med': thyroidOnMedicine.value,
         'thyroid_med_name_1': thyroidMedName1Ctrl.text.trim(),
         'thyroid_med_name_2': thyroidMedName2Ctrl.text.trim(),
@@ -725,7 +809,9 @@ class ServingPatientMedicalFormController extends GetxController {
 
         // Section 2
         'heart_attack': hasHeartAttack.value,
-        'heart_atk_when': heartAttackYears.value == 'Select' ? '' : heartAttackYears.value,
+        'heart_atk_when': heartAttackYears.value == 'Select'
+            ? ''
+            : heartAttackYears.value,
         'heart_atk_med': heartAttackOnMedicine.value,
         'heart_atk_status': heartAttackStatus.value,
         'heart_atk_med_name_1': heartAttackMedName1Ctrl.text.trim(),
@@ -747,7 +833,9 @@ class ServingPatientMedicalFormController extends GetxController {
         'stroke_med_freq_3': strokeMedFreq3.value,
 
         'kidney_failure': hasKidneyFailure.value,
-        'kidney_fail_when': kidneyFailureYears.value == 'Select' ? '' : kidneyFailureYears.value,
+        'kidney_fail_when': kidneyFailureYears.value == 'Select'
+            ? ''
+            : kidneyFailureYears.value,
         'kidney_fail_med': kidneyFailureOnMedicine.value,
         'kidney_failure_status': kidneyFailureStatus.value,
         'dialysis': kidneyFailureDialysis.value,
@@ -760,7 +848,9 @@ class ServingPatientMedicalFormController extends GetxController {
         'kidney_fail_med_freq_3': kidneyFailureMedFreq3.value,
 
         'angioplasty': hasAngioplasty.value,
-        'angioplasty_when': angioplastyYears.value == 'Select' ? '' : angioplastyYears.value,
+        'angioplasty_when': angioplastyYears.value == 'Select'
+            ? ''
+            : angioplastyYears.value,
         'angioplasty_med': angioplastyOnMedicine.value,
         'stent': angioplastyStents.value,
         'brilinta': angioplastyBrilinta.value,
@@ -774,7 +864,9 @@ class ServingPatientMedicalFormController extends GetxController {
         'angioplasty_med_freq_3': angioplastyMedFreq3.value,
 
         'bypass_surgery': hasBypass.value,
-        'bypass_surg_when': bypassYears.value == 'Select' ? '' : bypassYears.value,
+        'bypass_surg_when': bypassYears.value == 'Select'
+            ? ''
+            : bypassYears.value,
         'bypass_surg_med': bypassOnMedicine.value,
         'bypass_surg_med_name_1': bypassMedName1Ctrl.text.trim(),
         'bypass_surg_med_name_2': bypassMedName2Ctrl.text.trim(),
@@ -812,7 +904,8 @@ class ServingPatientMedicalFormController extends GetxController {
         'heart_attack_mother_age': famHeartAttackMotherAgeCtrl.text.trim(),
         'heart_attack_brother_age': famHeartAttackBrotherAgeCtrl.text.trim(),
         'heart_attack_sister_age': famHeartAttackSisterAgeCtrl.text.trim(),
-        'heart_attack_grandparents_age': famHeartAttackGrandparentsAgeCtrl.text.trim(),
+        'heart_attack_grandparents_age': famHeartAttackGrandparentsAgeCtrl.text
+            .trim(),
         'family_heart_attack_frequency': famHeartAttackSignificance.value,
 
         'family_member_stroke': hasFamilyStroke.value,
@@ -842,7 +935,8 @@ class ServingPatientMedicalFormController extends GetxController {
         'angioplasty_mother_age': famAngioplastyMotherAgeCtrl.text.trim(),
         'angioplasty_brother_age': famAngioplastyBrotherAgeCtrl.text.trim(),
         'angioplasty_sister_age': famAngioplastySisterAgeCtrl.text.trim(),
-        'angioplasty_grandparents_age': famAngioplastyGrandparentsAgeCtrl.text.trim(),
+        'angioplasty_grandparents_age': famAngioplastyGrandparentsAgeCtrl.text
+            .trim(),
         'angioplasty_comments': famAngioplastyCommentsCtrl.text.trim(),
 
         'family_member_died': hasFamilySuddenDeath.value,
@@ -863,7 +957,9 @@ class ServingPatientMedicalFormController extends GetxController {
         // Section 4: Personal Habits
         'smoke': smokeHabit.value,
         'daily_cigarette_count': dailyCigaretteCountCtrl.text.trim(),
-        'smoke_stop_before': smokeStopBeforeYears.value == 'Select' ? '' : smokeStopBeforeYears.value,
+        'smoke_stop_before': smokeStopBeforeYears.value == 'Select'
+            ? ''
+            : smokeStopBeforeYears.value,
         'alcohol': alcoholHabit.value,
         'extra_salt': extraSaltHabit.value,
         'family_member_count': familyMembersCountCtrl.text.trim(),
@@ -952,8 +1048,15 @@ class ServingPatientMedicalFormController extends GetxController {
         }
 
         final statusStr = body['status']?.toString().toLowerCase() ?? '';
-        final isSuccess = statusStr == 'success' || statusStr == 'true' || body['status'] == true || statusStr.isEmpty;
-        final msg = body['msg']?.toString() ?? body['message']?.toString() ?? 'medical_form_updated_successfully'.tr;
+        final isSuccess =
+            statusStr == 'success' ||
+            statusStr == 'true' ||
+            body['status'] == true ||
+            statusStr.isEmpty;
+        final msg =
+            body['msg']?.toString() ??
+            body['message']?.toString() ??
+            'medical_form_updated_successfully'.tr;
 
         if (isSuccess) {
           Get.back(result: true);

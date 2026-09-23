@@ -1,19 +1,17 @@
-﻿class LastSymptomsResponse {
+class LastSymptomsResponse {
   final String status;
   final String msg;
   final LastSymptomsData? data;
 
-  LastSymptomsResponse({
-    required this.status,
-    required this.msg,
-    this.data,
-  });
+  LastSymptomsResponse({required this.status, required this.msg, this.data});
 
   factory LastSymptomsResponse.fromJson(Map<String, dynamic> json) {
     return LastSymptomsResponse(
       status: json['status']?.toString() ?? '',
       msg: json['msg']?.toString() ?? '',
-      data: json['data'] != null ? LastSymptomsData.fromJson(json['data']) : null,
+      data: json['data'] != null
+          ? LastSymptomsData.fromJson(json['data'])
+          : null,
     );
   }
 }
@@ -103,4 +101,3 @@ class LastSymptomsData {
     );
   }
 }
-

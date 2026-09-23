@@ -51,7 +51,8 @@ class AppSecondaryButton extends StatelessWidget {
               )
             : Text(
                 label,
-                style: labelStyle ??
+                style:
+                    labelStyle ??
                     TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

@@ -182,7 +182,9 @@ class ServingPatientQuickFormController extends GetxController {
             final episodes = data.episode.split(', ');
             isBreathlessness.value = episodes.contains('Breathlessness');
             isChestPain.value = episodes.contains('Chest Pain');
-            isChestPainSweating.value = episodes.contains('Chest Pain Sweating');
+            isChestPainSweating.value = episodes.contains(
+              'Chest Pain Sweating',
+            );
             isLowBp.value = episodes.contains('Low BP');
             isPalpitations.value = episodes.contains('Palpitations');
             isHeadache.value = episodes.contains('Headache');
@@ -202,7 +204,14 @@ class ServingPatientQuickFormController extends GetxController {
             cbHighSugar.value = hospList.contains('High Sugar');
             cbLowSugar.value = hospList.contains('Low Sugar');
             for (var item in hospList) {
-              if (!['Heart Attack', 'Stroke', 'Kidney Failure', 'High BP', 'High Sugar', 'Low Sugar'].contains(item)) {
+              if (![
+                'Heart Attack',
+                'Stroke',
+                'Kidney Failure',
+                'High BP',
+                'High Sugar',
+                'Low Sugar',
+              ].contains(item)) {
                 cbOther.value = true;
                 otherHospitalizationCtrl.text = item;
               }
@@ -251,7 +260,8 @@ class ServingPatientQuickFormController extends GetxController {
           rwma.value = data.rwma;
           if (data.rwmaDetails.isNotEmpty) {
             final rwmaList = data.rwmaDetails.split(', ');
-            cbAnterior.value = rwmaList.contains('Auterior') || rwmaList.contains('Anterior');
+            cbAnterior.value =
+                rwmaList.contains('Auterior') || rwmaList.contains('Anterior');
             cbLateral.value = rwmaList.contains('Lateral');
             cbInferior.value = rwmaList.contains('Inferior');
             cbPosterior.value = rwmaList.contains('Posterior');
@@ -298,7 +308,9 @@ class ServingPatientQuickFormController extends GetxController {
   Future<void> submitQuickForm() async {
     isLoading.value = true;
     try {
-      final String endpoint = isEditMode.value ? ApiEndpoints.updateQuickForm : ApiEndpoints.quickForm;
+      final String endpoint = isEditMode.value
+          ? ApiEndpoints.updateQuickForm
+          : ApiEndpoints.quickForm;
 
       // Construct episode string
       final episodeList = <String>[];
@@ -359,9 +371,15 @@ class ServingPatientQuickFormController extends GetxController {
         creatinine: cbCreatinine.value ? creatinineCtrl.text : '',
         hba1c: cbHbA1c.value ? hba1cCtrl.text : '',
         hba1cDate: cbHbA1c.value ? hba1cDateStr.value : '',
-        totalCholesterol: cbTotalCholesterol.value ? totalCholesterolCtrl.text : '',
+        totalCholesterol: cbTotalCholesterol.value
+            ? totalCholesterolCtrl.text
+            : '',
         otherInvestigation: '',
-        myBsl: selectedDay.value != 'Select Day' && selectedDay.value != 'select_day'.tr ? selectedDay.value : '',
+        myBsl:
+            selectedDay.value != 'Select Day' &&
+                selectedDay.value != 'select_day'.tr
+            ? selectedDay.value
+            : '',
         morningFasting: morningFastingCtrl.text,
         morningMedicine: morningMedTaken.value,
         morningMedName: morningDoseCtrl.text,
@@ -390,7 +408,10 @@ class ServingPatientQuickFormController extends GetxController {
         echoOtherDetails: echoOtherCtrl.text,
       );
 
-      final Response response = await _apiClient.post(endpoint, data: req.toJson());
+      final Response response = await _apiClient.post(
+        endpoint,
+        data: req.toJson(),
+      );
       if (response.statusCode == 200) {
         Get.back();
         Get.snackbar(

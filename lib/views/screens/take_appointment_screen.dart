@@ -25,7 +25,9 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
           final patient = controller.userName;
           final subtitle = (loggedIn.isNotEmpty && patient.isNotEmpty)
               ? 'Dr. $loggedIn ($patient)'
-              : loggedIn.isNotEmpty ? 'Dr. $loggedIn' : patient;
+              : loggedIn.isNotEmpty
+              ? 'Dr. $loggedIn'
+              : patient;
           return Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,12 +63,16 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
         return Stack(
           children: [
             SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 24.0,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Conditionally show problem explanation
-                  if (controller.speciality.isNotEmpty || controller.isFromDoctorHomeService) ...[
+                  if (controller.speciality.isNotEmpty ||
+                      controller.isFromDoctorHomeService) ...[
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Column(
@@ -165,10 +171,7 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
                 width: 3,
               ),
             ),
-            child: Image.asset(
-              imagePath,
-              fit: BoxFit.contain,
-            ),
+            child: Image.asset(imagePath, fit: BoxFit.contain),
           ),
           const SizedBox(height: 8),
           SizedBox(
@@ -188,5 +191,3 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
     );
   }
 }
-
-

@@ -249,5 +249,3 @@ class ManagePatientsController extends GetxController {
     super.onClose();
   }
 }
-
-

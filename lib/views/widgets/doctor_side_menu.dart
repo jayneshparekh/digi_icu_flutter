@@ -240,7 +240,10 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
             },
             child: Text(
               'cancel'.tr,
-              style: TextStyle(color: AppColors.medicalGray, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: AppColors.medicalGray,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -276,5 +279,3 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
     );
   }
 }
-
-

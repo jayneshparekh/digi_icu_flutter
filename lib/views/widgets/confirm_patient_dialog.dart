@@ -16,7 +16,8 @@ class ConfirmPatientDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fullName = '${patient.firstName} ${patient.midName} ${patient.lastName}'.trim();
+    final fullName =
+        '${patient.firstName} ${patient.midName} ${patient.lastName}'.trim();
     final genderText = patient.gender == 'Male'
         ? 'M'
         : (patient.gender == 'Female' ? 'F' : 'O');
@@ -74,34 +75,22 @@ class ConfirmPatientDialog extends StatelessWidget {
               children: [
                 Text(
                   patient.mobileNo,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    color: AppColors.navy,
-                  ),
+                  style: const TextStyle(fontSize: 15, color: AppColors.navy),
                 ),
                 if (patient.taluka.isNotEmpty)
                   Text(
                     ' / ${patient.taluka}',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: AppColors.navy,
-                    ),
+                    style: const TextStyle(fontSize: 15, color: AppColors.navy),
                   ),
                 if (patient.district.isNotEmpty)
                   Text(
                     ' / ${patient.district}',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: AppColors.navy,
-                    ),
+                    style: const TextStyle(fontSize: 15, color: AppColors.navy),
                   ),
                 if (patient.state.isNotEmpty)
                   Text(
                     ' / ${patient.state}',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: AppColors.navy,
-                    ),
+                    style: const TextStyle(fontSize: 15, color: AppColors.navy),
                   ),
               ],
             ),

@@ -14,7 +14,10 @@ import 'package:image_picker/image_picker.dart';
 class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
   const AddPrescriptionScreen({super.key});
 
-  void _showPersonalisedTTDialog(BuildContext context, Map<String, String> data) {
+  void _showPersonalisedTTDialog(
+    BuildContext context,
+    Map<String, String> data,
+  ) {
     AppDialog.show(
       title: 'Personalised TT',
       showCloseButton: true,
@@ -29,11 +32,17 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
             decoration: BoxDecoration(
               color: AppColors.lightGray,
               borderRadius: BorderRadius.circular(6),
-              border: Border.all(color: AppColors.medicalGray.withValues(alpha: 0.5)),
+              border: Border.all(
+                color: AppColors.medicalGray.withValues(alpha: 0.5),
+              ),
             ),
             child: Text(
               entry.value,
-              style: const TextStyle(fontSize: 13, color: AppColors.navy, fontWeight: FontWeight.w500),
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppColors.navy,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           );
         }).toList(),
@@ -82,7 +91,11 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
     );
   }
 
-  Widget _buildMedicineRow(BuildContext context, MedicineRowData row, int index) {
+  Widget _buildMedicineRow(
+    BuildContext context,
+    MedicineRowData row,
+    int index,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -99,11 +112,19 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
             children: [
               Text(
                 'medicine_number'.trParams({'number': (index + 1).toString()}),
-                style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy, fontSize: 13),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.navy,
+                  fontSize: 13,
+                ),
               ),
               if (controller.medicineRows.length > 1)
                 IconButton(
-                  icon: const Icon(Icons.delete_outline, color: AppColors.error, size: 20),
+                  icon: const Icon(
+                    Icons.delete_outline,
+                    color: AppColors.error,
+                    size: 20,
+                  ),
                   onPressed: () => controller.removeMedicineRow(index),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -152,7 +173,8 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<AppDrawingCanvasState> canvasKey = GlobalKey<AppDrawingCanvasState>();
+    final GlobalKey<AppDrawingCanvasState> canvasKey =
+        GlobalKey<AppDrawingCanvasState>();
 
     return Scaffold(
       backgroundColor: AppColors.lightGray,
@@ -168,12 +190,20 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
           children: [
             Text(
               'add_prescription_title'.tr,
-              style: const TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                color: AppColors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             if (controller.patientName.isNotEmpty)
               Text(
                 controller.patientName,
-                style: const TextStyle(color: AppColors.white, fontSize: 12, fontWeight: FontWeight.normal),
+                style: const TextStyle(
+                  color: AppColors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                ),
               ),
           ],
         ),
@@ -189,19 +219,30 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      await Get.toNamed('/diagnosis', arguments: {
-                        'patientId': controller.patientId,
-                        'bookingId': controller.bookingId,
-                      });
+                      await Get.toNamed(
+                        '/diagnosis',
+                        arguments: {
+                          'patientId': controller.patientId,
+                          'bookingId': controller.bookingId,
+                        },
+                      );
                       controller.fetchDiagnosis();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.teal,
                       foregroundColor: AppColors.white,
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
                     ),
-                    child: Text('add_diagnosis_btn'.tr, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    child: Text(
+                      'add_diagnosis_btn'.tr,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -217,23 +258,44 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                       backgroundColor: AppColors.teal,
                       foregroundColor: AppColors.white,
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
                     ),
-                    child: Text('personalised_tt_btn'.tr, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    child: Text(
+                      'personalised_tt_btn'.tr,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 6),
                 Expanded(
-                  child: Obx(() => ElevatedButton(
-                        onPressed: () => controller.showDefaults.value = !controller.showDefaults.value,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: controller.showDefaults.value ? const Color(0xFFFF5722) : AppColors.teal,
-                          foregroundColor: AppColors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                  child: Obx(
+                    () => ElevatedButton(
+                      onPressed: () => controller.showDefaults.value =
+                          !controller.showDefaults.value,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: controller.showDefaults.value
+                            ? const Color(0xFFFF5722)
+                            : AppColors.teal,
+                        foregroundColor: AppColors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
                         ),
-                        child: Text('defaults_btn'.tr, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                      )),
+                      ),
+                      child: Text(
+                        'defaults_btn'.tr,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -241,7 +303,9 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
 
             // Selected Diagnosis Text Banner
             Obx(() {
-              if (controller.diagnosisText.value.isEmpty) return const SizedBox.shrink();
+              if (controller.diagnosisText.value.isEmpty) {
+                return const SizedBox.shrink();
+              }
               return Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(bottom: 8),
@@ -252,9 +316,15 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                   border: Border.all(color: AppColors.medicalGray),
                 ),
                 child: Text(
-                  'diagnosis_banner'.trParams({'diagnosis': controller.diagnosisText.value}),
+                  'diagnosis_banner'.trParams({
+                    'diagnosis': controller.diagnosisText.value,
+                  }),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy, fontSize: 12),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                    fontSize: 12,
+                  ),
                 ),
               );
             }),
@@ -264,7 +334,9 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
               if (controller.isLoadingOngoingMedicines.value) {
                 return const Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: Center(child: CircularProgressIndicator(color: AppColors.teal)),
+                  child: Center(
+                    child: CircularProgressIndicator(color: AppColors.teal),
+                  ),
                 );
               }
 
@@ -290,19 +362,37 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                       children: [
                         Text(
                           'ongoing_prescriptions'.tr,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                          ),
                         ),
-                        if (!controller.isServed && (hasMedicines || controller.ongoingTls.value.isNotEmpty))
+                        if (!controller.isServed &&
+                            (hasMedicines ||
+                                controller.ongoingTls.value.isNotEmpty))
                           ElevatedButton(
-                            onPressed: () => controller.continueOngoingMedicines(),
+                            onPressed: () =>
+                                controller.continueOngoingMedicines(),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.teal,
                               foregroundColor: AppColors.white,
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               minimumSize: const Size(0, 32),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
                             ),
-                            child: Text('continue_btn'.tr, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                            child: Text(
+                              'continue_btn'.tr,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                       ],
                     ),
@@ -313,7 +403,10 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Text(
                           'no_data_available'.tr,
-                          style: const TextStyle(color: AppColors.coolGray, fontSize: 12),
+                          style: const TextStyle(
+                            color: AppColors.coolGray,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
 
@@ -330,7 +423,11 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                         ),
                         child: Text(
                           controller.ongoingPresMsg.value,
-                          style: const TextStyle(fontSize: 12, color: AppColors.navy, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.navy,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ],
@@ -342,24 +439,34 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: controller.ongoingImageUrls.length,
-                          separatorBuilder: (context, index) => const SizedBox(width: 8),
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(width: 8),
                           itemBuilder: (context, index) {
                             final url = controller.ongoingImageUrls[index];
                             return GestureDetector(
-                              onTap: () => FullScreenImageViewer.show(context, url),
+                              onTap: () =>
+                                  FullScreenImageViewer.show(context, url),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(6),
                                 child: Container(
                                   width: 80,
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: AppColors.medicalGray),
+                                    border: Border.all(
+                                      color: AppColors.medicalGray,
+                                    ),
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Image.network(
                                     url,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) =>
-                                        const Center(child: Icon(Icons.broken_image, color: AppColors.coolGray)),
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            const Center(
+                                              child: Icon(
+                                                Icons.broken_image,
+                                                color: AppColors.coolGray,
+                                              ),
+                                            ),
                                   ),
                                 ),
                               ),
@@ -376,22 +483,35 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: controller.ongoingMedicines.length,
-                        separatorBuilder: (context, index) => const Divider(height: 12, color: AppColors.lightGray),
+                        separatorBuilder: (context, index) => const Divider(
+                          height: 12,
+                          color: AppColors.lightGray,
+                        ),
                         itemBuilder: (context, index) {
                           final item = controller.ongoingMedicines[index];
-                          final subMeds = item['medicines'] as List<dynamic>? ?? [];
-                          final medNames = subMeds.map((m) => m['medicine_name']?.toString() ?? '').where((n) => n.isNotEmpty).join(', ');
-                          final category = item['category_name']?.toString() ?? '';
+                          final subMeds =
+                              item['medicines'] as List<dynamic>? ?? [];
+                          final medNames = subMeds
+                              .map((m) => m['medicine_name']?.toString() ?? '')
+                              .where((n) => n.isNotEmpty)
+                              .join(', ');
+                          final category =
+                              item['category_name']?.toString() ?? '';
                           final frequency = item['frequency']?.toString() ?? '';
                           final days = item['days']?.toString() ?? '';
-                          final prescribedBy = item['prescribed_by']?.toString() ?? '';
+                          final prescribedBy =
+                              item['prescribed_by']?.toString() ?? '';
 
                           return Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 '${index + 1}. ',
-                                style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy, fontSize: 13),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.navy,
+                                  fontSize: 13,
+                                ),
                               ),
                               Expanded(
                                 child: Column(
@@ -400,8 +520,18 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                                     Text(
                                       medNames.isNotEmpty
                                           ? medNames
-                                          : (category.isNotEmpty ? category : 'medicine_item_fallback'.trParams({'number': (index + 1).toString()})),
-                                      style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy, fontSize: 13),
+                                          : (category.isNotEmpty
+                                                ? category
+                                                : 'medicine_item_fallback'
+                                                      .trParams({
+                                                        'number': (index + 1)
+                                                            .toString(),
+                                                      })),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.navy,
+                                        fontSize: 13,
+                                      ),
                                     ),
                                     const SizedBox(height: 2),
                                     Row(
@@ -410,13 +540,19 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                                           Expanded(
                                             child: Text(
                                               '${'dosage_colon'.tr} $frequency',
-                                              style: const TextStyle(fontSize: 12, color: AppColors.coolGray),
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                color: AppColors.coolGray,
+                                              ),
                                             ),
                                           ),
                                         if (days.isNotEmpty)
                                           Text(
                                             '${'duration_colon'.tr} $days Days',
-                                            style: const TextStyle(fontSize: 12, color: AppColors.coolGray),
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              color: AppColors.coolGray,
+                                            ),
                                           ),
                                       ],
                                     ),
@@ -424,15 +560,24 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                                       const SizedBox(height: 2),
                                       Text(
                                         '${'prescribed_by_colon'.tr} $prescribedBy',
-                                        style: const TextStyle(fontSize: 11, color: AppColors.teal, fontWeight: FontWeight.w500),
+                                        style: const TextStyle(
+                                          fontSize: 11,
+                                          color: AppColors.teal,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ],
                                   ],
                                 ),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.delete_outline, color: AppColors.error, size: 20),
-                                onPressed: () => controller.removeOngoingMedicine(index),
+                                icon: const Icon(
+                                  Icons.delete_outline,
+                                  color: AppColors.error,
+                                  size: 20,
+                                ),
+                                onPressed: () =>
+                                    controller.removeOngoingMedicine(index),
                                 padding: EdgeInsets.zero,
                                 constraints: const BoxConstraints(),
                               ),
@@ -447,14 +592,21 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
 
             // Collapsible Defaults Toggle Bar (Generic vs Branded, Auto RX, Upload Prescription)
             Obx(() {
-              if (!controller.showDefaults.value) return const SizedBox.shrink();
+              if (!controller.showDefaults.value) {
+                return const SizedBox.shrink();
+              }
               return Container(
                 margin: const EdgeInsets.only(bottom: 8),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.white,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.medicalGray.withValues(alpha: 0.5)),
+                  border: Border.all(
+                    color: AppColors.medicalGray.withValues(alpha: 0.5),
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -469,14 +621,26 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                               onChanged: controller.toggleBranded,
                             ),
                             Text(
-                              controller.isBranded.value ? 'branded'.tr : 'generic'.tr,
-                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.navy),
+                              controller.isBranded.value
+                                  ? 'branded'.tr
+                                  : 'generic'.tr,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.navy,
+                              ),
                             ),
                           ],
                         ),
                         Row(
                           children: [
-                            Text('auto_rx'.tr, style: const TextStyle(fontSize: 13, color: AppColors.coolGray)),
+                            Text(
+                              'auto_rx'.tr,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: AppColors.coolGray,
+                              ),
+                            ),
                             Switch(
                               value: controller.isAutoRxOn.value,
                               activeThumbColor: AppColors.teal,
@@ -490,11 +654,19 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('upload_prescription_label'.tr, style: const TextStyle(fontSize: 13, color: AppColors.navy, fontWeight: FontWeight.w500)),
+                        Text(
+                          'upload_prescription_label'.tr,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: AppColors.navy,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                         Switch(
                           value: controller.isUploadPrescriptionOn.value,
                           activeThumbColor: AppColors.teal,
-                          onChanged: (val) => controller.isUploadPrescriptionOn.value = val,
+                          onChanged: (val) =>
+                              controller.isUploadPrescriptionOn.value = val,
                         ),
                       ],
                     ),
@@ -506,7 +678,9 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
 
             // Upload / Captured Images Roster Section (Moved above tab buttons, controlled by isUploadPrescriptionOn)
             Obx(() {
-              if (!controller.isUploadPrescriptionOn.value) return const SizedBox.shrink();
+              if (!controller.isUploadPrescriptionOn.value) {
+                return const SizedBox.shrink();
+              }
               return Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(bottom: 12),
@@ -524,7 +698,11 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                       children: [
                         Text(
                           'prescription_images_max3'.tr,
-                          style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy, fontSize: 13),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                            fontSize: 13,
+                          ),
                         ),
                         ElevatedButton.icon(
                           onPressed: () => _showImagePickerModal(context),
@@ -533,9 +711,14 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.blue,
                             foregroundColor: AppColors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
                             textStyle: const TextStyle(fontSize: 12),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
                           ),
                         ),
                       ],
@@ -544,7 +727,10 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                     if (controller.imageFiles.isEmpty)
                       Text(
                         'no_images_attached'.tr,
-                        style: const TextStyle(color: AppColors.coolGray, fontSize: 12),
+                        style: const TextStyle(
+                          color: AppColors.coolGray,
+                          fontSize: 12,
+                        ),
                       )
                     else
                       SizedBox(
@@ -552,14 +738,20 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: controller.imageFiles.length,
-                          separatorBuilder: (context, index) => const SizedBox(width: 8),
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(width: 8),
                           itemBuilder: (context, index) {
                             final file = controller.imageFiles[index];
                             return Stack(
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(6),
-                                  child: Image.file(file, width: 80, height: 80, fit: BoxFit.cover),
+                                  child: Image.file(
+                                    file,
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                                 Positioned(
                                   top: 2,
@@ -571,7 +763,11 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                                         color: Colors.black54,
                                         shape: BoxShape.circle,
                                       ),
-                                      child: const Icon(Icons.close, color: AppColors.white, size: 16),
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: AppColors.white,
+                                        size: 16,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -596,7 +792,11 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                       label: Text('add_rx_tab'.tr),
                       selected: active == 'Add Rx',
                       selectedColor: AppColors.teal,
-                      labelStyle: TextStyle(color: active == 'Add Rx' ? AppColors.white : AppColors.navy),
+                      labelStyle: TextStyle(
+                        color: active == 'Add Rx'
+                            ? AppColors.white
+                            : AppColors.navy,
+                      ),
                       onSelected: (_) => controller.activeTab.value = 'Add Rx',
                     ),
                     const SizedBox(width: 8),
@@ -604,7 +804,11 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                       label: Text('tls_note_tab'.tr),
                       selected: active == 'TLS',
                       selectedColor: AppColors.teal,
-                      labelStyle: TextStyle(color: active == 'TLS' ? AppColors.white : AppColors.navy),
+                      labelStyle: TextStyle(
+                        color: active == 'TLS'
+                            ? AppColors.white
+                            : AppColors.navy,
+                      ),
                       onSelected: (_) => controller.activeTab.value = 'TLS',
                     ),
                     const SizedBox(width: 8),
@@ -612,8 +816,13 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                       label: Text('writepad_tab'.tr),
                       selected: active == 'Writepad',
                       selectedColor: AppColors.teal,
-                      labelStyle: TextStyle(color: active == 'Writepad' ? AppColors.white : AppColors.navy),
-                      onSelected: (_) => controller.activeTab.value = 'Writepad',
+                      labelStyle: TextStyle(
+                        color: active == 'Writepad'
+                            ? AppColors.white
+                            : AppColors.navy,
+                      ),
+                      onSelected: (_) =>
+                          controller.activeTab.value = 'Writepad',
                     ),
                   ],
                 ),
@@ -638,7 +847,11 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                     children: [
                       Text(
                         'writepad_notes_title'.tr,
-                        style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy, fontSize: 13),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.navy,
+                          fontSize: 13,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       AppDrawingCanvas(
@@ -671,18 +884,33 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
               // Default: 'Add Rx' Form
               return Column(
                 children: [
-                  Obx(() => ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: controller.medicineRows.length,
-                        itemBuilder: (context, index) => _buildMedicineRow(context, controller.medicineRows[index], index),
-                      )),
+                  Obx(
+                    () => ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: controller.medicineRows.length,
+                      itemBuilder: (context, index) => _buildMedicineRow(
+                        context,
+                        controller.medicineRows[index],
+                        index,
+                      ),
+                    ),
+                  ),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton.icon(
                       onPressed: controller.addMedicineRow,
-                      icon: const Icon(Icons.add_circle_outline, color: AppColors.teal),
-                      label: Text('add_another_medicine'.tr, style: const TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold)),
+                      icon: const Icon(
+                        Icons.add_circle_outline,
+                        color: AppColors.teal,
+                      ),
+                      label: Text(
+                        'add_another_medicine'.tr,
+                        style: const TextStyle(
+                          color: AppColors.teal,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -692,18 +920,21 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
             const SizedBox(height: 16),
 
             // Submit Button
-            Obx(() => AppPrimaryButton(
-                  label: 'submit_prescription_btn'.tr,
-                  isLoading: controller.isSubmitting.value,
-                  onPressed: () async {
-                    if (controller.activeTab.value == 'Writepad') {
-                      final canvasBytes = await canvasKey.currentState?.exportToPngImage();
-                      controller.submitPrescription(canvasBytes: canvasBytes);
-                    } else {
-                      controller.submitPrescription();
-                    }
-                  },
-                )),
+            Obx(
+              () => AppPrimaryButton(
+                label: 'submit_prescription_btn'.tr,
+                isLoading: controller.isSubmitting.value,
+                onPressed: () async {
+                  if (controller.activeTab.value == 'Writepad') {
+                    final canvasBytes = await canvasKey.currentState
+                        ?.exportToPngImage();
+                    controller.submitPrescription(canvasBytes: canvasBytes);
+                  } else {
+                    controller.submitPrescription();
+                  }
+                },
+              ),
+            ),
           ],
         ),
       ),

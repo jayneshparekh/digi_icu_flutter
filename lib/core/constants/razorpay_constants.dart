@@ -1,4 +1,4 @@
-﻿class RazorpayConstants {
+class RazorpayConstants {
   RazorpayConstants._();
 
   // --- Razorpay Environment Toggle ---
@@ -25,4 +25,3 @@
   static const String prefillEmailKey = 'email';
   static const String prefillContactKey = 'contact';
 }
-

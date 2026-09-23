@@ -31,9 +31,7 @@ class AppDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       backgroundColor: AppColors.white,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -75,11 +73,7 @@ class AppDialog extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             // Dynamic Body
-            Flexible(
-              child: SingleChildScrollView(
-                child: body,
-              ),
-            ),
+            Flexible(child: SingleChildScrollView(child: body)),
             // Optional Cancel/Confirm Footer
             if (confirmLabel != null || cancelLabel != null) ...[
               const SizedBox(height: 24),

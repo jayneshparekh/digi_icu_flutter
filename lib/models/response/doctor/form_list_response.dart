@@ -13,7 +13,10 @@ class FormListResponse {
     var listData = <FormListData>[];
     if (json['data'] != null && json['data'] is List) {
       listData = (json['data'] as List)
-          .map((item) => FormListData.fromJson(Map<String, dynamic>.from(item as Map)))
+          .map(
+            (item) =>
+                FormListData.fromJson(Map<String, dynamic>.from(item as Map)),
+          )
           .toList();
     }
     return FormListResponse(

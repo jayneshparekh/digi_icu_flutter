@@ -241,43 +241,46 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                         if (!isPatientView) ...[
                           const SizedBox(height: 8),
                           // Action Row 1: Refer, Leader Call, Call, Admit, Hold
-                          Row(
-                            children: [
-                              _buildTopActionButton(
-                                svgName: 'ic_refer',
-                                onTap: () => AppSnackbars.showInfo(
-                                  'info'.tr,
-                                  'refer_clicked'.tr,
+                          Obx(
+                            () => Row(
+                              children: [
+                                _buildTopActionButton(
+                                  svgName: 'ic_refer',
+                                  onTap: () => AppSnackbars.showInfo(
+                                    'info'.tr,
+                                    'refer_clicked'.tr,
+                                  ),
                                 ),
-                              ),
-                              _buildTopActionButton(
-                                svgName: 'ic_leader_call',
-                                onTap: () => AppSnackbars.showInfo(
-                                  'info'.tr,
-                                  'leader_call_clicked'.tr,
+                                _buildTopActionButton(
+                                  svgName: 'ic_leader_call',
+                                  onTap: () => AppSnackbars.showInfo(
+                                    'info'.tr,
+                                    'leader_call_clicked'.tr,
+                                  ),
+                                  bg: AppColors.error,
                                 ),
-                                bg: AppColors.error,
-                              ),
-                              _buildTopActionButton(
-                                svgName: 'ic_baseline_phone_24',
-                                onTap: () => AppSnackbars.showInfo(
-                                  'info'.tr,
-                                  'call_clicked'.tr,
+                                _buildTopActionButton(
+                                  svgName: 'ic_baseline_phone_24',
+                                  onTap: () => AppSnackbars.showInfo(
+                                    'info'.tr,
+                                    'call_clicked'.tr,
+                                  ),
                                 ),
-                              ),
-                              _buildTopActionButton(
-                                                              svgName: 'ic_baseline_admit_24',
-                                                              onTap: () => controller.openAdmitDialog(),
-                                                              bg: controller.isAdmitted.value == '1'
-                                                                  ? AppColors.error
-                                                                  : AppColors.teal,
-                                                            ),
-                              _buildTopActionButton(
-                                svgName: 'ic_hold',
-                                onTap: () => controller.showHoldReasonDialog(),
-                                visible: !hideHoldAndFinish,
-                              ),
-                            ],
+                                _buildTopActionButton(
+                                  svgName: 'ic_baseline_admit_24',
+                                  onTap: () => controller.openAdmitDialog(),
+                                  bg: controller.isAdmitted.value == '1'
+                                      ? AppColors.error
+                                      : AppColors.teal,
+                                ),
+                                _buildTopActionButton(
+                                  svgName: 'ic_hold',
+                                  onTap: () =>
+                                      controller.showHoldReasonDialog(),
+                                  visible: !hideHoldAndFinish,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                         const SizedBox(height: 6),

@@ -1,4 +1,4 @@
-﻿class DoctorListPatientSideResponse {
+class DoctorListPatientSideResponse {
   final String status;
   final String medicalForm;
   final String msg;
@@ -87,4 +87,3 @@ class DoctorDataModel {
     );
   }
 }
-

@@ -19,7 +19,8 @@ class ServingPatientFormTabView extends StatefulWidget {
   const ServingPatientFormTabView({super.key});
 
   @override
-  State<ServingPatientFormTabView> createState() => _ServingPatientFormTabViewState();
+  State<ServingPatientFormTabView> createState() =>
+      _ServingPatientFormTabViewState();
 }
 
 class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
@@ -61,14 +62,18 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
         );
         if (formResponse.status == 'success') {
           setState(() {
-            formList = formResponse.data.map((item) => {
-              'id': item.id,
-              'patient_note': item.patientNote,
-              'created': item.created,
-              'appointment_id': item.appointmentId,
-              'first_name': item.firstName,
-              'last_name': item.lastName,
-            }).toList();
+            formList = formResponse.data
+                .map(
+                  (item) => {
+                    'id': item.id,
+                    'patient_note': item.patientNote,
+                    'created': item.created,
+                    'appointment_id': item.appointmentId,
+                    'first_name': item.firstName,
+                    'last_name': item.lastName,
+                  },
+                )
+                .toList();
           });
         } else {
           setState(() {
@@ -107,14 +112,18 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
         );
         if (formResponse.status == 'success') {
           setState(() {
-            formList = formResponse.data.reversed.map((item) => {
-              'id': item.id,
-              'patient_note': item.patientNote,
-              'created': item.created,
-              'appointment_id': item.appointmentId,
-              'first_name': item.firstName,
-              'last_name': item.lastName,
-            }).toList();
+            formList = formResponse.data.reversed
+                .map(
+                  (item) => {
+                    'id': item.id,
+                    'patient_note': item.patientNote,
+                    'created': item.created,
+                    'appointment_id': item.appointmentId,
+                    'first_name': item.firstName,
+                    'last_name': item.lastName,
+                  },
+                )
+                .toList();
           });
         } else {
           setState(() {
@@ -153,15 +162,24 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
         );
         if (formResponse.status == 'success') {
           setState(() {
-            final sorted = formResponse.data.reversed.toList()..sort((a,b) => (int.tryParse(b.id.toString()) ?? 0).compareTo(int.tryParse(a.id.toString()) ?? 0));
-            formList = sorted.map((item) => {
-              'id': item.id,
-              'patient_note': item.patientNote,
-              'created': item.created,
-              'appointment_id': item.appointmentId,
-              'first_name': item.firstName,
-              'last_name': item.lastName,
-            }).toList();
+            final sorted = formResponse.data.reversed.toList()
+              ..sort(
+                (a, b) => (int.tryParse(b.id.toString()) ?? 0).compareTo(
+                  int.tryParse(a.id.toString()) ?? 0,
+                ),
+              );
+            formList = sorted
+                .map(
+                  (item) => {
+                    'id': item.id,
+                    'patient_note': item.patientNote,
+                    'created': item.created,
+                    'appointment_id': item.appointmentId,
+                    'first_name': item.firstName,
+                    'last_name': item.lastName,
+                  },
+                )
+                .toList();
           });
         } else {
           setState(() {
@@ -239,11 +257,31 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _buildHeaderButton('clinical_tab'.tr, 'Clinical', selectedHeaderTab == 'Clinical'),
-                    _buildHeaderButton('medical_tab'.tr, 'Medical', selectedHeaderTab == 'Medical'),
-                    _buildHeaderButton('quick_tab'.tr, 'Quick', selectedHeaderTab == 'Quick'),
-                    _buildHeaderButton('phe_tab'.tr, 'PHE', selectedHeaderTab == 'PHE'),
-                    _buildHeaderButton('doctor_note_tab'.tr, 'Doctor Note', selectedHeaderTab == 'Doctor Note'),
+                    _buildHeaderButton(
+                      'clinical_tab'.tr,
+                      'Clinical',
+                      selectedHeaderTab == 'Clinical',
+                    ),
+                    _buildHeaderButton(
+                      'medical_tab'.tr,
+                      'Medical',
+                      selectedHeaderTab == 'Medical',
+                    ),
+                    _buildHeaderButton(
+                      'quick_tab'.tr,
+                      'Quick',
+                      selectedHeaderTab == 'Quick',
+                    ),
+                    _buildHeaderButton(
+                      'phe_tab'.tr,
+                      'PHE',
+                      selectedHeaderTab == 'PHE',
+                    ),
+                    _buildHeaderButton(
+                      'doctor_note_tab'.tr,
+                      'Doctor Note',
+                      selectedHeaderTab == 'Doctor Note',
+                    ),
                   ],
                 ),
               ),
@@ -264,42 +302,75 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
                       color: AppColors.navy,
                     ),
                   ),
-                  if (selectedHeaderTab != 'Medical' && selectedHeaderTab != 'Clinical')
+                  if (selectedHeaderTab != 'Medical' &&
+                      selectedHeaderTab != 'Clinical')
                     ElevatedButton.icon(
                       onPressed: () {
                         if (selectedHeaderTab == 'Quick') {
-                          Get.to(() => const ServingPatientQuickFormView(), arguments: {'formId': null});
+                          Get.to(
+                            () => const ServingPatientQuickFormView(),
+                            arguments: {'formId': null},
+                          );
                         } else if (selectedHeaderTab == 'Medical') {
-                          Get.to(() => const ServingPatientMedicalFormView(), arguments: {'formId': null})?.then((res) {
+                          Get.to(
+                            () => const ServingPatientMedicalFormView(),
+                            arguments: {'formId': null},
+                          )?.then((res) {
                             if (res != null) {
                               fetchMedicalFormList();
                             }
                           });
                         } else if (selectedHeaderTab == 'Clinical') {
-                          Get.to(() => const ServingPatientClinicalFormScreen(), arguments: {
-                            'patientId': _getPatientId(),
-                            'patientName': Get.isRegistered<ServingPatientController>() ? Get.find<ServingPatientController>().fullName : '',
-                            'doctorId': Get.isRegistered<ServingPatientController>() ? Get.find<ServingPatientController>().doctorId : '',
-                            'doctorName': '',
-                            'formType': 'Clinical Form',
-                          })?.then((res) {
+                          Get.to(
+                            () => const ServingPatientClinicalFormScreen(),
+                            arguments: {
+                              'patientId': _getPatientId(),
+                              'patientName':
+                                  Get.isRegistered<ServingPatientController>()
+                                  ? Get.find<ServingPatientController>()
+                                        .fullName
+                                  : '',
+                              'doctorId':
+                                  Get.isRegistered<ServingPatientController>()
+                                  ? Get.find<ServingPatientController>()
+                                        .doctorId
+                                  : '',
+                              'doctorName': '',
+                              'formType': 'Clinical Form',
+                            },
+                          )?.then((res) {
                             if (res != null) {
-                              AppSnackbars.showSuccess('success'.tr, 'form_submitted'.tr);
+                              AppSnackbars.showSuccess(
+                                'success'.tr,
+                                'form_submitted'.tr,
+                              );
                               fetchClinicalFormList();
                             }
                           });
                         } else {
-                          AppSnackbars.showInfo('info'.tr, 'Opening $selectedHeaderTab Form');
+                          AppSnackbars.showInfo(
+                            'info'.tr,
+                            'Opening $selectedHeaderTab Form',
+                          );
                         }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.teal,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
                       ),
-                      icon: const Icon(Icons.add, size: 18, color: AppColors.white),
+                      icon: const Icon(
+                        Icons.add,
+                        size: 18,
+                        color: AppColors.white,
+                      ),
                       label: Text(
                         'add_form_btn'.trParams({'type': selectedHeaderTab}),
-                        style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          color: AppColors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                 ],
@@ -334,27 +405,54 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
                           date: recordDate,
                           onTap: () {
                             if (selectedHeaderTab == 'Quick') {
-                              Get.to(() => const ServingPatientQuickFormView(), arguments: {'formId': item['id']});
+                              Get.to(
+                                () => const ServingPatientQuickFormView(),
+                                arguments: {'formId': item['id']},
+                              );
                             } else if (selectedHeaderTab == 'Medical') {
-                              Get.to(() => const ServingPatientMedicalFormView(), arguments: {'formId': item['id']})?.then((res) {
+                              Get.to(
+                                () => const ServingPatientMedicalFormView(),
+                                arguments: {'formId': item['id']},
+                              )?.then((res) {
                                 if (res != null) {
                                   fetchMedicalFormList();
                                 }
                               });
                             } else if (selectedHeaderTab == 'Clinical') {
-                              Get.to(() => const ServingPatientClinicalFormScreen(), arguments: {
-                                'patientId': _getPatientId(),
-                                'formId': item['id'],
-                                'patientName': Get.isRegistered<ServingPatientController>() ? Get.find<ServingPatientController>().fullName : '',
-                                'doctorId': Get.isRegistered<ServingPatientController>() ? Get.find<ServingPatientController>().doctorId : '',
-                              })?.then((res) {
+                              Get.to(
+                                () => const ServingPatientClinicalFormScreen(),
+                                arguments: {
+                                  'patientId': _getPatientId(),
+                                  'formId': item['id'],
+                                  'patientName':
+                                      Get.isRegistered<
+                                        ServingPatientController
+                                      >()
+                                      ? Get.find<ServingPatientController>()
+                                            .fullName
+                                      : '',
+                                  'doctorId':
+                                      Get.isRegistered<
+                                        ServingPatientController
+                                      >()
+                                      ? Get.find<ServingPatientController>()
+                                            .doctorId
+                                      : '',
+                                },
+                              )?.then((res) {
                                 if (res != null) {
-                                  AppSnackbars.showSuccess('success'.tr, 'form_submitted'.tr);
+                                  AppSnackbars.showSuccess(
+                                    'success'.tr,
+                                    'form_submitted'.tr,
+                                  );
                                   fetchClinicalFormList();
                                 }
                               });
                             } else {
-                              AppSnackbars.showInfo('info'.tr, 'Viewing Record');
+                              AppSnackbars.showInfo(
+                                'info'.tr,
+                                'Viewing Record',
+                              );
                             }
                           },
                         );

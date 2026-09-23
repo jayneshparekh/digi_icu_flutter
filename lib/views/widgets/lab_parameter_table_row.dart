@@ -51,11 +51,7 @@ class LabParameterTableRow extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          Container(
-            width: 0.5,
-            height: 38,
-            color: AppColors.medicalGray,
-          ),
+          Container(width: 0.5, height: 38, color: AppColors.medicalGray),
           // Value Cells (Horizontal list)
           ...values.map(
             (val) => Container(

@@ -28,7 +28,9 @@ class AppointmentScreen extends GetView<AppointmentController> {
           final patient = controller.patientName;
           final subtitle = (loggedIn.isNotEmpty && patient.isNotEmpty)
               ? 'Dr. $loggedIn ($patient)'
-              : loggedIn.isNotEmpty ? 'Dr. $loggedIn' : patient;
+              : loggedIn.isNotEmpty
+              ? 'Dr. $loggedIn'
+              : patient;
           return Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,9 +96,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
               if (controller.isLoading.value) {
                 return const Center(
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      AppColors.teal,
-                    ),
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.teal),
                   ),
                 );
               }
@@ -105,7 +105,10 @@ class AppointmentScreen extends GetView<AppointmentController> {
                 return Center(
                   child: Text(
                     controller.errorMsg.value,
-                    style: TextStyle(fontSize: 16, color: AppColors.medicalGray),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.medicalGray,
+                    ),
                   ),
                 );
               }
@@ -115,7 +118,10 @@ class AppointmentScreen extends GetView<AppointmentController> {
                 return Center(
                   child: Text(
                     'no_doctors_found'.tr,
-                    style: TextStyle(fontSize: 16, color: AppColors.medicalGray),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.medicalGray,
+                    ),
                   ),
                 );
               }
@@ -194,10 +200,7 @@ class AppointmentScreen extends GetView<AppointmentController> {
                   if (doctor.degrees.isNotEmpty) ...[
                     Text(
                       doctor.degrees,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: AppColors.coolGray,
-                      ),
+                      style: TextStyle(fontSize: 13, color: AppColors.coolGray),
                     ),
                     const SizedBox(height: 2),
                   ],
@@ -222,7 +225,9 @@ class AppointmentScreen extends GetView<AppointmentController> {
                             height: 10,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: isAvailable ? AppColors.success : AppColors.medicalGray,
+                              color: isAvailable
+                                  ? AppColors.success
+                                  : AppColors.medicalGray,
                             ),
                           ),
                           const SizedBox(width: 4),
@@ -230,7 +235,9 @@ class AppointmentScreen extends GetView<AppointmentController> {
                             isAvailable ? 'available'.tr : 'not_available'.tr,
                             style: TextStyle(
                               fontSize: 12,
-                              color: isAvailable ? AppColors.success : AppColors.medicalGray,
+                              color: isAvailable
+                                  ? AppColors.success
+                                  : AppColors.medicalGray,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -295,5 +302,3 @@ class AppointmentScreen extends GetView<AppointmentController> {
     );
   }
 }
-
-

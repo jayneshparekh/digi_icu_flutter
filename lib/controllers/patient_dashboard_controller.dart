@@ -1,4 +1,4 @@
-﻿import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,7 +28,8 @@ class PatientDashboardController extends GetxController {
   String problem = '';
 
   final RxString doctorName = ''.obs;
-  final Rxn<InstallmentDetailsRes> rxInstallmentDetails = Rxn<InstallmentDetailsRes>();
+  final Rxn<InstallmentDetailsRes> rxInstallmentDetails =
+      Rxn<InstallmentDetailsRes>();
 
   // Sliders and marquee content loaded from API
   final RxList<SliderItem> homeSliders = <SliderItem>[].obs;
@@ -79,7 +80,8 @@ class PatientDashboardController extends GetxController {
       leaderId = args['leaderId']?.toString() ?? '';
       isFrom = args['isFrom']?.toString() ?? '';
       doctorId = args['doctorId']?.toString() ?? '';
-      isFromDoctorHomeService = args['isFromDoctorHomeService'] as bool? ?? false;
+      isFromDoctorHomeService =
+          args['isFromDoctorHomeService'] as bool? ?? false;
       homeServiceDoctorId = args['doctor_id']?.toString() ?? '';
       doctorHsReqId = args['doctor_hs_req_id']?.toString() ?? '';
       problem = args['problem']?.toString() ?? '';
@@ -151,10 +153,14 @@ class PatientDashboardController extends GetxController {
           rxRegisteredPinCode.value = homeRes.registeredPinCode;
           rxMedicalForm.value = homeRes.medicalForm;
           rxOngoingAppointment.value = homeRes.ongoingAppointment;
-          rxOngoingAppointmentId.value = homeRes.ongoingAppointmentDetails?.ongoingAppointmentId ?? '';
-          rxOngoingDoctorId.value = homeRes.ongoingAppointmentDetails?.doctorId ?? '';
-          rxOngoingDoctorName.value = homeRes.ongoingAppointmentDetails?.doctorName ?? '';
-          rxHoldReason.value = homeRes.ongoingAppointmentDetails?.holdReason ?? '';
+          rxOngoingAppointmentId.value =
+              homeRes.ongoingAppointmentDetails?.ongoingAppointmentId ?? '';
+          rxOngoingDoctorId.value =
+              homeRes.ongoingAppointmentDetails?.doctorId ?? '';
+          rxOngoingDoctorName.value =
+              homeRes.ongoingAppointmentDetails?.doctorName ?? '';
+          rxHoldReason.value =
+              homeRes.ongoingAppointmentDetails?.holdReason ?? '';
           rxPtMobileNo.value = homeRes.ptMobileNo;
           rxScreeningId.value = homeRes.screeningId;
           rxParentId.value = homeRes.parentId;
@@ -164,11 +170,15 @@ class PatientDashboardController extends GetxController {
           rxServiceLocation.value = homeRes.serviceLocation;
           rxServiceLocationLat.value = homeRes.serviceLocationLat;
           rxServiceLocationLong.value = homeRes.serviceLocationLong;
-          rxServiceLocationLastUpdated.value = homeRes.serviceLocationLastUpdated;
+          rxServiceLocationLastUpdated.value =
+              homeRes.serviceLocationLastUpdated;
           rxInstallmentDetails.value = homeRes.installmentDetails;
 
           if (homeRes.firstTimeAppointment.isNotEmpty) {
-            await prefs.setString(AppConstants.prefFirstTimeAppointment, homeRes.firstTimeAppointment);
+            await prefs.setString(
+              AppConstants.prefFirstTimeAppointment,
+              homeRes.firstTimeAppointment,
+            );
           }
           if (homeRes.leaderId.isNotEmpty) {
             await prefs.setString(AppConstants.prefLeaderId, homeRes.leaderId);
@@ -230,26 +240,26 @@ class PatientDashboardController extends GetxController {
       final details = rxInstallmentDetails.value;
       if (details != null) {
         Get.dialog(
-          InstallmentPaymentDialog(
-            data: details,
-            onPayNowClick: onPayNowClick,
-          ),
+          InstallmentPaymentDialog(data: details, onPayNowClick: onPayNowClick),
           barrierDismissible: false,
         );
       }
     } else {
-      Get.toNamed('/appointment', arguments: {
-        'patientId': patientId,
-        'userAge': userAge,
-        'userGender': userGender,
-        'patientName': userName,
-        'isFromDoctorHomeService': isFromDoctorHomeService,
-        'doctor_id': homeServiceDoctorId,
-        'doctor_hs_req_id': doctorHsReqId,
-        'problem': problem,
-        'type': type,
-        'leaderId': leaderId,
-      });
+      Get.toNamed(
+        '/appointment',
+        arguments: {
+          'patientId': patientId,
+          'userAge': userAge,
+          'userGender': userGender,
+          'patientName': userName,
+          'isFromDoctorHomeService': isFromDoctorHomeService,
+          'doctor_id': homeServiceDoctorId,
+          'doctor_hs_req_id': doctorHsReqId,
+          'problem': problem,
+          'type': type,
+          'leaderId': leaderId,
+        },
+      );
     }
   }
 
@@ -274,5 +284,3 @@ class PatientDashboardController extends GetxController {
   //   // Order generation and signature verification logic
   // }
 }
-
-

@@ -94,7 +94,13 @@ class DiagnosisController extends GetxController {
   final cbOtherDiagnosis = true.obs;
   final otherControllers = List.generate(5, (_) => TextEditingController());
   final otherSlotsVisible = [true, false, false, false, false].obs;
-  final otherSlotsAdded = [false, false, false, false, false].obs; // tracks if slot has been "submitted/added" to the summary list
+  final otherSlotsAdded = [
+    false,
+    false,
+    false,
+    false,
+    false,
+  ].obs; // tracks if slot has been "submitted/added" to the summary list
 
   // Summary Text
   final rxDiagnosisText = ''.obs;
@@ -103,9 +109,13 @@ class DiagnosisController extends GetxController {
   void onInit() {
     super.onInit();
     final args = Get.arguments as Map<String, dynamic>? ?? {};
-    patientId = args['patient_id']?.toString() ?? args['patientId']?.toString() ?? '';
-    bookingId = args['appointment_id']?.toString() ?? args['bookingId']?.toString() ?? '';
-    
+    patientId =
+        args['patient_id']?.toString() ?? args['patientId']?.toString() ?? '';
+    bookingId =
+        args['appointment_id']?.toString() ??
+        args['bookingId']?.toString() ??
+        '';
+
     // Bind listeners to automatically update the compiled summary text
     _setupChangeListeners();
     fetchPatientDiagnosis();
@@ -114,18 +124,59 @@ class DiagnosisController extends GetxController {
   void _setupChangeListeners() {
     // Whenever checkboxes change, re-compile diagnosis summary
     final allChecks = [
-      cbHypertension, cbHypertensionEssential, cbHypertensionSecondary, cbHypertensionWhiteCoat,
-      cbBPHypertensionResistant, cbHypertensionPregnancy, cbHypertensionMalignant,
-      cbHypertensionEmergency, cbHypertensionAccelarated,
-      cbDiabetes, cbDMType1, cbDmType2, cbPreDiabetic, cbDMPregnancy, cbDiabeticFoot,
-      cbStroke, cbStrokeAcute, cbStrokeRecent, cbStrokeOld,
-      cbIschemic, cbIschemicAcute, cbIschemicRecent, cbIhdECG, cbIschemicOld, cbIschemicNSTEMI, cbUnstableAngina,
-      cbCoronary, cbCoronaryPostCABG, cbCoronaryDVD, cbCoronarySVD, cbCoronaryTVD, cbCoronaryPostPCI,
-      cbRhythm, cbRhythmBrady, cbRhythmAtrialFlutter, cbRhythmAtrialFibrillation, cbRhythmSinus,
-      cbRhythmBrady2nd, cbRhythmBradyCHB, cbRhythmBrady1st, cbRhythmSVT,
-      cbRetinopathy, cbRetinopathyHypertensive, cbRetinopathyDiabetic, cbRetinopathyOther,
-      cbHtnCKD, cbHypothyroid, cbHyperThyroid, cbHyperuricemia, cbPeripheral,
-      cbLV, cbNYHA, selectedNYHA,
+      cbHypertension,
+      cbHypertensionEssential,
+      cbHypertensionSecondary,
+      cbHypertensionWhiteCoat,
+      cbBPHypertensionResistant,
+      cbHypertensionPregnancy,
+      cbHypertensionMalignant,
+      cbHypertensionEmergency,
+      cbHypertensionAccelarated,
+      cbDiabetes,
+      cbDMType1,
+      cbDmType2,
+      cbPreDiabetic,
+      cbDMPregnancy,
+      cbDiabeticFoot,
+      cbStroke,
+      cbStrokeAcute,
+      cbStrokeRecent,
+      cbStrokeOld,
+      cbIschemic,
+      cbIschemicAcute,
+      cbIschemicRecent,
+      cbIhdECG,
+      cbIschemicOld,
+      cbIschemicNSTEMI,
+      cbUnstableAngina,
+      cbCoronary,
+      cbCoronaryPostCABG,
+      cbCoronaryDVD,
+      cbCoronarySVD,
+      cbCoronaryTVD,
+      cbCoronaryPostPCI,
+      cbRhythm,
+      cbRhythmBrady,
+      cbRhythmAtrialFlutter,
+      cbRhythmAtrialFibrillation,
+      cbRhythmSinus,
+      cbRhythmBrady2nd,
+      cbRhythmBradyCHB,
+      cbRhythmBrady1st,
+      cbRhythmSVT,
+      cbRetinopathy,
+      cbRetinopathyHypertensive,
+      cbRetinopathyDiabetic,
+      cbRetinopathyOther,
+      cbHtnCKD,
+      cbHypothyroid,
+      cbHyperThyroid,
+      cbHyperuricemia,
+      cbPeripheral,
+      cbLV,
+      cbNYHA,
+      selectedNYHA,
     ];
 
     for (var check in allChecks) {
@@ -251,7 +302,7 @@ class DiagnosisController extends GetxController {
       if (cbHypertensionMalignant.value) sub.add('Malignant');
       if (cbHypertensionEmergency.value) sub.add('HTNsive Emergency');
       if (cbHypertensionAccelarated.value) sub.add('Accelarated');
-      
+
       if (sub.isNotEmpty) {
         list.add('HTN-${sub.join(" ")}');
       }
@@ -265,7 +316,7 @@ class DiagnosisController extends GetxController {
       if (cbPreDiabetic.value) sub.add('PreDiabetic');
       if (cbDMPregnancy.value) sub.add('Pregnancy induced');
       if (cbDiabeticFoot.value) sub.add('Diabetic Foot');
-      
+
       if (sub.isNotEmpty) {
         list.add('DM-${sub.join(" ")}');
       }
@@ -277,7 +328,7 @@ class DiagnosisController extends GetxController {
       if (cbStrokeAcute.value) sub.add('Acute');
       if (cbStrokeRecent.value) sub.add('Recent');
       if (cbStrokeOld.value) sub.add('Old');
-      
+
       if (sub.isNotEmpty) {
         list.add('Stroke-${sub.join(" ")}');
       }
@@ -292,7 +343,7 @@ class DiagnosisController extends GetxController {
       if (cbIschemicOld.value) sub.add('Old');
       if (cbIschemicNSTEMI.value) sub.add('NSTEMI');
       if (cbUnstableAngina.value) sub.add('Unstable Angina');
-      
+
       if (sub.isNotEmpty) {
         list.add('IHD-${sub.join(" ")}');
       }
@@ -306,7 +357,7 @@ class DiagnosisController extends GetxController {
       if (cbCoronarySVD.value) sub.add('SVD');
       if (cbCoronaryTVD.value) sub.add('TVD');
       if (cbCoronaryPostPCI.value) sub.add('Post PCI');
-      
+
       if (sub.isNotEmpty) {
         list.add('CAD-${sub.join(" ")}');
       }
@@ -323,7 +374,7 @@ class DiagnosisController extends GetxController {
       if (cbRhythmBradyCHB.value) sub.add('CHB');
       if (cbRhythmBrady1st.value) sub.add('1st degree heart block');
       if (cbRhythmSVT.value) sub.add('SVT');
-      
+
       if (sub.isNotEmpty) {
         list.add('Rhythm-${sub.join(" ")}');
       }
@@ -335,7 +386,7 @@ class DiagnosisController extends GetxController {
       if (cbRetinopathyHypertensive.value) sub.add('Hypertensive');
       if (cbRetinopathyDiabetic.value) sub.add('Diabetic');
       if (cbRetinopathyOther.value) sub.add('Other');
-      
+
       if (sub.isNotEmpty) {
         list.add('Retinopathy-${sub.join(" ")}');
       }
@@ -385,7 +436,10 @@ class DiagnosisController extends GetxController {
     } else {
       // Submit/Add custom slot
       if (otherControllers[index].text.trim().isEmpty) {
-        AppSnackbars.showError('Validation Error', 'Please enter a diagnosis value.');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please enter a diagnosis value.',
+        );
         return;
       }
       otherSlotsAdded[index] = true;
@@ -445,12 +499,20 @@ class DiagnosisController extends GetxController {
         final details = clean.replaceFirst('HTN-', '');
         if (details.contains('Essential')) cbHypertensionEssential.value = true;
         if (details.contains('Secondary')) cbHypertensionSecondary.value = true;
-        if (details.contains('White coat')) cbHypertensionWhiteCoat.value = true;
-        if (details.contains('Resistant')) cbBPHypertensionResistant.value = true;
-        if (details.contains('Pregnancy induced')) cbHypertensionPregnancy.value = true;
+        if (details.contains('White coat')) {
+          cbHypertensionWhiteCoat.value = true;
+        }
+        if (details.contains('Resistant')) {
+          cbBPHypertensionResistant.value = true;
+        }
+        if (details.contains('Pregnancy induced')) {
+          cbHypertensionPregnancy.value = true;
+        }
         if (details.contains('Malignant')) cbHypertensionMalignant.value = true;
         if (details.contains('Emergency')) cbHypertensionEmergency.value = true;
-        if (details.contains('Accelarated')) cbHypertensionAccelarated.value = true;
+        if (details.contains('Accelarated')) {
+          cbHypertensionAccelarated.value = true;
+        }
       } else if (clean.contains('DM-')) {
         cbDiabetes.value = true;
         final details = clean.replaceFirst('DM-', '');
@@ -486,17 +548,27 @@ class DiagnosisController extends GetxController {
         cbRhythm.value = true;
         final details = clean.replaceFirst('Rhythm-', '');
         if (details.contains('Brady arrhythmia')) cbRhythmBrady.value = true;
-        if (details.contains('Atrial flutter')) cbRhythmAtrialFlutter.value = true;
-        if (details.contains('Atrial Fibrillation')) cbRhythmAtrialFibrillation.value = true;
+        if (details.contains('Atrial flutter')) {
+          cbRhythmAtrialFlutter.value = true;
+        }
+        if (details.contains('Atrial Fibrillation')) {
+          cbRhythmAtrialFibrillation.value = true;
+        }
         if (details.contains('Sinus Tachycardia')) cbRhythmSinus.value = true;
-        if (details.contains('2nd degree heart block')) cbRhythmBrady2nd.value = true;
+        if (details.contains('2nd degree heart block')) {
+          cbRhythmBrady2nd.value = true;
+        }
         if (details.contains('CHB')) cbRhythmBradyCHB.value = true;
-        if (details.contains('1st degree heart block')) cbRhythmBrady1st.value = true;
+        if (details.contains('1st degree heart block')) {
+          cbRhythmBrady1st.value = true;
+        }
         if (details.contains('SVT')) cbRhythmSVT.value = true;
       } else if (clean.contains('Retinopathy-')) {
         cbRetinopathy.value = true;
         final details = clean.replaceFirst('Retinopathy-', '');
-        if (details.contains('Hypertensive')) cbRetinopathyHypertensive.value = true;
+        if (details.contains('Hypertensive')) {
+          cbRetinopathyHypertensive.value = true;
+        }
         if (details.contains('Diabetic')) cbRetinopathyDiabetic.value = true;
         if (details.contains('Other')) cbRetinopathyOther.value = true;
       } else if (clean == 'CKD') {
@@ -555,9 +627,13 @@ class DiagnosisController extends GetxController {
           'doctor_id': doctorId,
           'appointment_id': bookingId,
           'diagnosis': rxDiagnosisText.value,
-          'htn_treatment': cbHypertension.value ? selectedHTNTreatment.value : '',
+          'htn_treatment': cbHypertension.value
+              ? selectedHTNTreatment.value
+              : '',
           'dm_treatment': cbDiabetes.value ? selectedDMTreatment.value : '',
-          'dlp_treatment': cbDyslipidemia.value ? selectedDLPTreatment.value : '',
+          'dlp_treatment': cbDyslipidemia.value
+              ? selectedDLPTreatment.value
+              : '',
         },
         options: dio.Options(headers: {'Authorization': token}),
       );
@@ -566,8 +642,8 @@ class DiagnosisController extends GetxController {
         final statusVal = response.data['status']?.toString() ?? '';
         final msgVal = response.data['msg']?.toString() ?? '';
         if (statusVal == 'success') {
-          // Navigate back first to ensure the screen closes and triggers any then() callbacks
-          Get.back();
+          // Navigate back with result true so callers (like getDiagnosisAndProceed) can resume
+          Get.back(result: true);
           AppSnackbars.showSuccess(
             'Success',
             msgVal.isNotEmpty ? msgVal : 'Diagnosis updated successfully.',

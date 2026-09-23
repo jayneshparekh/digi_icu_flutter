@@ -37,7 +37,10 @@ class _PatientRatingDialogState extends State<PatientRatingDialog> {
           Get.back();
           widget.onSubmit(selectedRating.value);
         } else {
-          AppSnackbars.showError('validation_error'.tr, 'choose_rating_validation'.tr);
+          AppSnackbars.showError(
+            'validation_error'.tr,
+            'choose_rating_validation'.tr,
+          );
         }
       },
       body: Column(
@@ -76,14 +79,17 @@ class _PatientRatingDialogState extends State<PatientRatingDialog> {
                           value: rate,
                           activeColor: AppColors.teal,
                           visualDensity: VisualDensity.compact,
-                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           rate,
                           style: TextStyle(
                             fontSize: 14,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                             color: isSelected ? AppColors.teal : AppColors.navy,
                           ),
                         ),

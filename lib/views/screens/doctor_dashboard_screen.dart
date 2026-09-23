@@ -220,14 +220,20 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
                         value: 'portrait',
                         title: Text(
                           'portrait_vertical'.tr,
-                          style: const TextStyle(fontSize: 16, color: AppColors.navy),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: AppColors.navy,
+                          ),
                         ),
                       ),
                       AppRadioListTile<String>(
                         value: 'landscape',
                         title: Text(
                           'landscape_horizontal'.tr,
-                          style: const TextStyle(fontSize: 16, color: AppColors.navy),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: AppColors.navy,
+                          ),
                         ),
                       ),
                     ],
@@ -270,5 +276,3 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
     );
   }
 }
-
-

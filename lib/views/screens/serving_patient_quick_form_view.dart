@@ -24,7 +24,11 @@ class ServingPatientQuickFormView extends StatelessWidget {
             width: 120,
             child: Text(
               title,
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.navy),
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                color: AppColors.navy,
+              ),
             ),
           ),
           Expanded(
@@ -37,14 +41,21 @@ class ServingPatientQuickFormView extends StatelessWidget {
                     onTap: () => selectedVal.value = opt,
                     borderRadius: BorderRadius.circular(4),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 4,
+                      ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+                            isSelected
+                                ? Icons.radio_button_checked
+                                : Icons.radio_button_off,
                             size: 20,
-                            color: isSelected ? AppColors.teal : AppColors.medicalGray,
+                            color: isSelected
+                                ? AppColors.teal
+                                : AppColors.medicalGray,
                           ),
                           const SizedBox(width: 4),
                           Text(opt, style: const TextStyle(fontSize: 14)),
@@ -68,10 +79,14 @@ class ServingPatientQuickFormView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: Obx(() => Text(
-              controller.isEditMode.value ? 'edit_quick_form'.tr : 'add_quick_form'.tr,
-              style: const TextStyle(color: AppColors.navy),
-            )),
+        title: Obx(
+          () => Text(
+            controller.isEditMode.value
+                ? 'edit_quick_form'.tr
+                : 'add_quick_form'.tr,
+            style: const TextStyle(color: AppColors.navy),
+          ),
+        ),
         backgroundColor: AppColors.white,
         elevation: 0.5,
         leading: IconButton(
@@ -109,7 +124,13 @@ class ServingPatientQuickFormView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
-                Text('lying_down_bp'.tr, style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.navy)),
+                Text(
+                  'lying_down_bp'.tr,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.navy,
+                  ),
+                ),
                 const SizedBox(height: 6),
                 Row(
                   children: [
@@ -131,7 +152,13 @@ class ServingPatientQuickFormView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
-                Text('standing_bp'.tr, style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.navy)),
+                Text(
+                  'standing_bp'.tr,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.navy,
+                  ),
+                ),
                 const SizedBox(height: 6),
                 Row(
                   children: [
@@ -268,55 +295,71 @@ class ServingPatientQuickFormView extends StatelessWidget {
                 // 5. Hospitalization History
                 AppFormSectionHeader(title: 'hospitalization_history'.tr),
                 const SizedBox(height: 12),
-                Obx(() => CheckboxListTile(
-                      title: Text('q_heart_attack'.tr),
-                      value: controller.cbHeartAttack.value,
-                      onChanged: (v) => controller.cbHeartAttack.value = v ?? false,
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                    )),
-                Obx(() => CheckboxListTile(
-                      title: Text('q_stroke'.tr),
-                      value: controller.cbStroke.value,
-                      onChanged: (v) => controller.cbStroke.value = v ?? false,
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                    )),
-                Obx(() => CheckboxListTile(
-                      title: Text('q_kidney_failure'.tr),
-                      value: controller.cbKidneyFailure.value,
-                      onChanged: (v) => controller.cbKidneyFailure.value = v ?? false,
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                    )),
-                Obx(() => CheckboxListTile(
-                      title: Text('very_high_bp'.tr),
-                      value: controller.cbHighBP.value,
-                      onChanged: (v) => controller.cbHighBP.value = v ?? false,
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                    )),
-                Obx(() => CheckboxListTile(
-                      title: Text('very_high_sugar'.tr),
-                      value: controller.cbHighSugar.value,
-                      onChanged: (v) => controller.cbHighSugar.value = v ?? false,
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                    )),
-                Obx(() => CheckboxListTile(
-                      title: Text('low_sugar'.tr),
-                      value: controller.cbLowSugar.value,
-                      onChanged: (v) => controller.cbLowSugar.value = v ?? false,
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                    )),
-                Obx(() => CheckboxListTile(
-                      title: Text('other'.tr),
-                      value: controller.cbOther.value,
-                      onChanged: (v) => controller.cbOther.value = v ?? false,
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                    )),
+                Obx(
+                  () => CheckboxListTile(
+                    title: Text('q_heart_attack'.tr),
+                    value: controller.cbHeartAttack.value,
+                    onChanged: (v) =>
+                        controller.cbHeartAttack.value = v ?? false,
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+                Obx(
+                  () => CheckboxListTile(
+                    title: Text('q_stroke'.tr),
+                    value: controller.cbStroke.value,
+                    onChanged: (v) => controller.cbStroke.value = v ?? false,
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+                Obx(
+                  () => CheckboxListTile(
+                    title: Text('q_kidney_failure'.tr),
+                    value: controller.cbKidneyFailure.value,
+                    onChanged: (v) =>
+                        controller.cbKidneyFailure.value = v ?? false,
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+                Obx(
+                  () => CheckboxListTile(
+                    title: Text('very_high_bp'.tr),
+                    value: controller.cbHighBP.value,
+                    onChanged: (v) => controller.cbHighBP.value = v ?? false,
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+                Obx(
+                  () => CheckboxListTile(
+                    title: Text('very_high_sugar'.tr),
+                    value: controller.cbHighSugar.value,
+                    onChanged: (v) => controller.cbHighSugar.value = v ?? false,
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+                Obx(
+                  () => CheckboxListTile(
+                    title: Text('low_sugar'.tr),
+                    value: controller.cbLowSugar.value,
+                    onChanged: (v) => controller.cbLowSugar.value = v ?? false,
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+                Obx(
+                  () => CheckboxListTile(
+                    title: Text('other'.tr),
+                    value: controller.cbOther.value,
+                    onChanged: (v) => controller.cbOther.value = v ?? false,
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
                 Obx(() {
                   if (!controller.cbOther.value) return const SizedBox.shrink();
                   return AppLabeledTextField(
@@ -346,28 +389,35 @@ class ServingPatientQuickFormView extends StatelessWidget {
                 // 7. Blood Tests Checklist
                 AppFormSectionHeader(title: 'blood_tests_checklist'.tr),
                 const SizedBox(height: 12),
-                Obx(() => CheckboxListTile(
-                      title: Text('creatinine'.tr),
-                      value: controller.cbCreatinine.value,
-                      onChanged: (v) => controller.cbCreatinine.value = v ?? false,
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                    )),
+                Obx(
+                  () => CheckboxListTile(
+                    title: Text('creatinine'.tr),
+                    value: controller.cbCreatinine.value,
+                    onChanged: (v) =>
+                        controller.cbCreatinine.value = v ?? false,
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
                 Obx(() {
-                  if (!controller.cbCreatinine.value) return const SizedBox.shrink();
+                  if (!controller.cbCreatinine.value) {
+                    return const SizedBox.shrink();
+                  }
                   return AppLabeledTextField(
                     controller: controller.creatinineCtrl,
                     label: 'creatinine_value'.tr,
                     keyboardType: TextInputType.number,
                   );
                 }),
-                Obx(() => CheckboxListTile(
-                      title: Text('hba1c'.tr),
-                      value: controller.cbHbA1c.value,
-                      onChanged: (v) => controller.cbHbA1c.value = v ?? false,
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                    )),
+                Obx(
+                  () => CheckboxListTile(
+                    title: Text('hba1c'.tr),
+                    value: controller.cbHbA1c.value,
+                    onChanged: (v) => controller.cbHbA1c.value = v ?? false,
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
                 Obx(() {
                   if (!controller.cbHbA1c.value) return const SizedBox.shrink();
                   return Row(
@@ -409,15 +459,20 @@ class ServingPatientQuickFormView extends StatelessWidget {
                     ],
                   );
                 }),
-                Obx(() => CheckboxListTile(
-                      title: Text('total_cholesterol'.tr),
-                      value: controller.cbTotalCholesterol.value,
-                      onChanged: (v) => controller.cbTotalCholesterol.value = v ?? false,
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                    )),
+                Obx(
+                  () => CheckboxListTile(
+                    title: Text('total_cholesterol'.tr),
+                    value: controller.cbTotalCholesterol.value,
+                    onChanged: (v) =>
+                        controller.cbTotalCholesterol.value = v ?? false,
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
                 Obx(() {
-                  if (!controller.cbTotalCholesterol.value) return const SizedBox.shrink();
+                  if (!controller.cbTotalCholesterol.value) {
+                    return const SizedBox.shrink();
+                  }
                   return AppLabeledTextField(
                     controller: controller.totalCholesterolCtrl,
                     label: 'total_cholesterol_value'.tr,
@@ -428,11 +483,26 @@ class ServingPatientQuickFormView extends StatelessWidget {
                 // 8. 2D Echo Section
                 AppFormSectionHeader(title: 'echo_section'.tr),
                 const SizedBox(height: 12),
-                _buildRadioRow(title: 'COA', selectedVal: controller.coa, options: ['yes'.tr, 'no'.tr]),
-                _buildRadioRow(title: 'RAS', selectedVal: controller.ras, options: ['yes'.tr, 'no'.tr]),
-                _buildRadioRow(title: 'RWMA', selectedVal: controller.rwma, options: ['yes'.tr, 'no'.tr]),
+                _buildRadioRow(
+                  title: 'COA',
+                  selectedVal: controller.coa,
+                  options: ['yes'.tr, 'no'.tr],
+                ),
+                _buildRadioRow(
+                  title: 'RAS',
+                  selectedVal: controller.ras,
+                  options: ['yes'.tr, 'no'.tr],
+                ),
+                _buildRadioRow(
+                  title: 'RWMA',
+                  selectedVal: controller.rwma,
+                  options: ['yes'.tr, 'no'.tr],
+                ),
                 Obx(() {
-                  if (controller.rwma.value != 'yes'.tr && controller.rwma.value != 'Yes') return const SizedBox.shrink();
+                  if (controller.rwma.value != 'yes'.tr &&
+                      controller.rwma.value != 'Yes') {
+                    return const SizedBox.shrink();
+                  }
                   return Wrap(
                     spacing: 8,
                     children: [
@@ -459,35 +529,87 @@ class ServingPatientQuickFormView extends StatelessWidget {
                     ],
                   );
                 }),
-                _buildRadioRow(title: 'LVH', selectedVal: controller.lvh, options: ['yes'.tr, 'no'.tr]),
+                _buildRadioRow(
+                  title: 'LVH',
+                  selectedVal: controller.lvh,
+                  options: ['yes'.tr, 'no'.tr],
+                ),
                 Obx(() {
-                  if (controller.lvh.value != 'yes'.tr && controller.lvh.value != 'Yes') return const SizedBox.shrink();
+                  if (controller.lvh.value != 'yes'.tr &&
+                      controller.lvh.value != 'Yes') {
+                    return const SizedBox.shrink();
+                  }
                   return Row(
                     children: [
-                      Expanded(child: AppLabeledTextField(controller: controller.lviddCtrl, label: 'LVIDd')),
+                      Expanded(
+                        child: AppLabeledTextField(
+                          controller: controller.lviddCtrl,
+                          label: 'LVIDd',
+                        ),
+                      ),
                       const SizedBox(width: 12),
-                      Expanded(child: AppLabeledTextField(controller: controller.lvpwdCtrl, label: 'LVPWD')),
+                      Expanded(
+                        child: AppLabeledTextField(
+                          controller: controller.lvpwdCtrl,
+                          label: 'LVPWD',
+                        ),
+                      ),
                     ],
                   );
                 }),
                 AppLabeledTextField(controller: controller.efCtrl, label: 'EF'),
                 Row(
                   children: [
-                    Expanded(child: AppLabeledTextField(controller: controller.eCtrl, label: 'E')),
+                    Expanded(
+                      child: AppLabeledTextField(
+                        controller: controller.eCtrl,
+                        label: 'E',
+                      ),
+                    ),
                     const SizedBox(width: 12),
-                    Expanded(child: AppLabeledTextField(controller: controller.aCtrl, label: 'A')),
+                    Expanded(
+                      child: AppLabeledTextField(
+                        controller: controller.aCtrl,
+                        label: 'A',
+                      ),
+                    ),
                   ],
                 ),
-                _buildRadioRow(title: 'LVDd', selectedVal: controller.lvdd, options: ['yes'.tr, 'no'.tr]),
-                _buildRadioRow(title: 'RV Dysfunction', selectedVal: controller.rvDysfunction, options: ['yes'.tr, 'no'.tr]),
-                _buildRadioRow(title: 'PAH', selectedVal: controller.pah, options: ['yes'.tr, 'no'.tr]),
+                _buildRadioRow(
+                  title: 'LVDd',
+                  selectedVal: controller.lvdd,
+                  options: ['yes'.tr, 'no'.tr],
+                ),
+                _buildRadioRow(
+                  title: 'RV Dysfunction',
+                  selectedVal: controller.rvDysfunction,
+                  options: ['yes'.tr, 'no'.tr],
+                ),
+                _buildRadioRow(
+                  title: 'PAH',
+                  selectedVal: controller.pah,
+                  options: ['yes'.tr, 'no'.tr],
+                ),
                 Obx(() {
-                  if (controller.pah.value != 'yes'.tr && controller.pah.value != 'Yes') return const SizedBox.shrink();
-                  return AppLabeledTextField(controller: controller.paspCtrl, label: 'PASP');
+                  if (controller.pah.value != 'yes'.tr &&
+                      controller.pah.value != 'Yes') {
+                    return const SizedBox.shrink();
+                  }
+                  return AppLabeledTextField(
+                    controller: controller.paspCtrl,
+                    label: 'PASP',
+                  );
                 }),
-                _buildRadioRow(title: 'Regularization', selectedVal: controller.regularization, options: ['yes'.tr, 'no'.tr]),
+                _buildRadioRow(
+                  title: 'Regularization',
+                  selectedVal: controller.regularization,
+                  options: ['yes'.tr, 'no'.tr],
+                ),
                 Obx(() {
-                  if (controller.regularization.value != 'yes'.tr && controller.regularization.value != 'Yes') return const SizedBox.shrink();
+                  if (controller.regularization.value != 'yes'.tr &&
+                      controller.regularization.value != 'Yes') {
+                    return const SizedBox.shrink();
+                  }
                   return Wrap(
                     spacing: 8,
                     children: [
@@ -509,19 +631,32 @@ class ServingPatientQuickFormView extends StatelessWidget {
                     ],
                   );
                 }),
-                AppLabeledTextField(controller: controller.echoOtherCtrl, label: 'echo_other_notes'.tr),
+                AppLabeledTextField(
+                  controller: controller.echoOtherCtrl,
+                  label: 'echo_other_notes'.tr,
+                ),
 
                 // 9. 2 Days MYBSL Section (Hidden when Select Day is default)
                 AppFormSectionHeader(title: 'mybsl_section'.tr),
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    Text('${'select_day'.tr}: ', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy)),
+                    Text(
+                      '${'select_day'.tr}: ',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.navy,
+                      ),
+                    ),
                     const SizedBox(width: 8),
                     Obx(
                       () => DropdownButton<String>(
                         value: controller.selectedDay.value,
-                        items: controller.daysList.map((d) => DropdownMenuItem(value: d, child: Text(d))).toList(),
+                        items: controller.daysList
+                            .map(
+                              (d) => DropdownMenuItem(value: d, child: Text(d)),
+                            )
+                            .toList(),
                         onChanged: (v) {
                           if (v != null) controller.selectedDay.value = v;
                         },
@@ -531,7 +666,8 @@ class ServingPatientQuickFormView extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Obx(() {
-                  if (controller.selectedDay.value == 'Select Day' || controller.selectedDay.value == 'select_day'.tr) {
+                  if (controller.selectedDay.value == 'Select Day' ||
+                      controller.selectedDay.value == 'select_day'.tr) {
                     return const SizedBox.shrink();
                   }
                   return Column(
@@ -548,8 +684,14 @@ class ServingPatientQuickFormView extends StatelessWidget {
                         options: ['yes'.tr, 'no'.tr],
                       ),
                       Obx(() {
-                        if (controller.morningMedTaken.value != 'yes'.tr && controller.morningMedTaken.value != 'Yes') return const SizedBox.shrink();
-                        return AppLabeledTextField(controller: controller.morningDoseCtrl, label: 'medicine_name_dose'.tr);
+                        if (controller.morningMedTaken.value != 'yes'.tr &&
+                            controller.morningMedTaken.value != 'Yes') {
+                          return const SizedBox.shrink();
+                        }
+                        return AppLabeledTextField(
+                          controller: controller.morningDoseCtrl,
+                          label: 'medicine_name_dose'.tr,
+                        );
                       }),
                       AppLabeledTextField(
                         controller: controller.postLunchCtrl,
@@ -562,8 +704,14 @@ class ServingPatientQuickFormView extends StatelessWidget {
                         options: ['yes'.tr, 'no'.tr],
                       ),
                       Obx(() {
-                        if (controller.postLunchMedTaken.value != 'yes'.tr && controller.postLunchMedTaken.value != 'Yes') return const SizedBox.shrink();
-                        return AppLabeledTextField(controller: controller.postLunchDoseCtrl, label: 'medicine_name_dose'.tr);
+                        if (controller.postLunchMedTaken.value != 'yes'.tr &&
+                            controller.postLunchMedTaken.value != 'Yes') {
+                          return const SizedBox.shrink();
+                        }
+                        return AppLabeledTextField(
+                          controller: controller.postLunchDoseCtrl,
+                          label: 'medicine_name_dose'.tr,
+                        );
                       }),
                       AppLabeledTextField(
                         controller: controller.atNightCtrl,
@@ -576,8 +724,14 @@ class ServingPatientQuickFormView extends StatelessWidget {
                         options: ['yes'.tr, 'no'.tr],
                       ),
                       Obx(() {
-                        if (controller.atNightMedTaken.value != 'yes'.tr && controller.atNightMedTaken.value != 'Yes') return const SizedBox.shrink();
-                        return AppLabeledTextField(controller: controller.atNightDoseCtrl, label: 'medicine_name_dose'.tr);
+                        if (controller.atNightMedTaken.value != 'yes'.tr &&
+                            controller.atNightMedTaken.value != 'Yes') {
+                          return const SizedBox.shrink();
+                        }
+                        return AppLabeledTextField(
+                          controller: controller.atNightDoseCtrl,
+                          label: 'medicine_name_dose'.tr,
+                        );
                       }),
                     ],
                   );
@@ -590,14 +744,24 @@ class ServingPatientQuickFormView extends StatelessWidget {
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: controller.isLoading.value ? null : () => controller.submitQuickForm(),
+                      onPressed: controller.isLoading.value
+                          ? null
+                          : () => controller.submitQuickForm(),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.teal,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                       child: Text(
-                        controller.isEditMode.value ? 'update_quick_form'.tr : 'submit_quick_form'.tr,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.white),
+                        controller.isEditMode.value
+                            ? 'update_quick_form'.tr
+                            : 'submit_quick_form'.tr,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.white,
+                        ),
                       ),
                     ),
                   ),

@@ -265,10 +265,7 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
           child: Wrap(
             children: [
               ListTile(
-                leading: Icon(
-                  Icons.photo_library,
-                  color: AppColors.teal,
-                ),
+                leading: Icon(Icons.photo_library, color: AppColors.teal),
                 title: Text('choose_from_gallery'.tr),
                 onTap: () {
                   Navigator.of(context).pop();
@@ -290,5 +287,3 @@ class PatientSignUpScreen extends GetView<PatientSignUpController> {
     );
   }
 }
-
-

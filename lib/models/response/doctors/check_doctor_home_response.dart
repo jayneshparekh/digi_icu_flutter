@@ -1,4 +1,4 @@
-﻿class CheckDoctorHomeResponse {
+class CheckDoctorHomeResponse {
   final String status;
   final String msg;
   final DoctorHomeData? data;
@@ -50,4 +50,3 @@ class DoctorHomeData {
     );
   }
 }
-

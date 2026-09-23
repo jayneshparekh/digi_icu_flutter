@@ -61,7 +61,11 @@ class AppFamilyMemberSelector extends StatelessWidget {
         Obx(() {
           if (!isSelected.value) return const SizedBox.shrink();
           return Padding(
-            padding: const EdgeInsets.only(left: 32.0, bottom: 8.0, right: 16.0),
+            padding: const EdgeInsets.only(
+              left: 32.0,
+              bottom: 8.0,
+              right: 16.0,
+            ),
             child: AppLabeledTextField(
               controller: ageController,
               label: 'age_at_that_time'.tr,

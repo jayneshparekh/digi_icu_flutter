@@ -1,4 +1,4 @@
-﻿class PackageCategoriesResponse {
+class PackageCategoriesResponse {
   final String status;
   final String msg;
   final List<PackageCategoryModel> data;
@@ -42,4 +42,3 @@ class PackageCategoryModel {
     );
   }
 }
-

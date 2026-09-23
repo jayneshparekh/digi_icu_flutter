@@ -37,7 +37,8 @@ class PackageCategoryController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxString errorMsg = ''.obs;
   final RxList<PackageCategoryModel> categories = <PackageCategoryModel>[].obs;
-  final RxList<PackageCategoryModel> filteredCategories = <PackageCategoryModel>[].obs;
+  final RxList<PackageCategoryModel> filteredCategories =
+      <PackageCategoryModel>[].obs;
   final RxString selectedPaymentType = 'online'.obs;
   final RxString loggedInUserName = ''.obs;
   final promoCodeController = TextEditingController();
@@ -115,9 +116,11 @@ class PackageCategoryController extends GetxController {
       filteredCategories.assignAll(categories);
     } else {
       final lowercaseQuery = query.toLowerCase();
-      filteredCategories.assignAll(categories.where((cat) {
-        return cat.name.toLowerCase().contains(lowercaseQuery);
-      }).toList());
+      filteredCategories.assignAll(
+        categories.where((cat) {
+          return cat.name.toLowerCase().contains(lowercaseQuery);
+        }).toList(),
+      );
     }
   }
 
@@ -156,7 +159,9 @@ class PackageCategoryController extends GetxController {
       isLoading.value = false;
 
       if (response.statusCode == 200 && response.data != null) {
-        final orderRes = GetOrderResponse.fromJson(response.data as Map<String, dynamic>);
+        final orderRes = GetOrderResponse.fromJson(
+          response.data as Map<String, dynamic>,
+        );
         if (orderRes.status == 'success') {
           // Step 2: Open Razorpay checkout with the server-returned order details.
           _openRazorpayCheckout(
@@ -169,11 +174,17 @@ class PackageCategoryController extends GetxController {
           AppSnackbars.showError('Order Error', orderRes.msg);
         }
       } else {
-        AppSnackbars.showError('Error', 'Failed to create payment order. Please try again.');
+        AppSnackbars.showError(
+          'Error',
+          'Failed to create payment order. Please try again.',
+        );
       }
     } catch (e) {
       isLoading.value = false;
-      AppSnackbars.showError('Error', 'Something went wrong. Please try again.');
+      AppSnackbars.showError(
+        'Error',
+        'Something went wrong. Please try again.',
+      );
     }
   }
 
@@ -198,16 +209,25 @@ class PackageCategoryController extends GetxController {
   }
 
   void _onPaymentSuccess(PaymentSuccessResponse response) {
-    AppSnackbars.showSuccess('Payment Successful', 'Payment ID: ${response.paymentId}');
+    AppSnackbars.showSuccess(
+      'Payment Successful',
+      'Payment ID: ${response.paymentId}',
+    );
     redirectToScreen();
   }
 
   void _onPaymentFailure(PaymentFailureResponse response) {
-    AppSnackbars.showInfo('Payment Failed', response.message ?? 'Payment was not completed. Please try again.');
+    AppSnackbars.showInfo(
+      'Payment Failed',
+      response.message ?? 'Payment was not completed. Please try again.',
+    );
   }
 
   void _onExternalWallet(ExternalWalletResponse response) {
-    AppSnackbars.showInfo('External Wallet', 'Payment via ${response.walletName}');
+    AppSnackbars.showInfo(
+      'External Wallet',
+      'Payment via ${response.walletName}',
+    );
   }
 
   Future<void> applyPromoCode() async {
@@ -224,11 +244,7 @@ class PackageCategoryController extends GetxController {
 
       final response = await apiClient.post(
         ApiEndpoints.checkPromocode,
-        data: {
-          'patient_id': patientId,
-          'promo_code': code,
-          'package_id': '1',
-        },
+        data: {'patient_id': patientId, 'promo_code': code, 'package_id': '1'},
         options: dio.Options(headers: {'Authorization': token}),
       );
 
@@ -245,7 +261,10 @@ class PackageCategoryController extends GetxController {
         AppSnackbars.showError('Error', 'Failed to check promo code');
       }
     } catch (e) {
-      AppSnackbars.showError('Error', 'Something went wrong applying promo code');
+      AppSnackbars.showError(
+        'Error',
+        'Something went wrong applying promo code',
+      );
     } finally {
       isLoading.value = false;
     }
@@ -257,26 +276,34 @@ class PackageCategoryController extends GetxController {
 
   void redirectToScreen() {
     if (medicalForm == '1') {
-      Get.offAllNamed('/take-appointment', arguments: {
-        'doctorId': doctorData?.id,
-        'doctorName': doctorData != null ? 'Dr. ${doctorData!.firstName} ${doctorData!.lastName}' : '',
-        'patientId': patientId,
-        'userName': patientName,
-        'userAge': age,
-        'userGender': gender,
-        'type': userType,
-      });
+      Get.offAllNamed(
+        '/take-appointment',
+        arguments: {
+          'doctorId': doctorData?.id,
+          'doctorName': doctorData != null
+              ? 'Dr. ${doctorData!.firstName} ${doctorData!.lastName}'
+              : '',
+          'patientId': patientId,
+          'userName': patientName,
+          'userAge': age,
+          'userGender': gender,
+          'type': userType,
+        },
+      );
     } else {
-      Get.toNamed('/medical-form', arguments: {
-        'doctorId': doctorData?.id,
-        'patientId': patientId,
-        'doctorName': doctorData != null ? 'Dr. ${doctorData!.firstName} ${doctorData!.lastName}' : '',
-        'userAge': age,
-        'userGender': gender,
-        'type': userType,
-      });
+      Get.toNamed(
+        '/medical-form',
+        arguments: {
+          'doctorId': doctorData?.id,
+          'patientId': patientId,
+          'doctorName': doctorData != null
+              ? 'Dr. ${doctorData!.firstName} ${doctorData!.lastName}'
+              : '',
+          'userAge': age,
+          'userGender': gender,
+          'type': userType,
+        },
+      );
     }
   }
 }
-
-

@@ -1,4 +1,4 @@
-﻿class InstallmentDetailsRes {
+class InstallmentDetailsRes {
   final String status;
   final String installments;
   final String warningMsg;
@@ -29,13 +29,14 @@
       installments: json['installments']?.toString() ?? '',
       warningMsg: json['warning_msg']?.toString() ?? '',
       thirdInstallmentDate: json['third_installment_date']?.toString() ?? '',
-      thirdInstallmentAmount: json['third_installment_amount']?.toString() ?? '',
+      thirdInstallmentAmount:
+          json['third_installment_amount']?.toString() ?? '',
       secondInstallmentDate: json['second_installment_date']?.toString() ?? '',
-      secondInstallmentAmount: json['second_installment_amount']?.toString() ?? '',
+      secondInstallmentAmount:
+          json['second_installment_amount']?.toString() ?? '',
       packageName: json['package_name']?.toString() ?? '',
       packageId: json['package_id']?.toString() ?? '',
       paymentReferenceId: json['payment_reference_id']?.toString() ?? '',
     );
   }
 }
-

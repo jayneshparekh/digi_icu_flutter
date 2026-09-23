@@ -1,4 +1,4 @@
-﻿class BookAppointmentResponse {
+class BookAppointmentResponse {
   final String status;
   final String msg;
   final String appointmentId;
@@ -20,4 +20,3 @@
     );
   }
 }
-

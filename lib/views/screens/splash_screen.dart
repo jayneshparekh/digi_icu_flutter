@@ -1,4 +1,4 @@
-﻿import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,9 +16,7 @@ class SplashScreen extends GetView<SplashController> {
           Expanded(
             child: Center(
               child: Image(
-                image: AssetImage(
-                  'assets/images/digi_icu_logo.png',
-                ),
+                image: AssetImage('assets/images/digi_icu_logo.png'),
                 width: 250,
                 fit: BoxFit.contain,
               ),
@@ -39,5 +37,3 @@ class SplashScreen extends GetView<SplashController> {
     );
   }
 }
-
-

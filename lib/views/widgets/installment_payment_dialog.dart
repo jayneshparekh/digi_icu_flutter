@@ -12,7 +12,8 @@ class InstallmentPaymentDialog extends StatelessWidget {
     String packageType,
     String packageName,
     String paymentReferenceId,
-  ) onPayNowClick;
+  )
+  onPayNowClick;
 
   const InstallmentPaymentDialog({
     super.key,
@@ -23,11 +24,17 @@ class InstallmentPaymentDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isThirdInstallment = data.installments == "Third Installment";
-    final dueDate = isThirdInstallment ? data.thirdInstallmentDate : data.secondInstallmentDate;
-    final amount = isThirdInstallment ? data.thirdInstallmentAmount : data.secondInstallmentAmount;
+    final dueDate = isThirdInstallment
+        ? data.thirdInstallmentDate
+        : data.secondInstallmentDate;
+    final amount = isThirdInstallment
+        ? data.thirdInstallmentAmount
+        : data.secondInstallmentAmount;
 
     return AppDialog(
-      title: data.installments.isNotEmpty ? data.installments : 'installment_payment'.tr,
+      title: data.installments.isNotEmpty
+          ? data.installments
+          : 'installment_payment'.tr,
       confirmLabel: 'pay_now'.tr,
       cancelLabel: 'pay_later'.tr,
       onConfirm: () {
@@ -63,10 +70,7 @@ class InstallmentPaymentDialog extends StatelessWidget {
           // Due Date
           Text(
             'installment_due_date'.tr.replaceAll('@date', dueDate),
-            style: const TextStyle(
-              fontSize: 14,
-              color: AppColors.navy,
-            ),
+            style: const TextStyle(fontSize: 14, color: AppColors.navy),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
@@ -98,5 +102,3 @@ class InstallmentPaymentDialog extends StatelessWidget {
     );
   }
 }
-
-

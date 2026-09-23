@@ -1,4 +1,4 @@
-﻿import 'package:get/get.dart';
+import 'package:get/get.dart';
 
 import '../../services/api/api_client.dart';
 
@@ -9,4 +9,3 @@ class InitialBinding extends Bindings {
     Get.put<ApiClient>(ApiClient(), permanent: true);
   }
 }
-

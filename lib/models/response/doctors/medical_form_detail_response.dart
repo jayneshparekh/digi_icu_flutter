@@ -543,13 +543,16 @@ class MedicalFormDataModel {
       created: json['created']?.toString(),
       updated: json['updated']?.toString(),
       familyMemberHeartAttack: json['family_member_heart_attack']?.toString(),
-      familyMemberHeartAttackWho: json['family_member_heart_attack_who']?.toString(),
+      familyMemberHeartAttackWho: json['family_member_heart_attack_who']
+          ?.toString(),
       heartAttackFatherAge: json['heart_attack_father_age']?.toString(),
       heartAttackMotherAge: json['heart_attack_mother_age']?.toString(),
       heartAttackBrotherAge: json['heart_attack_brother_age']?.toString(),
       heartAttackSisterAge: json['heart_attack_sister_age']?.toString(),
-      heartAttackGrandparentsAge: json['heart_attack_grandparents_age']?.toString(),
-      familyHeartAttackFrequency: json['family_heart_attack_frequency']?.toString(),
+      heartAttackGrandparentsAge: json['heart_attack_grandparents_age']
+          ?.toString(),
+      familyHeartAttackFrequency: json['family_heart_attack_frequency']
+          ?.toString(),
       familyMemberStroke: json['family_member_stroke']?.toString(),
       familyMemberStrokeWho: json['family_member_stroke_who']?.toString(),
       strokeFatherAge: json['stroke_father_age']?.toString(),
@@ -559,12 +562,14 @@ class MedicalFormDataModel {
       strokeGrandparentsAge: json['stroke_grandparents_age']?.toString(),
       familyStrokeFrequency: json['family_stroke_frequency']?.toString(),
       familyMemberAngioplasty: json['family_member_angioplasty']?.toString(),
-      familyMemberAngioplastyWho: json['family_member_angioplasty_who']?.toString(),
+      familyMemberAngioplastyWho: json['family_member_angioplasty_who']
+          ?.toString(),
       angioplastyFatherAge: json['angioplasty_father_age']?.toString(),
       angioplastyMotherAge: json['angioplasty_mother_age']?.toString(),
       angioplastyBrotherAge: json['angioplasty_brother_age']?.toString(),
       angioplastySisterAge: json['angioplasty_sister_age']?.toString(),
-      angioplastyGrandparentsAge: json['angioplasty_grandparents_age']?.toString(),
+      angioplastyGrandparentsAge: json['angioplasty_grandparents_age']
+          ?.toString(),
       angioplastyComments: json['angioplasty_comments']?.toString(),
       familyMemberDied: json['family_member_died']?.toString(),
       familyMemberDiedWho: json['family_member_died_who']?.toString(),
@@ -588,7 +593,8 @@ class MedicalFormDataModel {
       bpDiastolic: json['bp_diastolic']?.toString(),
       otherInfo: json['other_info']?.toString(),
       otherInfoName: json['other_info_name']?.toString(),
-      firstEvaluationImpression: json['first_evaluation_impression']?.toString(),
+      firstEvaluationImpression: json['first_evaluation_impression']
+          ?.toString(),
       otherCare: json['other_care']?.toString(),
       otherCareComments: json['other_care_comments']?.toString(),
     );

@@ -53,15 +53,28 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  GraphLegendBadge(color: AppColors.teal, label: 'target_bp'.tr),
-                  GraphLegendBadge(color: AppColors.warning, label: 'systolic'.tr),
-                  GraphLegendBadge(color: AppColors.blue, label: 'diastolic'.tr),
+                  GraphLegendBadge(
+                    color: AppColors.teal,
+                    label: 'target_bp'.tr,
+                  ),
+                  GraphLegendBadge(
+                    color: AppColors.warning,
+                    label: 'systolic'.tr,
+                  ),
+                  GraphLegendBadge(
+                    color: AppColors.blue,
+                    label: 'diastolic'.tr,
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
               SizedBox(
                 height: 220,
-                child: _buildBPLineChart(context, controller.bpGraphList, controller.targetBp.value),
+                child: _buildBPLineChart(
+                  context,
+                  controller.bpGraphList,
+                  controller.targetBp.value,
+                ),
               ),
               const SizedBox(height: 16),
               const Divider(color: AppColors.medicalGray, thickness: 1),
@@ -76,7 +89,10 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   GraphLegendBadge(color: AppColors.error, label: 'fasting'.tr),
-                  GraphLegendBadge(color: AppColors.warning, label: 'after_food_or_pp'.tr),
+                  GraphLegendBadge(
+                    color: AppColors.warning,
+                    label: 'after_food_or_pp'.tr,
+                  ),
                   GraphLegendBadge(color: AppColors.info, label: 'random'.tr),
                 ],
               ),
@@ -103,7 +119,11 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
     });
   }
 
-  Widget _buildBPLineChart(BuildContext context, List<BPGraphData> list, TargetBp? target) {
+  Widget _buildBPLineChart(
+    BuildContext context,
+    List<BPGraphData> list,
+    TargetBp? target,
+  ) {
     if (list.isEmpty) {
       return Center(
         child: Text(
@@ -115,7 +135,10 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
 
     final screenWidth = MediaQuery.of(context).size.width - 24;
     final minPointWidth = 55.0;
-    final calculatedWidth = (list.length * minPointWidth).clamp(screenWidth, double.infinity);
+    final calculatedWidth = (list.length * minPointWidth).clamp(
+      screenWidth,
+      double.infinity,
+    );
 
     final dates = list.map((e) => _formatDate(e.created)).toList();
     final systolicSpots = <FlSpot>[];
@@ -181,12 +204,20 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
                     if (spot.barIndex == 0) {
                       return LineTooltipItem(
                         'Systolic: ${spot.y.toInt()}',
-                        const TextStyle(color: AppColors.warning, fontWeight: FontWeight.bold, fontSize: 12),
+                        const TextStyle(
+                          color: AppColors.warning,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
                       );
                     } else if (spot.barIndex == 1) {
                       return LineTooltipItem(
                         'Diastolic: ${spot.y.toInt()}',
-                        const TextStyle(color: AppColors.blue, fontWeight: FontWeight.bold, fontSize: 12),
+                        const TextStyle(
+                          color: AppColors.blue,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
                       );
                     }
                     return null;
@@ -197,10 +228,8 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
             gridData: FlGridData(
               show: true,
               drawVerticalLine: false,
-              getDrawingHorizontalLine: (value) => const FlLine(
-                color: AppColors.lightGray,
-                strokeWidth: 1,
-              ),
+              getDrawingHorizontalLine: (value) =>
+                  const FlLine(color: AppColors.lightGray, strokeWidth: 1),
             ),
             titlesData: FlTitlesData(
               leftTitles: AxisTitles(
@@ -216,7 +245,10 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
                       padding: const EdgeInsets.only(right: 6.0),
                       child: Text(
                         value.toInt().toString(),
-                        style: const TextStyle(color: AppColors.coolGray, fontSize: 10),
+                        style: const TextStyle(
+                          color: AppColors.coolGray,
+                          fontSize: 10,
+                        ),
                         textAlign: TextAlign.end,
                       ),
                     );
@@ -235,7 +267,11 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
                         padding: const EdgeInsets.only(top: 6.0),
                         child: Text(
                           dates[idx],
-                          style: const TextStyle(color: AppColors.navy, fontSize: 10, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                            color: AppColors.navy,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       );
                     }
@@ -243,8 +279,12 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
                   },
                 ),
               ),
-              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              rightTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
             ),
             borderData: FlBorderData(
               show: true,
@@ -308,7 +348,10 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
 
     final screenWidth = MediaQuery.of(context).size.width - 24;
     final minGroupWidth = 70.0;
-    final calculatedWidth = (list.length * minGroupWidth).clamp(screenWidth, double.infinity);
+    final calculatedWidth = (list.length * minGroupWidth).clamp(
+      screenWidth,
+      double.infinity,
+    );
 
     final dates = list.map((e) => _formatDate(e.created)).toList();
 
@@ -354,7 +397,11 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
                   }
                   return BarTooltipItem(
                     label,
-                    TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12),
+                    TextStyle(
+                      color: color,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
                   );
                 },
               ),
@@ -362,10 +409,8 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
             gridData: FlGridData(
               show: true,
               drawVerticalLine: false,
-              getDrawingHorizontalLine: (value) => const FlLine(
-                color: AppColors.lightGray,
-                strokeWidth: 1,
-              ),
+              getDrawingHorizontalLine: (value) =>
+                  const FlLine(color: AppColors.lightGray, strokeWidth: 1),
             ),
             titlesData: FlTitlesData(
               leftTitles: AxisTitles(
@@ -381,7 +426,10 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
                       padding: const EdgeInsets.only(right: 6.0),
                       child: Text(
                         value.toInt().toString(),
-                        style: const TextStyle(color: AppColors.coolGray, fontSize: 10),
+                        style: const TextStyle(
+                          color: AppColors.coolGray,
+                          fontSize: 10,
+                        ),
                         textAlign: TextAlign.end,
                       ),
                     );
@@ -399,7 +447,11 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
                         padding: const EdgeInsets.only(top: 6.0),
                         child: Text(
                           dates[idx],
-                          style: const TextStyle(color: AppColors.navy, fontSize: 10, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                            color: AppColors.navy,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       );
                     }
@@ -407,8 +459,12 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
                   },
                 ),
               ),
-              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              rightTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
             ),
             borderData: FlBorderData(
               show: true,
@@ -496,11 +552,23 @@ class ServingPatientGraphView extends GetView<ServingPatientController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               LabParameterTableRow(label: '#', values: dates, isHeader: true),
-              LabParameterTableRow(label: 'creatinine'.tr, values: creatinineVals),
-              LabParameterTableRow(label: 'cholesterol'.tr, values: cholesterolVals),
+              LabParameterTableRow(
+                label: 'creatinine'.tr,
+                values: creatinineVals,
+              ),
+              LabParameterTableRow(
+                label: 'cholesterol'.tr,
+                values: cholesterolVals,
+              ),
               LabParameterTableRow(label: 'bmi'.tr, values: bmiVals),
-              LabParameterTableRow(label: 'urine_albumin'.tr, values: urineAlbuminVals),
-              LabParameterTableRow(label: 'urine_protein'.tr, values: urineProteinVals),
+              LabParameterTableRow(
+                label: 'urine_albumin'.tr,
+                values: urineAlbuminVals,
+              ),
+              LabParameterTableRow(
+                label: 'urine_protein'.tr,
+                values: urineProteinVals,
+              ),
               LabParameterTableRow(label: 'uric_acid'.tr, values: uricAcidVals),
               LabParameterTableRow(label: 'ldl'.tr, values: ldlVals),
               LabParameterTableRow(label: 'hdl'.tr, values: hdlVals),

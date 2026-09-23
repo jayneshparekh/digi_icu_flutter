@@ -11,21 +11,31 @@ import 'package:get/get.dart';
 class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
   const ServingPatientPrescriptionView({super.key});
 
-  void _showMedicineDetailsDialog(BuildContext context, Map<String, dynamic> data, String createdDate) {
+  void _showMedicineDetailsDialog(
+    BuildContext context,
+    Map<String, dynamic> data,
+    String createdDate,
+  ) {
     final List<dynamic> medicinesData = data['data'] as List<dynamic>? ?? [];
-    final Map<String, dynamic>? adviceData = data['advice'] as Map<String, dynamic>?;
-    final List<dynamic> investigationsData = data['investigations'] as List<dynamic>? ?? [];
-    final Map<String, dynamic>? prescribedImages = data['prescribed_images'] as Map<String, dynamic>?;
+    final Map<String, dynamic>? adviceData =
+        data['advice'] as Map<String, dynamic>?;
+    final List<dynamic> investigationsData =
+        data['investigations'] as List<dynamic>? ?? [];
+    final Map<String, dynamic>? prescribedImages =
+        data['prescribed_images'] as Map<String, dynamic>?;
 
     final List<String> imageUrls = [];
     if (prescribedImages != null) {
-      if (prescribedImages['pres_image_1'] != null && prescribedImages['pres_image_1'].toString().isNotEmpty) {
+      if (prescribedImages['pres_image_1'] != null &&
+          prescribedImages['pres_image_1'].toString().isNotEmpty) {
         imageUrls.add(prescribedImages['pres_image_1'].toString());
       }
-      if (prescribedImages['pres_image_2'] != null && prescribedImages['pres_image_2'].toString().isNotEmpty) {
+      if (prescribedImages['pres_image_2'] != null &&
+          prescribedImages['pres_image_2'].toString().isNotEmpty) {
         imageUrls.add(prescribedImages['pres_image_2'].toString());
       }
-      if (prescribedImages['pres_image_3'] != null && prescribedImages['pres_image_3'].toString().isNotEmpty) {
+      if (prescribedImages['pres_image_3'] != null &&
+          prescribedImages['pres_image_3'].toString().isNotEmpty) {
         imageUrls.add(prescribedImages['pres_image_3'].toString());
       }
     }
@@ -50,12 +60,20 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                   Expanded(
                     child: Text(
                       'date_colon'.trParams({'date': createdDate}),
-                      style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy, fontSize: 13),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.navy,
+                        fontSize: 13,
+                      ),
                     ),
                   ),
                   Text(
                     controller.fullName,
-                    style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.blue, fontSize: 13),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.blue,
+                      fontSize: 13,
+                    ),
                   ),
                 ],
               ),
@@ -66,7 +84,11 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
             if (imageUrls.isNotEmpty) ...[
               Text(
                 'prescribed_images'.tr,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.navy,
+                ),
               ),
               const SizedBox(height: 6),
               SizedBox(
@@ -74,7 +96,8 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: imageUrls.length,
-                  separatorBuilder: (context, index) => const SizedBox(width: 8),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(width: 8),
                   itemBuilder: (context, index) {
                     final url = imageUrls[index];
                     return GestureDetector(
@@ -91,7 +114,12 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                             url,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) =>
-                                const Center(child: Icon(Icons.broken_image, color: AppColors.coolGray)),
+                                const Center(
+                                  child: Icon(
+                                    Icons.broken_image,
+                                    color: AppColors.coolGray,
+                                  ),
+                                ),
                           ),
                         ),
                       ),
@@ -105,24 +133,38 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
             // Medicines List Section
             Text(
               'medicines'.tr,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: AppColors.navy,
+              ),
             ),
             const SizedBox(height: 6),
             if (medicinesData.isEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text('no_medicines_specified'.tr, style: const TextStyle(color: AppColors.coolGray, fontSize: 13)),
+                child: Text(
+                  'no_medicines_specified'.tr,
+                  style: const TextStyle(
+                    color: AppColors.coolGray,
+                    fontSize: 13,
+                  ),
+                ),
               )
             else
               ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: medicinesData.length,
-                separatorBuilder: (context, index) => const Divider(height: 12, color: AppColors.lightGray),
+                separatorBuilder: (context, index) =>
+                    const Divider(height: 12, color: AppColors.lightGray),
                 itemBuilder: (context, index) {
                   final med = medicinesData[index] as Map<String, dynamic>;
                   final subMeds = med['medicines'] as List<dynamic>? ?? [];
-                  final medNames = subMeds.map((m) => m['medicine_name']?.toString() ?? '').where((n) => n.isNotEmpty).join(', ');
+                  final medNames = subMeds
+                      .map((m) => m['medicine_name']?.toString() ?? '')
+                      .where((n) => n.isNotEmpty)
+                      .join(', ');
                   final category = med['category_name']?.toString() ?? '';
                   final frequency = med['frequency']?.toString() ?? '';
                   final days = med['days']?.toString() ?? '';
@@ -132,7 +174,9 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                     decoration: BoxDecoration(
                       color: AppColors.white,
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: AppColors.medicalGray.withValues(alpha: 0.5)),
+                      border: Border.all(
+                        color: AppColors.medicalGray.withValues(alpha: 0.5),
+                      ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,18 +184,38 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                         Text(
                           medNames.isNotEmpty
                               ? medNames
-                              : (category.isNotEmpty ? category : 'medicine_item_fallback'.trParams({'number': (index + 1).toString()})),
-                          style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy, fontSize: 13),
+                              : (category.isNotEmpty
+                                    ? category
+                                    : 'medicine_item_fallback'.trParams({
+                                        'number': (index + 1).toString(),
+                                      })),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                            fontSize: 13,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Row(
                           children: [
                             if (frequency.isNotEmpty)
                               Expanded(
-                                child: Text('freq_colon'.trParams({'freq': frequency}), style: const TextStyle(fontSize: 12, color: AppColors.coolGray)),
+                                child: Text(
+                                  'freq_colon'.trParams({'freq': frequency}),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.coolGray,
+                                  ),
+                                ),
                               ),
                             if (days.isNotEmpty)
-                              Text('duration_days'.trParams({'days': days}), style: const TextStyle(fontSize: 12, color: AppColors.coolGray)),
+                              Text(
+                                'duration_days'.trParams({'days': days}),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.coolGray,
+                                ),
+                              ),
                           ],
                         ),
                       ],
@@ -163,10 +227,16 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
             const SizedBox(height: 12),
 
             // Advice Section (if available)
-            if (adviceData != null && (adviceData['for_patient'] != null || adviceData['follow_date'] != null)) ...[
+            if (adviceData != null &&
+                (adviceData['for_patient'] != null ||
+                    adviceData['follow_date'] != null)) ...[
               Text(
                 'advice_followup'.tr,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.navy,
+                ),
               ),
               const SizedBox(height: 6),
               Container(
@@ -179,24 +249,43 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (adviceData['follow_date'] != null && adviceData['follow_date'].toString().isNotEmpty) ...[
+                    if (adviceData['follow_date'] != null &&
+                        adviceData['follow_date'].toString().isNotEmpty) ...[
                       Text(
-                        'followup_date_colon'.trParams({'date': adviceData['follow_date'].toString()}),
-                        style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.teal, fontSize: 12),
+                        'followup_date_colon'.trParams({
+                          'date': adviceData['follow_date'].toString(),
+                        }),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.teal,
+                          fontSize: 12,
+                        ),
                       ),
                       const SizedBox(height: 4),
                     ],
-                    if (adviceData['for_patient'] != null && adviceData['for_patient'].toString().isNotEmpty) ...[
+                    if (adviceData['for_patient'] != null &&
+                        adviceData['for_patient'].toString().isNotEmpty) ...[
                       Text(
-                        'patient_advice_colon'.trParams({'advice': adviceData['for_patient'].toString()}),
-                        style: const TextStyle(color: AppColors.navy, fontSize: 12),
+                        'patient_advice_colon'.trParams({
+                          'advice': adviceData['for_patient'].toString(),
+                        }),
+                        style: const TextStyle(
+                          color: AppColors.navy,
+                          fontSize: 12,
+                        ),
                       ),
                     ],
-                    if (adviceData['for_leader'] != null && adviceData['for_leader'].toString().isNotEmpty) ...[
+                    if (adviceData['for_leader'] != null &&
+                        adviceData['for_leader'].toString().isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Text(
-                        'leader_advice_colon'.trParams({'advice': adviceData['for_leader'].toString()}),
-                        style: const TextStyle(color: AppColors.coolGray, fontSize: 12),
+                        'leader_advice_colon'.trParams({
+                          'advice': adviceData['for_leader'].toString(),
+                        }),
+                        style: const TextStyle(
+                          color: AppColors.coolGray,
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ],
@@ -209,11 +298,18 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
             if (investigationsData.isNotEmpty) ...[
               Text(
                 'investigations_requested'.tr,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.navy,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
-                investigationsData.map((inv) => inv['investigations']?.toString() ?? '').where((s) => s.isNotEmpty).join(', '),
+                investigationsData
+                    .map((inv) => inv['investigations']?.toString() ?? '')
+                    .where((s) => s.isNotEmpty)
+                    .join(', '),
                 style: const TextStyle(fontSize: 12, color: AppColors.coolGray),
               ),
               const SizedBox(height: 12),
@@ -281,24 +377,35 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                       },
                     );
                     if (result == true) {
-                      controller.fetchDoctorPrescription(controller.prescriptionType.value);
+                      controller.fetchDoctorPrescription(
+                        controller.prescriptionType.value,
+                      );
                     }
                   },
                 ),
                 _buildActionButton(
                   label: 'investigations_tab'.tr,
                   color: AppColors.teal,
-                  onTap: () => AppSnackbars.showInfo('investigations_tab'.tr, 'feature_coming_soon'.tr),
+                  onTap: () => AppSnackbars.showInfo(
+                    'investigations_tab'.tr,
+                    'feature_coming_soon'.tr,
+                  ),
                 ),
                 _buildActionButton(
                   label: 'drug_history_tab'.tr,
                   color: AppColors.teal,
-                  onTap: () => AppSnackbars.showInfo('drug_history_tab'.tr, 'feature_coming_soon'.tr),
+                  onTap: () => AppSnackbars.showInfo(
+                    'drug_history_tab'.tr,
+                    'feature_coming_soon'.tr,
+                  ),
                 ),
                 _buildActionButton(
                   label: 'old_medicines_tab'.tr,
                   color: AppColors.teal,
-                  onTap: () => AppSnackbars.showInfo('old_medicines_tab'.tr, 'feature_coming_soon'.tr),
+                  onTap: () => AppSnackbars.showInfo(
+                    'old_medicines_tab'.tr,
+                    'feature_coming_soon'.tr,
+                  ),
                 ),
               ],
             ),
@@ -306,7 +413,10 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
 
           // Radio Selector Bar: IPD vs OPD
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12.0,
+              vertical: 4.0,
+            ),
             child: Obx(() {
               return RadioGroup<String>(
                 groupValue: controller.prescriptionType.value,
@@ -323,12 +433,16 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                         const AppRadio<String>(value: 'IPD'),
                         const SizedBox(width: 4),
                         GestureDetector(
-                          onTap: () => controller.fetchDoctorPrescription('IPD'),
+                          onTap: () =>
+                              controller.fetchDoctorPrescription('IPD'),
                           child: Text(
                             'ipd_label'.tr,
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: controller.prescriptionType.value == 'IPD' ? FontWeight.bold : FontWeight.normal,
+                              fontWeight:
+                                  controller.prescriptionType.value == 'IPD'
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
                               color: AppColors.navy,
                             ),
                           ),
@@ -342,12 +456,16 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                         const AppRadio<String>(value: 'OPD'),
                         const SizedBox(width: 4),
                         GestureDetector(
-                          onTap: () => controller.fetchDoctorPrescription('OPD'),
+                          onTap: () =>
+                              controller.fetchDoctorPrescription('OPD'),
                           child: Text(
                             'opd_label'.tr,
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: controller.prescriptionType.value == 'OPD' ? FontWeight.bold : FontWeight.normal,
+                              fontWeight:
+                                  controller.prescriptionType.value == 'OPD'
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
                               color: AppColors.navy,
                             ),
                           ),
@@ -366,14 +484,20 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
           Expanded(
             child: Obx(() {
               if (controller.isLoadingPrescriptions.value) {
-                return const Center(child: CircularProgressIndicator(color: AppColors.teal));
+                return const Center(
+                  child: CircularProgressIndicator(color: AppColors.teal),
+                );
               }
 
               if (controller.prescriptionList.isEmpty) {
                 return Center(
                   child: Text(
                     'no_data_available'.tr,
-                    style: const TextStyle(fontSize: 14, color: AppColors.coolGray, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: AppColors.coolGray,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 );
               }
@@ -382,10 +506,23 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 itemCount: controller.prescriptionList.length,
                 itemBuilder: (context, index) {
-                  final item = controller.prescriptionList[index] as Map<String, dynamic>;
-                  final visitNo = item['visit_no']?.toString() ?? item['visitNo']?.toString() ?? item['appointment_id']?.toString() ?? '';
-                  final createdDate = item['created_date']?.toString() ?? item['date']?.toString() ?? item['created']?.toString() ?? 'N/A';
-                  final presId = item['id']?.toString() ?? item['appointment_id']?.toString() ?? '';
+                  final item =
+                      controller.prescriptionList[index]
+                          as Map<String, dynamic>;
+                  final visitNo =
+                      item['visit_no']?.toString() ??
+                      item['visitNo']?.toString() ??
+                      item['appointment_id']?.toString() ??
+                      '';
+                  final createdDate =
+                      item['created_date']?.toString() ??
+                      item['date']?.toString() ??
+                      item['created']?.toString() ??
+                      'N/A';
+                  final presId =
+                      item['id']?.toString() ??
+                      item['appointment_id']?.toString() ??
+                      '';
 
                   return PrescriptionRowTile(
                     index: index + 1,
@@ -393,11 +530,20 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                     date: createdDate,
                     onTap: () async {
                       if (presId.isNotEmpty) {
-                        final details = await controller.fetchMedicineDetails(presId);
+                        final details = await controller.fetchMedicineDetails(
+                          presId,
+                        );
                         if (details != null && context.mounted) {
-                          _showMedicineDetailsDialog(context, details, createdDate);
+                          _showMedicineDetailsDialog(
+                            context,
+                            details,
+                            createdDate,
+                          );
                         } else {
-                          AppSnackbars.showError('error'.tr, 'failed_to_load_medicine_details'.tr);
+                          AppSnackbars.showError(
+                            'error'.tr,
+                            'failed_to_load_medicine_details'.tr,
+                          );
                         }
                       }
                     },

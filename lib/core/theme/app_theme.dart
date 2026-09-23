@@ -1,4 +1,4 @@
-﻿import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -20,4 +20,3 @@ class AppTheme {
     useMaterial3: true,
   );
 }
-

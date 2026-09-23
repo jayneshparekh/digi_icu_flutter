@@ -87,12 +87,18 @@ class PatientSignUpController extends GetxController {
         lastNameController.text.trim().isEmpty ||
         mobileNoController.text.trim().isEmpty ||
         ageController.text.trim().isEmpty) {
-      AppSnackbars.showError('Validation Error', 'First name, middle name, last name, mobile and age are mandatory.');
+      AppSnackbars.showError(
+        'Validation Error',
+        'First name, middle name, last name, mobile and age are mandatory.',
+      );
       return;
     }
 
     if (selectedPastHistory.isEmpty) {
-      AppSnackbars.showError('Validation Error', 'Please select at least one past history option.');
+      AppSnackbars.showError(
+        'Validation Error',
+        'Please select at least one past history option.',
+      );
       return;
     }
 
@@ -127,10 +133,8 @@ class PatientSignUpController extends GetxController {
           latitude = position.latitude;
           longitude = position.longitude;
 
-          final List<Placemark> placemarks = await Geocoding().placemarkFromCoordinates(
-            position.latitude,
-            position.longitude,
-          );
+          final List<Placemark> placemarks = await Geocoding()
+              .placemarkFromCoordinates(position.latitude, position.longitude);
           if (placemarks.isNotEmpty) {
             final pm = placemarks.first;
             country = pm.country ?? '';
@@ -208,11 +212,17 @@ class PatientSignUpController extends GetxController {
       if (response.statusCode == 200 && response.data != null) {
         final res = response.data;
         if (res['status'] == 'success') {
-          AppSnackbars.showSuccess('Success', res['msg'] ?? 'Patient registered successfully!');
+          AppSnackbars.showSuccess(
+            'Success',
+            res['msg'] ?? 'Patient registered successfully!',
+          );
           // Go back to list and refresh
           Get.back(result: true);
         } else {
-          AppSnackbars.showError('Registration Error', res['msg'] ?? 'Could not register patient.');
+          AppSnackbars.showError(
+            'Registration Error',
+            res['msg'] ?? 'Could not register patient.',
+          );
         }
       } else {
         AppSnackbars.showError('Error', 'Failed to connect to the server.');
@@ -224,5 +234,3 @@ class PatientSignUpController extends GetxController {
     }
   }
 }
-
-

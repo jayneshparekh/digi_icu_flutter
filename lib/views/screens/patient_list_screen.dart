@@ -60,9 +60,7 @@ class PatientListScreen extends GetView<PatientListController> {
             child: Obx(() {
               if (controller.isLoading.value && controller.patients.isEmpty) {
                 return const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.teal,
-                  ),
+                  child: CircularProgressIndicator(color: AppColors.teal),
                 );
               }
               if (controller.errorMessage.value.isNotEmpty &&
@@ -97,7 +95,8 @@ class PatientListScreen extends GetView<PatientListController> {
               }
 
               final displayCount =
-                  controller.patients.length + (controller.hasMore.value ? 1 : 0);
+                  controller.patients.length +
+                  (controller.hasMore.value ? 1 : 0);
 
               return ListView.separated(
                 controller: controller.scrollController,
@@ -110,9 +109,7 @@ class PatientListScreen extends GetView<PatientListController> {
                     return const Center(
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 12.0),
-                        child: CircularProgressIndicator(
-                          color: AppColors.teal,
-                        ),
+                        child: CircularProgressIndicator(color: AppColors.teal),
                       ),
                     );
                   }
@@ -130,9 +127,7 @@ class PatientListScreen extends GetView<PatientListController> {
   Widget _buildFilterBtn(String statusValue) {
     return Obx(() {
       final isSelected = controller.selectedStatus.value == statusValue;
-      final Color bg = isSelected
-          ? AppColors.warning
-          : AppColors.teal;
+      final Color bg = isSelected ? AppColors.warning : AppColors.teal;
 
       String label = '';
       if (statusValue == 'Refer') {
@@ -240,10 +235,7 @@ class PatientListScreen extends GetView<PatientListController> {
                       const SizedBox(height: 4),
                       Text(
                         '${patient.taluka} / ${patient.district}'.trim(),
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: AppColors.navy,
-                        ),
+                        style: TextStyle(fontSize: 14, color: AppColors.navy),
                       ),
                     ],
                   ],
@@ -285,5 +277,3 @@ class PatientListScreen extends GetView<PatientListController> {
     );
   }
 }
-
-

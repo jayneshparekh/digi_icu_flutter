@@ -118,9 +118,7 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
                     return const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16.0),
                       child: Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.teal,
-                        ),
+                        child: CircularProgressIndicator(color: AppColors.teal),
                       ),
                     );
                   }
@@ -272,27 +270,35 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
                 height: 34,
                 child: ElevatedButton(
                   onPressed: () {
-                    Get.toNamed('/patient-dashboard', arguments: {
-                      'patientId': patient.id,
-                      'userName': '${patient.firstName} ${patient.lastName}',
-                      'userAge': patient.age,
-                      'userGender': patient.gender,
-                      'type': controller.userType.value,
-                      'leaderId': '',
-                      'isFrom': 'doctor',
-                      'doctorId': controller.doctorId.value,
-                    });
+                    Get.toNamed(
+                      '/patient-dashboard',
+                      arguments: {
+                        'patientId': patient.id,
+                        'userName': '${patient.firstName} ${patient.lastName}',
+                        'userAge': patient.age,
+                        'userGender': patient.gender,
+                        'type': controller.userType.value,
+                        'leaderId': '',
+                        'isFrom': 'doctor',
+                        'doctorId': controller.doctorId.value,
+                      },
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.teal,
                     foregroundColor: AppColors.white,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                   ),
                   child: Text(
                     'view_details'.tr,
-                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -315,5 +321,3 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
     );
   }
 }
-
-

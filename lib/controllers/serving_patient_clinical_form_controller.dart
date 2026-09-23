@@ -12,7 +12,9 @@ import 'package:digi_icu_flutter/services/api/api_client.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 
 class ServingPatientClinicalFormController extends GetxController {
-  final ApiClient _apiClient = Get.isRegistered<ApiClient>() ? Get.find<ApiClient>() : ApiClient();
+  final ApiClient _apiClient = Get.isRegistered<ApiClient>()
+      ? Get.find<ApiClient>()
+      : ApiClient();
 
   // Navigation & Arguments
   String patientId = '';
@@ -65,7 +67,8 @@ class ServingPatientClinicalFormController extends GetxController {
   final cbUrineAlbumin = false.obs;
   final urineAlbuminType = 'Numeric'.obs; // Numeric, Value
   final urineAlbuminNumericController = TextEditingController();
-  final urineAlbuminValueSelected = 'Select'.obs; // Select, Negative, Trace, Positive
+  final urineAlbuminValueSelected =
+      'Select'.obs; // Select, Negative, Trace, Positive
 
   final cbEcg = false.obs;
   final ecgReportImages = <XFile>[].obs;
@@ -76,7 +79,8 @@ class ServingPatientClinicalFormController extends GetxController {
   final tshController = TextEditingController();
 
   // Section 3: Symptoms State
-  final feelingCompared = 'Good'.obs; // Good, Better, Same, More Suffering, First Consultation
+  final feelingCompared =
+      'Good'.obs; // Good, Better, Same, More Suffering, First Consultation
   final chestPain = 'No'.obs; // Yes, No
   final chestPainSweating = 'No'.obs; // Yes, No
   final difficultyBreathing = 'No'.obs; // Yes, No
@@ -140,7 +144,8 @@ class ServingPatientClinicalFormController extends GetxController {
       if (args.containsKey('isPatientMode')) {
         isPatientMode.value = args['isPatientMode'] == true;
       }
-      if (args.containsKey('formData') && args['formData'] is ClinicalFormDetailsModel) {
+      if (args.containsKey('formData') &&
+          args['formData'] is ClinicalFormDetailsModel) {
         populateFromModel(args['formData'] as ClinicalFormDetailsModel);
       }
     }
@@ -174,17 +179,22 @@ class ServingPatientClinicalFormController extends GetxController {
       final response = await _apiClient.post(
         ApiEndpoints.getClinicalForm,
         data: {'form_id': formId},
-        options: dio.Options(headers: token.isNotEmpty ? {'Authorization': token} : null),
+        options: dio.Options(
+          headers: token.isNotEmpty ? {'Authorization': token} : null,
+        ),
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        final Map<String, dynamic> rawMap = response.data is Map<String, dynamic>
+        final Map<String, dynamic> rawMap =
+            response.data is Map<String, dynamic>
             ? response.data as Map<String, dynamic>
             : Map<String, dynamic>.from(response.data as Map);
 
         final dataMap = rawMap['data'] is Map<String, dynamic>
             ? rawMap['data'] as Map<String, dynamic>
-            : (rawMap['data'] is Map ? Map<String, dynamic>.from(rawMap['data'] as Map) : rawMap);
+            : (rawMap['data'] is Map
+                  ? Map<String, dynamic>.from(rawMap['data'] as Map)
+                  : rawMap);
 
         final model = ClinicalFormDetailsModel.fromJson(dataMap);
         populateFromModel(model);
@@ -198,7 +208,8 @@ class ServingPatientClinicalFormController extends GetxController {
 
   void populateFromModel(ClinicalFormDetailsModel model) {
     place.value = model.place;
-    haveBPApparatus.value = model.bpApparatus.isEmpty || model.bpApparatus != 'No';
+    haveBPApparatus.value =
+        model.bpApparatus.isEmpty || model.bpApparatus != 'No';
 
     systolicController.text = model.systolic1;
     diastolicController.text = model.diastolic1;
@@ -211,7 +222,8 @@ class ServingPatientClinicalFormController extends GetxController {
     weightController.text = model.weight;
     calculateBmi();
 
-    checkSugarVal.value = model.checkSugar == 'Yes' ||
+    checkSugarVal.value =
+        model.checkSugar == 'Yes' ||
         model.fasting.isNotEmpty ||
         model.afterFood.isNotEmpty ||
         model.random.isNotEmpty;
@@ -226,7 +238,8 @@ class ServingPatientClinicalFormController extends GetxController {
     hba1cController.text = model.hba1c;
     hba1cDateChoice.value = model.hba1cDate.isEmpty ? 'Today' : model.hba1cDate;
 
-    cbCholesterol.value = model.totalCholesterol.isNotEmpty ||
+    cbCholesterol.value =
+        model.totalCholesterol.isNotEmpty ||
         model.hdl.isNotEmpty ||
         model.ldl.isNotEmpty ||
         model.vldl.isNotEmpty;
@@ -238,8 +251,10 @@ class ServingPatientClinicalFormController extends GetxController {
     cbUricAcid.value = model.uricAcid.isNotEmpty;
     uricAcidController.text = model.uricAcid;
 
-    cbUrineAlbumin.value = model.urineAlbumin.isNotEmpty || model.urineAlbuminReport.isNotEmpty;
-    urineAlbuminType.value = (model.urineAlbumin == 'Value' ||
+    cbUrineAlbumin.value =
+        model.urineAlbumin.isNotEmpty || model.urineAlbuminReport.isNotEmpty;
+    urineAlbuminType.value =
+        (model.urineAlbumin == 'Value' ||
             model.urineAlbuminReport == 'Negative' ||
             model.urineAlbuminReport == 'Trace' ||
             model.urineAlbuminReport == 'Positive')
@@ -248,29 +263,53 @@ class ServingPatientClinicalFormController extends GetxController {
     if (urineAlbuminType.value == 'Numeric') {
       urineAlbuminNumericController.text = model.urineAlbuminReport;
     } else {
-      urineAlbuminValueSelected.value = model.urineAlbuminReport.isEmpty ? 'Select' : model.urineAlbuminReport;
+      urineAlbuminValueSelected.value = model.urineAlbuminReport.isEmpty
+          ? 'Select'
+          : model.urineAlbuminReport;
     }
 
-    cbEcg.value = model.ecg == 'Yes' || model.ecgImage1.isNotEmpty || model.ecgPdf.isNotEmpty;
-    cbThyroid.value = model.thyroid == 'Yes' || model.t3.isNotEmpty || model.t4.isNotEmpty || model.tsh.isNotEmpty;
+    cbEcg.value =
+        model.ecg == 'Yes' ||
+        model.ecgImage1.isNotEmpty ||
+        model.ecgPdf.isNotEmpty;
+    cbThyroid.value =
+        model.thyroid == 'Yes' ||
+        model.t3.isNotEmpty ||
+        model.t4.isNotEmpty ||
+        model.tsh.isNotEmpty;
     t3Controller.text = model.t3;
     t4Controller.text = model.t4;
     tshController.text = model.tsh;
 
-    feelingCompared.value = model.improvement.isEmpty ? 'Good' : model.improvement;
+    feelingCompared.value = model.improvement.isEmpty
+        ? 'Good'
+        : model.improvement;
     chestPain.value = model.chestPain.isEmpty ? 'No' : model.chestPain;
-    chestPainSweating.value = model.chestPainSweating.isEmpty ? 'No' : model.chestPainSweating;
-    difficultyBreathing.value = model.breathlessness.isEmpty ? 'No' : model.breathlessness;
-    breathingWhile.value = model.breathlessWhile.isEmpty ? 'Walking' : model.breathlessWhile;
+    chestPainSweating.value = model.chestPainSweating.isEmpty
+        ? 'No'
+        : model.chestPainSweating;
+    difficultyBreathing.value = model.breathlessness.isEmpty
+        ? 'No'
+        : model.breathlessness;
+    breathingWhile.value = model.breathlessWhile.isEmpty
+        ? 'Walking'
+        : model.breathlessWhile;
     palpitations.value = model.palpitations.isEmpty ? 'No' : model.palpitations;
     giddiness.value = model.giddiness.isEmpty ? 'No' : model.giddiness;
     headache.value = model.headache.isEmpty ? 'No' : model.headache;
     feelDizziness.value = model.dizziness.isEmpty ? 'No' : model.dizziness;
     dizzinessSystolicController.text = model.dizzinessSystolic;
     dizzinessDiastolicController.text = model.dizzinessDiaStolic;
-    bleedingEpisode.value = model.bleedingEpisode.isEmpty ? 'No' : model.bleedingEpisode;
-    otherSymptomsRadio.value = model.otherSymptomsDetails.isNotEmpty || model.otherSymptoms == 'Yes' ? 'Yes' : 'None';
-    otherSymptomsController.text = model.otherSymptomsDetails.isNotEmpty ? model.otherSymptomsDetails : model.otherSymptoms;
+    bleedingEpisode.value = model.bleedingEpisode.isEmpty
+        ? 'No'
+        : model.bleedingEpisode;
+    otherSymptomsRadio.value =
+        model.otherSymptomsDetails.isNotEmpty || model.otherSymptoms == 'Yes'
+        ? 'Yes'
+        : 'None';
+    otherSymptomsController.text = model.otherSymptomsDetails.isNotEmpty
+        ? model.otherSymptomsDetails
+        : model.otherSymptoms;
 
     systolic2Controller.text = model.systolic2;
     diastolic2Controller.text = model.diastolic2;
@@ -282,8 +321,14 @@ class ServingPatientClinicalFormController extends GetxController {
     morningWalk.value = model.exercise.isEmpty ? 'No' : model.exercise;
     areYouInStress.value = model.inStress.isEmpty ? 'No' : model.inStress;
     missMedicine.value = model.missMedicine.isEmpty ? 'No' : model.missMedicine;
-    lastHospitalization.value = model.lastHospitalization == 'Yes' ? 'Yes' : 'No';
-    hospitalizationReasonSelected.value = model.lastHospitalization == 'Yes' ? (model.hospitalizationReason.isEmpty ? 'Select' : model.hospitalizationReason) : 'Select';
+    lastHospitalization.value = model.lastHospitalization == 'Yes'
+        ? 'Yes'
+        : 'No';
+    hospitalizationReasonSelected.value = model.lastHospitalization == 'Yes'
+        ? (model.hospitalizationReason.isEmpty
+              ? 'Select'
+              : model.hospitalizationReason)
+        : 'Select';
 
     systolic3Controller.text = model.systolic3;
     diastolic3Controller.text = model.diastolic3;
@@ -340,7 +385,10 @@ class ServingPatientClinicalFormController extends GetxController {
     if (spo2Choice.value == 'Yes') {
       final val = int.tryParse(spo2Controller.text.trim());
       if (val == null || val < 50 || val > 100) {
-        AppSnackbars.showError('error'.tr, 'Please enter valid SPO2 level (50-100%).');
+        AppSnackbars.showError(
+          'error'.tr,
+          'Please enter valid SPO2 level (50-100%).',
+        );
         return false;
       }
     }
@@ -421,7 +469,9 @@ class ServingPatientClinicalFormController extends GetxController {
       isLoading.value = true;
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
-      final docId = doctorId.isNotEmpty ? doctorId : (prefs.getString(AppConstants.prefUserId) ?? '');
+      final docId = doctorId.isNotEmpty
+          ? doctorId
+          : (prefs.getString(AppConstants.prefUserId) ?? '');
       final otherDetails = otherSymptomsController.text.trim();
 
       final map = <String, dynamic>{
@@ -435,7 +485,9 @@ class ServingPatientClinicalFormController extends GetxController {
         'diastolic_1': diastolicController.text.trim(),
         'heart_rate_1': pulseRateController.text.trim(),
         'spo2': spo2Choice.value,
-        'spo2_value': spo2Choice.value == 'Yes' ? spo2Controller.text.trim() : '0',
+        'spo2_value': spo2Choice.value == 'Yes'
+            ? spo2Controller.text.trim()
+            : '0',
         'height': heightController.text.trim(),
         'weight': weightController.text.trim(),
         'bmi': calculatedBmi.value,
@@ -453,7 +505,9 @@ class ServingPatientClinicalFormController extends GetxController {
         'urine_albumin': cbUrineAlbumin.value ? urineAlbuminType.value : '',
         'urine_albumin_report': urineAlbuminType.value == 'Numeric'
             ? urineAlbuminNumericController.text.trim()
-            : (urineAlbuminValueSelected.value == 'Select' ? '' : urineAlbuminValueSelected.value),
+            : (urineAlbuminValueSelected.value == 'Select'
+                  ? ''
+                  : urineAlbuminValueSelected.value),
         'ecg': cbEcg.value ? 'Yes' : 'No',
         'thyroid': cbThyroid.value ? 'Yes' : 'No',
         't3': t3Controller.text.trim(),
@@ -486,7 +540,9 @@ class ServingPatientClinicalFormController extends GetxController {
         'last_hospitalization': lastHospitalization.value,
         'hospitalization_reason': hospitalizationReasonSelected.value == 'other'
             ? otherHospitalizationReasonController.text.trim()
-            : (hospitalizationReasonSelected.value == 'Select' ? '' : hospitalizationReasonSelected.value),
+            : (hospitalizationReasonSelected.value == 'Select'
+                  ? ''
+                  : hospitalizationReasonSelected.value),
         'systolic_3': systolic3Controller.text.trim(),
         'diastolic_3': diastolic3Controller.text.trim(),
         'heart_rate_3': pulseRate3Controller.text.trim(),
@@ -504,7 +560,9 @@ class ServingPatientClinicalFormController extends GetxController {
       final response = await _apiClient.post(
         ApiEndpoints.updateClinicalForm,
         data: formData,
-        options: dio.Options(headers: token.isNotEmpty ? {'Authorization': token} : null),
+        options: dio.Options(
+          headers: token.isNotEmpty ? {'Authorization': token} : null,
+        ),
       );
 
       if (response.statusCode == 200 && response.data != null) {
@@ -521,8 +579,14 @@ class ServingPatientClinicalFormController extends GetxController {
         }
 
         final statusStr = body['status']?.toString().toLowerCase() ?? '';
-        final isSuccess = statusStr == 'success' || statusStr == 'true' || body['status'] == true;
-        final msg = body['msg']?.toString() ?? body['message']?.toString() ?? 'form_submitted'.tr;
+        final isSuccess =
+            statusStr == 'success' ||
+            statusStr == 'true' ||
+            body['status'] == true;
+        final msg =
+            body['msg']?.toString() ??
+            body['message']?.toString() ??
+            'form_submitted'.tr;
 
         if (isSuccess) {
           final resultModel = buildFormDetailsModel();
@@ -581,5 +645,3 @@ class ServingPatientClinicalFormController extends GetxController {
     super.onClose();
   }
 }
-
-

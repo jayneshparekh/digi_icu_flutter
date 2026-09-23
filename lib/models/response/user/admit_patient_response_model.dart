@@ -18,8 +18,8 @@ class AdmitPatientResponseModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'status': status,
-        'msg': msg,
-        'admit_id': admitId,
-      };
+    'status': status,
+    'msg': msg,
+    'admit_id': admitId,
+  };
 }

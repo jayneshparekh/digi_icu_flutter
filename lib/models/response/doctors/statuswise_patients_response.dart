@@ -1,4 +1,4 @@
-﻿class StatuswisePatientsResponse {
+class StatuswisePatientsResponse {
   final String status;
   final String msg;
   final List<PatientAppointmentData> data;
@@ -152,4 +152,3 @@ class PatientAppointmentData {
     );
   }
 }
-

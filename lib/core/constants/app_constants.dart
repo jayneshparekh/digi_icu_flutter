@@ -1,4 +1,4 @@
-﻿class AppConstants {
+class AppConstants {
   AppConstants._();
 
   static const String baseUrl = 'https://www.mhclinic.net/MHC/';
@@ -28,11 +28,8 @@
   static const String prefUserOrientation = 'user_orientation';
 
   // Patient image uploads URL
-  static const String patientImageUrl =
-      '${baseUrl}uploads/patient_images/';
+  static const String patientImageUrl = '${baseUrl}uploads/patient_images/';
 
   // Doctor profile images URL
-  static const String doctorImageUrl =
-      '${baseUrl}uploads/doctor_images/';
+  static const String doctorImageUrl = '${baseUrl}uploads/doctor_images/';
 }
-

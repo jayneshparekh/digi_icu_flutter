@@ -41,15 +41,15 @@ class MedicalFormController extends GetxController {
   final RxString htnOnMedicine = ''.obs; // Yes, No
   final RxString htnMedicineRegular = ''.obs; // Yes, No
   final RxInt htnMedCount = 0.obs; // 0 to 3
-  
+
   final htnMedName1Controller = TextEditingController();
   final htnMedName2Controller = TextEditingController();
   final htnMedName3Controller = TextEditingController();
-  
+
   final RxString htnMedFreq1 = 'One Time'.obs;
   final RxString htnMedFreq2 = 'One Time'.obs;
   final RxString htnMedFreq3 = 'One Time'.obs;
-  
+
   final RxList<File> htnReports = <File>[].obs;
 
   // Diabetes States
@@ -58,15 +58,15 @@ class MedicalFormController extends GetxController {
   final RxString diabetesOnMedicine = ''.obs; // Yes, No
   final RxString diabetesMedicineRegular = ''.obs; // Yes, No
   final RxInt diabetesMedCount = 0.obs; // 0 to 3
-  
+
   final diabetesMedName1Controller = TextEditingController();
   final diabetesMedName2Controller = TextEditingController();
   final diabetesMedName3Controller = TextEditingController();
-  
+
   final RxString diabetesMedFreq1 = 'One Time'.obs;
   final RxString diabetesMedFreq2 = 'One Time'.obs;
   final RxString diabetesMedFreq3 = 'One Time'.obs;
-  
+
   final RxList<File> diabetesReports = <File>[].obs;
 
   // Thyroid States
@@ -75,15 +75,15 @@ class MedicalFormController extends GetxController {
   final RxString thyroidOnMedicine = ''.obs; // Yes, No
   final RxString thyroidMedicineRegular = ''.obs; // Yes, No
   final RxInt thyroidMedCount = 0.obs; // 0 to 3
-  
+
   final thyroidMedName1Controller = TextEditingController();
   final thyroidMedName2Controller = TextEditingController();
   final thyroidMedName3Controller = TextEditingController();
-  
+
   final RxString thyroidMedFreq1 = 'One Time'.obs;
   final RxString thyroidMedFreq2 = 'One Time'.obs;
   final RxString thyroidMedFreq3 = 'One Time'.obs;
-  
+
   final RxList<File> thyroidReports = <File>[].obs;
 
   // Cholesterol & Asthma
@@ -93,7 +93,6 @@ class MedicalFormController extends GetxController {
   // Pregnancy fields
   final RxString isPregnant = ''.obs; // Yes, No, May be
   final RxString duringPregnancy = ''.obs; // Hypertension, Diabetes, Both, None
-
 
   // --- SECTION 2 STATES ---
   // Heart Attack States
@@ -192,7 +191,6 @@ class MedicalFormController extends GetxController {
   final surgeryName1Controller = TextEditingController();
   final surgeryName2Controller = TextEditingController();
   final surgeryName3Controller = TextEditingController();
-
 
   final ImagePicker _picker = ImagePicker();
 
@@ -321,191 +319,307 @@ class MedicalFormController extends GetxController {
   bool validateForm() {
     // --- SECTION 1 VALIDATION ---
     if (hasHypertension.value.isEmpty) {
-      AppSnackbars.showError('Validation Error', 'Please select if you have hypertension');
+      AppSnackbars.showError(
+        'Validation Error',
+        'Please select if you have hypertension',
+      );
       return false;
     }
     if (hasHypertension.value == 'Yes') {
       if (htnYears.value == 'Select') {
-        AppSnackbars.showError('Validation Error', 'Please select how many years you have hypertension');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select how many years you have hypertension',
+        );
         return false;
       }
       if (htnOnMedicine.value.isEmpty) {
-        AppSnackbars.showError('Validation Error', 'Please select if you are on hypertension medicines');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select if you are on hypertension medicines',
+        );
         return false;
       }
       if (htnOnMedicine.value == 'Yes') {
         if (htnMedicineRegular.value.isEmpty) {
-          AppSnackbars.showError('Validation Error', 'Please select if you take medicines regularly');
+          AppSnackbars.showError(
+            'Validation Error',
+            'Please select if you take medicines regularly',
+          );
           return false;
         }
         if (htnMedCount.value == 0) {
-          AppSnackbars.showError('Validation Error', 'Please add at least one hypertension medicine name');
+          AppSnackbars.showError(
+            'Validation Error',
+            'Please add at least one hypertension medicine name',
+          );
           return false;
         }
-        if (htnMedCount.value >= 1 && htnMedName1Controller.text.trim().isEmpty) {
-          AppSnackbars.showError('Validation Error', 'Please enter first hypertension medicine name');
+        if (htnMedCount.value >= 1 &&
+            htnMedName1Controller.text.trim().isEmpty) {
+          AppSnackbars.showError(
+            'Validation Error',
+            'Please enter first hypertension medicine name',
+          );
           return false;
         }
       }
     }
 
     if (hasDiabetes.value.isEmpty) {
-      AppSnackbars.showError('Validation Error', 'Please select if you have diabetes');
+      AppSnackbars.showError(
+        'Validation Error',
+        'Please select if you have diabetes',
+      );
       return false;
     }
     if (hasDiabetes.value == 'Yes') {
       if (diabetesYears.value == 'Select') {
-        AppSnackbars.showError('Validation Error', 'Please select how many years you have diabetes');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select how many years you have diabetes',
+        );
         return false;
       }
       if (diabetesOnMedicine.value.isEmpty) {
-        AppSnackbars.showError('Validation Error', 'Please select if you are on diabetes medicines');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select if you are on diabetes medicines',
+        );
         return false;
       }
       if (diabetesOnMedicine.value == 'Yes') {
         if (diabetesMedicineRegular.value.isEmpty) {
-          AppSnackbars.showError('Validation Error', 'Please select if you take diabetes medicines regularly');
+          AppSnackbars.showError(
+            'Validation Error',
+            'Please select if you take diabetes medicines regularly',
+          );
           return false;
         }
         if (diabetesMedCount.value == 0) {
-          AppSnackbars.showError('Validation Error', 'Please add at least one diabetes medicine name');
+          AppSnackbars.showError(
+            'Validation Error',
+            'Please add at least one diabetes medicine name',
+          );
           return false;
         }
-        if (diabetesMedCount.value >= 1 && diabetesMedName1Controller.text.trim().isEmpty) {
-          AppSnackbars.showError('Validation Error', 'Please enter first diabetes medicine name');
+        if (diabetesMedCount.value >= 1 &&
+            diabetesMedName1Controller.text.trim().isEmpty) {
+          AppSnackbars.showError(
+            'Validation Error',
+            'Please enter first diabetes medicine name',
+          );
           return false;
         }
       }
     }
 
     if (hasThyroid.value.isEmpty) {
-      AppSnackbars.showError('Validation Error', 'Please select if you have thyroid');
+      AppSnackbars.showError(
+        'Validation Error',
+        'Please select if you have thyroid',
+      );
       return false;
     }
     if (hasThyroid.value == 'Yes') {
       if (thyroidYears.value == 'Select') {
-        AppSnackbars.showError('Validation Error', 'Please select how many years you have thyroid');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select how many years you have thyroid',
+        );
         return false;
       }
       if (thyroidOnMedicine.value.isEmpty) {
-        AppSnackbars.showError('Validation Error', 'Please select if you are on thyroid medicines');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select if you are on thyroid medicines',
+        );
         return false;
       }
       if (thyroidOnMedicine.value == 'Yes') {
         if (thyroidMedicineRegular.value.isEmpty) {
-          AppSnackbars.showError('Validation Error', 'Please select if you take thyroid medicines regularly');
+          AppSnackbars.showError(
+            'Validation Error',
+            'Please select if you take thyroid medicines regularly',
+          );
           return false;
         }
         if (thyroidMedCount.value == 0) {
-          AppSnackbars.showError('Validation Error', 'Please add at least one thyroid medicine name');
+          AppSnackbars.showError(
+            'Validation Error',
+            'Please add at least one thyroid medicine name',
+          );
           return false;
         }
-        if (thyroidMedCount.value >= 1 && thyroidMedName1Controller.text.trim().isEmpty) {
-          AppSnackbars.showError('Validation Error', 'Please enter first thyroid medicine name');
+        if (thyroidMedCount.value >= 1 &&
+            thyroidMedName1Controller.text.trim().isEmpty) {
+          AppSnackbars.showError(
+            'Validation Error',
+            'Please enter first thyroid medicine name',
+          );
           return false;
         }
       }
     }
 
     if (hasCholesterol.value.isEmpty) {
-      AppSnackbars.showError('Validation Error', 'Please select if you have a cholesterol problem');
+      AppSnackbars.showError(
+        'Validation Error',
+        'Please select if you have a cholesterol problem',
+      );
       return false;
     }
 
     if (hasAsthma.value.isEmpty) {
-      AppSnackbars.showError('Validation Error', 'Please select if you have asthma');
+      AppSnackbars.showError(
+        'Validation Error',
+        'Please select if you have asthma',
+      );
       return false;
     }
 
-
     // --- SECTION 2 VALIDATION ---
     if (hasHeartAttack.value.isEmpty) {
-      AppSnackbars.showError('Validation Error', 'Please select if you had a heart attack');
+      AppSnackbars.showError(
+        'Validation Error',
+        'Please select if you had a heart attack',
+      );
       return false;
     }
     if (hasHeartAttack.value == 'Yes') {
       if (heartAttackYears.value == 'Select') {
-        AppSnackbars.showError('Validation Error', 'Please select when you had a heart attack');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select when you had a heart attack',
+        );
         return false;
       }
       if (heartAttackOnMedicine.value.isEmpty) {
-        AppSnackbars.showError('Validation Error', 'Please select if you are on heart attack medicines');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select if you are on heart attack medicines',
+        );
         return false;
       }
     }
 
     if (hasStroke.value.isEmpty) {
-      AppSnackbars.showError('Validation Error', 'Please select if you had a stroke');
+      AppSnackbars.showError(
+        'Validation Error',
+        'Please select if you had a stroke',
+      );
       return false;
     }
     if (hasStroke.value == 'Yes') {
       if (strokeYears.value == 'Select') {
-        AppSnackbars.showError('Validation Error', 'Please select when you had a stroke');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select when you had a stroke',
+        );
         return false;
       }
       if (strokeOnMedicine.value.isEmpty) {
-        AppSnackbars.showError('Validation Error', 'Please select if you are on stroke medicines');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select if you are on stroke medicines',
+        );
         return false;
       }
     }
 
     if (hasKidneyFailure.value.isEmpty) {
-      AppSnackbars.showError('Validation Error', 'Please select if you had kidney failure');
+      AppSnackbars.showError(
+        'Validation Error',
+        'Please select if you had kidney failure',
+      );
       return false;
     }
     if (hasKidneyFailure.value == 'Yes') {
       if (kidneyFailureYears.value == 'Select') {
-        AppSnackbars.showError('Validation Error', 'Please select when you had kidney failure');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select when you had kidney failure',
+        );
         return false;
       }
       if (kidneyFailureOnMedicine.value.isEmpty) {
-        AppSnackbars.showError('Validation Error', 'Please select if you are on kidney failure medicines');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select if you are on kidney failure medicines',
+        );
         return false;
       }
     }
 
     if (hasAngioplasty.value.isEmpty) {
-      AppSnackbars.showError('Validation Error', 'Please select if you had angioplasty');
+      AppSnackbars.showError(
+        'Validation Error',
+        'Please select if you had angioplasty',
+      );
       return false;
     }
     if (hasAngioplasty.value == 'Yes') {
       if (angioplastyYears.value == 'Select') {
-        AppSnackbars.showError('Validation Error', 'Please select when you had angioplasty');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select when you had angioplasty',
+        );
         return false;
       }
       if (angioplastyOnMedicine.value.isEmpty) {
-        AppSnackbars.showError('Validation Error', 'Please select if you are on angioplasty medicines');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select if you are on angioplasty medicines',
+        );
         return false;
       }
     }
 
     if (hasBypass.value.isEmpty) {
-      AppSnackbars.showError('Validation Error', 'Please select if you had bypass surgery');
+      AppSnackbars.showError(
+        'Validation Error',
+        'Please select if you had bypass surgery',
+      );
       return false;
     }
     if (hasBypass.value == 'Yes') {
       if (bypassYears.value == 'Select') {
-        AppSnackbars.showError('Validation Error', 'Please select when you had bypass surgery');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select when you had bypass surgery',
+        );
         return false;
       }
       if (bypassOnMedicine.value.isEmpty) {
-        AppSnackbars.showError('Validation Error', 'Please select if you are on bypass surgery medicines');
+        AppSnackbars.showError(
+          'Validation Error',
+          'Please select if you are on bypass surgery medicines',
+        );
         return false;
       }
     }
 
     if (hasAllergy.value.isEmpty) {
-      AppSnackbars.showError('Validation Error', 'Please select if you have a medicine allergy');
+      AppSnackbars.showError(
+        'Validation Error',
+        'Please select if you have a medicine allergy',
+      );
       return false;
     }
 
     if (hasBleedingTendency.value.isEmpty) {
-      AppSnackbars.showError('Validation Error', 'Please select if you have bleeding tendencies');
+      AppSnackbars.showError(
+        'Validation Error',
+        'Please select if you have bleeding tendencies',
+      );
       return false;
     }
 
     if (hasOtherSurgery.value.isEmpty) {
-      AppSnackbars.showError('Validation Error', 'Please select if you had other surgeries');
+      AppSnackbars.showError(
+        'Validation Error',
+        'Please select if you had other surgeries',
+      );
       return false;
     }
 
@@ -525,9 +639,14 @@ class MedicalFormController extends GetxController {
 
         // Section 1 - Clinical History
         'hypertension': hasHypertension.value,
-        'htn_since': hasHypertension.value == 'Yes' ? (htnYears.value == 'Select' ? '' : htnYears.value) : '',
+        'htn_since': hasHypertension.value == 'Yes'
+            ? (htnYears.value == 'Select' ? '' : htnYears.value)
+            : '',
         'htn_med': hasHypertension.value == 'Yes' ? htnOnMedicine.value : '',
-        'htn_med_regular': (hasHypertension.value == 'Yes' && htnOnMedicine.value == 'Yes') ? htnMedicineRegular.value : '',
+        'htn_med_regular':
+            (hasHypertension.value == 'Yes' && htnOnMedicine.value == 'Yes')
+            ? htnMedicineRegular.value
+            : '',
         'htn_med_name_1': htnMedName1Controller.text.trim(),
         'htn_med_name_2': htnMedName2Controller.text.trim(),
         'htn_med_name_3': htnMedName3Controller.text.trim(),
@@ -536,9 +655,14 @@ class MedicalFormController extends GetxController {
         'htn_med_freq_3': htnMedFreq3.value,
 
         'diabetes': hasDiabetes.value,
-        'dia_since': hasDiabetes.value == 'Yes' ? (diabetesYears.value == 'Select' ? '' : diabetesYears.value) : '',
+        'dia_since': hasDiabetes.value == 'Yes'
+            ? (diabetesYears.value == 'Select' ? '' : diabetesYears.value)
+            : '',
         'dia_med': hasDiabetes.value == 'Yes' ? diabetesOnMedicine.value : '',
-        'dia_med_regular': (hasDiabetes.value == 'Yes' && diabetesOnMedicine.value == 'Yes') ? diabetesMedicineRegular.value : '',
+        'dia_med_regular':
+            (hasDiabetes.value == 'Yes' && diabetesOnMedicine.value == 'Yes')
+            ? diabetesMedicineRegular.value
+            : '',
         'dia_med_name_1': diabetesMedName1Controller.text.trim(),
         'dia_med_name_2': diabetesMedName2Controller.text.trim(),
         'dia_med_name_3': diabetesMedName3Controller.text.trim(),
@@ -547,9 +671,14 @@ class MedicalFormController extends GetxController {
         'dia_med_freq_3': diabetesMedFreq3.value,
 
         'thyroid': hasThyroid.value,
-        'thyroid_since': hasThyroid.value == 'Yes' ? (thyroidYears.value == 'Select' ? '' : thyroidYears.value) : '',
+        'thyroid_since': hasThyroid.value == 'Yes'
+            ? (thyroidYears.value == 'Select' ? '' : thyroidYears.value)
+            : '',
         'thyroid_med': hasThyroid.value == 'Yes' ? thyroidOnMedicine.value : '',
-        'thyroid_med_regular': (hasThyroid.value == 'Yes' && thyroidOnMedicine.value == 'Yes') ? thyroidMedicineRegular.value : '',
+        'thyroid_med_regular':
+            (hasThyroid.value == 'Yes' && thyroidOnMedicine.value == 'Yes')
+            ? thyroidMedicineRegular.value
+            : '',
         'thyroid_med_name_1': thyroidMedName1Controller.text.trim(),
         'thyroid_med_name_2': thyroidMedName2Controller.text.trim(),
         'thyroid_med_name_3': thyroidMedName3Controller.text.trim(),
@@ -564,8 +693,12 @@ class MedicalFormController extends GetxController {
 
         // Section 2 - Past History
         'heart_attack': hasHeartAttack.value,
-        'heart_atk_when': hasHeartAttack.value == 'Yes' ? (heartAttackYears.value == 'Select' ? '' : heartAttackYears.value) : '',
-        'heart_atk_med': hasHeartAttack.value == 'Yes' ? heartAttackOnMedicine.value : '',
+        'heart_atk_when': hasHeartAttack.value == 'Yes'
+            ? (heartAttackYears.value == 'Select' ? '' : heartAttackYears.value)
+            : '',
+        'heart_atk_med': hasHeartAttack.value == 'Yes'
+            ? heartAttackOnMedicine.value
+            : '',
         'heart_atk_med_name_1': heartAttackMedName1Controller.text.trim(),
         'heart_atk_med_name_2': heartAttackMedName2Controller.text.trim(),
         'heart_atk_med_name_3': heartAttackMedName3Controller.text.trim(),
@@ -574,7 +707,9 @@ class MedicalFormController extends GetxController {
         'heart_atk_med_freq_3': heartAttackMedFreq3.value,
 
         'stroke': hasStroke.value,
-        'stroke_when': hasStroke.value == 'Yes' ? (strokeYears.value == 'Select' ? '' : strokeYears.value) : '',
+        'stroke_when': hasStroke.value == 'Yes'
+            ? (strokeYears.value == 'Select' ? '' : strokeYears.value)
+            : '',
         'stroke_med': hasStroke.value == 'Yes' ? strokeOnMedicine.value : '',
         'stroke_med_name_1': strokeMedName1Controller.text.trim(),
         'stroke_med_name_2': strokeMedName2Controller.text.trim(),
@@ -584,8 +719,14 @@ class MedicalFormController extends GetxController {
         'stroke_med_freq_3': strokeMedFreq3.value,
 
         'kidney_failure': hasKidneyFailure.value,
-        'kidney_fail_when': hasKidneyFailure.value == 'Yes' ? (kidneyFailureYears.value == 'Select' ? '' : kidneyFailureYears.value) : '',
-        'kidney_fail_med': hasKidneyFailure.value == 'Yes' ? kidneyFailureOnMedicine.value : '',
+        'kidney_fail_when': hasKidneyFailure.value == 'Yes'
+            ? (kidneyFailureYears.value == 'Select'
+                  ? ''
+                  : kidneyFailureYears.value)
+            : '',
+        'kidney_fail_med': hasKidneyFailure.value == 'Yes'
+            ? kidneyFailureOnMedicine.value
+            : '',
         'kidney_fail_med_name_1': kidneyFailureMedName1Controller.text.trim(),
         'kidney_fail_med_name_2': kidneyFailureMedName2Controller.text.trim(),
         'kidney_fail_med_name_3': kidneyFailureMedName3Controller.text.trim(),
@@ -594,8 +735,12 @@ class MedicalFormController extends GetxController {
         'kidney_fail_med_freq_3': kidneyFailureMedFreq3.value,
 
         'angioplasty': hasAngioplasty.value,
-        'angioplasty_when': hasAngioplasty.value == 'Yes' ? (angioplastyYears.value == 'Select' ? '' : angioplastyYears.value) : '',
-        'angioplasty_med': hasAngioplasty.value == 'Yes' ? angioplastyOnMedicine.value : '',
+        'angioplasty_when': hasAngioplasty.value == 'Yes'
+            ? (angioplastyYears.value == 'Select' ? '' : angioplastyYears.value)
+            : '',
+        'angioplasty_med': hasAngioplasty.value == 'Yes'
+            ? angioplastyOnMedicine.value
+            : '',
         'angioplasty_med_name_1': angioplastyMedName1Controller.text.trim(),
         'angioplasty_med_name_2': angioplastyMedName2Controller.text.trim(),
         'angioplasty_med_name_3': angioplastyMedName3Controller.text.trim(),
@@ -604,8 +749,12 @@ class MedicalFormController extends GetxController {
         'angioplasty_med_freq_3': angioplastyMedFreq3.value,
 
         'bypass_surgery': hasBypass.value,
-        'bypass_surg_when': hasBypass.value == 'Yes' ? (bypassYears.value == 'Select' ? '' : bypassYears.value) : '',
-        'bypass_surg_med': hasBypass.value == 'Yes' ? bypassOnMedicine.value : '',
+        'bypass_surg_when': hasBypass.value == 'Yes'
+            ? (bypassYears.value == 'Select' ? '' : bypassYears.value)
+            : '',
+        'bypass_surg_med': hasBypass.value == 'Yes'
+            ? bypassOnMedicine.value
+            : '',
         'bypass_surg_med_name_1': bypassMedName1Controller.text.trim(),
         'bypass_surg_med_name_2': bypassMedName2Controller.text.trim(),
         'bypass_surg_med_name_3': bypassMedName3Controller.text.trim(),
@@ -661,30 +810,43 @@ class MedicalFormController extends GetxController {
 
       // Section 1 report files
       for (int i = 0; i < htnReports.length; i++) {
-        fields['htn_med_img_${i + 1}'] = await dio.MultipartFile.fromFile(htnReports[i].path);
+        fields['htn_med_img_${i + 1}'] = await dio.MultipartFile.fromFile(
+          htnReports[i].path,
+        );
       }
       for (int i = 0; i < diabetesReports.length; i++) {
-        fields['dia_med_img_${i + 1}'] = await dio.MultipartFile.fromFile(diabetesReports[i].path);
+        fields['dia_med_img_${i + 1}'] = await dio.MultipartFile.fromFile(
+          diabetesReports[i].path,
+        );
       }
       for (int i = 0; i < thyroidReports.length; i++) {
-        fields['thy_med_img_${i + 1}'] = await dio.MultipartFile.fromFile(thyroidReports[i].path);
+        fields['thy_med_img_${i + 1}'] = await dio.MultipartFile.fromFile(
+          thyroidReports[i].path,
+        );
       }
 
       // Section 2 report files
       for (int i = 0; i < heartAttackReports.length; i++) {
-        fields['hrt_atk_med_img_${i + 1}'] = await dio.MultipartFile.fromFile(heartAttackReports[i].path);
+        fields['hrt_atk_med_img_${i + 1}'] = await dio.MultipartFile.fromFile(
+          heartAttackReports[i].path,
+        );
       }
       for (int i = 0; i < strokeReports.length; i++) {
-        fields['stroke_med_img_${i + 1}'] = await dio.MultipartFile.fromFile(strokeReports[i].path);
+        fields['stroke_med_img_${i + 1}'] = await dio.MultipartFile.fromFile(
+          strokeReports[i].path,
+        );
       }
       for (int i = 0; i < kidneyFailureReports.length; i++) {
-        fields['kidney_fail_med_img_${i + 1}'] = await dio.MultipartFile.fromFile(kidneyFailureReports[i].path);
+        fields['kidney_fail_med_img_${i + 1}'] =
+            await dio.MultipartFile.fromFile(kidneyFailureReports[i].path);
       }
       for (int i = 0; i < angioplastyReports.length; i++) {
-        fields['angioplasty_med_img_${i + 1}'] = await dio.MultipartFile.fromFile(angioplastyReports[i].path);
+        fields['angioplasty_med_img_${i + 1}'] =
+            await dio.MultipartFile.fromFile(angioplastyReports[i].path);
       }
       for (int i = 0; i < bypassReports.length; i++) {
-        fields['bypass_surg_med_img_${i + 1}'] = await dio.MultipartFile.fromFile(bypassReports[i].path);
+        fields['bypass_surg_med_img_${i + 1}'] =
+            await dio.MultipartFile.fromFile(bypassReports[i].path);
       }
 
       final formData = dio.FormData.fromMap(fields);
@@ -699,28 +861,40 @@ class MedicalFormController extends GetxController {
 
       if (response.statusCode == 200 && response.data != null) {
         if (response.data['status'] == 'success') {
-          Get.offAllNamed('/take-appointment', arguments: {
-            'doctorId': doctorId,
-            'doctorName': doctorName,
-            'patientId': patientId,
-            'userName': patientName,
-            'userAge': patientAge,
-            'userGender': gender,
-            'type': userType,
-            'speciality': speciality,
-            'isFromDoctorHomeService': isFromDoctorHomeService,
-            'doctor_hs_req_id': doctorHsReqId,
-            'problem': problem,
-          });
+          Get.offAllNamed(
+            '/take-appointment',
+            arguments: {
+              'doctorId': doctorId,
+              'doctorName': doctorName,
+              'patientId': patientId,
+              'userName': patientName,
+              'userAge': patientAge,
+              'userGender': gender,
+              'type': userType,
+              'speciality': speciality,
+              'isFromDoctorHomeService': isFromDoctorHomeService,
+              'doctor_hs_req_id': doctorHsReqId,
+              'problem': problem,
+            },
+          );
         } else {
-          AppSnackbars.showError('Error', response.data['msg'] ?? 'Failed to submit form');
+          AppSnackbars.showError(
+            'Error',
+            response.data['msg'] ?? 'Failed to submit form',
+          );
         }
       } else {
-        AppSnackbars.showError('Error', 'Failed to submit. Server status: ${response.statusCode}');
+        AppSnackbars.showError(
+          'Error',
+          'Failed to submit. Server status: ${response.statusCode}',
+        );
       }
     } catch (e) {
       isLoading.value = false;
-      AppSnackbars.showError('Error', 'An error occurred during submission: $e');
+      AppSnackbars.showError(
+        'Error',
+        'An error occurred during submission: $e',
+      );
     }
   }
 }

@@ -36,9 +36,7 @@ class ServingPatientDashboardController extends GetxController {
 
       final response = await apiClient.post(
         ApiEndpoints.dashboardDetails,
-        data: {
-          'patient_id': patientId,
-        },
+        data: {'patient_id': patientId},
         options: dio.Options(headers: {'Authorization': token}),
       );
 
@@ -47,7 +45,9 @@ class ServingPatientDashboardController extends GetxController {
         if (res.status == 'success') {
           dashboardData.value = res.data;
         } else {
-          errorMessage.value = res.msg.isNotEmpty ? res.msg : 'Failed to load dashboard details.';
+          errorMessage.value = res.msg.isNotEmpty
+              ? res.msg
+              : 'Failed to load dashboard details.';
         }
       } else {
         errorMessage.value = 'Failed to load details: ${response.statusCode}';

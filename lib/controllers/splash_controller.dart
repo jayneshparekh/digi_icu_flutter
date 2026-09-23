@@ -1,4 +1,4 @@
-﻿import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,5 +36,3 @@ class SplashController extends GetxController {
     });
   }
 }
-
-

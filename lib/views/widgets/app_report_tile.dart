@@ -29,7 +29,10 @@ class AppReportTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Show 'Report from Cardiologist' button if ECG and payment pending/ecg franchise
-    final showConsultCardiologist = (reportName.toUpperCase().contains('ECG') && (paymentStatus == '2' || paymentStatus == '0')) || (reportFrom == 'ecg_franchise');
+    final showConsultCardiologist =
+        (reportName.toUpperCase().contains('ECG') &&
+            (paymentStatus == '2' || paymentStatus == '0')) ||
+        (reportFrom == 'ecg_franchise');
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -39,7 +42,11 @@ class AppReportTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         onTap: () {
           if (reportImgUrl.isNotEmpty) {
-            FullScreenImageViewer.show(context, reportImgUrl, title: reportName);
+            FullScreenImageViewer.show(
+              context,
+              reportImgUrl,
+              title: reportName,
+            );
           }
         },
         child: Padding(
@@ -61,7 +68,11 @@ class AppReportTile extends StatelessWidget {
                           height: 140,
                           color: AppColors.lightGray,
                           child: const Center(
-                            child: Icon(Icons.insert_drive_file, size: 48, color: AppColors.medicalGray),
+                            child: Icon(
+                              Icons.insert_drive_file,
+                              size: 48,
+                              color: AppColors.medicalGray,
+                            ),
                           ),
                         ),
                       ),
@@ -71,14 +82,21 @@ class AppReportTile extends StatelessWidget {
                         right: 8,
                         top: 8,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.error,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Text(
                             'N',
-                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.white),
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -94,17 +112,28 @@ class AppReportTile extends StatelessWidget {
                       children: [
                         Text(
                           reportName,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy,
+                          ),
                         ),
                         if (uploadedOn.isNotEmpty) ...[
                           const SizedBox(height: 4),
                           Row(
                             children: [
-                              const Icon(Icons.calendar_today, size: 13, color: AppColors.coolGray),
+                              const Icon(
+                                Icons.calendar_today,
+                                size: 13,
+                                color: AppColors.coolGray,
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 uploadedOn,
-                                style: const TextStyle(fontSize: 12, color: AppColors.coolGray),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.coolGray,
+                                ),
                               ),
                             ],
                           ),
@@ -113,7 +142,10 @@ class AppReportTile extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete_outline, color: AppColors.error),
+                    icon: const Icon(
+                      Icons.delete_outline,
+                      color: AppColors.error,
+                    ),
                     onPressed: onDelete,
                   ),
                 ],
@@ -123,15 +155,28 @@ class AppReportTile extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    icon: const Icon(Icons.medical_services_outlined, size: 16, color: AppColors.white),
+                    icon: const Icon(
+                      Icons.medical_services_outlined,
+                      size: 16,
+                      color: AppColors.white,
+                    ),
                     label: Text(
                       'consult_cardiologist'.tr,
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.white),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.white,
+                      ),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.teal,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
                     ),
                     onPressed: onConsultCardiologist,
                   ),

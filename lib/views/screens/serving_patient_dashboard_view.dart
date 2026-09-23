@@ -17,7 +17,8 @@ class ServingPatientDashboardView extends StatelessWidget {
     final controller = Get.put(ServingPatientDashboardController());
 
     return Obx(() {
-      if (controller.isLoading.value && controller.dashboardData.value == null) {
+      if (controller.isLoading.value &&
+          controller.dashboardData.value == null) {
         return const Center(
           child: Padding(
             padding: EdgeInsets.all(24.0),
@@ -79,7 +80,8 @@ class ServingPatientDashboardView extends StatelessWidget {
       String creatinineText = 'NA';
       if (data.creatinine.isNotEmpty) {
         if (data.creatinine.length > 1) {
-          creatinineText = '${data.creatinine[0].value}(${data.creatinine[1].value})';
+          creatinineText =
+              '${data.creatinine[0].value}(${data.creatinine[1].value})';
           final finalCreatinine = double.tryParse(data.creatinine[1].value);
           if (finalCreatinine != null && finalCreatinine > 1.2) {
             creatinineColor = AppColors.error;
@@ -101,7 +103,9 @@ class ServingPatientDashboardView extends StatelessWidget {
         if (rawValue.isNotEmpty) {
           final finalHba1c = double.tryParse(rawValue) ?? 0.0;
           final relativeText = _getHba1cRelativeText(data.hba1c[0].created);
-          hba1cText = relativeText.isNotEmpty ? '$rawValue ($relativeText)' : rawValue;
+          hba1cText = relativeText.isNotEmpty
+              ? '$rawValue ($relativeText)'
+              : rawValue;
           if (finalHba1c > 6.7) {
             hba1cColor = AppColors.error;
           }
@@ -146,7 +150,10 @@ class ServingPatientDashboardView extends StatelessWidget {
                   ],
                 ),
                 InkWell(
-                  onTap: () => _showAdmissionHistoryDialog(context, data.admissionHistory),
+                  onTap: () => _showAdmissionHistoryDialog(
+                    context,
+                    data.admissionHistory,
+                  ),
                   child: Text(
                     'admission_history'.tr,
                     style: TextStyle(
@@ -199,14 +206,21 @@ class ServingPatientDashboardView extends StatelessWidget {
                   final risk = data.whoIshRisk[index];
                   if (risk.isEmpty) return const SizedBox.shrink();
 
-                  final message = data.whoMsg.length > index ? data.whoMsg[index] : risk;
+                  final message = data.whoMsg.length > index
+                      ? data.whoMsg[index]
+                      : risk;
                   final bannerColor = _getWhoRiskColor(risk);
-                  final textColor = risk == '>40%' ? AppColors.white : AppColors.navy;
+                  final textColor = risk == '>40%'
+                      ? AppColors.white
+                      : AppColors.navy;
 
                   return Container(
                     width: double.infinity,
                     margin: const EdgeInsets.only(bottom: 4),
-                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4,
+                      horizontal: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: bannerColor,
                       borderRadius: BorderRadius.circular(4),
@@ -227,7 +241,7 @@ class ServingPatientDashboardView extends StatelessWidget {
             const SizedBox(height: 4),
 
             // 1. Diagnosis
-             ServingPatientDashboardCard(
+            ServingPatientDashboardCard(
               title: 'diagnosis'.tr,
               value: data.diagnosis.isNotEmpty ? data.diagnosis : 'na'.tr,
               onTap: () {
@@ -274,22 +288,30 @@ class ServingPatientDashboardView extends StatelessWidget {
                   Expanded(
                     child: ServingPatientDashboardCard(
                       title: 'symptoms_label'.tr,
-                      value: data.symptoms.isNotEmpty ? data.symptoms[0].value : 'na'.tr,
-                      onTap: () => _showHistoryDialog(context, data.symptoms, 'symptoms_label'.tr),
+                      value: data.symptoms.isNotEmpty
+                          ? data.symptoms[0].value
+                          : 'na'.tr,
+                      onTap: () => _showHistoryDialog(
+                        context,
+                        data.symptoms,
+                        'symptoms_label'.tr,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 4),
                   Expanded(
                     child: ServingPatientDashboardCard(
                       title: 'significant_history'.tr,
-                      value: data.significantHistory.isNotEmpty ? data.significantHistory : 'na'.tr,
+                      value: data.significantHistory.isNotEmpty
+                          ? data.significantHistory
+                          : 'na'.tr,
                     ),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 4),
- 
+
             // 3. Risk Factor, End Organ, Event & Compliance
             IntrinsicHeight(
               child: Row(
@@ -298,7 +320,9 @@ class ServingPatientDashboardView extends StatelessWidget {
                   Expanded(
                     child: ServingPatientDashboardCard(
                       title: 'risk_factor'.tr,
-                      value: data.riskFactors.isNotEmpty ? data.riskFactors : 'na'.tr,
+                      value: data.riskFactors.isNotEmpty
+                          ? data.riskFactors
+                          : 'na'.tr,
                     ),
                   ),
                   const SizedBox(width: 4),
@@ -312,16 +336,21 @@ class ServingPatientDashboardView extends StatelessWidget {
                   Expanded(
                     child: ServingPatientDashboardCard(
                       title: 'event_compliance'.tr,
-                      value: data.events.isNotEmpty ? data.events.split('|')[0] : 'na'.tr,
+                      value: data.events.isNotEmpty
+                          ? data.events.split('|')[0]
+                          : 'na'.tr,
                       onTap: () {
                         if (data.events.isNotEmpty) {
                           final eventParts = data.events.split('|');
-                          final dateStr = eventParts.length > 1 ? eventParts[1] : '';
-                          _showHistoryDialog(
-                            context,
-                            [DashboardData(value: eventParts[0], created: dateStr)],
-                            'event_compliance'.tr,
-                          );
+                          final dateStr = eventParts.length > 1
+                              ? eventParts[1]
+                              : '';
+                          _showHistoryDialog(context, [
+                            DashboardData(
+                              value: eventParts[0],
+                              created: dateStr,
+                            ),
+                          ], 'event_compliance'.tr);
                         }
                       },
                     ),
@@ -352,7 +381,9 @@ class ServingPatientDashboardView extends StatelessWidget {
                 Expanded(
                   child: ServingPatientDashboardCard(
                     title: 'baseline_bp'.tr,
-                    value: data.baselineBp.isNotEmpty ? data.baselineBp : 'na'.tr,
+                    value: data.baselineBp.isNotEmpty
+                        ? data.baselineBp
+                        : 'na'.tr,
                   ),
                 ),
               ],
@@ -365,8 +396,11 @@ class ServingPatientDashboardView extends StatelessWidget {
                 Expanded(
                   child: ServingPatientDashboardCard(
                     title: 'sugar'.tr,
-                    value: data.sugar.isNotEmpty ? data.sugar[0].value : 'na'.tr,
-                    onTap: () => _showHistoryDialog(context, data.sugar, 'sugar'.tr),
+                    value: data.sugar.isNotEmpty
+                        ? data.sugar[0].value
+                        : 'na'.tr,
+                    onTap: () =>
+                        _showHistoryDialog(context, data.sugar, 'sugar'.tr),
                   ),
                 ),
                 const SizedBox(width: 4),
@@ -375,15 +409,28 @@ class ServingPatientDashboardView extends StatelessWidget {
                     title: 'hba1c'.tr,
                     value: hba1cText,
                     backgroundColor: hba1cColor,
-                    onTap: () => _showHistoryDialog(context, data.hba1c, 'hba1c'.tr, isHba1c: true, controller: controller),
+                    onTap: () => _showHistoryDialog(
+                      context,
+                      data.hba1c,
+                      'hba1c'.tr,
+                      isHba1c: true,
+                      controller: controller,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 4),
                 Expanded(
                   child: ServingPatientDashboardCard(
                     title: 'weight_bmi'.tr,
-                    value: data.weight.isNotEmpty ? data.weight[0].value : 'na'.tr,
-                    onTap: () => _showHistoryDialog(context, data.weight, 'height_weight_bmi'.tr, height: data.height),
+                    value: data.weight.isNotEmpty
+                        ? data.weight[0].value
+                        : 'na'.tr,
+                    onTap: () => _showHistoryDialog(
+                      context,
+                      data.weight,
+                      'height_weight_bmi'.tr,
+                      height: data.height,
+                    ),
                   ),
                 ),
               ],
@@ -398,23 +445,39 @@ class ServingPatientDashboardView extends StatelessWidget {
                     title: 'creatinine_label'.tr,
                     value: creatinineText,
                     backgroundColor: creatinineColor,
-                    onTap: () => _showHistoryDialog(context, data.creatinine, 'creatinine_label'.tr),
+                    onTap: () => _showHistoryDialog(
+                      context,
+                      data.creatinine,
+                      'creatinine_label'.tr,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 4),
                 Expanded(
                   child: ServingPatientDashboardCard(
                     title: 'cholesterol'.tr,
-                    value: data.cholesterol.isNotEmpty ? data.cholesterol[0].value : 'na'.tr,
-                    onTap: () => _showHistoryDialog(context, data.cholesterol, 'cholesterol'.tr),
+                    value: data.cholesterol.isNotEmpty
+                        ? data.cholesterol[0].value
+                        : 'na'.tr,
+                    onTap: () => _showHistoryDialog(
+                      context,
+                      data.cholesterol,
+                      'cholesterol'.tr,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 4),
                 Expanded(
                   child: ServingPatientDashboardCard(
                     title: 'protein_urine'.tr,
-                    value: data.urineAlbumin.isNotEmpty ? data.urineAlbumin[0].value : 'na'.tr,
-                    onTap: () => _showHistoryDialog(context, data.urineAlbumin, 'protein_urine'.tr),
+                    value: data.urineAlbumin.isNotEmpty
+                        ? data.urineAlbumin[0].value
+                        : 'na'.tr,
+                    onTap: () => _showHistoryDialog(
+                      context,
+                      data.urineAlbumin,
+                      'protein_urine'.tr,
+                    ),
                   ),
                 ),
               ],
@@ -461,13 +524,19 @@ class ServingPatientDashboardView extends StatelessWidget {
       final diffDays = difference.inDays;
       if (diffDays < 0) return '';
       if (diffDays < 30) {
-        return diffDays == 1 ? 'one_day_ago'.tr : 'days_ago'.tr.replaceAll('@days', diffDays.toString());
+        return diffDays == 1
+            ? 'one_day_ago'.tr
+            : 'days_ago'.tr.replaceAll('@days', diffDays.toString());
       } else if (diffDays < 365) {
         final diffMonths = diffDays ~/ 30;
-        return diffMonths == 1 ? 'one_month_ago'.tr : 'months_ago'.tr.replaceAll('@months', diffMonths.toString());
+        return diffMonths == 1
+            ? 'one_month_ago'.tr
+            : 'months_ago'.tr.replaceAll('@months', diffMonths.toString());
       } else {
         final diffYears = diffDays ~/ 365;
-        return diffYears == 1 ? 'one_year_ago'.tr : 'years_ago'.tr.replaceAll('@years', diffYears.toString());
+        return diffYears == 1
+            ? 'one_year_ago'.tr
+            : 'years_ago'.tr.replaceAll('@years', diffYears.toString());
       }
     } catch (_) {
       return '';
@@ -493,7 +562,10 @@ class ServingPatientDashboardView extends StatelessWidget {
   }
 
   // Admission History Custom Table Dialog
-  void _showAdmissionHistoryDialog(BuildContext context, List<AdmissionHistoryItem> list) {
+  void _showAdmissionHistoryDialog(
+    BuildContext context,
+    List<AdmissionHistoryItem> list,
+  ) {
     Get.dialog(
       AlertDialog(
         insetPadding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -529,7 +601,10 @@ class ServingPatientDashboardView extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 'id'.tr,
-                                style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  color: AppColors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -539,7 +614,10 @@ class ServingPatientDashboardView extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 'doctor'.tr,
-                                style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  color: AppColors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -549,7 +627,10 @@ class ServingPatientDashboardView extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 'date'.tr,
-                                style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  color: AppColors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -558,8 +639,11 @@ class ServingPatientDashboardView extends StatelessWidget {
                       ),
                       // Data Rows
                       ...list.map((item) {
-                        final isAdmitted = item.status.toLowerCase() == 'admitted';
-                        final rowBgColor = isAdmitted ? AppColors.success.withValues(alpha: 0.2) : Colors.transparent;
+                        final isAdmitted =
+                            item.status.toLowerCase() == 'admitted';
+                        final rowBgColor = isAdmitted
+                            ? AppColors.success.withValues(alpha: 0.2)
+                            : Colors.transparent;
 
                         return TableRow(
                           decoration: BoxDecoration(color: rowBgColor),
@@ -636,7 +720,10 @@ class ServingPatientDashboardView extends StatelessWidget {
               Expanded(
                 child: Text(
                   text,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
               ),
               GestureDetector(
@@ -661,7 +748,11 @@ class ServingPatientDashboardView extends StatelessWidget {
                 if (text == 'height_weight_bmi'.tr && height.isNotEmpty) ...[
                   Text(
                     'height_label'.tr.replaceAll('@height', height),
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.blue),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: AppColors.blue,
+                    ),
                   ),
                   const SizedBox(height: 8),
                 ],
@@ -675,23 +766,30 @@ class ServingPatientDashboardView extends StatelessWidget {
                         : ListView.separated(
                             shrinkWrap: true,
                             itemCount: list.length,
-                            separatorBuilder: (context, index) => const Divider(),
+                            separatorBuilder: (context, index) =>
+                                const Divider(),
                             itemBuilder: (context, index) {
                               final item = list[index];
                               String datePart = '';
                               if (item.created.isNotEmpty) {
                                 final parsed = DateTime.tryParse(item.created);
                                 if (parsed != null) {
-                                  datePart = ' (${DateFormat('dd-MM-yyyy hh:mm a').format(parsed)})';
+                                  datePart =
+                                      ' (${DateFormat('dd-MM-yyyy hh:mm a').format(parsed)})';
                                 } else {
                                   datePart = ' (${item.created})';
                                 }
                               }
                               return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 4.0,
+                                ),
                                 child: Text(
                                   '${item.value}$datePart',
-                                  style: TextStyle(fontSize: 14, color: AppColors.navy),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: AppColors.navy,
+                                  ),
                                 ),
                               );
                             },
@@ -699,19 +797,36 @@ class ServingPatientDashboardView extends StatelessWidget {
                   ),
                 ] else ...[
                   // HbA1c input form
-                  Text('enter_hba1c_value'.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  Text(
+                    'enter_hba1c_value'.tr,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   const SizedBox(height: 6),
                   TextField(
                     controller: hba1cValueController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     decoration: InputDecoration(
                       hintText: 'eg_6_5'.tr,
                       border: const OutlineInputBorder(),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 8,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Text('select_date'.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  Text(
+                    'select_date'.tr,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   const SizedBox(height: 6),
                   TextField(
                     controller: hba1cDateController,
@@ -724,15 +839,22 @@ class ServingPatientDashboardView extends StatelessWidget {
                         lastDate: DateTime.now(),
                       );
                       if (selected != null) {
-                        hba1cDateController.text = DateFormat('dd/MM/yyyy').format(selected);
-                        apiFormattedDate = DateFormat('yyyy-MM-dd').format(selected);
+                        hba1cDateController.text = DateFormat(
+                          'dd/MM/yyyy',
+                        ).format(selected);
+                        apiFormattedDate = DateFormat(
+                          'yyyy-MM-dd',
+                        ).format(selected);
                       }
                     },
                     decoration: InputDecoration(
                       hintText: 'dd_mm_yyyy'.tr,
                       border: const OutlineInputBorder(),
                       suffixIcon: const Icon(Icons.calendar_today, size: 18),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 8,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -748,14 +870,22 @@ class ServingPatientDashboardView extends StatelessWidget {
                           return;
                         }
                         if (controller != null) {
-                          final success = await controller.addQuickForm(val, apiFormattedDate);
+                          final success = await controller.addQuickForm(
+                            val,
+                            apiFormattedDate,
+                          );
                           if (success) {
                             Get.back();
                           }
                         }
                       },
-                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal),
-                      child: Text('submit'.tr, style: TextStyle(color: AppColors.white)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.teal,
+                      ),
+                      child: Text(
+                        'submit'.tr,
+                        style: TextStyle(color: AppColors.white),
+                      ),
                     ),
                   ),
                 ],

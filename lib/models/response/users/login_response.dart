@@ -1,4 +1,4 @@
-﻿class LoginResponse {
+class LoginResponse {
   final String status;
   final String authToken;
   final String msg;
@@ -67,4 +67,3 @@ class LoginDataRes {
     );
   }
 }
-

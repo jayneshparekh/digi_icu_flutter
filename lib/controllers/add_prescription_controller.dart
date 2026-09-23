@@ -24,9 +24,9 @@ class MedicineRowData {
     this.frequency = '1-0-1',
     this.category = '',
     this.group = '',
-  })  : nameController = nameController ?? TextEditingController(),
-        doseController = doseController ?? TextEditingController(),
-        daysController = daysController ?? TextEditingController();
+  }) : nameController = nameController ?? TextEditingController(),
+       doseController = doseController ?? TextEditingController(),
+       daysController = daysController ?? TextEditingController();
 
   void dispose() {
     nameController.dispose();
@@ -91,7 +91,7 @@ class AddPrescriptionController extends GetxController {
       admitId = args['admitId']?.toString() ?? '0';
       openFrom = args['openFrom']?.toString() ?? '';
     }
-    
+
     // Add default initial medicine row
     addMedicineRow();
     fetchDiagnosis();
@@ -104,9 +104,11 @@ class AddPrescriptionController extends GetxController {
     try {
       // First try bookingId
       bool success = await _loadOngoingMedicinesForId(bookingId);
-      
+
       // Fallback to lastAppointmentId if bookingId failed or returned empty
-      if (!success && lastAppointmentId.isNotEmpty && lastAppointmentId != bookingId) {
+      if (!success &&
+          lastAppointmentId.isNotEmpty &&
+          lastAppointmentId != bookingId) {
         await _loadOngoingMedicinesForId(lastAppointmentId);
       }
     } catch (_) {
@@ -120,12 +122,9 @@ class AddPrescriptionController extends GetxController {
     try {
       final response = await _apiClient.post(
         ApiEndpoints.getMedicines,
-        data: {
-          'appointment_id': id,
-          'type': openFrom,
-        },
+        data: {'appointment_id': id, 'type': openFrom},
       );
-      
+
       if (response.data != null && response.data['status'] == 'success') {
         final resMap = response.data as Map<String, dynamic>;
         isExistingPrescription.value = true;
@@ -134,20 +133,25 @@ class AddPrescriptionController extends GetxController {
         final imagesObj = resMap['prescribed_images'] as Map<String, dynamic>?;
         final imgList = <String>[];
         if (imagesObj != null) {
-          if (imagesObj['pres_image_1'] != null && imagesObj['pres_image_1'].toString().isNotEmpty) {
+          if (imagesObj['pres_image_1'] != null &&
+              imagesObj['pres_image_1'].toString().isNotEmpty) {
             imgList.add(imagesObj['pres_image_1'].toString());
           }
-          if (imagesObj['pres_image_2'] != null && imagesObj['pres_image_2'].toString().isNotEmpty) {
+          if (imagesObj['pres_image_2'] != null &&
+              imagesObj['pres_image_2'].toString().isNotEmpty) {
             imgList.add(imagesObj['pres_image_2'].toString());
           }
-          if (imagesObj['pres_image_3'] != null && imagesObj['pres_image_3'].toString().isNotEmpty) {
+          if (imagesObj['pres_image_3'] != null &&
+              imagesObj['pres_image_3'].toString().isNotEmpty) {
             imgList.add(imagesObj['pres_image_3'].toString());
           }
         }
         ongoingImageUrls.value = imgList;
 
         final rawList = resMap['data'] as List<dynamic>? ?? [];
-        final parsedList = rawList.map((item) => item as Map<String, dynamic>).toList();
+        final parsedList = rawList
+            .map((item) => item as Map<String, dynamic>)
+            .toList();
 
         if (parsedList.isNotEmpty) {
           ongoingPresMsg.value = parsedList[0]['pres_msg']?.toString() ?? '';
@@ -182,8 +186,14 @@ class AddPrescriptionController extends GetxController {
       medicineRows.clear();
       for (var item in ongoingMedicines) {
         final subMeds = item['medicines'] as List<dynamic>? ?? [];
-        final medName = subMeds.map((m) => m['medicine_name']?.toString() ?? '').where((n) => n.isNotEmpty).join(', ');
-        final dose = subMeds.map((m) => m['dose']?.toString() ?? '').where((n) => n.isNotEmpty).join(', ');
+        final medName = subMeds
+            .map((m) => m['medicine_name']?.toString() ?? '')
+            .where((n) => n.isNotEmpty)
+            .join(', ');
+        final dose = subMeds
+            .map((m) => m['dose']?.toString() ?? '')
+            .where((n) => n.isNotEmpty)
+            .join(', ');
         final days = item['days']?.toString() ?? '';
         final freq = item['frequency']?.toString() ?? '1-0-1';
 
@@ -229,10 +239,7 @@ class AddPrescriptionController extends GetxController {
     try {
       final response = await _apiClient.post(
         ApiEndpoints.getPersonalisedTT,
-        data: {
-          'patient_id': patientId,
-          'appointment_id': bookingId,
-        },
+        data: {'patient_id': patientId, 'appointment_id': bookingId},
       );
       if (response.data != null && response.data['status'] == 'success') {
         final Map<String, dynamic> rawMap = response.data;
@@ -261,7 +268,10 @@ class AddPrescriptionController extends GetxController {
     if (medicineRows.length < 5) {
       medicineRows.add(MedicineRowData());
     } else {
-      AppSnackbars.showWarning('Limit Reached', 'Maximum 5 medicine entries allowed at once.');
+      AppSnackbars.showWarning(
+        'Limit Reached',
+        'Maximum 5 medicine entries allowed at once.',
+      );
     }
   }
 
@@ -284,7 +294,10 @@ class AddPrescriptionController extends GetxController {
     if (imageFiles.length < 3) {
       imageFiles.add(file);
     } else {
-      AppSnackbars.showWarning('Limit Reached', 'Maximum 3 prescription images allowed.');
+      AppSnackbars.showWarning(
+        'Limit Reached',
+        'Maximum 3 prescription images allowed.',
+      );
     }
   }
 
@@ -298,12 +311,17 @@ class AddPrescriptionController extends GetxController {
     if (isSubmitting.value) return;
 
     // Validate at least some data is present
-    bool hasMedicines = medicineRows.any((row) => row.nameController.text.trim().isNotEmpty);
+    bool hasMedicines = medicineRows.any(
+      (row) => row.nameController.text.trim().isNotEmpty,
+    );
     bool hasTls = tlsController.text.trim().isNotEmpty;
     bool hasImages = imageFiles.isNotEmpty || canvasBytes != null;
 
     if (!hasMedicines && !hasTls && !hasImages) {
-      AppSnackbars.showWarning('Empty Prescription', 'Please add medicines, TLS notes, or an image/drawing before submitting.');
+      AppSnackbars.showWarning(
+        'Empty Prescription',
+        'Please add medicines, TLS notes, or an image/drawing before submitting.',
+      );
       return;
     }
 
@@ -324,8 +342,10 @@ class AddPrescriptionController extends GetxController {
         if (row.nameController.text.trim().isNotEmpty) {
           formMap['category[$validIndex]'] = row.category;
           formMap['group[$validIndex]'] = row.group;
-          formMap['medicine_name[$validIndex]'] = row.nameController.text.trim();
-          formMap['dose[$validIndex]'] = '${row.doseController.text.trim()} ${row.doseUnit}';
+          formMap['medicine_name[$validIndex]'] = row.nameController.text
+              .trim();
+          formMap['dose[$validIndex]'] =
+              '${row.doseController.text.trim()} ${row.doseUnit}';
           formMap['frequency[$validIndex]'] = row.frequency;
           formMap['days[$validIndex]'] = row.daysController.text.trim();
           validIndex++;
@@ -342,12 +362,15 @@ class AddPrescriptionController extends GetxController {
       // If canvas drawing provided, save to temp file and attach if less than 3
       if (canvasBytes != null && imageFiles.length < 3) {
         final tempDir = Directory.systemTemp;
-        final tempFile = File('${tempDir.path}/canvas_pres_${DateTime.now().millisecondsSinceEpoch}.png');
-        await tempFile.writeAsBytes(canvasBytes);
-        formMap['pres_file_${imageFiles.length + 1}'] = await dio.MultipartFile.fromFile(
-          tempFile.path,
-          filename: 'canvas_drawing.png',
+        final tempFile = File(
+          '${tempDir.path}/canvas_pres_${DateTime.now().millisecondsSinceEpoch}.png',
         );
+        await tempFile.writeAsBytes(canvasBytes);
+        formMap['pres_file_${imageFiles.length + 1}'] =
+            await dio.MultipartFile.fromFile(
+              tempFile.path,
+              filename: 'canvas_drawing.png',
+            );
       }
 
       final formData = dio.FormData.fromMap(formMap);
@@ -358,10 +381,16 @@ class AddPrescriptionController extends GetxController {
 
       final data = response.data;
       if (data != null && data['status'] == 'success') {
-        AppSnackbars.showSuccess('Success', data['msg']?.toString() ?? 'Prescription added successfully.');
+        AppSnackbars.showSuccess(
+          'Success',
+          data['msg']?.toString() ?? 'Prescription added successfully.',
+        );
         Get.back(result: true);
       } else {
-        AppSnackbars.showError('Error', data?['msg']?.toString() ?? 'Failed to submit prescription.');
+        AppSnackbars.showError(
+          'Error',
+          data?['msg']?.toString() ?? 'Failed to submit prescription.',
+        );
       }
     } catch (e) {
       AppSnackbars.showError('Error', 'An error occurred while submitting: $e');

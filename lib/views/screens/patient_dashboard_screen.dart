@@ -32,7 +32,10 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                 constraints: const BoxConstraints(),
                 icon: SvgPicture.asset(
                   'assets/icons/svg/ic_back.svg',
-                  colorFilter: const ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+                  colorFilter: const ColorFilter.mode(
+                    AppColors.white,
+                    BlendMode.srcIn,
+                  ),
                   width: 26,
                   height: 26,
                 ),
@@ -102,10 +105,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
       body: Column(
         children: [
           // Divider Line
-          Container(
-            height: 1,
-            color: AppColors.lightGray,
-          ),
+          Container(height: 1, color: AppColors.lightGray),
           // Top Layout Section (llTop)
           Container(
             color: AppColors.teal, // medium teal matching mockup
@@ -153,7 +153,12 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                 Obx(() {
                   final currentUserType = controller.type;
                   final isAdmitted = controller.rxIsAdmitted.value;
-                  final showDigiIcu = (currentUserType == "Doctor" || currentUserType == "Nurse" || currentUserType == "Digi Icu Nurse" || currentUserType == "Leader") && isAdmitted == "1";
+                  final showDigiIcu =
+                      (currentUserType == "Doctor" ||
+                          currentUserType == "Nurse" ||
+                          currentUserType == "Digi Icu Nurse" ||
+                          currentUserType == "Leader") &&
+                      isAdmitted == "1";
 
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -161,7 +166,8 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                     children: [
                       Expanded(
                         child: PatientDashboardCircleBtn(
-                          iconPath: 'assets/icons/svg/ic_doctor_appointment.svg',
+                          iconPath:
+                              'assets/icons/svg/ic_doctor_appointment.svg',
                           label: 'doctor_appointment'.tr,
                           onTap: () => controller.handleDoctorAppointmentTap(),
                         ),
@@ -198,7 +204,10 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
           // Scrollable content area
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -292,7 +301,9 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                     if (controller.homeSliders.isEmpty) {
                       return const SizedBox.shrink();
                     }
-                    return PatientDashboardSlider(items: controller.homeSliders);
+                    return PatientDashboardSlider(
+                      items: controller.homeSliders,
+                    );
                   }),
                   const SizedBox(height: 16),
 
@@ -310,7 +321,8 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                     children: [
                       Expanded(
                         child: PatientDashboardVerticalCard(
-                          iconPath: 'assets/icons/svg/ic_specialist.svg', // Fallback icon for NRI package
+                          iconPath:
+                              'assets/icons/svg/ic_specialist.svg', // Fallback icon for NRI package
                           label: 'nri_package'.tr,
                           onTap: () {},
                         ),
@@ -318,7 +330,8 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       const SizedBox(width: 4),
                       Expanded(
                         child: PatientDashboardVerticalCard(
-                          iconPath: 'assets/icons/svg/ic_doctor_appointment.svg', // Fallback for Mom Dad package
+                          iconPath:
+                              'assets/icons/svg/ic_doctor_appointment.svg', // Fallback for Mom Dad package
                           label: 'mom_dad_package'.tr,
                           onTap: () {},
                         ),
@@ -326,7 +339,8 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       const SizedBox(width: 4),
                       Expanded(
                         child: PatientDashboardVerticalCard(
-                          iconPath: 'assets/icons/svg/ic_prescription.svg', // Fallback for All Package
+                          iconPath:
+                              'assets/icons/svg/ic_prescription.svg', // Fallback for All Package
                           label: 'all_package'.tr,
                           onTap: () {},
                         ),
@@ -385,48 +399,109 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   const SizedBox(height: 12),
                   Obx(() {
                     final list = <Map<String, String>>[
-                      {'title': 'my_dashboard'.tr, 'icon': 'assets/icons/svg/ic_dashboard.svg'},
-                      {'title': 'online_pharmacy'.tr, 'icon': 'assets/icons/svg/ic_online_pharmacy.svg'},
-                      {'title': 'quick_form'.tr, 'icon': 'assets/icons/svg/ic_quick.svg'},
-                      {'title': 'my_graphs'.tr, 'icon': 'assets/icons/svg/ic_graphs.svg'},
-                      {'title': 'info_education'.tr, 'icon': 'assets/icons/svg/ic_info_education.svg'},
-                      {'title': 'my_forms'.tr, 'icon': 'assets/icons/svg/ic_my_forms.svg'},
-                      {'title': 'orders_status'.tr, 'icon': 'assets/icons/svg/ic_delivery.svg'},
-                      {'title': 'collaborated_hospitals'.tr, 'icon': 'assets/icons/svg/ic_hospital_building.svg'},
-                      {'title': 'screening'.tr, 'icon': 'assets/icons/svg/ic_screening.svg'},
-                      {'title': 'health_monitor'.tr, 'icon': 'assets/icons/svg/ic_health_monitor.svg'},
-                      {'title': 'stethoscope_device'.tr, 'icon': 'assets/icons/svg/ic_health_monitor.svg'},
-                      {'title': 'family_member'.tr, 'icon': 'assets/icons/svg/ic_patient_list.svg'},
+                      {
+                        'title': 'my_dashboard'.tr,
+                        'icon': 'assets/icons/svg/ic_dashboard.svg',
+                      },
+                      {
+                        'title': 'online_pharmacy'.tr,
+                        'icon': 'assets/icons/svg/ic_online_pharmacy.svg',
+                      },
+                      {
+                        'title': 'quick_form'.tr,
+                        'icon': 'assets/icons/svg/ic_quick.svg',
+                      },
+                      {
+                        'title': 'my_graphs'.tr,
+                        'icon': 'assets/icons/svg/ic_graphs.svg',
+                      },
+                      {
+                        'title': 'info_education'.tr,
+                        'icon': 'assets/icons/svg/ic_info_education.svg',
+                      },
+                      {
+                        'title': 'my_forms'.tr,
+                        'icon': 'assets/icons/svg/ic_my_forms.svg',
+                      },
+                      {
+                        'title': 'orders_status'.tr,
+                        'icon': 'assets/icons/svg/ic_delivery.svg',
+                      },
+                      {
+                        'title': 'collaborated_hospitals'.tr,
+                        'icon': 'assets/icons/svg/ic_hospital_building.svg',
+                      },
+                      {
+                        'title': 'screening'.tr,
+                        'icon': 'assets/icons/svg/ic_screening.svg',
+                      },
+                      {
+                        'title': 'health_monitor'.tr,
+                        'icon': 'assets/icons/svg/ic_health_monitor.svg',
+                      },
+                      {
+                        'title': 'stethoscope_device'.tr,
+                        'icon': 'assets/icons/svg/ic_health_monitor.svg',
+                      },
+                      {
+                        'title': 'family_member'.tr,
+                        'icon': 'assets/icons/svg/ic_patient_list.svg',
+                      },
                     ];
 
-                    if ((controller.type == "Doctor" || controller.type == "Leader" || controller.type == "Nurse") && controller.rxIsAdmitted.value == "0") {
-                      list.add({'title': 'ipd_admit'.tr, 'icon': 'assets/icons/svg/ic_hospital_bed.svg'});
+                    if ((controller.type == "Doctor" ||
+                            controller.type == "Leader" ||
+                            controller.type == "Nurse") &&
+                        controller.rxIsAdmitted.value == "0") {
+                      list.add({
+                        'title': 'ipd_admit'.tr,
+                        'icon': 'assets/icons/svg/ic_hospital_bed.svg',
+                      });
                     }
 
-                    list.add({'title': 'my_admit_details'.tr, 'icon': 'assets/icons/svg/ic_hospital_bed.svg'});
+                    list.add({
+                      'title': 'my_admit_details'.tr,
+                      'icon': 'assets/icons/svg/ic_hospital_bed.svg',
+                    });
 
                     if (controller.type != "Patient") {
-                      list.add({'title': 'patient_location'.tr, 'icon': 'assets/icons/svg/location.svg'});
+                      list.add({
+                        'title': 'patient_location'.tr,
+                        'icon': 'assets/icons/svg/location.svg',
+                      });
                     } else {
-                      list.add({'title': 'update_my_location'.tr, 'icon': 'assets/icons/svg/location.svg'});
+                      list.add({
+                        'title': 'update_my_location'.tr,
+                        'icon': 'assets/icons/svg/location.svg',
+                      });
                     }
 
-                    list.add({'title': 'echo_cardiography_report'.tr, 'icon': 'assets/icons/svg/echocardiography.svg'});
-                    list.add({'title': 'home_services'.tr, 'icon': 'assets/icons/svg/ic_orders_status.svg'});
+                    list.add({
+                      'title': 'echo_cardiography_report'.tr,
+                      'icon': 'assets/icons/svg/echocardiography.svg',
+                    });
+                    list.add({
+                      'title': 'home_services'.tr,
+                      'icon': 'assets/icons/svg/ic_orders_status.svg',
+                    });
 
                     if (controller.rxCovidIconShow.value == "1") {
-                      list.add({'title': 'covid_care_at_home'.tr, 'icon': 'assets/images/covid_logo.png'});
+                      list.add({
+                        'title': 'covid_care_at_home'.tr,
+                        'icon': 'assets/images/covid_logo.png',
+                      });
                     }
 
                     return GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                        childAspectRatio: 0.9,
-                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                            childAspectRatio: 0.9,
+                          ),
                       itemCount: list.length,
                       itemBuilder: (context, index) {
                         final item = list[index];
@@ -457,7 +532,9 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        PatientDashboardSlider(items: controller.awarenessSliders),
+                        PatientDashboardSlider(
+                          items: controller.awarenessSliders,
+                        ),
                         const SizedBox(height: 16),
                       ],
                     );

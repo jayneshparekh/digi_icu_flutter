@@ -84,7 +84,8 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
     super.initState();
     _selectedColor = widget.initialPenColor;
     _selectedStrokeWidth = widget.initialStrokeWidth;
-    _availableColors = widget.paletteColors ??
+    _availableColors =
+        widget.paletteColors ??
         const [
           AppColors.pureBlack,
           Colors.purple,
@@ -156,7 +157,9 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
   }
 
   /// Exports current drawing as PNG image bytes.
-  Future<Uint8List?> exportToPngImage({Size canvasSize = const Size(800, 1200)}) async {
+  Future<Uint8List?> exportToPngImage({
+    Size canvasSize = const Size(800, 1200),
+  }) async {
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(
       recorder,
@@ -208,14 +211,18 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
               children: [
                 Text(
                   'select_color'.tr,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Wrap(
                   spacing: 12,
                   runSpacing: 12,
                   children: _availableColors.map((color) {
-                    final isSelected = !_isEraserMode && _selectedColor == color;
+                    final isSelected =
+                        !_isEraserMode && _selectedColor == color;
                     return GestureDetector(
                       onTap: () {
                         setState(() {
@@ -231,14 +238,18 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
                           color: color,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: isSelected ? AppColors.teal : AppColors.medicalGray,
+                            color: isSelected
+                                ? AppColors.teal
+                                : AppColors.medicalGray,
                             width: isSelected ? 3 : 1,
                           ),
                         ),
                         child: isSelected
                             ? Icon(
                                 Icons.check,
-                                color: color.computeLuminance() > 0.5 ? AppColors.pureBlack : AppColors.white,
+                                color: color.computeLuminance() > 0.5
+                                    ? AppColors.pureBlack
+                                    : AppColors.white,
                               )
                             : null,
                       ),
@@ -270,7 +281,10 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
                   children: [
                     Text(
                       'stroke_width'.tr,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Row(
@@ -396,8 +410,8 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
     final Color tintColor = !isEnabled
         ? AppColors.medicalGray
         : isActive
-            ? (activeColor ?? AppColors.teal)
-            : AppColors.coolGray;
+        ? (activeColor ?? AppColors.teal)
+        : AppColors.coolGray;
 
     return Tooltip(
       message: tooltip,
@@ -516,7 +530,8 @@ void _drawPathOnCanvas(Canvas canvas, DrawingPath pathData) {
   if (pathData.points.length == 1) {
     canvas.drawPoints(ui.PointMode.points, [pathData.points.first], paint);
   } else {
-    final path = Path()..moveTo(pathData.points.first.dx, pathData.points.first.dy);
+    final path = Path()
+      ..moveTo(pathData.points.first.dx, pathData.points.first.dy);
     for (int i = 1; i < pathData.points.length; i++) {
       path.lineTo(pathData.points[i].dx, pathData.points[i].dy);
     }

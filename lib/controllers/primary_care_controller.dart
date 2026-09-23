@@ -83,7 +83,11 @@ class PrimaryCareController extends GetxController {
   void toggleSymptom(String symptom, bool isSelected) {
     final currentText = symptomsController.text.trim();
     List<String> parts = currentText.isNotEmpty
-        ? currentText.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList()
+        ? currentText
+              .split(',')
+              .map((s) => s.trim())
+              .where((s) => s.isNotEmpty)
+              .toList()
         : [];
 
     if (isSelected) {
@@ -99,7 +103,10 @@ class PrimaryCareController extends GetxController {
 
   Future<void> pickImageFromGallery() async {
     if (selectedImages.length >= 5) {
-      AppSnackbars.showWarning('Limit Reached', 'You can upload up to 5 images only');
+      AppSnackbars.showWarning(
+        'Limit Reached',
+        'You can upload up to 5 images only',
+      );
       return;
     }
     final List<XFile> images = await _picker.pickMultiImage();
@@ -112,7 +119,10 @@ class PrimaryCareController extends GetxController {
 
   Future<void> captureImageFromCamera() async {
     if (selectedImages.length >= 5) {
-      AppSnackbars.showWarning('Limit Reached', 'You can upload up to 5 images only');
+      AppSnackbars.showWarning(
+        'Limit Reached',
+        'You can upload up to 5 images only',
+      );
       return;
     }
     final XFile? image = await _picker.pickImage(source: ImageSource.camera);
@@ -142,12 +152,20 @@ class PrimaryCareController extends GetxController {
         'appointment_id': appointmentId,
         'place': place,
         'have_bp_apparatus': haveBPApparatus.value ? 'Yes' : 'No',
-        'systolic_1': haveBPApparatus.value ? systolicController.text.trim() : '',
-        'diastolic_1': haveBPApparatus.value ? diastolicController.text.trim() : '',
-        'heart_rate_1': haveBPApparatus.value ? pulseRateController.text.trim() : '',
+        'systolic_1': haveBPApparatus.value
+            ? systolicController.text.trim()
+            : '',
+        'diastolic_1': haveBPApparatus.value
+            ? diastolicController.text.trim()
+            : '',
+        'heart_rate_1': haveBPApparatus.value
+            ? pulseRateController.text.trim()
+            : '',
         'have_glucometer': haveGlucometer.value ? 'Yes' : 'No',
         'fasting': haveGlucometer.value ? fastingController.text.trim() : '',
-        'after_food': haveGlucometer.value ? afterFoodController.text.trim() : '',
+        'after_food': haveGlucometer.value
+            ? afterFoodController.text.trim()
+            : '',
         'random': haveGlucometer.value ? randomController.text.trim() : '',
         'other_symptom_details': symptoms,
         'form_type': formType,
@@ -172,7 +190,8 @@ class PrimaryCareController extends GetxController {
 
       if (response.statusCode == 200 && response.data != null) {
         final status = response.data['status']?.toString();
-        final msg = response.data['msg']?.toString() ?? 'Form submitted successfully';
+        final msg =
+            response.data['msg']?.toString() ?? 'Form submitted successfully';
         if (status == 'success') {
           AppSnackbars.showSuccess('Success', msg);
           // Go to manage patients
@@ -190,5 +209,3 @@ class PrimaryCareController extends GetxController {
     }
   }
 }
-
-

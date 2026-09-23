@@ -4,8 +4,6 @@ class GetQuickFormReq {
   GetQuickFormReq({required this.formId});
 
   Map<String, dynamic> toJson() {
-    return {
-      'form_id': formId,
-    };
+    return {'form_id': formId};
   }
 }

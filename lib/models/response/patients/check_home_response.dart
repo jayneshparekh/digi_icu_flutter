@@ -1,4 +1,4 @@
-﻿import 'installment_details_res.dart';
+import 'installment_details_res.dart';
 
 class CheckHomeResponse {
   final String status;
@@ -100,7 +100,9 @@ class CheckHomeResponse {
       medicalForm: json['medical_form']?.toString() ?? '',
       ongoingAppointment: json['ongoing_appointment']?.toString() ?? '',
       ongoingAppointmentDetails: json['ongoing_appointment_details'] != null
-          ? OngoingAppointmentDetails.fromJson(json['ongoing_appointment_details'])
+          ? OngoingAppointmentDetails.fromJson(
+              json['ongoing_appointment_details'],
+            )
           : null,
       ptMobileNo: json['pt_mobile_no']?.toString() ?? '',
       screeningId: json['screening_id']?.toString() ?? '',
@@ -111,7 +113,8 @@ class CheckHomeResponse {
       serviceLocation: json['service_location']?.toString() ?? '',
       serviceLocationLat: json['service_location_lat']?.toString() ?? '',
       serviceLocationLong: json['service_location_long']?.toString() ?? '',
-      serviceLocationLastUpdated: json['service_location_last_updated']?.toString() ?? '',
+      serviceLocationLastUpdated:
+          json['service_location_last_updated']?.toString() ?? '',
       installmentDetails: json['installment_details'] != null
           ? InstallmentDetailsRes.fromJson(json['installment_details'])
           : null,
@@ -188,4 +191,3 @@ class PastHistoryModel {
     );
   }
 }
-

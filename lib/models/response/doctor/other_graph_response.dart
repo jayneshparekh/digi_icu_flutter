@@ -3,11 +3,7 @@ class OtherGraphResponse {
   final String? msg;
   final List<OtherGraphData>? data;
 
-  OtherGraphResponse({
-    this.status,
-    this.msg,
-    this.data,
-  });
+  OtherGraphResponse({this.status, this.msg, this.data});
 
   factory OtherGraphResponse.fromJson(Map<String, dynamic> json) {
     return OtherGraphResponse(

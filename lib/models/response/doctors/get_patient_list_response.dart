@@ -1,4 +1,4 @@
-﻿class GetPatientListResponse {
+class GetPatientListResponse {
   final String status;
   final String msg;
   final int count;
@@ -106,4 +106,3 @@ class PatientData {
     );
   }
 }
-

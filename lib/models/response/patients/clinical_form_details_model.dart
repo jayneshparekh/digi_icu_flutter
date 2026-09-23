@@ -254,7 +254,12 @@ class ClinicalFormDetailsModel {
       spo2: getVal(['spo2']),
       spo2Details: getVal(['spo2Details', 'spo2_details', 'spo2_value']),
       bmi: getVal(['bmi']),
-      bpApparatus: getVal(['bpApparatus', 'bp_apparatus', 'have_bp_apparatus', 'have_bp_appratus']),
+      bpApparatus: getVal([
+        'bpApparatus',
+        'bp_apparatus',
+        'have_bp_apparatus',
+        'have_bp_appratus',
+      ]),
       checkSugar: getVal(['checkSugar', 'check_sugar']),
       fasting: getVal(['fasting', 'fasting_bsl']),
       afterFood: getVal(['afterFood', 'after_food', 'after_food_bsl']),
@@ -267,7 +272,10 @@ class ClinicalFormDetailsModel {
       hba1c: getVal(['hba1c']),
       hba1cDate: getVal(['hba1cDate', 'hba1c_date']),
       urineAlbumin: getVal(['urineAlbumin', 'urine_albumin']),
-      urineAlbuminReport: getVal(['urineAlbuminReport', 'urine_albumin_report']),
+      urineAlbuminReport: getVal([
+        'urineAlbuminReport',
+        'urine_albumin_report',
+      ]),
       ecg: getVal(['ecg']),
       ecgPdf: getVal(['ecgPdf', 'ecg_pdf']),
       ecgImage1: getVal(['ecgImage1', 'ecg_image_1']),
@@ -280,12 +288,27 @@ class ClinicalFormDetailsModel {
       t4: getVal(['t4']),
       tsh: getVal(['tsh']),
       uricAcid: getVal(['uricAcid', 'uric_acid']),
-      otherInvestigations: getVal(['otherInvestigations', 'other_investigations']),
-      investigationDetails: getVal(['investigationDetails', 'investigation_details']),
+      otherInvestigations: getVal([
+        'otherInvestigations',
+        'other_investigations',
+      ]),
+      investigationDetails: getVal([
+        'investigationDetails',
+        'investigation_details',
+      ]),
       investigations: getVal(['investigations']),
-      investigationImage1: getVal(['investigationImage1', 'investigation_image_1']),
-      investigationImage2: getVal(['investigationImage2', 'investigation_image_2']),
-      investigationImage3: getVal(['investigationImage3', 'investigation_image_3']),
+      investigationImage1: getVal([
+        'investigationImage1',
+        'investigation_image_1',
+      ]),
+      investigationImage2: getVal([
+        'investigationImage2',
+        'investigation_image_2',
+      ]),
+      investigationImage3: getVal([
+        'investigationImage3',
+        'investigation_image_3',
+      ]),
       // Section 3
       improvement: getVal(['improvement']),
       chestPain: getVal(['chestPain', 'chest_pain']),
@@ -299,7 +322,11 @@ class ClinicalFormDetailsModel {
       dizzinessSystolic: getVal(['dizzinessSystolic', 'dizziness_systolic']),
       dizzinessDiaStolic: getVal(['dizzinessDiaStolic', 'dizziness_diastolic']),
       otherSymptoms: getVal(['otherSymptoms', 'other_symptoms']),
-      otherSymptomsDetails: getVal(['otherSymptomsDetails', 'other_symptom_details', 'other_symptoms_details']),
+      otherSymptomsDetails: getVal([
+        'otherSymptomsDetails',
+        'other_symptom_details',
+        'other_symptoms_details',
+      ]),
       systolic2: getVal(['systolic2', 'systolic_2']),
       diastolic2: getVal(['diastolic2', 'diastolic_2']),
       heartRate2: getVal(['heartRate2', 'heart_rate_2', 'heart_rate2']),
@@ -311,8 +338,14 @@ class ClinicalFormDetailsModel {
       exercise: getVal(['exercise']),
       inStress: getVal(['inStress', 'in_stress']),
       missMedicine: getVal(['missMedicine', 'miss_medicine']),
-      lastHospitalization: getVal(['lastHospitalization', 'last_hospitalization']),
-      hospitalizationReason: getVal(['hospitalizationReason', 'hospitalization_reason']),
+      lastHospitalization: getVal([
+        'lastHospitalization',
+        'last_hospitalization',
+      ]),
+      hospitalizationReason: getVal([
+        'hospitalizationReason',
+        'hospitalization_reason',
+      ]),
       remindMedicine: getVal(['remindMedicine', 'remind_medicine'], 'No'),
       setAlarm: getVal(['setAlarm', 'set_alarm'], 'No'),
       systolic3: getVal(['systolic3', 'systolic_3']),
@@ -321,4 +354,3 @@ class ClinicalFormDetailsModel {
     );
   }
 }
-

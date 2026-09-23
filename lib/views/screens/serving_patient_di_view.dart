@@ -53,10 +53,7 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
                     controller.diagnosisText.value.isNotEmpty
                         ? controller.diagnosisText.value
                         : 'no_data_available'.tr,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: AppColors.navy,
-                    ),
+                    style: const TextStyle(fontSize: 14, color: AppColors.navy),
                   ),
                 ],
               ),
@@ -221,7 +218,11 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
                   label: 'submit'.tr,
                   width: 105,
                   height: 36,
-                  labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.white),
+                  labelStyle: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.white,
+                  ),
                   isLoading: controller.isLoadingDi.value,
                   onPressed: () => controller.submitPatientNote(),
                 );
@@ -287,7 +288,11 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
                   label: 'submit'.tr,
                   width: 105,
                   height: 36,
-                  labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.white),
+                  labelStyle: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.white,
+                  ),
                   isLoading: controller.isLoadingDi.value,
                   onPressed: () => controller.submitSelfNote(),
                 );
@@ -339,7 +344,11 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
                   label: 'submit'.tr,
                   width: 105,
                   height: 36,
-                  labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.white),
+                  labelStyle: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.white,
+                  ),
                   isLoading: controller.isLoadingDi.value,
                   onPressed: () => controller.submitEvent(),
                 );
@@ -405,7 +414,10 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
                     _buildCheckbox('PIH', controller.cbPIH),
                     _buildCheckbox('ICH', controller.cbICH),
                     _buildCheckbox('AkI', controller.cbAkI),
-                    _buildCheckbox('other'.tr, controller.cbHospitalizationOther),
+                    _buildCheckbox(
+                      'other'.tr,
+                      controller.cbHospitalizationOther,
+                    ),
                   ],
                 ),
                 if (controller.cbHospitalizationOther.value) ...[
@@ -432,7 +444,10 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
                   spacing: 12,
                   runSpacing: 4,
                   children: [
-                    _buildCheckbox('Postural Hypotension', controller.cbPostural),
+                    _buildCheckbox(
+                      'Postural Hypotension',
+                      controller.cbPostural,
+                    ),
                     _buildCheckbox('SVT', controller.cbSVT),
                     _buildCheckbox('Bleeding', controller.cbBleeding),
                     _buildCheckbox('other'.tr, controller.cbNonHospOther),
@@ -494,7 +509,10 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
           // Medicine Effect
           Text(
             'medicine_effect'.tr,
-            style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.navy,
+            ),
           ),
           Obx(() {
             return RadioGroup<String>(
@@ -505,9 +523,21 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
               child: Wrap(
                 spacing: 8,
                 children: [
-                  _buildInlineRadio('Good', 'good'.tr, controller.medicinesEffect),
-                  _buildInlineRadio('Intermittent', 'intermittent'.tr, controller.medicinesEffect),
-                  _buildInlineRadio('NonCompliant', 'non_compliant'.tr, controller.medicinesEffect),
+                  _buildInlineRadio(
+                    'Good',
+                    'good'.tr,
+                    controller.medicinesEffect,
+                  ),
+                  _buildInlineRadio(
+                    'Intermittent',
+                    'intermittent'.tr,
+                    controller.medicinesEffect,
+                  ),
+                  _buildInlineRadio(
+                    'NonCompliant',
+                    'non_compliant'.tr,
+                    controller.medicinesEffect,
+                  ),
                   _buildInlineRadio('NA', 'na'.tr, controller.medicinesEffect),
                 ],
               ),
@@ -518,7 +548,10 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
           // Asked Investigation
           Text(
             'asked_investigate'.tr,
-            style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.navy,
+            ),
           ),
           Obx(() {
             return RadioGroup<String>(
@@ -529,10 +562,26 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
               child: Wrap(
                 spacing: 8,
                 children: [
-                  _buildInlineRadio('Yes', 'yes'.tr, controller.askedInvestigations),
-                  _buildInlineRadio('No', 'no'.tr, controller.askedInvestigations),
-                  _buildInlineRadio('Non Affording', 'non_afford'.tr, controller.askedInvestigations),
-                  _buildInlineRadio('NA', 'na'.tr, controller.askedInvestigations),
+                  _buildInlineRadio(
+                    'Yes',
+                    'yes'.tr,
+                    controller.askedInvestigations,
+                  ),
+                  _buildInlineRadio(
+                    'No',
+                    'no'.tr,
+                    controller.askedInvestigations,
+                  ),
+                  _buildInlineRadio(
+                    'Non Affording',
+                    'non_afford'.tr,
+                    controller.askedInvestigations,
+                  ),
+                  _buildInlineRadio(
+                    'NA',
+                    'na'.tr,
+                    controller.askedInvestigations,
+                  ),
                 ],
               ),
             );
@@ -542,7 +591,10 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
           // Salt Reduction
           Text(
             'salt_reduce'.tr,
-            style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.navy,
+            ),
           ),
           Obx(() {
             return RadioGroup<String>(
@@ -564,7 +616,10 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
           // Exercise
           Text(
             'exercise'.tr,
-            style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.navy,
+            ),
           ),
           Obx(() {
             return RadioGroup<String>(
@@ -619,7 +674,11 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
                   label: 'submit'.tr,
                   width: 105,
                   height: 36,
-                  labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.white),
+                  labelStyle: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.white,
+                  ),
                   isLoading: controller.isLoadingDi.value,
                   onPressed: () => controller.submitEcg(),
                 );
@@ -646,8 +705,12 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
                 child: Image.network(
                   controller.ecgReportImageUrl.value,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Center(child: Icon(Icons.broken_image, color: AppColors.medicalGray)),
+                  errorBuilder: (context, error, stackTrace) => const Center(
+                    child: Icon(
+                      Icons.broken_image,
+                      color: AppColors.medicalGray,
+                    ),
+                  ),
                 ),
               ),
             );
@@ -656,7 +719,10 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
           // Rhythm Dropdown
           Text(
             'rhythm'.tr,
-            style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.navy,
+            ),
           ),
           const SizedBox(height: 4),
           Obx(() {
@@ -664,11 +730,19 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
               initialValue: controller.ecgRhythm.value,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
               ),
-              items: ['Sinus', 'AF', 'SVT', 'CHB', '1st HB', '2nd HB']
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
+              items: [
+                'Sinus',
+                'AF',
+                'SVT',
+                'CHB',
+                '1st HB',
+                '2nd HB',
+              ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
               onChanged: (val) {
                 if (val != null) controller.ecgRhythm.value = val;
               },
@@ -679,7 +753,10 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
           // ST Segment Dropdown
           Text(
             'st_segment'.tr,
-            style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.navy,
+            ),
           ),
           const SizedBox(height: 4),
           Obx(() {
@@ -687,11 +764,16 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
               initialValue: controller.stSegment.value,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
               ),
-              items: ['Normal', 'Elevated', 'Depressed']
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
+              items: [
+                'Normal',
+                'Elevated',
+                'Depressed',
+              ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
               onChanged: (val) {
                 if (val != null) {
                   controller.stSegment.value = val;
@@ -715,7 +797,16 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
             final isElevated = controller.stSegment.value == 'Elevated';
             final options = isElevated
                 ? ['Select…', 'Infe', 'Ante', 'Lateral', 'early repolarisation']
-                : ['Select…', 'Infe', 'Ante', 'Lateral', 'Tschemic', 'Lv strain', 'Physiologic', 'invenile'];
+                : [
+                    'Select…',
+                    'Infe',
+                    'Ante',
+                    'Lateral',
+                    'Tschemic',
+                    'Lv strain',
+                    'Physiologic',
+                    'invenile',
+                  ];
 
             return Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -725,7 +816,10 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
                     : options.first,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                 ),
                 items: options
                     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
@@ -749,7 +843,10 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
           // ECG Impression Dropdown
           Text(
             'ecg_impression'.tr,
-            style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.navy,
+            ),
           ),
           const SizedBox(height: 4),
           Obx(() {
@@ -773,13 +870,18 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
                   : impressions.first,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
               ),
               items: impressions
-                  .map((e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(e, overflow: TextOverflow.ellipsis),
-                      ))
+                  .map(
+                    (e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(e, overflow: TextOverflow.ellipsis),
+                    ),
+                  )
                   .toList(),
               onChanged: (val) {
                 if (val != null) controller.ecgImpression.value = val;
@@ -838,7 +940,11 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
                   label: 'submit'.tr,
                   width: 105,
                   height: 36,
-                  labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.white),
+                  labelStyle: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.white,
+                  ),
                   isLoading: controller.isLoadingDi.value,
                   onPressed: () => controller.submitTargetBp(),
                 );
@@ -895,7 +1001,11 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
                   label: 'submit'.tr,
                   width: 105,
                   height: 36,
-                  labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.white),
+                  labelStyle: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.white,
+                  ),
                   isLoading: controller.isLoadingDi.value,
                   onPressed: () => controller.submitTmt(),
                 );
@@ -907,7 +1017,10 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
           // TMT Result Radio Group
           Text(
             'result'.tr,
-            style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.navy,
+            ),
           ),
           Obx(() {
             return RadioGroup<String>(

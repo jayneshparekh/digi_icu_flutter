@@ -431,13 +431,20 @@ class MedicalFormDetailsModel {
       strokeImage3: json['stroke_image_3']?.toString() ?? '',
       kidneyFailure: json['kidney_failure']?.toString() ?? '',
       kidneyFailureWhen: json['kidney_failure_when']?.toString() ?? '',
-      kidneyFailureOnMedicine: json['kidney_failure_on_medicine']?.toString() ?? '',
-      kidneyFailureMedName1: json['kidney_failure_med_name_1']?.toString() ?? '',
-      kidneyFailureMedName2: json['kidney_failure_med_name_2']?.toString() ?? '',
-      kidneyFailureMedName3: json['kidney_failure_med_name_3']?.toString() ?? '',
-      kidneyFailureMedFreq1: json['kidney_failure_med_freq_1']?.toString() ?? '',
-      kidneyFailureMedFreq2: json['kidney_failure_med_freq_2']?.toString() ?? '',
-      kidneyFailureMedFreq3: json['kidney_failure_med_freq_3']?.toString() ?? '',
+      kidneyFailureOnMedicine:
+          json['kidney_failure_on_medicine']?.toString() ?? '',
+      kidneyFailureMedName1:
+          json['kidney_failure_med_name_1']?.toString() ?? '',
+      kidneyFailureMedName2:
+          json['kidney_failure_med_name_2']?.toString() ?? '',
+      kidneyFailureMedName3:
+          json['kidney_failure_med_name_3']?.toString() ?? '',
+      kidneyFailureMedFreq1:
+          json['kidney_failure_med_freq_1']?.toString() ?? '',
+      kidneyFailureMedFreq2:
+          json['kidney_failure_med_freq_2']?.toString() ?? '',
+      kidneyFailureMedFreq3:
+          json['kidney_failure_med_freq_3']?.toString() ?? '',
       kidneyFailImage1: json['kidney_fail_image_1']?.toString() ?? '',
       kidneyFailImage2: json['kidney_fail_image_2']?.toString() ?? '',
       kidneyFailImage3: json['kidney_fail_image_3']?.toString() ?? '',

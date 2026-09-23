@@ -1,4 +1,4 @@
-﻿class GetOrderResponse {
+class GetOrderResponse {
   final String status;
   final String msg;
   final String orderId;
@@ -23,4 +23,3 @@
     );
   }
 }
-

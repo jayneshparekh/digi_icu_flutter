@@ -19,11 +19,7 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
       'countKey': 'kidneyCount',
       'checkKey': 'check_kidney',
     },
-    {
-      'title': 'ECG',
-      'countKey': 'ecgCount',
-      'checkKey': 'check_ecg',
-    },
+    {'title': 'ECG', 'countKey': 'ecgCount', 'checkKey': 'check_ecg'},
     {
       'title': 'Liver function test',
       'countKey': 'liverCount',
@@ -39,11 +35,7 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
       'countKey': 'oldMedCount',
       'checkKey': 'check_oldMed',
     },
-    {
-      'title': 'Echo',
-      'countKey': 'echoCount',
-      'checkKey': 'check_echo',
-    },
+    {'title': 'Echo', 'countKey': 'echoCount', 'checkKey': 'check_echo'},
     {
       'title': 'Sonography',
       'countKey': 'sonographyCount',
@@ -59,11 +51,7 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
       'countKey': 'ctScanCount',
       'checkKey': 'check_ctScan',
     },
-    {
-      'title': 'HBA1C',
-      'countKey': 'hba1cCount',
-      'checkKey': 'check_hba1c',
-    },
+    {'title': 'HBA1C', 'countKey': 'hba1cCount', 'checkKey': 'check_hba1c'},
     {
       'title': 'Blood sugar',
       'countKey': 'sugarCount',
@@ -94,11 +82,7 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
       'countKey': 'thyroidCount',
       'checkKey': 'check_thyroid',
     },
-    {
-      'title': 'PT INR',
-      'countKey': 'ptInrCount',
-      'checkKey': 'check_pt_inr',
-    },
+    {'title': 'PT INR', 'countKey': 'ptInrCount', 'checkKey': 'check_pt_inr'},
     {
       'title': 'Full Body Check',
       'countKey': 'fullBodyCheckCount',
@@ -114,11 +98,7 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
       'countKey': 'angiographyCount',
       'checkKey': 'check_angiography',
     },
-    {
-      'title': 'Other',
-      'countKey': 'otherCount',
-      'checkKey': 'check_other',
-    },
+    {'title': 'Other', 'countKey': 'otherCount', 'checkKey': 'check_other'},
   ];
 
   static const List<String> allReportCategories = [
@@ -224,7 +204,8 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                 final countVal = countsMap[countKey]?.toString() ?? '0';
                 final checkVal = (countsMap[checkKey] is int)
                     ? countsMap[checkKey] as int
-                    : (int.tryParse(countsMap[checkKey]?.toString() ?? '0') ?? 0);
+                    : (int.tryParse(countsMap[checkKey]?.toString() ?? '0') ??
+                          0);
                 final hasNew = checkVal > 0;
 
                 return AppFolderCard(
@@ -291,7 +272,10 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                   return Center(
                     child: Text(
                       'no_data_found'.tr,
-                      style: const TextStyle(fontSize: 14, color: AppColors.coolGray),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: AppColors.coolGray,
+                      ),
                     ),
                   );
                 }
@@ -303,10 +287,12 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                     final item = reports[index];
                     final reportId = item['id']?.toString() ?? '';
                     final reportImg = item['report_img']?.toString() ?? '';
-                    final reportName = item['report_name']?.toString() ?? folderTitle;
+                    final reportName =
+                        item['report_name']?.toString() ?? folderTitle;
                     final uploadedOn = item['uploaded_on']?.toString() ?? '';
                     final isSeen = item['report_seen']?.toString() == '1';
-                    final paymentStatus = item['payment_status']?.toString() ?? '1';
+                    final paymentStatus =
+                        item['payment_status']?.toString() ?? '1';
                     final reportFrom = item['report_from']?.toString() ?? '';
 
                     return AppReportTile(
@@ -319,35 +305,38 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                       onConsultCardiologist: () {
                         GetReportingDialog.show(
                           context,
-                          onSubmit: ({
-                            required String hypertension,
-                            required String diabetics,
-                            required String heartAttack,
-                            required String stroke,
-                            required String thyroid,
-                            required String systolicBp,
-                            required String diastolicBp,
-                            required String symptoms,
-                          }) {
-                            controller.submitCardiologistReport(
-                              hypertension: hypertension,
-                              diabetics: diabetics,
-                              heartAttack: heartAttack,
-                              stroke: stroke,
-                              thyroid: thyroid,
-                              systolicBp: systolicBp,
-                              diastolicBp: diastolicBp,
-                              symptoms: symptoms,
-                              reportId: reportId,
-                              reportImgName: reportImg,
-                            );
-                          },
+                          onSubmit:
+                              ({
+                                required String hypertension,
+                                required String diabetics,
+                                required String heartAttack,
+                                required String stroke,
+                                required String thyroid,
+                                required String systolicBp,
+                                required String diastolicBp,
+                                required String symptoms,
+                              }) {
+                                controller.submitCardiologistReport(
+                                  hypertension: hypertension,
+                                  diabetics: diabetics,
+                                  heartAttack: heartAttack,
+                                  stroke: stroke,
+                                  thyroid: thyroid,
+                                  systolicBp: systolicBp,
+                                  diastolicBp: diastolicBp,
+                                  symptoms: symptoms,
+                                  reportId: reportId,
+                                  reportImgName: reportImg,
+                                );
+                              },
                         );
                       },
                       onDelete: () {
                         AppDialog.show(
                           title: 'Delete Report',
-                          body: const Text('Are you sure you want to delete this report?'),
+                          body: const Text(
+                            'Are you sure you want to delete this report?',
+                          ),
                           confirmLabel: 'Yes',
                           cancelLabel: 'No',
                           onConfirm: () {
@@ -369,7 +358,10 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
           bottom: 16,
           child: FloatingActionButton(
             backgroundColor: AppColors.error,
-            onPressed: () => _openUploadReportFormDialog(context, initialCategory: folderTitle),
+            onPressed: () => _openUploadReportFormDialog(
+              context,
+              initialCategory: folderTitle,
+            ),
             child: const Icon(Icons.add, color: AppColors.white, size: 28),
           ),
         ),
@@ -380,8 +372,12 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
   // ==========================================
   // Upload Report Dialog Form (Category + Image Capture/Picker & Live Preview)
   // ==========================================
-  void _openUploadReportFormDialog(BuildContext context, {String? initialCategory}) {
-    final RxString selectedCategory = (initialCategory ?? allReportCategories.first).obs;
+  void _openUploadReportFormDialog(
+    BuildContext context, {
+    String? initialCategory,
+  }) {
+    final RxString selectedCategory =
+        (initialCategory ?? allReportCategories.first).obs;
     final RxString otherRemarks = ''.obs;
     final RxString selectedFilePath = ''.obs;
     final picker = ImagePicker();
@@ -396,12 +392,19 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
             if (initialCategory != null) ...[
               const Text(
                 'Report Category:',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.navy),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: AppColors.navy,
+                ),
               ),
               const SizedBox(height: 6),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.lightGray,
                   borderRadius: BorderRadius.circular(6),
@@ -409,30 +412,44 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                 ),
                 child: Text(
                   initialCategory,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.navy),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: AppColors.navy,
+                  ),
                 ),
               ),
             ] else ...[
               const Text(
                 'Select Report Category:',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.navy),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: AppColors.navy,
+                ),
               ),
               const SizedBox(height: 6),
               Obx(() {
                 return DropdownButtonFormField<String>(
                   isExpanded: true,
-                  initialValue: allReportCategories.contains(selectedCategory.value)
+                  initialValue:
+                      allReportCategories.contains(selectedCategory.value)
                       ? selectedCategory.value
                       : allReportCategories.first,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
                   ),
                   items: allReportCategories
-                      .map((cat) => DropdownMenuItem(
-                            value: cat,
-                            child: Text(cat, overflow: TextOverflow.ellipsis),
-                          ))
+                      .map(
+                        (cat) => DropdownMenuItem(
+                          value: cat,
+                          child: Text(cat, overflow: TextOverflow.ellipsis),
+                        ),
+                      )
                       .toList(),
                   onChanged: (val) {
                     if (val != null) selectedCategory.value = val;
@@ -451,7 +468,11 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                 children: [
                   const Text(
                     'Other Remarks:',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.navy),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      color: AppColors.navy,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   TextField(
@@ -459,7 +480,10 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Enter report details...',
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 10,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -469,7 +493,11 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
 
             const Text(
               'Attach Document / Photo:',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.navy),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+                color: AppColors.navy,
+              ),
             ),
             const SizedBox(height: 8),
             Row(
@@ -479,7 +507,10 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                     icon: const Icon(Icons.camera_alt, color: AppColors.teal),
                     label: const Text('Camera'),
                     onPressed: () async {
-                      final img = await picker.pickImage(source: ImageSource.camera, imageQuality: 80);
+                      final img = await picker.pickImage(
+                        source: ImageSource.camera,
+                        imageQuality: 80,
+                      );
                       if (img != null) selectedFilePath.value = img.path;
                     },
                   ),
@@ -487,10 +518,16 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: OutlinedButton.icon(
-                    icon: const Icon(Icons.photo_library, color: AppColors.blue),
+                    icon: const Icon(
+                      Icons.photo_library,
+                      color: AppColors.blue,
+                    ),
                     label: const Text('Gallery'),
                     onPressed: () async {
-                      final img = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+                      final img = await picker.pickImage(
+                        source: ImageSource.gallery,
+                        imageQuality: 80,
+                      );
                       if (img != null) selectedFilePath.value = img.path;
                     },
                   ),
@@ -510,7 +547,8 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
 
               final path = selectedFilePath.value;
               final fileName = path.split('/').last;
-              final isImage = path.toLowerCase().endsWith('.jpg') ||
+              final isImage =
+                  path.toLowerCase().endsWith('.jpg') ||
                   path.toLowerCase().endsWith('.jpeg') ||
                   path.toLowerCase().endsWith('.png');
 
@@ -528,25 +566,34 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
-                        child: Image.file(
-                          File(path),
-                          fit: BoxFit.cover,
-                        ),
+                        child: Image.file(File(path), fit: BoxFit.cover),
                       ),
                     ),
                   Row(
                     children: [
-                      const Icon(Icons.check_circle, color: AppColors.teal, size: 16),
+                      const Icon(
+                        Icons.check_circle,
+                        color: AppColors.teal,
+                        size: 16,
+                      ),
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
                           fileName,
-                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.navy),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.navy,
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close, size: 18, color: AppColors.error),
+                        icon: const Icon(
+                          Icons.close,
+                          size: 18,
+                          color: AppColors.error,
+                        ),
                         onPressed: () => selectedFilePath.value = '',
                       ),
                     ],
@@ -564,7 +611,10 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                   isLoading: controller.isLoadingReports.value,
                   onPressed: () {
                     if (selectedFilePath.value.isEmpty) {
-                      Get.snackbar('Error', 'Please attach a report photo or document');
+                      Get.snackbar(
+                        'Error',
+                        'Please attach a report photo or document',
+                      );
                       return;
                     }
                     Get.back();

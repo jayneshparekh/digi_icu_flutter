@@ -40,10 +40,12 @@ class AppointmentController extends GetxController {
     final args = Get.arguments as Map<String, dynamic>?;
     if (args != null) {
       patientId = args['patientId']?.toString() ?? '';
-      patientName = args['patientName']?.toString() ?? args['userName']?.toString() ?? '';
+      patientName =
+          args['patientName']?.toString() ?? args['userName']?.toString() ?? '';
       age = args['userAge']?.toString() ?? '';
       gender = args['userGender']?.toString() ?? '';
-      isFromDoctorHomeService = args['isFromDoctorHomeService'] as bool? ?? false;
+      isFromDoctorHomeService =
+          args['isFromDoctorHomeService'] as bool? ?? false;
       homeServiceDoctorId = args['doctor_id']?.toString() ?? '';
       doctorHsReqId = args['doctor_hs_req_id']?.toString() ?? '';
       problem = args['problem']?.toString() ?? '';
@@ -104,12 +106,20 @@ class AppointmentController extends GetxController {
       filteredDoctors.assignAll(doctors);
     } else {
       final lowercaseQuery = query.toLowerCase();
-      filteredDoctors.assignAll(doctors.where((doc) {
-        final matchesFirstName = doc.firstName.toLowerCase().contains(lowercaseQuery);
-        final matchesMidName = doc.midName.toLowerCase().contains(lowercaseQuery);
-        final matchesLastName = doc.lastName.toLowerCase().contains(lowercaseQuery);
-        return matchesFirstName || matchesMidName || matchesLastName;
-      }).toList());
+      filteredDoctors.assignAll(
+        doctors.where((doc) {
+          final matchesFirstName = doc.firstName.toLowerCase().contains(
+            lowercaseQuery,
+          );
+          final matchesMidName = doc.midName.toLowerCase().contains(
+            lowercaseQuery,
+          );
+          final matchesLastName = doc.lastName.toLowerCase().contains(
+            lowercaseQuery,
+          );
+          return matchesFirstName || matchesMidName || matchesLastName;
+        }).toList(),
+      );
     }
   }
 
@@ -130,46 +140,55 @@ class AppointmentController extends GetxController {
         if (payRes.status == 'success') {
           if (payRes.planStatus == '0') {
             if (medicalForm.value == '1') {
-              Get.toNamed('/take-appointment', arguments: {
-                'doctorId': doctor.id,
-                'doctorName': 'Dr. ${doctor.firstName} ${doctor.lastName}',
+              Get.toNamed(
+                '/take-appointment',
+                arguments: {
+                  'doctorId': doctor.id,
+                  'doctorName': 'Dr. ${doctor.firstName} ${doctor.lastName}',
+                  'patientId': patientId,
+                  'userName': patientName,
+                  'userAge': age,
+                  'userGender': gender,
+                  'isFromDoctorHomeService': isFromDoctorHomeService,
+                  'doctor_hs_req_id': doctorHsReqId,
+                  'problem': problem,
+                  'type': userType,
+                  'speciality': speciality,
+                },
+              );
+            } else {
+              Get.toNamed(
+                '/medical-form',
+                arguments: {
+                  'doctorId': doctor.id,
+                  'doctorName': 'Dr. ${doctor.firstName} ${doctor.lastName}',
+                  'patientId': patientId,
+                  'userAge': age,
+                  'userGender': gender,
+                  'isFromDoctorHomeService': isFromDoctorHomeService,
+                  'doctor_hs_req_id': doctorHsReqId,
+                  'problem': problem,
+                  'type': userType,
+                  'speciality': speciality,
+                },
+              );
+            }
+          } else {
+            Get.toNamed(
+              '/package-categories',
+              arguments: {
                 'patientId': patientId,
                 'userName': patientName,
                 'userAge': age,
                 'userGender': gender,
-                'isFromDoctorHomeService': isFromDoctorHomeService,
-                'doctor_hs_req_id': doctorHsReqId,
-                'problem': problem,
+                'medicalForm': medicalForm.value,
+                'consultationCharge': doctor.consultingCharges,
+                'packageType': 'General Consultation',
                 'type': userType,
-                'speciality': speciality,
-              });
-            } else {
-              Get.toNamed('/medical-form', arguments: {
-                'doctorId': doctor.id,
-                'doctorName': 'Dr. ${doctor.firstName} ${doctor.lastName}',
-                'patientId': patientId,
-                'userAge': age,
-                'userGender': gender,
-                'isFromDoctorHomeService': isFromDoctorHomeService,
-                'doctor_hs_req_id': doctorHsReqId,
-                'problem': problem,
-                'type': userType,
-                'speciality': speciality,
-              });
-            }
-          } else {
-            Get.toNamed('/package-categories', arguments: {
-              'patientId': patientId,
-              'userName': patientName,
-              'userAge': age,
-              'userGender': gender,
-              'medicalForm': medicalForm.value,
-              'consultationCharge': doctor.consultingCharges,
-              'packageType': 'General Consultation',
-              'type': userType,
-              'leaderId': leaderId,
-              'mData': doctor,
-            });
+                'leaderId': leaderId,
+                'mData': doctor,
+              },
+            );
           }
         } else {
           AppSnackbars.showError('Error', payRes.msg);
@@ -184,5 +203,3 @@ class AppointmentController extends GetxController {
     }
   }
 }
-
-

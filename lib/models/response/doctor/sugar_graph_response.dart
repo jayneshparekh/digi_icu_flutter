@@ -3,11 +3,7 @@ class SugarGraphResponse {
   final String? msg;
   final List<SugarGraphData>? data;
 
-  SugarGraphResponse({
-    this.status,
-    this.msg,
-    this.data,
-  });
+  SugarGraphResponse({this.status, this.msg, this.data});
 
   factory SugarGraphResponse.fromJson(Map<String, dynamic> json) {
     return SugarGraphResponse(

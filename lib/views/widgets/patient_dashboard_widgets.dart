@@ -31,10 +31,7 @@ class PatientDashboardCircleBtn extends StatelessWidget {
         fit: BoxFit.contain,
       );
     } else {
-      iconWidget = Image.asset(
-        iconPath,
-        fit: BoxFit.contain,
-      );
+      iconWidget = Image.asset(iconPath, fit: BoxFit.contain);
     }
 
     return GestureDetector(
@@ -53,11 +50,7 @@ class PatientDashboardCircleBtn extends StatelessWidget {
                 border: Border.all(color: AppColors.medicalGray, width: 1),
               ),
               alignment: Alignment.center,
-              child: SizedBox(
-                width: 32,
-                height: 32,
-                child: iconWidget,
-              ),
+              child: SizedBox(width: 32, height: 32, child: iconWidget),
             ),
             const SizedBox(height: 6),
             Text(
@@ -104,10 +97,7 @@ class PatientDashboardCard extends StatelessWidget {
         fit: BoxFit.contain,
       );
     } else {
-      iconWidget = Image.asset(
-        iconPath,
-        fit: BoxFit.contain,
-      );
+      iconWidget = Image.asset(iconPath, fit: BoxFit.contain);
     }
 
     return Card(
@@ -125,11 +115,7 @@ class PatientDashboardCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                width: 28,
-                height: 28,
-                child: iconWidget,
-              ),
+              SizedBox(width: 28, height: 28, child: iconWidget),
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
@@ -208,19 +194,14 @@ class _PatientDashboardSliderState extends State<PatientDashboardSlider> {
         alignment: Alignment.center,
         child: Text(
           'mh_clinic_promo'.tr,
-          style: TextStyle(
-            color: AppColors.teal,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: AppColors.teal, fontWeight: FontWeight.bold),
         ),
       );
     }
 
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       clipBehavior: Clip.antiAlias,
       child: SizedBox(
         height: 160,
@@ -310,10 +291,7 @@ class PatientDashboardVerticalCard extends StatelessWidget {
         fit: BoxFit.contain,
       );
     } else {
-      iconWidget = Image.asset(
-        iconPath,
-        fit: BoxFit.contain,
-      );
+      iconWidget = Image.asset(iconPath, fit: BoxFit.contain);
     }
 
     return Card(
@@ -332,11 +310,7 @@ class PatientDashboardVerticalCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
-                width: 32,
-                height: 32,
-                child: iconWidget,
-              ),
+              SizedBox(width: 32, height: 32, child: iconWidget),
               const SizedBox(height: 8),
               Text(
                 label,
@@ -383,9 +357,10 @@ class _BreathingColorWrapperState extends State<BreathingColorWrapper>
       vsync: this,
       duration: const Duration(seconds: 1, milliseconds: 500),
     )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0.25, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0.25,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -405,5 +380,3 @@ class _BreathingColorWrapperState extends State<BreathingColorWrapper>
     );
   }
 }
-
-

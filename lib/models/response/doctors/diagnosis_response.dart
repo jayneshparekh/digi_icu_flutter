@@ -3,11 +3,7 @@ class DiagnosisResponse {
   final String msg;
   final DiagnosisData? data;
 
-  DiagnosisResponse({
-    required this.status,
-    required this.msg,
-    this.data,
-  });
+  DiagnosisResponse({required this.status, required this.msg, this.data});
 
   factory DiagnosisResponse.fromJson(Map<String, dynamic> json) {
     return DiagnosisResponse(
@@ -42,13 +38,27 @@ class DiagnosisData {
   factory DiagnosisData.fromJson(Map<String, dynamic> json) {
     return DiagnosisData(
       id: json['id']?.toString() ?? '',
-      patientId: json['patient_id']?.toString() ?? json['patientId']?.toString() ?? '',
-      doctorId: json['doctor_id']?.toString() ?? json['doctorId']?.toString() ?? '',
+      patientId:
+          json['patient_id']?.toString() ?? json['patientId']?.toString() ?? '',
+      doctorId:
+          json['doctor_id']?.toString() ?? json['doctorId']?.toString() ?? '',
       diagnosis: json['diagnosis']?.toString() ?? '',
-      shortDiagnosis: json['short_diagnosis']?.toString() ?? json['shortDiagnosis']?.toString() ?? '',
-      htnTreatment: json['htn_treatment']?.toString() ?? json['htnTreatment']?.toString() ?? '',
-      dmTreatment: json['dm_treatment']?.toString() ?? json['dmTreatment']?.toString() ?? '',
-      dlpTreatment: json['dlp_treatment']?.toString() ?? json['dlpTreatment']?.toString() ?? '',
+      shortDiagnosis:
+          json['short_diagnosis']?.toString() ??
+          json['shortDiagnosis']?.toString() ??
+          '',
+      htnTreatment:
+          json['htn_treatment']?.toString() ??
+          json['htnTreatment']?.toString() ??
+          '',
+      dmTreatment:
+          json['dm_treatment']?.toString() ??
+          json['dmTreatment']?.toString() ??
+          '',
+      dlpTreatment:
+          json['dlp_treatment']?.toString() ??
+          json['dlpTreatment']?.toString() ??
+          '',
     );
   }
 }

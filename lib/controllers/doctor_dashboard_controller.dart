@@ -170,6 +170,3 @@ class DoctorDashboardController extends GetxController {
     Get.offAllNamed('/login');
   }
 }
-
-
-
