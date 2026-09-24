@@ -3,9 +3,12 @@ import 'package:digi_icu_flutter/controllers/serving_patient_controller.dart';
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
 import 'package:digi_icu_flutter/core/constants/app_constants.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/models/request/user/admit_place_request_model.dart';
+import 'package:digi_icu_flutter/models/request/user/get_beds_request_model.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
 import 'package:digi_icu_flutter/views/widgets/app_drawing_canvas.dart';
 import 'package:digi_icu_flutter/views/widgets/app_primary_button.dart';
+import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:digi_icu_flutter/views/widgets/app_speech_input_widget.dart';
 import 'package:dio/dio.dart' as dio;
@@ -36,10 +39,6 @@ class IpdAdmitDialog extends StatelessWidget {
     final TextEditingController admissionNotesEditingController =
         TextEditingController(text: controller.admissionNotes.value);
 
-    final String instituteName = instituteAmenities.isNotEmpty
-        ? instituteAmenities[0]['institute_name']?.toString() ?? ''
-        : '';
-
     // Auto-fill doctor info for Doctor role
     if (controller.userType.value == 'Doctor' &&
         controller.selectedConsultantDoctorId.value.isEmpty) {
@@ -47,16 +46,38 @@ class IpdAdmitDialog extends StatelessWidget {
       controller.selectedConsultantDoctorName.value = controller.fullName;
     }
 
+    final facilities = _getDynamicFacilities(instituteAmenities);
+
+    // Default place initialization matching Android
+    if (controller.selectedAdmitPlace.value.isEmpty && facilities.isNotEmpty) {
+      if (controller.isDayCare.value) {
+        final dayCare = facilities.firstWhere(
+          (f) => f['key'] == 'Day Care',
+          orElse: () => facilities.first,
+        );
+        controller.selectedAdmitPlace.value = dayCare['key']!;
+        _fetchWardsForPlace(controller, apiClient, dayCare['key']!);
+      } else {
+        final nonDayCare = facilities.firstWhere(
+          (f) => f['key'] != 'Day Care',
+          orElse: () => facilities.first,
+        );
+        controller.selectedAdmitPlace.value = nonDayCare['key']!;
+        _fetchWardsForPlace(controller, apiClient, nonDayCare['key']!);
+      }
+    }
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
         constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.9,
+          maxWidth: 600,
           maxHeight: MediaQuery.of(context).size.height * 0.85,
         ),
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
+            // Dialog Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -75,25 +96,29 @@ class IpdAdmitDialog extends StatelessWidget {
               ],
             ),
             const Divider(),
+
+            // Scrollable Dialog Body
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Care Info Header Widget
+                    // Care Info Header Banner (Matching Android)
                     Obx(() {
-                      final docText =
-                          controller
-                              .selectedConsultantDoctorName
-                              .value
-                              .isNotEmpty
-                          ? controller.selectedConsultantDoctorName.value
-                          : controller.fullName;
-                      final instText =
-                          controller.selectedInstituteName.value.isNotEmpty
-                          ? controller.selectedInstituteName.value
-                          : instituteName;
+                      final docPart = controller
+                              .selectedConsultantDoctorName.value.isNotEmpty
+                          ? 'Dr. ${controller.selectedConsultantDoctorName.value}'
+                          : (controller.fullName.isNotEmpty
+                              ? 'Dr. ${controller.fullName}'
+                              : 'the institute');
+                      final instPart = controller
+                              .selectedInstituteName.value.isNotEmpty
+                          ? ' in ${controller.selectedInstituteName.value}'
+                          : '';
+                      final careText =
+                          'The patient will be admitted under the care of $docPart$instPart';
+
                       return Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(10),
@@ -106,15 +131,7 @@ class IpdAdmitDialog extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          'care_info_text'.tr
-                              .replaceAll(
-                                '@doctor',
-                                docText.isNotEmpty ? docText : 'Doctor',
-                              )
-                              .replaceAll(
-                                '@institute',
-                                instText.isNotEmpty ? instText : 'Institute',
-                              ),
+                          careText,
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -125,164 +142,187 @@ class IpdAdmitDialog extends StatelessWidget {
                     }),
                     const SizedBox(height: 16),
 
-                    // Consultant Doctor
+                    // Consultant Doctor (Role Leader vs Doctor)
                     Obx(() {
-                      if (controller.userType.value == 'Doctor') {
-                        return TextFormField(
-                          initialValue: controller.fullName.isNotEmpty
-                              ? controller.fullName
-                              : 'Doctor',
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            labelText: 'doctor'.tr,
-                            border: const OutlineInputBorder(),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
+                      final role = controller.userType.value;
+                      if (role == 'Leader' || role == 'leader') {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DropdownButtonFormField<String>(
+                              isExpanded: true,
+                              decoration: InputDecoration(
+                                labelText: 'consultant_doctor'.tr,
+                                border: const OutlineInputBorder(),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                              ),
+                              initialValue: controller
+                                      .selectedConsultantDoctorId.value.isNotEmpty
+                                  ? controller.selectedConsultantDoctorId.value
+                                  : null,
+                              hint: Text('please_select_doctor'.tr),
+                              items: controller.admitDoctors.map((doc) {
+                                final docId =
+                                    (doc['id'] ?? doc['doctor_id'])?.toString() ??
+                                        '';
+                                final name = doc['doctor_name']?.toString() ??
+                                    'Dr. ${doc['first_name'] ?? ''} ${doc['last_name'] ?? ''}';
+                                return DropdownMenuItem<String>(
+                                  value: docId,
+                                  child: Text(name),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                if (value != null) {
+                                  final match = controller.admitDoctors.firstWhere(
+                                    (d) =>
+                                        (d['id'] ?? d['doctor_id'])?.toString() ==
+                                        value,
+                                    orElse: () => null,
+                                  );
+                                  controller.selectedConsultantDoctorId.value =
+                                      value;
+                                  if (match != null) {
+                                    controller
+                                            .selectedConsultantDoctorName.value =
+                                        match['doctor_name']?.toString() ??
+                                            '${match['first_name'] ?? ''} ${match['last_name'] ?? ''}';
+                                  }
+                                }
+                              },
                             ),
-                          ),
+                            const SizedBox(height: 12),
+                          ],
                         );
                       } else {
-                        return DropdownButtonFormField<String>(
-                          isExpanded: true,
-                          decoration: InputDecoration(
-                            labelText: 'doctor'.tr,
-                            border: const OutlineInputBorder(),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                          ),
-                          initialValue:
-                              controller
-                                      .selectedConsultantDoctorId
-                                      .value
-                                      .isNotEmpty &&
-                                  controller.admitDoctors.any(
-                                    (d) =>
-                                        d['doctor_id']?.toString() ==
-                                        controller
-                                            .selectedConsultantDoctorId
-                                            .value,
-                                  )
-                              ? controller.selectedConsultantDoctorId.value
-                              : null,
-                          hint: Text('please_select_doctor'.tr),
-                          items: controller.admitDoctors.map((doc) {
-                            return DropdownMenuItem<String>(
-                              value: doc['doctor_id']?.toString(),
-                              child: Text(doc['doctor_name']?.toString() ?? ''),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            final index = controller.admitDoctors.indexWhere(
-                              (d) => d['doctor_id']?.toString() == value,
-                            );
-                            if (index >= 0) {
-                              controller.selectedConsultantDoctorId.value =
-                                  controller.admitDoctors[index]['doctor_id']
-                                      ?.toString() ??
-                                  '';
-                              controller.selectedConsultantDoctorName.value =
-                                  controller.admitDoctors[index]['doctor_name']
-                                      ?.toString() ??
-                                  '';
-                            }
-                          },
-                        );
+                        return const SizedBox.shrink();
                       }
                     }),
-                    const SizedBox(height: 12),
 
-                    // Referral Doctor (conditional)
-                    Obx(
-                      () => controller.hasReferralDoctor.value
-                          ? Column(
-                              children: [
-                                DropdownButtonFormField<String>(
-                                  isExpanded: true,
-                                  decoration: InputDecoration(
-                                    labelText: 'referral_doctor'.tr,
-                                    border: const OutlineInputBorder(),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 8,
-                                    ),
-                                  ),
-                                  initialValue:
-                                      controller.referralDoctor.value.isNotEmpty
-                                      ? controller.referralDoctor.value
-                                      : null,
-                                  hint: Text('please_select_doctor'.tr),
-                                  items: controller.admitDoctors.map((doc) {
-                                    return DropdownMenuItem<String>(
-                                      value: doc['doctor_id']?.toString(),
-                                      child: Text(
-                                        doc['doctor_name']?.toString() ?? '',
-                                      ),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) =>
-                                      controller.referralDoctor.value =
-                                          value ?? '',
-                                ),
-                                const SizedBox(height: 12),
-                              ],
-                            )
-                          : const SizedBox.shrink(),
-                    ),
-
-                    // Approx Cost & Days
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            initialValue: controller.approxCost.value,
+                    // Referral Doctor Dropdown
+                    Obx(() {
+                      if (controller.userType.value == 'Leader' ||
+                          controller.userType.value == 'leader') {
+                        return const SizedBox.shrink();
+                      }
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          DropdownButtonFormField<String>(
+                            isExpanded: true,
                             decoration: InputDecoration(
-                              labelText: 'approx_cost'.tr,
+                              labelText: 'referral_doctor'.tr,
                               border: const OutlineInputBorder(),
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 12,
                                 vertical: 8,
                               ),
                             ),
-                            keyboardType: TextInputType.number,
-                            onChanged: (value) =>
-                                controller.approxCost.value = value,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: TextFormField(
-                            initialValue: controller.approxDays.value,
-                            decoration: InputDecoration(
-                              labelText: 'approx_days'.tr,
-                              border: const OutlineInputBorder(),
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
+                            initialValue: controller
+                                    .selectedReferralDoctorId.value.isNotEmpty
+                                ? controller.selectedReferralDoctorId.value
+                                : null,
+                            hint: Text('select_doctor'.tr),
+                            items: [
+                              DropdownMenuItem<String>(
+                                value: '',
+                                child: Text('select_doctor'.tr),
                               ),
-                            ),
-                            keyboardType: TextInputType.number,
-                            onChanged: (value) =>
-                                controller.approxDays.value = value,
+                              ...controller.referralDoctors.map((doc) {
+                                final docId = doc['id']?.toString() ?? '';
+                                final docName = doc['doctor_name']?.toString() ??
+                                    '${doc['first_name'] ?? ''} ${doc['last_name'] ?? ''}';
+                                return DropdownMenuItem<String>(
+                                  value: docId,
+                                  child: Text(docName),
+                                );
+                              }),
+                            ],
+                            onChanged: (value) {
+                              controller.selectedReferralDoctorId.value =
+                                  value ?? '';
+                              if (value != null && value.isNotEmpty) {
+                                final match = controller.referralDoctors.firstWhere(
+                                  (d) => d['id']?.toString() == value,
+                                  orElse: () => null,
+                                );
+                                if (match != null) {
+                                  controller.referralDoctor.value =
+                                      match['doctor_name']?.toString() ??
+                                          '${match['first_name'] ?? ''} ${match['last_name'] ?? ''}';
+                                }
+                              } else {
+                                controller.referralDoctor.value = '';
+                              }
+                            },
                           ),
+                          const SizedBox(height: 12),
+                        ],
+                      );
+                    }),
+
+                    // Approx Cost & Approx Days (Stacked Vertically)
+                    TextFormField(
+                      initialValue: controller.approxCost.value,
+                      decoration: InputDecoration(
+                        labelText: 'approx_cost'.tr,
+                        border: const OutlineInputBorder(),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
                         ),
-                      ],
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) =>
+                          controller.approxCost.value = value,
                     ),
                     const SizedBox(height: 12),
+                    TextFormField(
+                      initialValue: controller.approxDays.value,
+                      decoration: InputDecoration(
+                        labelText: 'approx_days'.tr,
+                        border: const OutlineInputBorder(),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) =>
+                          controller.approxDays.value = value,
+                    ),
+                    const SizedBox(height: 16),
 
-                    // Admission Amount & Payment Status
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
+                    // ==========================================
+                    // Admission Charges Section (Stacked Vertically)
+                    // ==========================================
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.medicalGray, width: 0.8),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'admission_charges'.tr,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.navy,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
                             initialValue: controller.admissionAmount.value,
                             decoration: InputDecoration(
-                              labelText: 'admission_amount'.tr,
+                              labelText: 'amount'.tr,
                               border: const OutlineInputBorder(),
                               contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 12,
+                                horizontal: 10,
                                 vertical: 8,
                               ),
                             ),
@@ -290,261 +330,136 @@ class IpdAdmitDialog extends StatelessWidget {
                             onChanged: (value) =>
                                 controller.admissionAmount.value = value,
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Obx(
-                            () => DropdownButtonFormField<String>(
-                              isExpanded: true,
-                              decoration: InputDecoration(
-                                labelText: 'admission_amount_payment_status'.tr,
-                                border: const OutlineInputBorder(),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                              ),
-                              initialValue:
+                          const SizedBox(height: 8),
+                          Obx(
+                            () => RadioGroup<String>(
+                              groupValue:
                                   controller.admissionPaymentStatus.value,
-                              items: ['Due', 'Paid']
-                                  .map(
-                                    (status) => DropdownMenuItem<String>(
-                                      value: status,
-                                      child: Text(status),
-                                    ),
-                                  )
-                                  .toList(),
                               onChanged: (value) {
-                                controller.admissionPaymentStatus.value =
-                                    value ?? 'Due';
+                                if (value != null) {
+                                  controller.admissionPaymentStatus.value =
+                                      value;
+                                }
                               },
+                              child: Row(
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      AppRadio<String>(value: 'Paid'),
+                                      const SizedBox(width: 4),
+                                      const Text('Paid'),
+                                    ],
+                                  ),
+                                  const SizedBox(width: 24),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      AppRadio<String>(value: 'Due'),
+                                      const SizedBox(width: 4),
+                                      const Text('Due'),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Dynamic Admission Payment Mode & Transaction ID
-                    Obx(() {
-                      if (controller.admissionPaymentStatus.value == 'Paid') {
-                        return Column(
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: DropdownButtonFormField<String>(
-                                    isExpanded: true,
-                                    decoration: InputDecoration(
-                                      labelText:
-                                          'admission_amount_payment_mode'.tr,
-                                      border: const OutlineInputBorder(),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 12,
-                                            vertical: 8,
-                                          ),
-                                    ),
-                                    initialValue:
-                                        controller.admissionPaymentMode.value,
-                                    items: ['Cash', 'Online']
-                                        .map(
-                                          (mode) => DropdownMenuItem<String>(
-                                            value: mode,
-                                            child: Text(mode),
-                                          ),
-                                        )
-                                        .toList(),
+                          Obx(() {
+                            if (controller.admissionPaymentStatus.value ==
+                                'Paid') {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 8),
+                                  RadioGroup<String>(
+                                    groupValue: controller
+                                        .admissionPaymentMode.value,
                                     onChanged: (value) {
-                                      controller.admissionPaymentMode.value =
-                                          value ?? 'Cash';
+                                      if (value != null) {
+                                        controller.admissionPaymentMode
+                                            .value = value;
+                                      }
                                     },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            if (controller.admissionPaymentMode.value ==
-                                'Online') ...[
-                              const SizedBox(height: 12),
-                              TextFormField(
-                                initialValue:
-                                    controller.admissionTransactionId.value,
-                                decoration: InputDecoration(
-                                  labelText: 'admission_transaction_id'.tr,
-                                  border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 8,
-                                  ),
-                                ),
-                                onChanged: (value) =>
-                                    controller.admissionTransactionId.value =
-                                        value,
-                              ),
-                            ],
-                            const SizedBox(height: 12),
-                          ],
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    }),
-
-                    // Date & Time Pickers
-                    Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            onTap: () async {
-                              final DateTime? picked = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(2000),
-                                lastDate: DateTime(2100),
-                              );
-                              if (picked != null) {
-                                controller.admissionDate.value =
-                                    '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
-                              }
-                            },
-                            child: Obx(
-                              () => IgnorePointer(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'admission_date'.tr,
-                                    border: const OutlineInputBorder(),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 8,
+                                    child: Row(
+                                      children: [
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            AppRadio<String>(value: 'Cash'),
+                                            const SizedBox(width: 4),
+                                            const Text('Cash'),
+                                          ],
+                                        ),
+                                        const SizedBox(width: 24),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            AppRadio<String>(
+                                                value: 'Online'),
+                                            const SizedBox(width: 4),
+                                            const Text('Online'),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  controller: TextEditingController(
-                                    text: controller.admissionDate.value,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () async {
-                              final TimeOfDay? picked = await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                              );
-                              if (picked != null) {
-                                controller.admissionTime.value =
-                                    '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
-                              }
-                            },
-                            child: Obx(
-                              () => IgnorePointer(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'admission_time'.tr,
-                                    border: const OutlineInputBorder(),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 8,
+                                  if (controller.admissionPaymentMode.value ==
+                                      'Online') ...[
+                                    const SizedBox(height: 8),
+                                    TextFormField(
+                                      initialValue: controller
+                                          .admissionTransactionId.value,
+                                      decoration: InputDecoration(
+                                        labelText: 'transaction_id'.tr,
+                                        border: const OutlineInputBorder(),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 8,
+                                        ),
+                                      ),
+                                      onChanged: (value) => controller
+                                          .admissionTransactionId
+                                          .value = value,
                                     ),
-                                  ),
-                                  controller: TextEditingController(
-                                    text: controller.admissionTime.value,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                                  ],
+                                ],
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          }),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 12),
 
-                    // Discharge Date & Time (optional)
-                    Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            onTap: () async {
-                              final DateTime? picked = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(2000),
-                                lastDate: DateTime(2100),
-                              );
-                              if (picked != null) {
-                                controller.dischargeDate.value =
-                                    '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
-                              }
-                            },
-                            child: Obx(
-                              () => IgnorePointer(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'discharge_date'.tr,
-                                    border: const OutlineInputBorder(),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 8,
-                                    ),
-                                  ),
-                                  controller: TextEditingController(
-                                    text: controller.dischargeDate.value,
-                                  ),
-                                ),
-                              ),
+                    // ==========================================
+                    // Advance Amount Section (Stacked Vertically)
+                    // ==========================================
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.medicalGray, width: 0.8),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'advance_amount'.tr,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.navy,
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () async {
-                              final TimeOfDay? picked = await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                              );
-                              if (picked != null) {
-                                controller.dischargeTime.value =
-                                    '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
-                              }
-                            },
-                            child: Obx(
-                              () => IgnorePointer(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'discharge_time'.tr,
-                                    border: const OutlineInputBorder(),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 8,
-                                    ),
-                                  ),
-                                  controller: TextEditingController(
-                                    text: controller.dischargeTime.value,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Advance Amount & Payment Status
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
+                          const SizedBox(height: 8),
+                          TextFormField(
                             initialValue: controller.advanceAmount.value,
                             decoration: InputDecoration(
-                              labelText: 'advance_amount'.tr,
+                              labelText: 'amount'.tr,
                               border: const OutlineInputBorder(),
                               contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 12,
+                                horizontal: 10,
                                 vertical: 8,
                               ),
                             ),
@@ -552,226 +467,358 @@ class IpdAdmitDialog extends StatelessWidget {
                             onChanged: (value) =>
                                 controller.advanceAmount.value = value,
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Obx(
-                            () => DropdownButtonFormField<String>(
-                              isExpanded: true,
-                              decoration: InputDecoration(
-                                labelText: 'advance_payment_status'.tr,
-                                border: const OutlineInputBorder(),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                              ),
-                              initialValue:
+                          const SizedBox(height: 8),
+                          Obx(
+                            () => RadioGroup<String>(
+                              groupValue:
                                   controller.advancePaymentStatus.value,
-                              items: ['Due', 'Paid']
-                                  .map(
-                                    (status) => DropdownMenuItem<String>(
-                                      value: status,
-                                      child: Text(status),
-                                    ),
-                                  )
-                                  .toList(),
                               onChanged: (value) {
-                                controller.advancePaymentStatus.value =
-                                    value ?? 'Due';
+                                if (value != null) {
+                                  controller.advancePaymentStatus.value =
+                                      value;
+                                }
                               },
+                              child: Row(
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      AppRadio<String>(value: 'Paid'),
+                                      const SizedBox(width: 4),
+                                      const Text('Paid'),
+                                    ],
+                                  ),
+                                  const SizedBox(width: 24),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      AppRadio<String>(value: 'Due'),
+                                      const SizedBox(width: 4),
+                                      const Text('Due'),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                          Obx(() {
+                            if (controller.advancePaymentStatus.value ==
+                                'Paid') {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 8),
+                                  RadioGroup<String>(
+                                    groupValue: controller
+                                        .advancePaymentMode.value,
+                                    onChanged: (value) {
+                                      if (value != null) {
+                                        controller.advancePaymentMode
+                                            .value = value;
+                                      }
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            AppRadio<String>(value: 'Cash'),
+                                            const SizedBox(width: 4),
+                                            const Text('Cash'),
+                                          ],
+                                        ),
+                                        const SizedBox(width: 24),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            AppRadio<String>(
+                                                value: 'Online'),
+                                            const SizedBox(width: 4),
+                                            const Text('Online'),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  if (controller.advancePaymentMode.value ==
+                                      'Online') ...[
+                                    const SizedBox(height: 8),
+                                    TextFormField(
+                                      initialValue: controller
+                                          .advanceTransactionId.value,
+                                      decoration: InputDecoration(
+                                        labelText: 'transaction_id'.tr,
+                                        border: const OutlineInputBorder(),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 8,
+                                        ),
+                                      ),
+                                      onChanged: (value) => controller
+                                          .advanceTransactionId
+                                          .value = value,
+                                    ),
+                                  ],
+                                ],
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          }),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 12),
 
-                    // Dynamic Advance Payment Mode & Transaction ID
-                    Obx(() {
-                      if (controller.advancePaymentStatus.value == 'Paid') {
-                        return Column(
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: DropdownButtonFormField<String>(
-                                    isExpanded: true,
-                                    decoration: InputDecoration(
-                                      labelText: 'advance_payment_mode'.tr,
-                                      border: const OutlineInputBorder(),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 12,
-                                            vertical: 8,
-                                          ),
-                                    ),
-                                    initialValue:
-                                        controller.advancePaymentMode.value,
-                                    items: ['Cash', 'Online']
-                                        .map(
-                                          (mode) => DropdownMenuItem<String>(
-                                            value: mode,
-                                            child: Text(mode),
-                                          ),
-                                        )
-                                        .toList(),
-                                    onChanged: (value) {
-                                      controller.advancePaymentMode.value =
-                                          value ?? 'Cash';
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            if (controller.advancePaymentMode.value ==
-                                'Online') ...[
-                              const SizedBox(height: 12),
-                              TextFormField(
-                                initialValue:
-                                    controller.advanceTransactionId.value,
-                                decoration: InputDecoration(
-                                  labelText: 'advance_transaction_id'.tr,
-                                  border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 8,
-                                  ),
-                                ),
-                                onChanged: (value) =>
-                                    controller.advanceTransactionId.value =
-                                        value,
-                              ),
-                            ],
-                            const SizedBox(height: 12),
-                          ],
+                    // Admission Date & Time (Stacked Vertically)
+                    InkWell(
+                      onTap: () async {
+                        final DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
                         );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    }),
-
-                    // Place / Ward / Bed Selection
-                    Obx(
-                      () => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          DropdownButtonFormField<String>(
-                            isExpanded: true,
+                        if (picked != null) {
+                          controller.admissionDate.value =
+                              '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
+                        }
+                      },
+                      child: Obx(
+                        () => IgnorePointer(
+                          child: TextFormField(
                             decoration: InputDecoration(
-                              labelText: 'place'.tr,
+                              labelText: 'admission_date'.tr,
                               border: const OutlineInputBorder(),
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 12,
                                 vertical: 8,
                               ),
                             ),
-                            initialValue:
-                                controller.selectedAdmitPlace.value.isNotEmpty
-                                ? controller.selectedAdmitPlace.value
-                                : null,
-                            hint: Text('please_select'.tr),
-                            items: (_getUniquePlaces(instituteAmenities))
-                                .map(
-                                  (place) => DropdownMenuItem<String>(
-                                    value: place,
-                                    child: Text(place),
-                                  ),
-                                )
-                                .toList(),
-                            onChanged: (value) {
-                              controller.selectedAdmitPlace.value = value ?? '';
-                              controller.selectedAdmitWard.value = '';
-                              controller.selectedAdmitBed.value = '';
-                              _fetchWardsForPlace(
-                                controller,
-                                apiClient,
-                                value ?? '',
-                              );
-                            },
+                            controller: TextEditingController(
+                              text: controller.admissionDate.value,
+                            ),
                           ),
-                          const SizedBox(height: 12),
-                          Obx(() {
-                            final String? wardVal =
-                                controller.selectedAdmitWard.value.isNotEmpty &&
-                                    controller.admitWardOptions.contains(
-                                      controller.selectedAdmitWard.value,
-                                    )
-                                ? controller.selectedAdmitWard.value
-                                : null;
-                            return DropdownButtonFormField<String>(
-                              isExpanded: true,
-                              decoration: InputDecoration(
-                                labelText: 'ward'.tr,
-                                border: const OutlineInputBorder(),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    InkWell(
+                      onTap: () async {
+                        final TimeOfDay? picked = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        if (picked != null) {
+                          controller.admissionTime.value =
+                              '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
+                        }
+                      },
+                      child: Obx(
+                        () => IgnorePointer(
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'admission_time'.tr,
+                              border: const OutlineInputBorder(),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
                               ),
-                              initialValue: wardVal,
-                              hint: Text('please_select'.tr),
-                              items: controller.admitWardOptions
-                                  .map(
-                                    (ward) => DropdownMenuItem<String>(
-                                      value: ward,
-                                      child: Text(ward),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (value) {
-                                controller.selectedAdmitWard.value =
-                                    value ?? '';
+                            ),
+                            controller: TextEditingController(
+                              text: controller.admissionTime.value,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Place Selection (Dynamic Radio Buttons with Counts matching Android)
+                    Obx(
+                      () => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'place'.tr,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.navy,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          RadioGroup<String>(
+                            groupValue:
+                                controller.selectedAdmitPlace.value.isNotEmpty
+                                    ? controller.selectedAdmitPlace.value
+                                    : null,
+                            onChanged: (value) {
+                              if (value != null) {
+                                controller.selectedAdmitPlace.value = value;
+                                controller.selectedAdmitWard.value = '';
                                 controller.selectedAdmitBed.value = '';
-                                _fetchBedsForWard(
+                                _fetchWardsForPlace(
                                   controller,
                                   apiClient,
-                                  controller.selectedAdmitPlace.value,
-                                  value ?? '',
+                                  value,
                                 );
-                              },
+                              }
+                            },
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: facilities.map<Widget>((f) {
+                                  final isDayCare = (f['key'] == 'Day Care');
+                                  final isPrevDayCare = controller.isDayCare.value;
+                                  final enabled = isPrevDayCare
+                                      ? isDayCare
+                                      : !isDayCare;
+
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        AppRadio<String>(
+                                          value: f['key']!,
+                                          enabled: enabled,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          '${f['label']} (${f['count']})',
+                                          style: TextStyle(
+                                            color: enabled
+                                                ? AppColors.pureBlack
+                                                : AppColors.medicalGray,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Ward Selection (Horizontal RadioGroup)
+                          Obx(() {
+                            if (controller.admitWardOptions.isEmpty) {
+                              return const SizedBox.shrink();
+                            }
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'ward'.tr,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                RadioGroup<String>(
+                                  groupValue: controller
+                                              .selectedAdmitWard.value.isNotEmpty &&
+                                          controller.admitWardOptions.contains(
+                                            controller.selectedAdmitWard.value,
+                                          )
+                                      ? controller.selectedAdmitWard.value
+                                      : null,
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      controller.selectedAdmitWard.value =
+                                          value;
+                                      controller.selectedAdmitBed.value = '';
+                                      _fetchBedsForWard(
+                                        controller,
+                                        apiClient,
+                                        controller.selectedAdmitPlace.value,
+                                        value,
+                                      );
+                                    }
+                                  },
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: controller.admitWardOptions
+                                          .map<Widget>((ward) {
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 12.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              AppRadio<String>(value: ward),
+                                              const SizedBox(width: 4),
+                                              Text(ward),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                              ],
                             );
                           }),
-                          const SizedBox(height: 12),
+
+                          // Beds Selection (Responsive Grid / Wrap of Radio Buttons)
                           Obx(() {
-                            final String? bedVal =
-                                controller.selectedAdmitBed.value.isNotEmpty &&
-                                    controller.admitBedOptions.contains(
-                                      controller.selectedAdmitBed.value,
-                                    )
-                                ? controller.selectedAdmitBed.value
-                                : null;
-                            return DropdownButtonFormField<String>(
-                              isExpanded: true,
-                              decoration: InputDecoration(
-                                labelText: 'bed'.tr,
-                                border: const OutlineInputBorder(),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
+                            if (controller.admitBedOptions.isEmpty) {
+                              return const SizedBox.shrink();
+                            }
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'beds'.tr,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
                                 ),
-                              ),
-                              initialValue: bedVal,
-                              hint: Text('please_select'.tr),
-                              items: controller.admitBedOptions
-                                  .map(
-                                    (bed) => DropdownMenuItem<String>(
-                                      value: bed,
-                                      child: Text(bed),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (value) =>
-                                  controller.selectedAdmitBed.value =
-                                      value ?? '',
+                                const SizedBox(height: 8),
+                                RadioGroup<String>(
+                                  groupValue: controller
+                                              .selectedAdmitBed.value.isNotEmpty &&
+                                          controller.admitBedOptions.contains(
+                                            controller.selectedAdmitBed.value,
+                                          )
+                                      ? controller.selectedAdmitBed.value
+                                      : null,
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      controller.selectedAdmitBed.value =
+                                          value;
+                                    }
+                                  },
+                                  child: Wrap(
+                                    spacing: 12,
+                                    runSpacing: 8,
+                                    children: controller.admitBedOptions
+                                        .map<Widget>((bed) {
+                                      return Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          AppRadio<String>(value: bed),
+                                          const SizedBox(width: 4),
+                                          Text(bed),
+                                        ],
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                              ],
                             );
                           }),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16),
 
-                    // Admission Notes with Speech-to-Text
+                    // Admission Notes with Speech Input
                     AppSpeechInputWidget(
                       controller: admissionNotesEditingController,
                       label: 'admission_notes'.tr,
@@ -797,7 +844,7 @@ class IpdAdmitDialog extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             SizedBox(
-                              height: 220,
+                              height: 240,
                               child: AppDrawingCanvas(
                                 key: canvasKey,
                                 showToolbar: true,
@@ -827,11 +874,10 @@ class IpdAdmitDialog extends StatelessWidget {
                       }
                     }),
 
-                    // Photo Note Attachment (Nurse / Leader Roles)
+                    // Photo Note Attachment (Nurse / Leader / Duty Doctor Roles)
                     Obx(() {
                       final role = controller.userType.value;
-                      final isNurseOrLeader =
-                          role == 'Nurse' ||
+                      final isNurseOrLeader = role == 'Nurse' ||
                           role == 'Digi Icu Nurse' ||
                           role == 'Duty Doctor' ||
                           role == 'Leader' ||
@@ -899,44 +945,59 @@ class IpdAdmitDialog extends StatelessWidget {
                     }),
                     const SizedBox(height: 12),
 
-                    // Admit Prescription Action Button (Planted ABOVE Footer Section)
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.teal,
-                          foregroundColor: AppColors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 10,
+                    // Admit Prescription Action Button
+                    Obx(
+                      () => Align(
+                        alignment: Alignment.centerRight,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.teal,
+                            foregroundColor: AppColors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 10,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
+                          icon: Stack(
+                            children: [
+                              const Icon(
+                                Icons.description,
+                                color: AppColors.white,
+                                size: 18,
+                              ),
+                              if (!controller.isAdmitPrescription.value)
+                                const Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: CircleAvatar(
+                                    radius: 4,
+                                    backgroundColor: AppColors.warning,
+                                  ),
+                                ),
+                            ],
                           ),
-                        ),
-                        icon: const Icon(
-                          Icons.description,
-                          color: AppColors.white,
-                          size: 18,
-                        ),
-                        label: Text(
-                          'admit_prescription'.tr,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
+                          label: Text(
+                            'admit_prescription'.tr,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
+                          onPressed: () {
+                            Get.toNamed(
+                              '/add-prescription',
+                              arguments: {
+                                'patient_id': controller.patientId,
+                                'bookingId': controller.bookingId,
+                                'admitId': '0',
+                                'isFromAdmit': true,
+                              },
+                            );
+                          },
                         ),
-                        onPressed: () {
-                          Get.toNamed(
-                            '/add-prescription',
-                            arguments: {
-                              'patient_id': controller.patientId,
-                              'bookingId': controller.bookingId,
-                              'admitId': '0',
-                              'isFromAdmit': true,
-                            },
-                          );
-                        },
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -946,7 +1007,7 @@ class IpdAdmitDialog extends StatelessWidget {
             ),
             const Divider(),
 
-            // Footer Section: Cancel & Submit Buttons ONLY
+            // Footer Section: Cancel & Submit Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -968,7 +1029,6 @@ class IpdAdmitDialog extends StatelessWidget {
                     label: 'submit'.tr,
                     height: 40,
                     onPressed: () async {
-                      // Auto-export drawing canvas if Doctor role and canvas not manually saved
                       if (controller.userType.value == 'Doctor' &&
                           controller.canvasDrawingBytes.value == null) {
                         final bytes = await canvasKey.currentState
@@ -977,8 +1037,8 @@ class IpdAdmitDialog extends StatelessWidget {
                           controller.canvasDrawingBytes.value = bytes;
                         }
                       }
-                      Get.back();
                       if (onSubmit != null) {
+                        Get.back();
                         onSubmit!();
                       } else {
                         controller.validateAndConfirmAdmit();
@@ -994,52 +1054,125 @@ class IpdAdmitDialog extends StatelessWidget {
     );
   }
 
-  List<String> _getUniquePlaces(List<dynamic> amenities) {
-    final Set<String> places = {};
-    for (var amenity in amenities) {
-      final place = amenity['place']?.toString();
-      if (place != null && place.isNotEmpty) {
-        places.add(place);
-      }
+  List<Map<String, String>> _getDynamicFacilities(dynamic amenityData) {
+    Map<String, dynamic> amenityMap = {};
+    if (amenityData is List &&
+        amenityData.isNotEmpty &&
+        amenityData[0] is Map<String, dynamic>) {
+      amenityMap = amenityData[0];
+    } else if (amenityData is Map<String, dynamic>) {
+      amenityMap = amenityData;
     }
-    return places.toList();
+
+    final facilities = [
+      {
+        'label': 'ICU',
+        'key': 'ICU',
+        'count': amenityMap['icu']?.toString() ?? '0'
+      },
+      {
+        'label': 'CCU',
+        'key': 'CCU',
+        'count': amenityMap['ccu']?.toString() ?? '0'
+      },
+      {
+        'label': 'Ward / Room',
+        'key': 'Ward / Room',
+        'count': amenityMap['wards']?.toString() ?? '0'
+      },
+      {
+        'label': 'Casualty',
+        'key': 'Casualty',
+        'count': amenityMap['casuality']?.toString() ?? '0'
+      },
+      {
+        'label': 'Step down',
+        'key': 'Step down',
+        'count': amenityMap['step_down']?.toString() ?? '0'
+      },
+      {
+        'label': 'Day Care',
+        'key': 'Day Care',
+        'count': amenityMap['day_care']?.toString() ?? '0'
+      },
+      {
+        'label': 'Extra',
+        'key': 'Extra',
+        'count': amenityMap['extra']?.toString() ?? '0'
+      },
+    ];
+
+    return facilities
+        .where((f) => f['count'] != '0' && f['count'] != null)
+        .toList();
   }
 
   void _fetchWardsForPlace(
     ServingPatientController controller,
     ApiClient apiClient,
-    String? place,
+    String? placeKey,
   ) async {
-    if (place == null || place.isEmpty) return;
+    if (placeKey == null || placeKey.isEmpty) return;
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final targetInstituteId = controller.selectedInstituteId.value.isNotEmpty
           ? controller.selectedInstituteId.value
           : controller.instituteId;
+
+      final req = AdmitPlaceRequestModel(
+        admitIn: placeKey,
+        instituteId: targetInstituteId,
+      );
+
       final resp = await apiClient.post(
         ApiEndpoints.whereAdmit,
-        data: {'institute_id': targetInstituteId, 'place': place},
+        data: req.toJson(),
         options: dio.Options(headers: {'Authorization': token}),
       );
       if (resp.statusCode == 200 && resp.data != null) {
         final wards = resp.data['data'] ?? [];
-        controller.admitWardOptions.value = wards
-            .map((w) => w['ward_name']?.toString() ?? '')
-            .toList();
+        if (wards is List) {
+          final wardsList =
+              wards.map((w) => w['name']?.toString() ?? '').where((w) => w.isNotEmpty).toList();
+          controller.admitWardOptions.value = wardsList;
+          if (wardsList.isNotEmpty) {
+            final firstWard = wardsList.first;
+            controller.selectedAdmitWard.value = firstWard;
+            _fetchBedsForWard(controller, apiClient, placeKey, firstWard);
+          } else {
+            controller.selectedAdmitWard.value = '';
+            controller.admitBedOptions.clear();
+          }
+        } else {
+          controller.admitWardOptions.clear();
+          controller.selectedAdmitWard.value = '';
+          controller.admitBedOptions.clear();
+        }
+      } else {
+        controller.admitWardOptions.clear();
+        controller.selectedAdmitWard.value = '';
+        controller.admitBedOptions.clear();
       }
     } catch (e) {
       debugPrint('Error fetching wards: $e');
+      controller.admitWardOptions.clear();
+      controller.selectedAdmitWard.value = '';
+      controller.admitBedOptions.clear();
     }
   }
 
   void _fetchBedsForWard(
     ServingPatientController controller,
     ApiClient apiClient,
-    String? place,
-    String? ward,
+    String? placeKey,
+    String? wardName,
   ) async {
-    if (place == null || place.isEmpty || ward == null || ward.isEmpty) {
+    if (placeKey == null ||
+        placeKey.isEmpty ||
+        wardName == null ||
+        wardName.isEmpty) {
+      controller.admitBedOptions.clear();
       return;
     }
     try {
@@ -1048,23 +1181,32 @@ class IpdAdmitDialog extends StatelessWidget {
       final targetInstituteId = controller.selectedInstituteId.value.isNotEmpty
           ? controller.selectedInstituteId.value
           : controller.instituteId;
+
+      final req = GetBedsRequestModel(
+        admitIn: placeKey,
+        instituteId: targetInstituteId,
+        name: wardName,
+      );
+
       final resp = await apiClient.post(
         ApiEndpoints.getBeds,
-        data: {
-          'admit_in': place,
-          'institute_id': targetInstituteId,
-          'name': ward,
-        },
+        data: req.toJson(),
         options: dio.Options(headers: {'Authorization': token}),
       );
       if (resp.statusCode == 200 && resp.data != null) {
         final beds = resp.data['data'] ?? [];
-        controller.admitBedOptions.value = beds
-            .map((b) => b['bed_no']?.toString() ?? '')
-            .toList();
+        if (beds is List) {
+          controller.admitBedOptions.value =
+              beds.map((b) => b['bed_no']?.toString() ?? '').toList();
+        } else {
+          controller.admitBedOptions.clear();
+        }
+      } else {
+        controller.admitBedOptions.clear();
       }
     } catch (e) {
       debugPrint('Error fetching beds: $e');
+      controller.admitBedOptions.clear();
     }
   }
 }

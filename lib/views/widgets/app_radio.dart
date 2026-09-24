@@ -8,24 +8,30 @@ class AppRadio<T> extends StatelessWidget {
   final T value;
   final VisualDensity visualDensity;
   final MaterialTapTargetSize materialTapTargetSize;
+  final bool enabled;
 
   const AppRadio({
     super.key,
     required this.value,
     this.visualDensity = VisualDensity.compact,
     this.materialTapTargetSize = MaterialTapTargetSize.shrinkWrap,
+    this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Radio<T>(
-      value: value,
-      activeColor: AppColors.teal,
-      visualDensity: visualDensity,
-      materialTapTargetSize: materialTapTargetSize,
+    return IgnorePointer(
+      ignoring: !enabled,
+      child: Radio<T>(
+        value: value,
+        activeColor: enabled ? AppColors.teal : AppColors.medicalGray,
+        visualDensity: visualDensity,
+        materialTapTargetSize: materialTapTargetSize,
+      ),
     );
   }
 }
+
 
 /// A standardized branded RadioListTile wrapping the Flutter [RadioListTile] widget.
 /// Auto-applies [AppColors.teal] as the active color.

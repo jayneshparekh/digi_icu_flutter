@@ -14,8 +14,7 @@ class ApiEndpoints {
   static const String clinicalFormNew = 'api/v2/Patient/clinical_form_new';
   static const String medicalFormNew = 'api/v2/Patient/medical_form_new';
   static const String getDoctorList = 'api/v2/Patient/get_doctor_list';
-  static const String checkPaymentStatus =
-      'api/v2/Patient/check_payment_status';
+  static const String checkPaymentStatus = 'api/v2/Patient/check_payment_status';
   static const String patientDetails = 'api/v2/Patient/pt_details';
   static const String quickForm = 'api/v2/Patient/quick_form';
   static const String prescriptionList = 'api/v2/Patient/prescription_list';
@@ -31,10 +30,8 @@ class ApiEndpoints {
   static const String addRating = 'api/v2/Doctor/add_rating';
   static const String dashboardDetails = 'api/v2/Doctor/dashboard_details';
   static const String confirmConsultPatientPost = 'api/v2/Doctor/confirmation';
-  static const String getPatientDiagnosis =
-      'api/v2/Doctor/get_patient_diagnosis';
-  static const String addPatientDiagnosis =
-      'api/v2/Doctor/add_patient_diagnosis';
+  static const String getPatientDiagnosis = 'api/v2/Doctor/get_patient_diagnosis';
+  static const String addPatientDiagnosis = 'api/v2/Doctor/add_patient_diagnosis';
   static const String getPatientList = 'api/v2/Doctor/get_patient_list';
   static const String checkDoctorHome = 'api/v2/Doctor/check_doctor_home';
   static const String getMedicalForm = 'api/v2/Doctor/get_medical_form';
@@ -42,8 +39,7 @@ class ApiEndpoints {
   static const String sugarGraph = 'api/v2/Doctor/sugar_graph';
   static const String otherGraph = 'api/v2/Doctor/other_graph';
   static const String getMedicines = 'api/v2/Doctor/get_medicines';
-  static const String addPatientPrescription =
-      'api/v2/Doctor/add_patient_prescription';
+  static const String addPatientPrescription = 'api/v2/Doctor/add_patient_prescription';
   static const String getPersonalisedTT = 'api/v2/Doctor/get_personalised_tt';
   static const String addPatientNotes = 'api/v2/Doctor/add_patient_notes';
   static const String addSelfNotes = 'api/v2/Doctor/add_self_notes';
@@ -61,8 +57,7 @@ class ApiEndpoints {
   static const String quickFormsList = 'api/v2/Doctor/quick_forms_list';
   static const String getQuickForm = 'api/v2/Doctor/get_quick_form';
   static const String updateQuickForm = 'api/v2/Doctor/update_quick_form';
-  static const String holdQuickAppointment =
-      'api/v2/Doctor/hold_quick_appointment';
+  static const String holdQuickAppointment = 'api/v2/Doctor/hold_quick_appointment';
   static const String addReferralNotes = 'api/v2/Doctor/add_referral_notes';
   static const String addHomeVisitNotes = 'api/v2/Doctor/add_home_visit_notes';
   static const String medicalFormsList = 'api/v2/Doctor/medical_forms_list';
@@ -70,29 +65,31 @@ class ApiEndpoints {
   static const String clinicalFormsList = 'api/v2/Doctor/clinical_forms_list';
   static const String getClinicalForm = 'api/v2/Doctor/get_clinical_form';
   static const String updateClinicalForm = 'api/v2/Doctor/update_clinical_form';
-  static const String serveQuickAppointment =
-      'api/v2/Doctor/serve_quick_appointment';
-  static const String serveAndNextQuickAppointment =
-      'api/v2/Doctor/serve_and_next_quick_appointment';
-  static const String getInstituteAmenities =
-      'api/v2/Doctor/get_institute_amenities';
+  static const String serveQuickAppointment = 'api/v2/Doctor/serve_quick_appointment';
+  static const String serveAndNextQuickAppointment = 'api/v2/Doctor/serve_and_next_quick_appointment';
+  static const String getInstituteAmenities = 'api/v2/Doctor/get_institute_amenities';
+  static const String checkAdmitPrescription = 'api/v2/Doctor/check_admit_discharge_prescription';
+  static const String getLabIdApiPrefix = 'web/doctorweb/get_lab_id_api/institute_lab/institute_id/is_default/';
 
   // ==========================================
   // Admin Endpoints
   // ==========================================
   static const String patientSignup = 'api/v2/Admin/patient_signup';
   static const String search = 'api/v2/Admin/search';
+  static const String getDoctorListAdmin = 'api/v2/Admin/get_doctor_list';
+
+  // ==========================================
+  // Lab Endpoints
+  // ==========================================
+  static const String getLabOwnDoctors = 'api/v2/Lab/get_lab_own_doctors';
 
   // ==========================================
   // User Endpoints
   // ==========================================
-  static const String getPackageCategories =
-      'api/v2/User/get_package_categories';
+  static const String getPackageCategories = 'api/v2/User/get_package_categories';
   static const String signin = 'api/v2/User/signin';
-  static const String updateAppointmentStatus =
-      'api/v2/User/update_appointment_status';
-  static const String addEcgFranchiseData =
-      'api/v2/User/add_ecg_franchise_data';
+  static const String updateAppointmentStatus = 'api/v2/User/update_appointment_status';
+  static const String addEcgFranchiseData = 'api/v2/User/add_ecg_franchise_data';
   static const String whereAdmit = 'api/v2/User/where_admit';
   static const String getBeds = 'api/v2/User/get_beds';
   static const String getInstitute = 'api/v2/User/get_institute';
@@ -105,20 +102,15 @@ class ApiEndpoints {
   // ==========================================
   // Servingpatient Endpoints
   // ==========================================
-  static const String sharePrescription =
-      'web/Servingpatient/share_prescription';
+  static const String sharePrescription = 'web/Servingpatient/share_prescription';
 
   // ==========================================
   // IPDPatient Endpoints
   // ==========================================
-  static const String addAdmitPatientRequest =
-      'web/IPDPatients/add_admit_patient_request';
+  static const String addAdmitPatientRequest = 'web/IPDPatients/add_admit_patient_request';
 
   // ==========================================
   // Institute Endpoints
   // ==========================================
-  static const String admitPatientFromWeb =
-      'api/v2/Institute/admit_patient_from_web';
-  static const String admitPatientFromWebMultipart =
-      'api/v2/Institute/admit_patient_from_web_multipart';
+  static const String admitPatientFromWeb = 'api/v2/Institute/admit_patient_from_web';
 }

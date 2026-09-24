@@ -66,6 +66,9 @@ class ServingPatientController extends GetxController {
   // Admit fields
   final RxString selectedInstituteId = ''.obs;
   final RxString selectedInstituteName = ''.obs;
+  final RxString selectedInstituteLogo = ''.obs;
+  final RxString selectedInstituteAddress = ''.obs;
+  final RxString selectedInstituteMobile = ''.obs;
   final RxBool isDayCare = false.obs;
   final RxBool isDayCareAvailable = false.obs;
   final RxString dayCareOption = 'others'.obs;
@@ -75,6 +78,9 @@ class ServingPatientController extends GetxController {
   final RxString selectedConsultantDoctorId = ''.obs;
   final RxString selectedConsultantDoctorName = ''.obs;
   final RxList<dynamic> admitDoctors = <dynamic>[].obs;
+  final RxString selectedReferralDoctorId = ''.obs;
+  final RxList<dynamic> referralDoctors = <dynamic>[].obs;
+  final RxBool isAdmitPrescription = false.obs;
   // Place/Ward/Bed selection
   final RxString selectedAdmitPlace = ''.obs;
   final RxString selectedAdmitWard = ''.obs;
@@ -101,6 +107,7 @@ class ServingPatientController extends GetxController {
   final Rxn<Uint8List> canvasDrawingBytes = Rxn<Uint8List>();
   final RxString noteImagePath = ''.obs;
   final RxBool hasReferralDoctor = false.obs;
+
 
   // Active Center tab state
   final RxString currentTab = 'Dashboard'.obs;
@@ -335,6 +342,8 @@ class ServingPatientController extends GetxController {
   }
 
   /// Checks patient diagnosis status via get_patient_diagnosis API.
+
+
   /// If diagnosis exists (status == 'success'), prompts confirmation dialog and opens PreAdmitDialog.
   /// If diagnosis is missing (status != 'success'), shows error snackbar and redirects to DiagnosisScreen.
   Future<void> getDiagnosisAndProceed() async {
@@ -498,8 +507,23 @@ class ServingPatientController extends GetxController {
         return;
       }
 
-      // Fetch institute doctors list
+      selectedAdmitPlace.value = '';
+      selectedAdmitWard.value = '';
+      selectedAdmitBed.value = '';
+      admitWardOptions.clear();
+      admitBedOptions.clear();
+
+      // Fetch institute details (logo, address, mobile)
+      await fetchInstituteDetails(targetInstituteId);
+
+      // Fetch consultant doctors list
       await fetchDoctorsForInstitute(targetInstituteId);
+
+      // Fetch referral doctors via lab ID
+      await fetchLabIdAndLoadReferralDoctors(targetInstituteId);
+
+      // Check admit prescription status
+      await checkAdmitPrescription();
 
       // Fetch institute amenities data
       final amenitiesResp = await apiClient.post(
@@ -509,9 +533,14 @@ class ServingPatientController extends GetxController {
       );
 
       if (amenitiesResp.statusCode == 200 && amenitiesResp.data != null) {
+        final Map<String, dynamic> data =
+            amenitiesResp.data['data'] is Map<String, dynamic>
+                ? amenitiesResp.data['data']
+                : amenitiesResp.data;
+
         Get.dialog(
           IpdAdmitDialog(
-            instituteAmenities: amenitiesResp.data['data'] ?? [],
+            instituteAmenities: [data],
             beds: const [],
           ),
           barrierDismissible: false,
@@ -520,19 +549,72 @@ class ServingPatientController extends GetxController {
         AppSnackbars.showError('error'.tr, 'admission_failed'.tr);
       }
     } catch (e) {
+      debugPrint('Error opening IPD Admit Dialog: $e');
       AppSnackbars.showError('error'.tr, 'admission_failed'.tr);
     }
   }
 
-  /// Fetches doctors for a given institute using get_doctor_list API.
+  /// Fetches institute details (logo, address, mobile) for selected institute.
+  Future<void> fetchInstituteDetails(String instId) async {
+    if (instId.isEmpty || instId == '0') return;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final currentUserType =
+          prefs.getString(AppConstants.prefLoginType) ?? userType.value;
+      final currentUserId =
+          prefs.getString(AppConstants.prefUserId) ?? doctorId;
+
+      final resp = await apiClient.post(
+        ApiEndpoints.getInstitute,
+        data: {'user_id': currentUserId, 'user_type': currentUserType},
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+      if (resp.statusCode == 200 &&
+          resp.data != null &&
+          resp.data['status'] == 'success') {
+        final List<dynamic> list = resp.data['data'] ?? [];
+        final match = list.firstWhere(
+          (item) =>
+              item['id']?.toString() == instId ||
+              item['institute_id']?.toString() == instId,
+          orElse: () => null,
+        );
+        if (match != null) {
+          selectedInstituteName.value =
+              match['institute_name']?.toString() ?? '';
+          selectedInstituteLogo.value =
+              match['institute_logo']?.toString() ?? '';
+          selectedInstituteAddress.value =
+              match['institute_adress']?.toString() ?? '';
+          selectedInstituteMobile.value =
+              match['institute_mobile_no']?.toString() ?? '';
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching institute details: $e');
+    }
+  }
+
+  /// Fetches doctors for a given institute using appropriate endpoint based on role.
   Future<void> fetchDoctorsForInstitute(String instId) async {
     if (instId.isEmpty) return;
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final currentUserType =
+          prefs.getString(AppConstants.prefLoginType) ?? userType.value;
+
+      final isLeader =
+          currentUserType == 'Leader' || currentUserType == 'leader';
+      if (!isLeader) {
+        // Doctor role doctor selection uses logged-in user info & lab referral doctors
+        return;
+      }
+
       final resp = await apiClient.post(
-        ApiEndpoints.getDoctorList,
-        data: {'institute_id': instId},
+        ApiEndpoints.getDoctorListAdmin,
+        data: {'page_no': 1, 'user_id': instId, 'user_type': 'Institute'},
         options: dio.Options(headers: {'Authorization': token}),
       );
       if (resp.statusCode == 200 && resp.data != null) {
@@ -540,6 +622,85 @@ class ServingPatientController extends GetxController {
       }
     } catch (e) {
       debugPrint('Error fetching doctors for institute: $e');
+    }
+  }
+
+  /// Fetches lab ID for institute and loads referral doctors from lab own doctors API.
+  Future<void> fetchLabIdAndLoadReferralDoctors(String instId) async {
+    if (instId.isEmpty || instId == '0') {
+      referralDoctors.clear();
+      return;
+    }
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final url = '${ApiEndpoints.getLabIdApiPrefix}$instId';
+
+      final resp = await apiClient.get(
+        url,
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (resp.statusCode == 200 &&
+          resp.data != null &&
+          resp.data['status']?.toString().toLowerCase() == 'success') {
+        final labId = resp.data['lab_id']?.toString();
+        if (labId != null && labId.isNotEmpty && labId != '0') {
+          await fetchReferralDoctors(labId);
+          return;
+        }
+      }
+      referralDoctors.clear();
+    } catch (e) {
+      debugPrint('Error fetching lab ID: $e');
+      referralDoctors.clear();
+    }
+  }
+
+  /// Fetches referral doctors for a given lab ID.
+  Future<void> fetchReferralDoctors(String labId) async {
+    if (labId.isEmpty || labId == '0') {
+      referralDoctors.clear();
+      return;
+    }
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final resp = await apiClient.post(
+        ApiEndpoints.getLabOwnDoctors,
+        data: {'lab_id': labId},
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+      if (resp.statusCode == 200 &&
+          resp.data != null &&
+          resp.data['status'] == 'success') {
+        referralDoctors.value = resp.data['data'] ?? [];
+      } else {
+        referralDoctors.clear();
+      }
+    } catch (e) {
+      debugPrint('Error fetching referral doctors: $e');
+      referralDoctors.clear();
+    }
+  }
+
+  /// Checks if an IPD admit prescription exists for current booking.
+  Future<void> checkAdmitPrescription() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final resp = await apiClient.post(
+        ApiEndpoints.checkAdmitPrescription,
+        data: {'appointment_id': bookingId, 'type': 'ipd'},
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+      if (resp.statusCode == 200 &&
+          resp.data != null &&
+          resp.data['status'] == 'success') {
+        isAdmitPrescription.value = (resp.data['msg']?.toString() != '0');
+      }
+    } catch (e) {
+      debugPrint('Error checking admit prescription: $e');
     }
   }
 
@@ -576,6 +737,8 @@ class ServingPatientController extends GetxController {
         ? 'confirm_payment_admit_msg'.tr
         : 'confirm_admit_msg'.tr;
 
+    Get.back(); // Dismiss IpdAdmitDialog safely after validation passes
+
     AppDialog.show(
       title: 'admit_confirm_title'.tr,
       body: Text(confirmMsg),
@@ -585,7 +748,7 @@ class ServingPatientController extends GetxController {
     );
   }
 
-  /// Final submit: builds the full AdmitPatientRequestModel and calls the admit API.
+  /// Final submit: builds payload and calls ApiEndpoints.admitPatientFromWeb API.
   Future<void> submitAdmit() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -618,22 +781,26 @@ class ServingPatientController extends GetxController {
       dio.Response response;
 
       if (isMultipartRole && (hasCanvasDrawing || hasImageFile)) {
-        dio.MultipartFile noteImageFile;
+        dio.MultipartFile? noteImageFile;
         if (hasCanvasDrawing) {
           noteImageFile = dio.MultipartFile.fromBytes(
             canvasDrawingBytes.value!,
             filename:
                 'admission_notes_canvas_${DateTime.now().millisecondsSinceEpoch}.png',
           );
-        } else {
+        } else if (hasImageFile) {
           noteImageFile = await dio.MultipartFile.fromFile(
             noteImagePath.value,
             filename: noteImagePath.value.split('/').last,
           );
         }
 
-        final formData = dio.FormData.fromMap({
+        final formDataMap = <String, dynamic>{
           'institute_id': targetInstituteId,
+          'institute_logo': selectedInstituteLogo.value,
+          'institute_name': selectedInstituteName.value,
+          'institute_address': selectedInstituteAddress.value,
+          'institute_mobile': selectedInstituteMobile.value,
           'patient_id': patientId,
           'appointment_id': bookingId,
           'doctor_id': targetDoctorId,
@@ -656,11 +823,16 @@ class ServingPatientController extends GetxController {
           'admit_by': currentUserType,
           'admit_by_id': currentUserId,
           'admission_notes': admissionNotes.value,
-          'note_image': noteImageFile,
-        });
+        };
+
+        if (noteImageFile != null) {
+          formDataMap['note_image'] = noteImageFile;
+        }
+
+        final formData = dio.FormData.fromMap(formDataMap);
 
         response = await apiClient.post(
-          ApiEndpoints.admitPatientFromWebMultipart,
+          ApiEndpoints.admitPatientFromWeb,
           data: formData,
           options: dio.Options(headers: {'Authorization': token}),
         );
@@ -688,6 +860,11 @@ class ServingPatientController extends GetxController {
           place: selectedAdmitPlace.value,
           admitBy: currentUserType.isNotEmpty ? currentUserType : 'Doctor',
           admitById: currentUserId.isNotEmpty ? currentUserId : doctorId,
+          admissionNotes: admissionNotes.value,
+          instituteLogo: selectedInstituteLogo.value,
+          instituteName: selectedInstituteName.value,
+          instituteAddress: selectedInstituteAddress.value,
+          instituteMobile: selectedInstituteMobile.value,
         );
 
         response = await apiClient.post(
@@ -696,6 +873,7 @@ class ServingPatientController extends GetxController {
           options: dio.Options(headers: {'Authorization': token}),
         );
       }
+
 
       if (response.statusCode == 200 && response.data != null) {
         final msg =

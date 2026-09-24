@@ -323,11 +323,10 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
         if (widget.showToolbar) _buildToolbar(),
-        const SizedBox(height: 8),
-        _buildCanvasArea(),
+        const SizedBox(height: 4),
+        Expanded(child: _buildCanvasArea()),
       ],
     );
   }
