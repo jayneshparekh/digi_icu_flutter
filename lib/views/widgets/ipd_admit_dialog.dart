@@ -48,7 +48,7 @@ class IpdAdmitDialog extends StatelessWidget {
 
     final facilities = _getDynamicFacilities(instituteAmenities);
 
-    // Default place initialization matching Android
+    // Default place initialization
     if (controller.selectedAdmitPlace.value.isEmpty && facilities.isNotEmpty) {
       if (controller.isDayCare.value) {
         final dayCare = facilities.firstWhere(
@@ -104,7 +104,7 @@ class IpdAdmitDialog extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Care Info Header Banner (Matching Android)
+                    // Care Info Header Banner
                     Obx(() {
                       final docPart = controller
                               .selectedConsultantDoctorName.value.isNotEmpty
@@ -146,6 +146,25 @@ class IpdAdmitDialog extends StatelessWidget {
                     Obx(() {
                       final role = controller.userType.value;
                       if (role == 'Leader' || role == 'leader') {
+                        final currentSelectedId =
+                            controller.selectedConsultantDoctorId.value;
+
+                        final Map<String, String> docMap = {'': 'please_select_doctor'.tr};
+                        for (final doc in controller.admitDoctors) {
+                          final docId =
+                              (doc['id'] ?? doc['doctor_id'])?.toString() ?? '';
+                          if (docId.isNotEmpty) {
+                            final name = doc['doctor_name']?.toString() ??
+                                'Dr. ${doc['first_name'] ?? ''} ${doc['last_name'] ?? ''}';
+                            docMap[docId] = name;
+                          }
+                        }
+
+                        final validValue =
+                            docMap.containsKey(currentSelectedId)
+                                ? currentSelectedId
+                                : '';
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -159,37 +178,32 @@ class IpdAdmitDialog extends StatelessWidget {
                                   vertical: 8,
                                 ),
                               ),
-                              initialValue: controller
-                                      .selectedConsultantDoctorId.value.isNotEmpty
-                                  ? controller.selectedConsultantDoctorId.value
-                                  : null,
+                              initialValue: validValue,
                               hint: Text('please_select_doctor'.tr),
-                              items: controller.admitDoctors.map((doc) {
-                                final docId =
-                                    (doc['id'] ?? doc['doctor_id'])?.toString() ??
-                                        '';
-                                final name = doc['doctor_name']?.toString() ??
-                                    'Dr. ${doc['first_name'] ?? ''} ${doc['last_name'] ?? ''}';
+                              items: docMap.entries.map((entry) {
                                 return DropdownMenuItem<String>(
-                                  value: docId,
-                                  child: Text(name),
+                                  value: entry.key,
+                                  child: Text(entry.value),
                                 );
                               }).toList(),
                               onChanged: (value) {
                                 if (value != null) {
-                                  final match = controller.admitDoctors.firstWhere(
-                                    (d) =>
-                                        (d['id'] ?? d['doctor_id'])?.toString() ==
-                                        value,
-                                    orElse: () => null,
-                                  );
-                                  controller.selectedConsultantDoctorId.value =
-                                      value;
-                                  if (match != null) {
-                                    controller
-                                            .selectedConsultantDoctorName.value =
-                                        match['doctor_name']?.toString() ??
-                                            '${match['first_name'] ?? ''} ${match['last_name'] ?? ''}';
+                                  controller.selectedConsultantDoctorId.value = value;
+                                  if (value.isNotEmpty) {
+                                    final match = controller.admitDoctors.firstWhere(
+                                      (d) =>
+                                          (d['id'] ?? d['doctor_id'])?.toString() ==
+                                          value,
+                                      orElse: () => null,
+                                    );
+                                    if (match != null) {
+                                      controller
+                                              .selectedConsultantDoctorName.value =
+                                          match['doctor_name']?.toString() ??
+                                              '${match['first_name'] ?? ''} ${match['last_name'] ?? ''}';
+                                    }
+                                  } else {
+                                    controller.selectedConsultantDoctorName.value = '';
                                   }
                                 }
                               },
@@ -208,6 +222,38 @@ class IpdAdmitDialog extends StatelessWidget {
                           controller.userType.value == 'leader') {
                         return const SizedBox.shrink();
                       }
+
+                      final currentSelectedId =
+                          controller.selectedReferralDoctorId.value;
+
+                      final List<DropdownMenuItem<String>> dropdownItems = [
+                        DropdownMenuItem<String>(
+                          value: '',
+                          child: Text('select_doctor'.tr),
+                        ),
+                      ];
+
+                      String validValue = '';
+
+                      for (int i = 0; i < controller.referralDoctors.length; i++) {
+                        final doc = controller.referralDoctors[i];
+                        final docId = doc['id']?.toString() ?? '';
+                        final docName = doc['doctor_name']?.toString() ??
+                            '${doc['first_name'] ?? ''} ${doc['last_name'] ?? ''}';
+                        
+                        final itemValue = '$i:$docId';
+                        dropdownItems.add(
+                          DropdownMenuItem<String>(
+                            value: itemValue,
+                            child: Text(docName),
+                          ),
+                        );
+
+                        if (docId == currentSelectedId && validValue.isEmpty) {
+                          validValue = itemValue;
+                        }
+                      }
+
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -221,41 +267,27 @@ class IpdAdmitDialog extends StatelessWidget {
                                 vertical: 8,
                               ),
                             ),
-                            initialValue: controller
-                                    .selectedReferralDoctorId.value.isNotEmpty
-                                ? controller.selectedReferralDoctorId.value
-                                : null,
+                            initialValue: validValue,
                             hint: Text('select_doctor'.tr),
-                            items: [
-                              DropdownMenuItem<String>(
-                                value: '',
-                                child: Text('select_doctor'.tr),
-                              ),
-                              ...controller.referralDoctors.map((doc) {
-                                final docId = doc['id']?.toString() ?? '';
-                                final docName = doc['doctor_name']?.toString() ??
-                                    '${doc['first_name'] ?? ''} ${doc['last_name'] ?? ''}';
-                                return DropdownMenuItem<String>(
-                                  value: docId,
-                                  child: Text(docName),
-                                );
-                              }),
-                            ],
+                            items: dropdownItems,
                             onChanged: (value) {
-                              controller.selectedReferralDoctorId.value =
-                                  value ?? '';
-                              if (value != null && value.isNotEmpty) {
-                                final match = controller.referralDoctors.firstWhere(
-                                  (d) => d['id']?.toString() == value,
-                                  orElse: () => null,
-                                );
-                                if (match != null) {
-                                  controller.referralDoctor.value =
-                                      match['doctor_name']?.toString() ??
-                                          '${match['first_name'] ?? ''} ${match['last_name'] ?? ''}';
+                              if (value != null) {
+                                if (value.contains(':')) {
+                                  final parts = value.split(':');
+                                  final index = int.tryParse(parts[0]) ?? -1;
+                                  final realId = parts.sublist(1).join(':');
+
+                                  controller.selectedReferralDoctorId.value = realId;
+                                  if (index >= 0 && index < controller.referralDoctors.length) {
+                                    final match = controller.referralDoctors[index];
+                                    controller.referralDoctor.value =
+                                        match['doctor_name']?.toString() ??
+                                            '${match['first_name'] ?? ''} ${match['last_name'] ?? ''}';
+                                  }
+                                } else {
+                                  controller.selectedReferralDoctorId.value = '';
+                                  controller.referralDoctor.value = '';
                                 }
-                              } else {
-                                controller.referralDoctor.value = '';
                               }
                             },
                           ),
@@ -634,7 +666,7 @@ class IpdAdmitDialog extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
 
-                    // Place Selection (Dynamic Radio Buttons with Counts matching Android)
+                    // Place Selection
                     Obx(
                       () => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -844,7 +876,7 @@ class IpdAdmitDialog extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             SizedBox(
-                              height: 240,
+                              height: 380,
                               child: AppDrawingCanvas(
                                 key: canvasKey,
                                 showToolbar: true,
@@ -1142,17 +1174,17 @@ class IpdAdmitDialog extends StatelessWidget {
             _fetchBedsForWard(controller, apiClient, placeKey, firstWard);
           } else {
             controller.selectedAdmitWard.value = '';
-            controller.admitBedOptions.clear();
+            _fetchBedsForWard(controller, apiClient, placeKey, '');
           }
         } else {
           controller.admitWardOptions.clear();
           controller.selectedAdmitWard.value = '';
-          controller.admitBedOptions.clear();
+          _fetchBedsForWard(controller, apiClient, placeKey, '');
         }
       } else {
         controller.admitWardOptions.clear();
         controller.selectedAdmitWard.value = '';
-        controller.admitBedOptions.clear();
+        _fetchBedsForWard(controller, apiClient, placeKey, '');
       }
     } catch (e) {
       debugPrint('Error fetching wards: $e');
@@ -1168,10 +1200,7 @@ class IpdAdmitDialog extends StatelessWidget {
     String? placeKey,
     String? wardName,
   ) async {
-    if (placeKey == null ||
-        placeKey.isEmpty ||
-        wardName == null ||
-        wardName.isEmpty) {
+    if (placeKey == null || placeKey.isEmpty) {
       controller.admitBedOptions.clear();
       return;
     }
@@ -1185,7 +1214,7 @@ class IpdAdmitDialog extends StatelessWidget {
       final req = GetBedsRequestModel(
         admitIn: placeKey,
         instituteId: targetInstituteId,
-        name: wardName,
+        name: wardName ?? '',
       );
 
       final resp = await apiClient.post(

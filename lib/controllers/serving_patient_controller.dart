@@ -16,6 +16,8 @@ import 'package:digi_icu_flutter/models/request/doctor/add_doctor_visit_notes_re
 import 'package:digi_icu_flutter/models/request/doctor/hold_quick_appointment_req.dart';
 import 'package:digi_icu_flutter/models/request/user/change_appointment_status_req.dart';
 import 'package:digi_icu_flutter/models/request/user/admit_patient_request_model.dart';
+import 'package:digi_icu_flutter/models/request/lab/common_lab_req.dart';
+import 'package:digi_icu_flutter/models/response/patients/patient_detail_response.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
 import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
@@ -56,6 +58,7 @@ class ServingPatientController extends GetxController {
   late final String doctorHomeServiceId;
   late final String doctorId;
   late final RxString isAdmitted = ''.obs;
+  final RxString admitStatus = 'normal'.obs;
   late final String videoUrl;
   late final RxString clinicalFormStatus = ''.obs;
   late final RxString medicalFormStatus = ''.obs;
@@ -251,22 +254,27 @@ class ServingPatientController extends GetxController {
   /// - If clinical form incomplete -> notify user via AppSnackbars
   /// - Otherwise -> open AdmitSelectionDialog
   Future<void> openAdmitDialog() async {
-    // If already admitted
-    if (isAdmitted.value == '1') {
-      AppSnackbars.showError('error'.tr, 'patient_already_admitted'.tr);
+    if (admitStatus.value == 'request_pending') {
+      AppDialog.show(
+        title: 'admit_request_confirm_title'.tr,
+        body: const Text('Admit request for the patient is already created.'),
+        confirmLabel: 'okay'.tr,
+      );
       return;
-    }
-    // If medical form not completed
-    if (medicalFormStatus.value == '0') {
+    } else if (admitStatus.value == 'admitted' || isAdmitted.value == '1') {
+      AppDialog.show(
+        title: 'admit_confirm_title'.tr,
+        body: Text('patient_already_admitted'.tr),
+        confirmLabel: 'okay'.tr,
+      );
+      return;
+    } else if (medicalFormStatus.value == '0') {
       AppSnackbars.showError('error'.tr, 'complete_medical_form_prompt'.tr);
       return;
-    }
-    // If clinical form not completed
-    if (clinicalFormStatus.value == '0') {
+    } else if (clinicalFormStatus.value == '0') {
       AppSnackbars.showError('error'.tr, 'complete_clinical_form_prompt'.tr);
       return;
     }
-    // Show admission selection dialog
     _showAdmitSelectionDialog();
   }
 
@@ -325,13 +333,25 @@ class ServingPatientController extends GetxController {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        final msg =
-            response.data['msg']?.toString() ??
-            'admit_request_confirm_title'.tr;
-        if (response.data['status'] == 'success') {
-          AppSnackbars.showSuccess('success'.tr, msg);
+        var resData = response.data;
+        if (resData is String) {
+          try {
+            resData = jsonDecode(resData);
+          } catch (_) {}
+        }
+
+        if (resData is Map) {
+          final msg =
+              resData['msg']?.toString() ??
+              'admit_request_confirm_title'.tr;
+          final status = resData['status'];
+          if (status == 'success' || status == true) {
+            AppSnackbars.showSuccess('success'.tr, msg);
+          } else {
+            AppSnackbars.showError('error'.tr, msg);
+          }
         } else {
-          AppSnackbars.showError('error'.tr, msg);
+          AppSnackbars.showError('error'.tr, 'admission_failed'.tr);
         }
       } else {
         AppSnackbars.showError('error'.tr, 'admission_failed'.tr);
@@ -641,13 +661,20 @@ class ServingPatientController extends GetxController {
         options: dio.Options(headers: {'Authorization': token}),
       );
 
-      if (resp.statusCode == 200 &&
-          resp.data != null &&
-          resp.data['status']?.toString().toLowerCase() == 'success') {
-        final labId = resp.data['lab_id']?.toString();
-        if (labId != null && labId.isNotEmpty && labId != '0') {
-          await fetchReferralDoctors(labId);
-          return;
+      if (resp.statusCode == 200 && resp.data != null) {
+        var resData = resp.data;
+        if (resData is String) {
+          try {
+            resData = jsonDecode(resData);
+          } catch (_) {}
+        }
+        if (resData is Map &&
+            resData['status']?.toString().toLowerCase() == 'success') {
+          final labId = resData['lab_id']?.toString();
+          if (labId != null && labId.isNotEmpty && labId != '0') {
+            await fetchReferralDoctors(labId);
+            return;
+          }
         }
       }
       referralDoctors.clear();
@@ -666,15 +693,24 @@ class ServingPatientController extends GetxController {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final req = CommonLabReq(labId: labId);
       final resp = await apiClient.post(
         ApiEndpoints.getLabOwnDoctors,
-        data: {'lab_id': labId},
+        data: req.toJson(),
         options: dio.Options(headers: {'Authorization': token}),
       );
-      if (resp.statusCode == 200 &&
-          resp.data != null &&
-          resp.data['status'] == 'success') {
-        referralDoctors.value = resp.data['data'] ?? [];
+      if (resp.statusCode == 200 && resp.data != null) {
+        var resData = resp.data;
+        if (resData is String) {
+          try {
+            resData = jsonDecode(resData);
+          } catch (_) {}
+        }
+        if (resData is Map && resData['status'] == 'success') {
+          referralDoctors.value = resData['data'] ?? [];
+        } else {
+          referralDoctors.clear();
+        }
       } else {
         referralDoctors.clear();
       }
@@ -968,9 +1004,20 @@ class ServingPatientController extends GetxController {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        if (response.data['status'] == 'success') {
-          final ratingVal = response.data['data']?['rating']?.toString() ?? '0';
-          patientRating.value = ratingVal;
+        Map<String, dynamic> jsonMap = {};
+        if (response.data is String) {
+          try {
+            jsonMap = jsonDecode(response.data as String);
+          } catch (_) {}
+        } else if (response.data is Map<String, dynamic>) {
+          jsonMap = response.data as Map<String, dynamic>;
+        }
+
+        final resModel = PatientDetailResponse.fromJson(jsonMap);
+        if (resModel.status == 'success' && resModel.data != null) {
+          final data = resModel.data!;
+          patientRating.value = data.rating.isNotEmpty ? data.rating : '0';
+          admitStatus.value = data.admitStatus ?? 'normal';
         }
       }
     } catch (e) {
