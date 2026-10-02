@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/constants/app_constants.dart';
+import '../models/response/doctors/statewise_patient_count_response.dart';
 import '../models/response/doctors/statuswise_patients_response.dart';
 import '../services/api/api_client.dart';
 import '../views/widgets/confirm_patient_dialog.dart';
@@ -34,18 +35,23 @@ class PatientListController extends GetxController {
   final RxInt currentPage = 1.obs;
   final RxBool hasMore = true.obs;
 
-  // Dynamic counts for status tabs
-  final RxInt referCount = 0.obs;
-  final RxInt instituteCount = 0.obs;
-  final RxInt inProcessCount = 0.obs;
-  final RxInt onHoldCount = 0.obs;
-  final RxInt servedCount = 0.obs;
+  // Dynamic counts for status tabs from get_no_of_patients API
+  final RxString referCount = '0'.obs;
+  final RxString instituteCount = '0'.obs;
+  final RxString inProcessCount = '0'.obs;
+  final RxString onHoldCount = '0'.obs;
+  final RxString servedCount = '0'.obs;
+  final RxString referOutCount = '0'.obs;
+  final RxString scheduleTodayCount = '0'.obs;
+  final RxString scheduleMissedCount = '0'.obs;
+  final RxString scheduleImpCount = '0'.obs;
 
   @override
   void onInit() {
     super.onInit();
     scrollController = ScrollController()..addListener(_onScroll);
     _loadDoctorName().then((_) {
+      fetchPatientCounts();
       fetchPatients();
     });
   }
@@ -60,6 +66,39 @@ class PatientListController extends GetxController {
   Future<void> _loadDoctorName() async {
     final prefs = await SharedPreferences.getInstance();
     doctorName.value = prefs.getString(AppConstants.prefUserName) ?? 'Doctor';
+  }
+
+  /// Fetches status counts from api/v2/Doctor/get_no_of_patients
+  Future<void> fetchPatientCounts() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      if (doctorId.isEmpty) return;
+
+      final response = await apiClient.post(
+        ApiEndpoints.getNoOfPatients,
+        data: {'doctor_id': doctorId},
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final countRes = StatewisePatientCountResponse.fromJson(response.data);
+        if (countRes.status == 'success') {
+          referCount.value = countRes.referIn;
+          inProcessCount.value = countRes.inProcess;
+          onHoldCount.value = countRes.onHold;
+          servedCount.value = countRes.serve;
+          referOutCount.value = countRes.referOut;
+          scheduleTodayCount.value = countRes.scheduleToday;
+          scheduleMissedCount.value = countRes.scheduleMissed;
+          scheduleImpCount.value = countRes.scheduleImp;
+        }
+      }
+    } catch (_) {
+      // Fail silently
+    }
   }
 
   /// Fetches statuswise patients list from API
@@ -110,7 +149,6 @@ class PatientListController extends GetxController {
             patients.addAll(res.data);
           } else {
             patients.assignAll(res.data);
-            _updateCountForStatus(selectedStatus.value, res.data.length);
           }
 
           // If returned data length is less than page limit (10), we reached the end
@@ -123,7 +161,6 @@ class PatientListController extends GetxController {
             errorMessage.value = res.msg.isNotEmpty
                 ? res.msg
                 : 'No patients found';
-            _updateCountForStatus(selectedStatus.value, 0);
           }
           hasMore.value = false;
         }
@@ -144,20 +181,6 @@ class PatientListController extends GetxController {
     } finally {
       isLoading.value = false;
       isLoadMoreLoading.value = false;
-    }
-  }
-
-  void _updateCountForStatus(String status, int count) {
-    if (status == 'Refer') {
-      referCount.value = count;
-    } else if (status == 'Institute') {
-      instituteCount.value = count;
-    } else if (status == 'In Process') {
-      inProcessCount.value = count;
-    } else if (status == 'On Hold') {
-      onHoldCount.value = count;
-    } else if (status == 'Served') {
-      servedCount.value = count;
     }
   }
 
@@ -236,6 +259,7 @@ class PatientListController extends GetxController {
               'doctor_verify',
             );
             if (success) {
+              fetchPatientCounts();
               fetchPatients(search: searchController.text);
               _navigateToServingPatient(patient);
             }

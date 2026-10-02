@@ -3,11 +3,7 @@ class PatientDetailResponse {
   final String msg;
   final PatientDetailData? data;
 
-  PatientDetailResponse({
-    required this.status,
-    required this.msg,
-    this.data,
-  });
+  PatientDetailResponse({required this.status, required this.msg, this.data});
 
   factory PatientDetailResponse.fromJson(Map<String, dynamic> json) {
     return PatientDetailResponse(
@@ -20,11 +16,7 @@ class PatientDetailResponse {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'msg': msg,
-      'data': data?.toJson(),
-    };
+    return {'status': status, 'msg': msg, 'data': data?.toJson()};
   }
 }
 

@@ -86,5 +86,4 @@ class AdmitPatientRequestModel {
     'institute_address': instituteAddress,
     'institute_mobile': instituteMobile,
   };
-
 }

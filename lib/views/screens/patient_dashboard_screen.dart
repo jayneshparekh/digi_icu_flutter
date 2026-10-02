@@ -39,7 +39,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   width: 26,
                   height: 26,
                 ),
-                onPressed: () => Get.back(),
+                onPressed: controller.handleBack,
               ),
               const SizedBox(width: 8),
               // Patient Name & Doctor Details Header
@@ -48,16 +48,22 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      controller.userName,
-                      style: TextStyle(
-                        color: AppColors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    Obx(() {
+                      final displayName =
+                          controller.rxUserName.value.isNotEmpty
+                              ? controller.rxUserName.value
+                              : controller.userName;
+                      return Text(
+                        displayName,
+                        style: const TextStyle(
+                          color: AppColors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      );
+                    }),
                     Obx(() {
                       return Text(
                         'Dr. ${controller.doctorName.value}',
@@ -184,7 +190,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                           iconPath: 'assets/icons/svg/ic_chest_pain_help.svg',
                           iconColor: AppColors.error,
                           label: 'chest_pain_help'.tr,
-                          onTap: () {},
+                          onTap: () => controller.handleChestPainTap(),
                         ),
                       ),
                       if (showDigiIcu)

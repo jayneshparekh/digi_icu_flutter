@@ -111,7 +111,6 @@ class ServingPatientController extends GetxController {
   final RxString noteImagePath = ''.obs;
   final RxBool hasReferralDoctor = false.obs;
 
-
   // Active Center tab state
   final RxString currentTab = 'Dashboard'.obs;
 
@@ -342,8 +341,7 @@ class ServingPatientController extends GetxController {
 
         if (resData is Map) {
           final msg =
-              resData['msg']?.toString() ??
-              'admit_request_confirm_title'.tr;
+              resData['msg']?.toString() ?? 'admit_request_confirm_title'.tr;
           final status = resData['status'];
           if (status == 'success' || status == true) {
             AppSnackbars.showSuccess('success'.tr, msg);
@@ -362,7 +360,6 @@ class ServingPatientController extends GetxController {
   }
 
   /// Checks patient diagnosis status via get_patient_diagnosis API.
-
 
   /// If diagnosis exists (status == 'success'), prompts confirmation dialog and opens PreAdmitDialog.
   /// If diagnosis is missing (status != 'success'), shows error snackbar and redirects to DiagnosisScreen.
@@ -555,14 +552,11 @@ class ServingPatientController extends GetxController {
       if (amenitiesResp.statusCode == 200 && amenitiesResp.data != null) {
         final Map<String, dynamic> data =
             amenitiesResp.data['data'] is Map<String, dynamic>
-                ? amenitiesResp.data['data']
-                : amenitiesResp.data;
+            ? amenitiesResp.data['data']
+            : amenitiesResp.data;
 
         Get.dialog(
-          IpdAdmitDialog(
-            instituteAmenities: [data],
-            beds: const [],
-          ),
+          IpdAdmitDialog(instituteAmenities: [data], beds: const []),
           barrierDismissible: false,
         );
       } else {
@@ -909,7 +903,6 @@ class ServingPatientController extends GetxController {
           options: dio.Options(headers: {'Authorization': token}),
         );
       }
-
 
       if (response.statusCode == 200 && response.data != null) {
         final msg =

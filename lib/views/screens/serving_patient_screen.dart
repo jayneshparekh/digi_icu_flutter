@@ -269,15 +269,15 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                                 _buildTopActionButton(
                                   svgName: 'ic_baseline_admit_24',
                                   onTap: () => controller.openAdmitDialog(),
-                                  bg: controller.admitStatus.value ==
+                                  bg:
+                                      controller.admitStatus.value ==
                                           'request_pending'
                                       ? AppColors.warning
                                       : (controller.admitStatus.value ==
-                                                  'admitted' ||
-                                              controller.isAdmitted.value ==
-                                                  '1')
-                                          ? AppColors.error
-                                          : AppColors.teal,
+                                                'admitted' ||
+                                            controller.isAdmitted.value == '1')
+                                      ? AppColors.error
+                                      : AppColors.teal,
                                 ),
                                 _buildTopActionButton(
                                   svgName: 'ic_hold',

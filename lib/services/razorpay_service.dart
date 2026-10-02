@@ -30,7 +30,7 @@ class RazorpayService {
   /// [email]          – customer email address.
   void openPayment({
     required int amountInPaise,
-    required String orderId,
+    String? orderId,
     String appName = RazorpayConstants.companyName,
     String appLogo = '',
     String contactNumber = '',
@@ -50,7 +50,6 @@ class RazorpayService {
       'currency': RazorpayConstants.currency,
       'name': appName.isNotEmpty ? appName : RazorpayConstants.companyName,
       'description': description,
-      'order_id': orderId,
       'send_sms_hash': true,
       'allow_rotation': true,
       'prefill': {
@@ -59,6 +58,10 @@ class RazorpayService {
       },
       'theme': {'color': '#00897B'},
     };
+
+    if (orderId != null && orderId.trim().isNotEmpty && orderId.startsWith('order_')) {
+      options['order_id'] = orderId;
+    }
 
     if (appLogo.isNotEmpty) {
       options['image'] = appLogo;

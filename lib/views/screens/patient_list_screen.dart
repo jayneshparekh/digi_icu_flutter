@@ -19,8 +19,10 @@ class PatientListScreen extends GetView<PatientListController> {
         doctorName: controller.doctorName,
         searchController: controller.searchController,
         onSearch: (val) => controller.fetchPatients(search: val),
-        onRefresh: () =>
-            controller.fetchPatients(search: controller.searchController.text),
+        onRefresh: () {
+          controller.fetchPatientCounts();
+          controller.fetchPatients(search: controller.searchController.text);
+        },
         onHome: () => Get.offAllNamed('/doctor-dashboard'),
       ),
       body: Column(

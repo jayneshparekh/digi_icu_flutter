@@ -106,14 +106,17 @@ class IpdAdmitDialog extends StatelessWidget {
                   children: [
                     // Care Info Header Banner
                     Obx(() {
-                      final docPart = controller
-                              .selectedConsultantDoctorName.value.isNotEmpty
+                      final docPart =
+                          controller
+                              .selectedConsultantDoctorName
+                              .value
+                              .isNotEmpty
                           ? 'Dr. ${controller.selectedConsultantDoctorName.value}'
                           : (controller.fullName.isNotEmpty
-                              ? 'Dr. ${controller.fullName}'
-                              : 'the institute');
-                      final instPart = controller
-                              .selectedInstituteName.value.isNotEmpty
+                                ? 'Dr. ${controller.fullName}'
+                                : 'the institute');
+                      final instPart =
+                          controller.selectedInstituteName.value.isNotEmpty
                           ? ' in ${controller.selectedInstituteName.value}'
                           : '';
                       final careText =
@@ -149,21 +152,23 @@ class IpdAdmitDialog extends StatelessWidget {
                         final currentSelectedId =
                             controller.selectedConsultantDoctorId.value;
 
-                        final Map<String, String> docMap = {'': 'please_select_doctor'.tr};
+                        final Map<String, String> docMap = {
+                          '': 'please_select_doctor'.tr,
+                        };
                         for (final doc in controller.admitDoctors) {
                           final docId =
                               (doc['id'] ?? doc['doctor_id'])?.toString() ?? '';
                           if (docId.isNotEmpty) {
-                            final name = doc['doctor_name']?.toString() ??
+                            final name =
+                                doc['doctor_name']?.toString() ??
                                 'Dr. ${doc['first_name'] ?? ''} ${doc['last_name'] ?? ''}';
                             docMap[docId] = name;
                           }
                         }
 
-                        final validValue =
-                            docMap.containsKey(currentSelectedId)
-                                ? currentSelectedId
-                                : '';
+                        final validValue = docMap.containsKey(currentSelectedId)
+                            ? currentSelectedId
+                            : '';
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,22 +193,29 @@ class IpdAdmitDialog extends StatelessWidget {
                               }).toList(),
                               onChanged: (value) {
                                 if (value != null) {
-                                  controller.selectedConsultantDoctorId.value = value;
+                                  controller.selectedConsultantDoctorId.value =
+                                      value;
                                   if (value.isNotEmpty) {
-                                    final match = controller.admitDoctors.firstWhere(
-                                      (d) =>
-                                          (d['id'] ?? d['doctor_id'])?.toString() ==
-                                          value,
-                                      orElse: () => null,
-                                    );
+                                    final match = controller.admitDoctors
+                                        .firstWhere(
+                                          (d) =>
+                                              (d['id'] ?? d['doctor_id'])
+                                                  ?.toString() ==
+                                              value,
+                                          orElse: () => null,
+                                        );
                                     if (match != null) {
                                       controller
-                                              .selectedConsultantDoctorName.value =
+                                              .selectedConsultantDoctorName
+                                              .value =
                                           match['doctor_name']?.toString() ??
-                                              '${match['first_name'] ?? ''} ${match['last_name'] ?? ''}';
+                                          '${match['first_name'] ?? ''} ${match['last_name'] ?? ''}';
                                     }
                                   } else {
-                                    controller.selectedConsultantDoctorName.value = '';
+                                    controller
+                                            .selectedConsultantDoctorName
+                                            .value =
+                                        '';
                                   }
                                 }
                               },
@@ -235,12 +247,17 @@ class IpdAdmitDialog extends StatelessWidget {
 
                       String validValue = '';
 
-                      for (int i = 0; i < controller.referralDoctors.length; i++) {
+                      for (
+                        int i = 0;
+                        i < controller.referralDoctors.length;
+                        i++
+                      ) {
                         final doc = controller.referralDoctors[i];
                         final docId = doc['id']?.toString() ?? '';
-                        final docName = doc['doctor_name']?.toString() ??
+                        final docName =
+                            doc['doctor_name']?.toString() ??
                             '${doc['first_name'] ?? ''} ${doc['last_name'] ?? ''}';
-                        
+
                         final itemValue = '$i:$docId';
                         dropdownItems.add(
                           DropdownMenuItem<String>(
@@ -277,15 +294,20 @@ class IpdAdmitDialog extends StatelessWidget {
                                   final index = int.tryParse(parts[0]) ?? -1;
                                   final realId = parts.sublist(1).join(':');
 
-                                  controller.selectedReferralDoctorId.value = realId;
-                                  if (index >= 0 && index < controller.referralDoctors.length) {
-                                    final match = controller.referralDoctors[index];
+                                  controller.selectedReferralDoctorId.value =
+                                      realId;
+                                  if (index >= 0 &&
+                                      index <
+                                          controller.referralDoctors.length) {
+                                    final match =
+                                        controller.referralDoctors[index];
                                     controller.referralDoctor.value =
                                         match['doctor_name']?.toString() ??
-                                            '${match['first_name'] ?? ''} ${match['last_name'] ?? ''}';
+                                        '${match['first_name'] ?? ''} ${match['last_name'] ?? ''}';
                                   }
                                 } else {
-                                  controller.selectedReferralDoctorId.value = '';
+                                  controller.selectedReferralDoctorId.value =
+                                      '';
                                   controller.referralDoctor.value = '';
                                 }
                               }
@@ -308,8 +330,7 @@ class IpdAdmitDialog extends StatelessWidget {
                         ),
                       ),
                       keyboardType: TextInputType.number,
-                      onChanged: (value) =>
-                          controller.approxCost.value = value,
+                      onChanged: (value) => controller.approxCost.value = value,
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
@@ -323,8 +344,7 @@ class IpdAdmitDialog extends StatelessWidget {
                         ),
                       ),
                       keyboardType: TextInputType.number,
-                      onChanged: (value) =>
-                          controller.approxDays.value = value,
+                      onChanged: (value) => controller.approxDays.value = value,
                     ),
                     const SizedBox(height: 16),
 
@@ -334,7 +354,10 @@ class IpdAdmitDialog extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.medicalGray, width: 0.8),
+                        border: Border.all(
+                          color: AppColors.medicalGray,
+                          width: 0.8,
+                        ),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Column(
@@ -404,12 +427,12 @@ class IpdAdmitDialog extends StatelessWidget {
                                 children: [
                                   const SizedBox(height: 8),
                                   RadioGroup<String>(
-                                    groupValue: controller
-                                        .admissionPaymentMode.value,
+                                    groupValue:
+                                        controller.admissionPaymentMode.value,
                                     onChanged: (value) {
                                       if (value != null) {
-                                        controller.admissionPaymentMode
-                                            .value = value;
+                                        controller.admissionPaymentMode.value =
+                                            value;
                                       }
                                     },
                                     child: Row(
@@ -426,8 +449,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                         Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            AppRadio<String>(
-                                                value: 'Online'),
+                                            AppRadio<String>(value: 'Online'),
                                             const SizedBox(width: 4),
                                             const Text('Online'),
                                           ],
@@ -440,19 +462,22 @@ class IpdAdmitDialog extends StatelessWidget {
                                     const SizedBox(height: 8),
                                     TextFormField(
                                       initialValue: controller
-                                          .admissionTransactionId.value,
+                                          .admissionTransactionId
+                                          .value,
                                       decoration: InputDecoration(
                                         labelText: 'transaction_id'.tr,
                                         border: const OutlineInputBorder(),
                                         contentPadding:
                                             const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 8,
-                                        ),
+                                              horizontal: 10,
+                                              vertical: 8,
+                                            ),
                                       ),
-                                      onChanged: (value) => controller
-                                          .admissionTransactionId
-                                          .value = value,
+                                      onChanged: (value) =>
+                                          controller
+                                                  .admissionTransactionId
+                                                  .value =
+                                              value,
                                     ),
                                   ],
                                 ],
@@ -471,7 +496,10 @@ class IpdAdmitDialog extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.medicalGray, width: 0.8),
+                        border: Border.all(
+                          color: AppColors.medicalGray,
+                          width: 0.8,
+                        ),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Column(
@@ -502,12 +530,10 @@ class IpdAdmitDialog extends StatelessWidget {
                           const SizedBox(height: 8),
                           Obx(
                             () => RadioGroup<String>(
-                              groupValue:
-                                  controller.advancePaymentStatus.value,
+                              groupValue: controller.advancePaymentStatus.value,
                               onChanged: (value) {
                                 if (value != null) {
-                                  controller.advancePaymentStatus.value =
-                                      value;
+                                  controller.advancePaymentStatus.value = value;
                                 }
                               },
                               child: Row(
@@ -541,12 +567,12 @@ class IpdAdmitDialog extends StatelessWidget {
                                 children: [
                                   const SizedBox(height: 8),
                                   RadioGroup<String>(
-                                    groupValue: controller
-                                        .advancePaymentMode.value,
+                                    groupValue:
+                                        controller.advancePaymentMode.value,
                                     onChanged: (value) {
                                       if (value != null) {
-                                        controller.advancePaymentMode
-                                            .value = value;
+                                        controller.advancePaymentMode.value =
+                                            value;
                                       }
                                     },
                                     child: Row(
@@ -563,8 +589,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                         Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            AppRadio<String>(
-                                                value: 'Online'),
+                                            AppRadio<String>(value: 'Online'),
                                             const SizedBox(width: 4),
                                             const Text('Online'),
                                           ],
@@ -576,20 +601,22 @@ class IpdAdmitDialog extends StatelessWidget {
                                       'Online') ...[
                                     const SizedBox(height: 8),
                                     TextFormField(
-                                      initialValue: controller
-                                          .advanceTransactionId.value,
+                                      initialValue:
+                                          controller.advanceTransactionId.value,
                                       decoration: InputDecoration(
                                         labelText: 'transaction_id'.tr,
                                         border: const OutlineInputBorder(),
                                         contentPadding:
                                             const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 8,
-                                        ),
+                                              horizontal: 10,
+                                              vertical: 8,
+                                            ),
                                       ),
-                                      onChanged: (value) => controller
-                                          .advanceTransactionId
-                                          .value = value,
+                                      onChanged: (value) =>
+                                          controller
+                                                  .advanceTransactionId
+                                                  .value =
+                                              value,
                                     ),
                                   ],
                                 ],
@@ -682,8 +709,8 @@ class IpdAdmitDialog extends StatelessWidget {
                           RadioGroup<String>(
                             groupValue:
                                 controller.selectedAdmitPlace.value.isNotEmpty
-                                    ? controller.selectedAdmitPlace.value
-                                    : null,
+                                ? controller.selectedAdmitPlace.value
+                                : null,
                             onChanged: (value) {
                               if (value != null) {
                                 controller.selectedAdmitPlace.value = value;
@@ -701,7 +728,8 @@ class IpdAdmitDialog extends StatelessWidget {
                               child: Row(
                                 children: facilities.map<Widget>((f) {
                                   final isDayCare = (f['key'] == 'Day Care');
-                                  final isPrevDayCare = controller.isDayCare.value;
+                                  final isPrevDayCare =
+                                      controller.isDayCare.value;
                                   final enabled = isPrevDayCare
                                       ? isDayCare
                                       : !isDayCare;
@@ -750,8 +778,11 @@ class IpdAdmitDialog extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
-                                  groupValue: controller
-                                              .selectedAdmitWard.value.isNotEmpty &&
+                                  groupValue:
+                                      controller
+                                              .selectedAdmitWard
+                                              .value
+                                              .isNotEmpty &&
                                           controller.admitWardOptions.contains(
                                             controller.selectedAdmitWard.value,
                                           )
@@ -775,19 +806,21 @@ class IpdAdmitDialog extends StatelessWidget {
                                     child: Row(
                                       children: controller.admitWardOptions
                                           .map<Widget>((ward) {
-                                        return Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 12.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              AppRadio<String>(value: ward),
-                                              const SizedBox(width: 4),
-                                              Text(ward),
-                                            ],
-                                          ),
-                                        );
-                                      }).toList(),
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                right: 12.0,
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  AppRadio<String>(value: ward),
+                                                  const SizedBox(width: 4),
+                                                  Text(ward),
+                                                ],
+                                              ),
+                                            );
+                                          })
+                                          .toList(),
                                     ),
                                   ),
                                 ),
@@ -813,8 +846,11 @@ class IpdAdmitDialog extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
-                                  groupValue: controller
-                                              .selectedAdmitBed.value.isNotEmpty &&
+                                  groupValue:
+                                      controller
+                                              .selectedAdmitBed
+                                              .value
+                                              .isNotEmpty &&
                                           controller.admitBedOptions.contains(
                                             controller.selectedAdmitBed.value,
                                           )
@@ -822,8 +858,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                       : null,
                                   onChanged: (value) {
                                     if (value != null) {
-                                      controller.selectedAdmitBed.value =
-                                          value;
+                                      controller.selectedAdmitBed.value = value;
                                     }
                                   },
                                   child: Wrap(
@@ -831,15 +866,16 @@ class IpdAdmitDialog extends StatelessWidget {
                                     runSpacing: 8,
                                     children: controller.admitBedOptions
                                         .map<Widget>((bed) {
-                                      return Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          AppRadio<String>(value: bed),
-                                          const SizedBox(width: 4),
-                                          Text(bed),
-                                        ],
-                                      );
-                                    }).toList(),
+                                          return Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              AppRadio<String>(value: bed),
+                                              const SizedBox(width: 4),
+                                              Text(bed),
+                                            ],
+                                          );
+                                        })
+                                        .toList(),
                                   ),
                                 ),
                                 const SizedBox(height: 16),
@@ -909,7 +945,8 @@ class IpdAdmitDialog extends StatelessWidget {
                     // Photo Note Attachment (Nurse / Leader / Duty Doctor Roles)
                     Obx(() {
                       final role = controller.userType.value;
-                      final isNurseOrLeader = role == 'Nurse' ||
+                      final isNurseOrLeader =
+                          role == 'Nurse' ||
                           role == 'Digi Icu Nurse' ||
                           role == 'Duty Doctor' ||
                           role == 'Leader' ||
@@ -1100,37 +1137,37 @@ class IpdAdmitDialog extends StatelessWidget {
       {
         'label': 'ICU',
         'key': 'ICU',
-        'count': amenityMap['icu']?.toString() ?? '0'
+        'count': amenityMap['icu']?.toString() ?? '0',
       },
       {
         'label': 'CCU',
         'key': 'CCU',
-        'count': amenityMap['ccu']?.toString() ?? '0'
+        'count': amenityMap['ccu']?.toString() ?? '0',
       },
       {
         'label': 'Ward / Room',
         'key': 'Ward / Room',
-        'count': amenityMap['wards']?.toString() ?? '0'
+        'count': amenityMap['wards']?.toString() ?? '0',
       },
       {
         'label': 'Casualty',
         'key': 'Casualty',
-        'count': amenityMap['casuality']?.toString() ?? '0'
+        'count': amenityMap['casuality']?.toString() ?? '0',
       },
       {
         'label': 'Step down',
         'key': 'Step down',
-        'count': amenityMap['step_down']?.toString() ?? '0'
+        'count': amenityMap['step_down']?.toString() ?? '0',
       },
       {
         'label': 'Day Care',
         'key': 'Day Care',
-        'count': amenityMap['day_care']?.toString() ?? '0'
+        'count': amenityMap['day_care']?.toString() ?? '0',
       },
       {
         'label': 'Extra',
         'key': 'Extra',
-        'count': amenityMap['extra']?.toString() ?? '0'
+        'count': amenityMap['extra']?.toString() ?? '0',
       },
     ];
 
@@ -1165,8 +1202,10 @@ class IpdAdmitDialog extends StatelessWidget {
       if (resp.statusCode == 200 && resp.data != null) {
         final wards = resp.data['data'] ?? [];
         if (wards is List) {
-          final wardsList =
-              wards.map((w) => w['name']?.toString() ?? '').where((w) => w.isNotEmpty).toList();
+          final wardsList = wards
+              .map((w) => w['name']?.toString() ?? '')
+              .where((w) => w.isNotEmpty)
+              .toList();
           controller.admitWardOptions.value = wardsList;
           if (wardsList.isNotEmpty) {
             final firstWard = wardsList.first;
@@ -1225,8 +1264,9 @@ class IpdAdmitDialog extends StatelessWidget {
       if (resp.statusCode == 200 && resp.data != null) {
         final beds = resp.data['data'] ?? [];
         if (beds is List) {
-          controller.admitBedOptions.value =
-              beds.map((b) => b['bed_no']?.toString() ?? '').toList();
+          controller.admitBedOptions.value = beds
+              .map((b) => b['bed_no']?.toString() ?? '')
+              .toList();
         } else {
           controller.admitBedOptions.clear();
         }

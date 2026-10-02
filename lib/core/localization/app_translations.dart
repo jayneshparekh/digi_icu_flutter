@@ -955,6 +955,82 @@ class AppTranslations extends Translations {
       'admit_prescription': 'Admit Prescription',
       'drawing_canvas_saved': 'Canvas drawing saved',
       'day_care_vs_others': 'Day Care vs Others',
+
+      // Chest Pain Assessment
+      'chest_pain_check_title': 'Chest pain - check if it is heart attack',
+      'test_for_whom': 'Test for whom?',
+      'me': 'Me',
+      'someone_other': 'Someone Other',
+      'answer_6_questions': 'Answer the 6 questions here below',
+      'full_name_mandatory': 'Full Name*',
+      'dont_know_name': 'Don\'t Know Name',
+      'hypertension_or_diabetes_q': 'Do you have Hypertension or Diabetes?*',
+      'what_kind_of_pain': '1. What kind of pain is it ?*',
+      'pain_pressure': 'Pressure in the chest',
+      'pain_fullness': 'Chest fullness',
+      'pain_tightness': 'Tightness',
+      'pain_burning': 'Burning in the chest',
+      'location_central_q': '2. Location - Is it central?*',
+      'pain_going_q': '3. Is the pain going to left hand, back or lower jaw?*',
+      'duration_pain_q':
+          '4. Duration -\nIs it paining for more than 5 minutes continuously ?*',
+      'do_you_have_symptoms_q': '5. Do you have ?*',
+      'symptom_nausea_vomiting': 'Nausea/vomiting',
+      'symptom_fatigue_syncope': 'Fatigue/Syncope',
+      'symptom_difficulty_breathing': 'Difficulty in breathing',
+      'symptom_sweating': 'Chest Pain Sweating',
+      'symptoms_none': 'None of the above',
+      'pain_after_exertion_q': '6. Did the pain started after exertion?*',
+      'chest_pain_disclaimer':
+          'Disclaimer - This analysis is generated solely based on the answers you provided and data we have saved in our database. The reference scientific paper for the risk generation is https://doi.org/10.1590/1516-3180.2018.0238101218 please go through it if you want.',
+      'acidity_pain_q': '1. Does it look like acidity pain?*',
+      'pain_epigastric_q':
+          '2. Is the pain at the epigastric, just below the chest region?*',
+      'suffered_similar_pain_q':
+          '3. Have you suffered similar pain anytime in past ?*',
+      'heart_pain_after_doctor_q':
+          '3.1 Was it heart pain after visiting to doctor ?*',
+      'didnt_go_to_doctor': 'I didn\'t go to the doctor',
+      'past_heart_surgery_q':
+          '4. Did you have Heart attack/Angioplasty/bypass surgery in past ?*',
+      'chest_pain_family_attack_q':
+          '5. Anyone in family had heart attack before age of < 55 ?*',
+      'medical_form_missing_title': 'Medical Form',
+      'medical_form_not_found_prompt':
+          'Medical form data is required to complete the chest pain evaluation. Please complete the following history.',
+      'score_low_risk': 'Low Risk',
+      'score_moderate_risk': 'Moderate Risk',
+      'score_high_risk': 'High Risk',
+      'score_very_high_risk': 'Very High Risk',
+      'your_score': 'Your Score: @score (@risk)',
+      'emergency_consultation': 'Emergency Consultation',
+      'share_report': 'Share',
+      'score_msg_7_plus':
+          '• Don\'t worry - Relax.\n• Sit back on a chair.\n• Take some water.\n• Get fresh air.\n• If you have sorbitrate at home please have it.\n• If you have Tab Aspirin at home please take 2 tablets.\n• If you have Loading Medicines package- please take it all.\n• Please visit nearest hospital to take ECG.\n• Hurry up - Reach nearest Hospital for ECG and get doctors consultation.\n\nIf you want - Use our Emergency Button to get help at earliest.\n\nIf you are subscribed to MHCs Package patient - We have provided Loading Medicine Package which is in Red Box.',
+      'score_msg_5_6':
+          '• Don\'t worry - Relax.\n• Sit back on a chair.\n• Take some water.\n• Get fresh air.\n• If you have sorbitrate at home please have it.\n• If you have Tab Aspirin at home please take 2 tablets.\n• If you have Loading Medicines package- please take it all.\n• Please visit nearest hospital to take ECG.\n• We will have to go little early. Reach nearest Hospital for ECG and get doctors consultation.\n\nIf you want - Use our Emergency Button to get help at earliest.\n\nIf you are subscribed to MHCs Package patient - We have provided Loading Medicine Package which is in Red Box.',
+      'score_msg_3_4':
+          '• Don\'t worry - Relax.\n• Sit back on a chair.\n• Take some water.\n• Get fresh air.\n• If you have sorbitrate at home please have it.\n• Please take acidity medicines if it is at home.\n• Please visit the nearest hospital to take ECG.\n\nIf you want - Use our Emergency Button to get help at earliest.',
+      'score_msg_0_2':
+          '• Don\'t worry - Relax.\n• It is very less likely that your chest pain is due to heart attack.\n• If you have acidity tablet at home - please take it.\n• Still we advise you to visit nearest doctor and take an ECG.\n• Check with the questionnaire again after 30 minutes.',
+      'please_select_for_whom': 'Please select who this test is for',
+      'please_enter_full_name': 'Please enter full name',
+      'please_enter_age': 'Please enter age',
+      'enter_valid_age': 'Enter valid age (1-100)',
+      'please_select_gender': 'Please select gender',
+      'please_answer_all_questions': 'Please answer all required questions',
+      'age_label': 'Age*',
+      'gender_label': 'Gender*',
+      'past_history_label': 'Past History*',
+      'location_permission_required': 'Location Permission Required',
+      'please_grant_location_permission':
+          'Please grant location permission to accurately assess chest pain emergency services.',
+      'location_required': 'Location Required',
+      'please_enable_gps':
+          'Please enable device GPS/location service to continue.',
+      'location_permission_denied': 'Location Permission Denied',
+      'please_enable_location_in_settings':
+          'Location permission is permanently denied. Please enable it in device settings.',
     },
   };
 }

@@ -23,6 +23,13 @@ class AppConstants {
   static const String prefUserWeight = 'weight';
   static const String doctorRegSec2Pending = 'section_2';
   static const String doctorRegSec3Pending = 'section_3';
+  static const String prefSelectedPatientId = 'selected_patient_id';
+  static const String prefSelectedPatientName = 'selected_patient_name';
+  static const String prefSelectedPatientAge = 'selected_patient_age';
+  static const String prefSelectedPatientGender = 'selected_patient_gender';
+  static const String prefSelectedPatientType = 'selected_patient_type';
+  static const String prefSelectedLeaderId = 'selected_leader_id';
+  static const String prefSelectedDoctorId = 'selected_doctor_id';
 
   // Orientation settings
   static const String prefUserOrientation = 'user_orientation';

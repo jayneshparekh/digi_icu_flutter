@@ -32,7 +32,6 @@ class AppRadio<T> extends StatelessWidget {
   }
 }
 
-
 /// A standardized branded RadioListTile wrapping the Flutter [RadioListTile] widget.
 /// Auto-applies [AppColors.teal] as the active color.
 /// Designed to be used inside a [RadioGroup] ancestor.

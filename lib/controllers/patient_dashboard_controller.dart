@@ -70,31 +70,73 @@ class PatientDashboardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    final args = Get.arguments as Map<String, dynamic>?;
-    if (args != null) {
-      patientId = args['patientId']?.toString() ?? '';
-      userName = args['userName']?.toString() ?? '';
-      userAge = args['userAge']?.toString() ?? '';
-      userGender = args['userGender']?.toString() ?? '';
-      type = args['type']?.toString() ?? '';
-      leaderId = args['leaderId']?.toString() ?? '';
-      isFrom = args['isFrom']?.toString() ?? '';
-      doctorId = args['doctorId']?.toString() ?? '';
-      isFromDoctorHomeService =
-          args['isFromDoctorHomeService'] as bool? ?? false;
-      homeServiceDoctorId = args['doctor_id']?.toString() ?? '';
-      doctorHsReqId = args['doctor_hs_req_id']?.toString() ?? '';
-      problem = args['problem']?.toString() ?? '';
-    }
-    rxUserName.value = userName; // Fallback to route arg name
-    _loadDoctorName();
-    fetchSliders();
-    checkHome();
+    _initData();
   }
 
-  Future<void> _loadDoctorName() async {
+  Future<void> _initData() async {
     final prefs = await SharedPreferences.getInstance();
+    final args = Get.arguments as Map<String, dynamic>?;
+
+    final passedPatientId =
+        (args?['patientId'] ?? args?['patient_id'])?.toString();
+    if (passedPatientId != null && passedPatientId.isNotEmpty) {
+      patientId = passedPatientId;
+      userName =
+          (args?['userName'] ?? args?['patientName'])?.toString() ?? '';
+      userAge =
+          (args?['userAge'] ?? args?['patientAge'])?.toString() ?? '';
+      userGender =
+          (args?['userGender'] ?? args?['patientGender'])?.toString() ?? '';
+      type = args?['type']?.toString() ?? '';
+      leaderId = args?['leaderId']?.toString() ?? '';
+      isFrom = args?['isFrom']?.toString() ?? '';
+      doctorId = args?['doctorId']?.toString() ?? '';
+      isFromDoctorHomeService =
+          args?['isFromDoctorHomeService'] as bool? ?? false;
+      homeServiceDoctorId = args?['doctor_id']?.toString() ?? '';
+      doctorHsReqId = args?['doctor_hs_req_id']?.toString() ?? '';
+      problem = args?['problem']?.toString() ?? '';
+
+      // Persist active patient session
+      await prefs.setString(AppConstants.prefSelectedPatientId, patientId);
+      await prefs.setString(AppConstants.prefSelectedPatientName, userName);
+      await prefs.setString(AppConstants.prefSelectedPatientAge, userAge);
+      await prefs.setString(
+        AppConstants.prefSelectedPatientGender,
+        userGender,
+      );
+      await prefs.setString(AppConstants.prefSelectedPatientType, type);
+      await prefs.setString(AppConstants.prefSelectedLeaderId, leaderId);
+      await prefs.setString(AppConstants.prefSelectedDoctorId, doctorId);
+    } else {
+      // Restore active patient session from SharedPreferences
+      final loginType = prefs.getString(AppConstants.prefLoginType) ?? '';
+      patientId = prefs.getString(AppConstants.prefSelectedPatientId) ?? '';
+      if (patientId.isEmpty && loginType.toLowerCase() == 'patient') {
+        patientId = prefs.getString(AppConstants.prefUserId) ?? '';
+      }
+      userName =
+          prefs.getString(AppConstants.prefSelectedPatientName) ??
+          prefs.getString(AppConstants.prefUserName) ??
+          '';
+      userAge =
+          prefs.getString(AppConstants.prefSelectedPatientAge) ??
+          prefs.getString(AppConstants.prefUserAge) ??
+          '';
+      userGender =
+          prefs.getString(AppConstants.prefSelectedPatientGender) ??
+          prefs.getString(AppConstants.prefUserGender) ??
+          '';
+      type = prefs.getString(AppConstants.prefSelectedPatientType) ?? '';
+      leaderId = prefs.getString(AppConstants.prefSelectedLeaderId) ?? '';
+      doctorId = prefs.getString(AppConstants.prefSelectedDoctorId) ?? '';
+    }
+
+    rxUserName.value = userName;
     doctorName.value = prefs.getString(AppConstants.prefUserName) ?? 'Doctor';
+
+    fetchSliders();
+    checkHome();
   }
 
   Future<void> fetchSliders() async {
@@ -126,6 +168,7 @@ class PatientDashboardController extends GetxController {
   }
 
   Future<void> checkHome() async {
+    if (patientId.isEmpty) return;
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
@@ -139,7 +182,14 @@ class PatientDashboardController extends GetxController {
       if (response.statusCode == 200 && response.data != null) {
         final homeRes = CheckHomeResponse.fromJson(response.data);
         if (homeRes.status == 'success') {
-          rxUserName.value = homeRes.patientName;
+          if (homeRes.patientName.isNotEmpty) {
+            rxUserName.value = homeRes.patientName;
+            userName = homeRes.patientName;
+            await prefs.setString(
+              AppConstants.prefSelectedPatientName,
+              homeRes.patientName,
+            );
+          }
           rxIsAdmitted.value = homeRes.isAdmitted;
           rxInstituteId.value = homeRes.instituteId;
           rxFollowDate.value = homeRes.followDate;
@@ -173,6 +223,7 @@ class PatientDashboardController extends GetxController {
           rxServiceLocationLastUpdated.value =
               homeRes.serviceLocationLastUpdated;
           rxInstallmentDetails.value = homeRes.installmentDetails;
+          rxPastHistory.value = homeRes.pastHistory;
 
           if (homeRes.firstTimeAppointment.isNotEmpty) {
             await prefs.setString(
@@ -235,6 +286,8 @@ class PatientDashboardController extends GetxController {
     return raw;
   }
 
+  final Rxn<PastHistoryModel> rxPastHistory = Rxn<PastHistoryModel>();
+
   void handleDoctorAppointmentTap() {
     if (rxPackageStop.value == "1") {
       final details = rxInstallmentDetails.value;
@@ -260,6 +313,40 @@ class PatientDashboardController extends GetxController {
           'leaderId': leaderId,
         },
       );
+    }
+  }
+
+  void handleChestPainTap() {
+    final ph = rxPastHistory.value;
+    Get.toNamed(
+      '/check-chest-pain',
+      arguments: {
+        'patient_id': patientId,
+        'patientName': rxUserName.value.isNotEmpty
+            ? rxUserName.value
+            : userName,
+        'patientAge': userAge,
+        'patientGender': userGender,
+        'admitId': rxAdmitId.value,
+        'pinCode': rxRegisteredPinCode.value,
+        'regAddress': rxRegisteredAddress.value,
+        'regLatitude': rxLatitude.value,
+        'regLongitude': rxLongitude.value,
+        'ptMobileNo': rxPtMobileNo.value,
+        'hypertension': ph?.hypertension ?? '',
+        'diabetes': ph?.diabetes ?? '',
+        'heartAttack': ph?.heartAttack ?? '',
+        'thyroid': ph?.thyroid ?? '',
+        'stroke': ph?.stroke ?? '',
+      },
+    );
+  }
+
+  void handleBack() {
+    if (Get.key.currentState?.canPop() ?? false) {
+      Get.back();
+    } else {
+      Get.offAllNamed('/doctor-dashboard');
     }
   }
 

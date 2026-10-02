@@ -10,8 +10,8 @@ class GetBedsRequestModel {
   });
 
   Map<String, dynamic> toJson() => {
-        'admit_in': admitIn,
-        'institute_id': instituteId,
-        'name': name,
-      };
+    'admit_in': admitIn,
+    'institute_id': instituteId,
+    'name': name,
+  };
 }

@@ -37,6 +37,10 @@ import 'views/screens/diagnosis_screen.dart';
 import 'controllers/diagnosis_controller.dart';
 import 'views/screens/add_prescription_screen.dart';
 import 'controllers/add_prescription_controller.dart';
+import 'views/screens/check_chest_pain_screen.dart';
+import 'controllers/check_chest_pain_controller.dart';
+import 'views/screens/chest_pain_other_questions_screen.dart';
+import 'controllers/chest_pain_other_questions_controller.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -218,6 +222,20 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           page: () => const AddPrescriptionScreen(),
           binding: BindingsBuilder(() {
             Get.lazyPut(() => AddPrescriptionController());
+          }),
+        ),
+        GetPage(
+          name: '/check-chest-pain',
+          page: () => const CheckChestPainScreen(),
+          binding: BindingsBuilder(() {
+            Get.lazyPut(() => CheckChestPainController());
+          }),
+        ),
+        GetPage(
+          name: '/chest-pain-other-questions',
+          page: () => const ChestPainOtherQuestionsScreen(),
+          binding: BindingsBuilder(() {
+            Get.lazyPut(() => ChestPainOtherQuestionsController());
           }),
         ),
       ],

@@ -3,7 +3,5 @@ class CommonLabReq {
 
   CommonLabReq({required this.labId});
 
-  Map<String, dynamic> toJson() => {
-        'lab_id': labId,
-      };
+  Map<String, dynamic> toJson() => {'lab_id': labId};
 }

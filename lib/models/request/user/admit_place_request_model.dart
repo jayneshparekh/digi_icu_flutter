@@ -8,7 +8,7 @@ class AdmitPlaceRequestModel {
   });
 
   Map<String, dynamic> toJson() => {
-        'admit_in': admitIn,
-        'institute_id': instituteId,
-      };
+    'admit_in': admitIn,
+    'institute_id': instituteId,
+  };
 }
