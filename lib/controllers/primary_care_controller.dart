@@ -194,8 +194,7 @@ class PrimaryCareController extends GetxController {
             response.data['msg']?.toString() ?? 'Form submitted successfully';
         if (status == 'success') {
           AppSnackbars.showSuccess('Success', msg);
-          // Go to manage patients
-          Get.offAllNamed('/manage-patients');
+          Get.back(result: true);
         } else {
           AppSnackbars.showInfo('Submission Failed', msg);
         }

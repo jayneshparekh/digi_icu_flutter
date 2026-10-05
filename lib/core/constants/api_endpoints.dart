@@ -26,11 +26,14 @@ class ApiEndpoints {
   static const String addChestPain = 'api/v2/Patient/add_chest_pain';
   static const String updateChestPain = 'api/v2/Patient/update_chest_pain';
   static const String chestPainPdf = 'api/v2/Patient/chestpain_pdf';
+  static const String addAmbulanceService =
+      'api/v2/Patient/add_ambulance_service';
 
   // ==========================================
   // Doctor Endpoints
   // ==========================================
   static const String statuswisePatients = 'api/v2/Doctor/statuswise_patients';
+  static const String getDefault = 'api/v2/Doctor/get_default';
   static const String getNoOfPatients = 'api/v2/Doctor/get_no_of_patients';
   static const String addRating = 'api/v2/Doctor/add_rating';
   static const String dashboardDetails = 'api/v2/Doctor/dashboard_details';
@@ -91,6 +94,8 @@ class ApiEndpoints {
   static const String patientSignup = 'api/v2/Admin/patient_signup';
   static const String search = 'api/v2/Admin/search';
   static const String getDoctorListAdmin = 'api/v2/Admin/get_doctor_list';
+  static const String updateUserPackageTrack =
+      'api/v2/Admin/update_user_package_track';
 
   // ==========================================
   // Lab Endpoints
@@ -102,6 +107,12 @@ class ApiEndpoints {
   // ==========================================
   static const String getPackageCategories =
       'api/v2/User/get_package_categories';
+  static const String getUserPackageDetails =
+      'api/v2/User/get_user_package_details';
+  static const String getRemainingCreditList =
+      'api/v2/User/get_remaining_credit_list';
+  static const String updateUserWalletTrack =
+      'api/v2/User/update_user_wallet_track';
   static const String signin = 'api/v2/User/signin';
   static const String updateAppointmentStatus =
       'api/v2/User/update_appointment_status';
@@ -115,6 +126,7 @@ class ApiEndpoints {
   // Payment Endpoints
   // ==========================================
   static const String getOrder = 'api/v2/Payment/get_order';
+  static const String verifySignature = 'api/v2/Payment/verify_signature';
 
   // ==========================================
   // Servingpatient Endpoints

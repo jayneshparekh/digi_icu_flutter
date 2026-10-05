@@ -30,6 +30,8 @@ class AppConstants {
   static const String prefSelectedPatientType = 'selected_patient_type';
   static const String prefSelectedLeaderId = 'selected_leader_id';
   static const String prefSelectedDoctorId = 'selected_doctor_id';
+  static const String prefAddress = 'address';
+
 
   // Orientation settings
   static const String prefUserOrientation = 'user_orientation';
@@ -39,4 +41,7 @@ class AppConstants {
 
   // Doctor profile images URL
   static const String doctorImageUrl = '${baseUrl}uploads/doctor_images/';
+
+  // Emergency constants
+  static const String emergencyDoctorId = 'emergency.doc';
 }

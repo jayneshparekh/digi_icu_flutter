@@ -1,16 +1,32 @@
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants/app_constants.dart';
+import '../models/request/emergency/get_remain_credit_list_req.dart';
+import '../models/request/emergency/get_user_package_detail_req.dart';
+import '../models/request/emergency/update_user_package_track_req.dart';
+import '../models/request/emergency/update_user_wallet_track_req.dart';
+import '../models/response/emergency/get_remain_credit_res.dart';
+import '../models/response/emergency/get_user_package_detail_res.dart';
+import '../models/response/patients/appointment_slots_response.dart';
+import '../models/response/patients/book_appointment_response.dart';
 import '../models/response/patients/check_home_response.dart';
 import '../models/response/patients/installment_details_res.dart';
 import '../models/response/patients/slider_response.dart';
+import '../models/response/payment/order_response.dart';
 import '../services/api/api_client.dart';
+import '../services/razorpay_service.dart';
 import '../../views/widgets/installment_payment_dialog.dart';
+import '../views/widgets/app_snackbars.dart';
+import '../views/widgets/emergency_consultation_dialog.dart';
+import '../views/screens/serving_patient_quick_form_view.dart';
 
 class PatientDashboardController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
+  final RazorpayService _razorpayService = RazorpayService();
 
   // Navigation arguments
   String patientId = '';
@@ -342,6 +358,481 @@ class PatientDashboardController extends GetxController {
     );
   }
 
+  void handleAmbulanceTap() {
+    Get.toNamed(
+      '/ambulance-service-request',
+      arguments: {
+        'patientId': patientId,
+        'patientName': rxUserName.value.isNotEmpty
+            ? rxUserName.value
+            : userName,
+        'pinCode': rxRegisteredPinCode.value,
+        'regAddress': rxRegisteredAddress.value,
+        'regLatitude': rxLatitude.value,
+        'regLongitude': rxLongitude.value,
+        'ptMobileNo': rxPtMobileNo.value,
+        'userType': type,
+      },
+    );
+  }
+
+  void handleReportTap(String reportCategory) {
+    Get.toNamed(
+      '/serving-patient',
+      arguments: {
+        'patientId': patientId,
+        'fullName': rxUserName.value.isNotEmpty ? rxUserName.value : userName,
+        'age': userAge,
+        'gender': userGender,
+        'mhcId': rxMhcId.value,
+        'mobileNo': rxPtMobileNo.value,
+        'isAdmitted': rxIsAdmitted.value,
+        'instituteId': rxInstituteId.value,
+        'fromPatient': true,
+        'doctorId': doctorId,
+        'userType': type.isNotEmpty ? type : 'Patient',
+        'initialTab': 'Reports',
+        'initialReportName': reportCategory,
+      },
+    );
+  }
+
+  void handleOtherReportsTap() {
+    handleReportTap('');
+  }
+
+  void handleOpenServingPatientTab(String tabName) {
+    Get.toNamed(
+      '/serving-patient',
+      arguments: {
+        'patientId': patientId,
+        'fullName': rxUserName.value.isNotEmpty ? rxUserName.value : userName,
+        'age': userAge,
+        'gender': userGender,
+        'mhcId': rxMhcId.value,
+        'mobileNo': rxPtMobileNo.value,
+        'isAdmitted': rxIsAdmitted.value,
+        'instituteId': rxInstituteId.value,
+        'fromPatient': true,
+        'doctorId': doctorId,
+        'userType': type.isNotEmpty ? type : 'Patient',
+        'initialTab': tabName,
+      },
+    );
+  }
+
+  void handleOpenQuickForm() {
+    Get.to(
+      () => const ServingPatientQuickFormView(),
+      arguments: {
+        'patientId': patientId,
+        'formId': null,
+      },
+    );
+  }
+
+  void handleCategoryTap(String key) {
+    switch (key) {
+      case 'my_dashboard':
+        handleOpenServingPatientTab('Dashboard');
+        break;
+      case 'quick_form':
+        handleOpenQuickForm();
+        break;
+      case 'my_graphs':
+        handleOpenServingPatientTab('Graph');
+        break;
+      case 'my_forms':
+        handleOpenServingPatientTab('Form');
+        break;
+      case 'echo_cardiography_report':
+        handleReportTap('Echo');
+        break;
+      default:
+        break;
+    }
+  }
+
+
+  final RxBool isEmergencyLoading = false.obs;
+  final RxString emergencySelectedOption = 'Package / Online'.obs;
+
+  Future<void> handleEmergencyDoctorTap() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final currentUserId = prefs.getString(AppConstants.prefUserId) ?? '';
+      final currentUserType = prefs.getString(AppConstants.prefLoginType) ?? type;
+
+      // 1. Fetch remaining credit list
+      int myCredit = 0;
+      try {
+        final creditReq = GetRemainCreditListReq(
+          userId: currentUserId,
+          userType: currentUserType,
+        );
+        final creditRes = await apiClient.post(
+          ApiEndpoints.getRemainingCreditList,
+          data: creditReq.toJson(),
+          options: dio.Options(headers: {'Authorization': token}),
+        );
+        if (creditRes.statusCode == 200 && creditRes.data != null) {
+          final res = GetRemainCreditRes.fromJson(creditRes.data);
+          if (res.status == 'success') {
+            myCredit = int.tryParse(res.myCredit) ?? 0;
+          }
+        }
+      } catch (e) {
+        // Fail silently
+      }
+
+      // 2. Fetch user emergency package details
+      String remainPackage = '0';
+      try {
+        final pkgReq = GetUserPackageDetailReq(
+          userId: currentUserId,
+          userType: currentUserType,
+          packageType: 'Emergency Consultation',
+        );
+        final pkgRes = await apiClient.post(
+          ApiEndpoints.getUserPackageDetails,
+          data: pkgReq.toJson(),
+          options: dio.Options(headers: {'Authorization': token}),
+        );
+        if (pkgRes.statusCode == 200 && pkgRes.data != null) {
+          final res = GetUserPackageDetailRes.fromJson(pkgRes.data);
+          remainPackage = res.remain;
+        }
+      } catch (e) {
+        // Fail silently
+      }
+
+      emergencySelectedOption.value = 'Package / Online';
+
+      Get.dialog(
+        EmergencyConsultationDialog(
+          remainPackages: remainPackage,
+          myCredit: myCredit,
+          consultationFee: 300,
+          userType: currentUserType,
+          selectedOption: emergencySelectedOption,
+          isLoading: isEmergencyLoading.value,
+          onPay: () {
+            _onEmergencyPay(
+              remainPackages: remainPackage,
+              myCredit: myCredit,
+              currentUserId: currentUserId,
+              currentUserType: currentUserType,
+              token: token,
+            );
+          },
+        ),
+      );
+    } catch (e) {
+      AppSnackbars.showError('Error', 'Failed to initialize emergency service');
+    }
+  }
+
+  Future<void> _onEmergencyPay({
+    required String remainPackages,
+    required int myCredit,
+    required String currentUserId,
+    required String currentUserType,
+    required String token,
+  }) async {
+    final hasPackage = remainPackages != "0" && remainPackages.isNotEmpty;
+
+    if (hasPackage) {
+      // Deduct from emergency package
+      isEmergencyLoading.value = true;
+      try {
+        final trackReq = UpdateUserPackageTrackReq(
+          patientId: patientId,
+          userId: currentUserId,
+          userType: currentUserType,
+          type: 'Emergency Consultation',
+          refId: '',
+        );
+        final res = await apiClient.post(
+          ApiEndpoints.updateUserPackageTrack,
+          data: trackReq.toJson(),
+          options: dio.Options(headers: {'Authorization': token}),
+        );
+        if (res.statusCode == 200 && res.data != null) {
+          final status = res.data['status']?.toString() ?? '';
+          if (status == 'success') {
+            await _bookEmergencyAppointmentNow();
+          } else {
+            AppSnackbars.showError('Error', res.data['msg']?.toString() ?? 'Failed to update package');
+          }
+        }
+      } catch (e) {
+        AppSnackbars.showError('Error', 'Failed to deduct package');
+      } finally {
+        isEmergencyLoading.value = false;
+      }
+    } else if (emergencySelectedOption.value == "Wallet") {
+      if (myCredit < 300) {
+        AppSnackbars.showError('Error', 'insufficient_wallet_credit'.tr);
+        return;
+      }
+      isEmergencyLoading.value = true;
+      try {
+        final walletReq = UpdateUserWalletTrackReq(
+          patientId: patientId,
+          amount: '300',
+          type: 'Emergency Consultation',
+          userId: currentUserId,
+          userType: currentUserType,
+          packageId: '',
+        );
+        final res = await apiClient.post(
+          ApiEndpoints.updateUserWalletTrack,
+          data: walletReq.toJson(),
+          options: dio.Options(headers: {'Authorization': token}),
+        );
+        if (res.statusCode == 200 && res.data != null) {
+          final status = res.data['status']?.toString() ?? '';
+          if (status == 'success') {
+            await _bookEmergencyAppointmentNow();
+          } else {
+            AppSnackbars.showError('Error', res.data['msg']?.toString() ?? 'Wallet deduction failed');
+          }
+        }
+      } catch (e) {
+        AppSnackbars.showError('Error', 'Wallet transaction failed');
+      } finally {
+        isEmergencyLoading.value = false;
+      }
+    } else {
+      // Online payment via Razorpay
+      await _startEmergencyOnlinePayment(
+        amount: '30000',
+        currentUserId: currentUserId,
+        currentUserType: currentUserType,
+        token: token,
+      );
+    }
+  }
+
+  Future<void> _startEmergencyOnlinePayment({
+    required String amount,
+    required String currentUserId,
+    required String currentUserType,
+    required String token,
+  }) async {
+    isEmergencyLoading.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userEmail = prefs.getString(AppConstants.prefUserEmail) ?? '';
+      final userMobile = prefs.getString(AppConstants.prefUserMobileNumber) ?? '';
+
+      // 1. Create Order via api/v2/Payment/get_order
+      final orderPayload = {
+        'user_id': patientId.isNotEmpty ? patientId : currentUserId,
+        'package_id': 0,
+        'amount': amount,
+        'payment_for': 'Emergency Doctor',
+        'payment_by': currentUserType.isNotEmpty ? currentUserType : 'Patient',
+        'payment_by_id': currentUserId.isNotEmpty ? currentUserId : patientId,
+      };
+
+      final orderRes = await apiClient.post(
+        ApiEndpoints.getOrder,
+        data: orderPayload,
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (orderRes.statusCode != 200 || orderRes.data == null) {
+        AppSnackbars.showError('Payment Error', 'Failed to generate payment order');
+        return;
+      }
+
+      final orderData = OrderResponse.fromJson(orderRes.data);
+      if (orderData.status != 'success' || orderData.orderId.isEmpty) {
+        AppSnackbars.showError('Payment Error', orderData.msg.isNotEmpty ? orderData.msg : 'Failed to generate order');
+        return;
+      }
+
+      final int amountInPaise = int.tryParse(amount) ?? 30000;
+
+      // 2. Open Razorpay Checkout
+      _razorpayService.openPayment(
+        amountInPaise: amountInPaise,
+        orderId: orderData.orderId,
+        appName: orderData.appName.isNotEmpty ? orderData.appName : 'Digi ICU',
+        appLogo: orderData.appLogo,
+        contactNumber: userMobile,
+        email: userEmail,
+        description: 'Emergency Consultation',
+        onSuccess: (PaymentSuccessResponse success) async {
+          await _verifyEmergencySignature(
+            signature: success.signature ?? '',
+            paymentId: success.paymentId ?? '',
+            orderId: orderData.orderId,
+            token: token,
+          );
+        },
+        onFailure: (PaymentFailureResponse failure) {
+          AppSnackbars.showError(
+            'Payment Failed',
+            failure.message ?? 'Emergency consultation payment was cancelled or failed.',
+          );
+        },
+      );
+    } catch (e) {
+      AppSnackbars.showError('Payment Error', 'Failed to initiate online payment');
+    } finally {
+      isEmergencyLoading.value = false;
+    }
+  }
+
+  Future<void> _verifyEmergencySignature({
+    required String signature,
+    required String paymentId,
+    required String orderId,
+    required String token,
+  }) async {
+    isEmergencyLoading.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final currentUserId = prefs.getString(AppConstants.prefUserId) ?? '';
+      final targetUserId = patientId.isNotEmpty ? patientId : currentUserId;
+
+      final verifyPayload = {
+        'user_id': targetUserId,
+        'signature': signature,
+        'payment_id': paymentId,
+        'order_id': orderId,
+        'request_from': 'Emergency Doctor',
+      };
+
+      final verifyRes = await apiClient.post(
+        ApiEndpoints.verifySignature,
+        data: verifyPayload,
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (verifyRes.statusCode == 200 && verifyRes.data != null) {
+        final status = verifyRes.data['status']?.toString() ?? '';
+        if (status == 'success') {
+          AppSnackbars.showSuccess('Payment Successful', 'Payment verified successfully!');
+          await _bookEmergencyAppointmentNow();
+        } else {
+          AppSnackbars.showError('Payment Error', verifyRes.data['msg']?.toString() ?? 'Signature verification failed');
+        }
+      } else {
+        AppSnackbars.showError('Payment Error', 'Failed to verify payment signature');
+      }
+    } catch (e) {
+      AppSnackbars.showError('Payment Error', 'Payment verification failed');
+    } finally {
+      isEmergencyLoading.value = false;
+    }
+  }
+
+  Future<void> _bookEmergencyAppointmentNow() async {
+    isEmergencyLoading.value = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final currentUserId = prefs.getString(AppConstants.prefUserId) ?? '';
+      final currentUserType = prefs.getString(AppConstants.prefLoginType) ?? type;
+
+      final now = DateTime.now();
+      final dayName = DateFormat('EEEE').format(now);
+      final dateStr = DateFormat('yyyy-MM-dd').format(now);
+      final timeStr = DateFormat('HH:mm:ss').format(now);
+
+      // 1. Fetch Emergency Doctor Slots
+      final slotsResponse = await apiClient.post(
+        ApiEndpoints.getTimeSlotNew,
+        data: {
+          'doctor_id': AppConstants.emergencyDoctorId,
+          'day': dayName,
+          'date': dateStr,
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (slotsResponse.statusCode != 200 || slotsResponse.data == null) {
+        AppSnackbars.showError('Error', 'doctor_not_available_now'.tr);
+        return;
+      }
+
+      final slotsData = AppointmentSlotsResponse.fromJson(slotsResponse.data);
+      if (slotsData.status != 'success' || slotsData.data.isEmpty) {
+        AppSnackbars.showInfo(
+          'doctor_not_available_now'.tr,
+          'doctor_not_available_now'.tr,
+        );
+        return;
+      }
+
+      // Slot resolution: find matching current slot or fallback to last slot
+      AppointmentSlotModel matchedSlot = slotsData.data.last;
+      for (final slot in slotsData.data) {
+        final slotTimes = slot.timeSlot.split('to');
+        if (slotTimes.length == 2) {
+          try {
+            final startFormat = DateFormat('yyyy-MM-dd hh:mm a');
+            final start = startFormat.parse('$dateStr ${slotTimes[0].trim().toLowerCase()}');
+            final end = startFormat.parse('$dateStr ${slotTimes[1].trim().toLowerCase()}');
+            if (now.isAfter(start) && now.isBefore(end)) {
+              matchedSlot = slot;
+              break;
+            }
+          } catch (e) {
+            // Ignore format parse exceptions
+          }
+        }
+      }
+
+      final String appointmentBy = (currentUserType == 'Patient') ? 'self' : currentUserType;
+      final bookingPayload = {
+        'place': '',
+        'patient_id': patientId,
+        'doctor_id': AppConstants.emergencyDoctorId,
+        'time_slot_id': matchedSlot.id,
+        'time_slot': matchedSlot.timeSlot,
+        'booking_date': dateStr,
+        'booking_time': timeStr,
+        'appointment_by': appointmentBy,
+        'appointment_by_id': currentUserId,
+        'speciality': 'Emergency Consultation',
+        'problem': 'Emergency Doctor Consultation',
+        'home_service_id': '',
+        'platform': 'App',
+        'appointment_type': 'Emergency',
+        'amount': 300,
+      };
+
+      final bookResponse = await apiClient.post(
+        ApiEndpoints.bookAppointment,
+        data: bookingPayload,
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (bookResponse.statusCode == 200 && bookResponse.data != null) {
+        final res = BookAppointmentResponse.fromJson(bookResponse.data);
+        if (res.status == 'success') {
+          AppSnackbars.showSuccess('Success', 'Appointment booked successfully!');
+          if (Get.currentRoute != '/patient-dashboard') {
+            Get.toNamed('/patient-dashboard');
+          }
+        } else {
+          AppSnackbars.showError('Error', res.msg.isNotEmpty ? res.msg : 'Failed to book appointment');
+        }
+      } else {
+        AppSnackbars.showError('Error', 'Failed to book emergency appointment');
+      }
+    } catch (e) {
+      AppSnackbars.showError('Error', 'Failed to connect with Emergency Doctor');
+    } finally {
+      isEmergencyLoading.value = false;
+    }
+  }
+
   void handleBack() {
     if (Get.key.currentState?.canPop() ?? false) {
       Get.back();
@@ -357,17 +848,12 @@ class PatientDashboardController extends GetxController {
     String packageName,
     String paymentReferenceId,
   ) {
-    // TODO: Implement Razorpay Integration Order creation
-    // generateOrder(payableAmount, packageId, packageType, packageName, paymentReferenceId);
+    // Razorpay Integration Order creation
   }
 
-  // void generateOrder(
-  //   String payableAmount,
-  //   String packageId,
-  //   String packageType,
-  //   String packageName,
-  //   String paymentReferenceId,
-  // ) {
-  //   // Order generation and signature verification logic
-  // }
+  @override
+  void onClose() {
+    _razorpayService.dispose();
+    super.onClose();
+  }
 }

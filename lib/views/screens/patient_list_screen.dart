@@ -267,13 +267,54 @@ class PatientListScreen extends GetView<PatientListController> {
             style: TextStyle(fontSize: 14, color: AppColors.coolGray),
           ),
           const SizedBox(height: 12),
-          // View Details Button (Only button displayed in patient cards now, no refer button)
-          AppPrimaryButton(
-            label: 'view_details'.tr,
-            onPressed: () => controller.onViewDetails(patient),
-            height: 42,
-            borderRadius: 4,
-          ),
+          // Action Buttons: Clinical Form Pending or View Details
+          if (controller.selectedStatus.value == 'In Process' &&
+              patient.clinicalFormStatus == '0')
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    'clinical_form_pending'.tr,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.error,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                InkWell(
+                  onTap: () => controller.onFillClinicalForm(patient),
+                  borderRadius: BorderRadius.circular(4),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.teal,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      'fill_clinical_form'.tr,
+                      style: const TextStyle(
+                        color: AppColors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          else
+            AppPrimaryButton(
+              label: 'view_details'.tr,
+              onPressed: () => controller.onViewDetails(patient),
+              height: 42,
+              borderRadius: 4,
+            ),
         ],
       ),
     );

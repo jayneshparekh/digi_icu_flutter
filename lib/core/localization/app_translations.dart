@@ -119,6 +119,43 @@ class AppTranslations extends Translations {
       'home_services': 'Home Services',
       'covid_care_at_home': 'Covid Care at Home',
       'for_details_call': 'For details please call',
+      'ambulance_service': 'Ambulance Service',
+      'ambulance_service_for_whom': 'Ambulance service for whom?',
+      'my_self': 'Myself',
+      'mobile_no_with_val': 'Mobile No: @mobile',
+      'change': 'Change',
+      'full_name': 'Full Name',
+      'enter_full_name': 'Enter full name',
+      'why_do_you_want_ambulance': 'Why do you want ambulance service?',
+      'for_which_location_you_want': 'For which location you want?',
+      'registered': 'Registered',
+      'current': 'Current',
+      'other_loc': 'Other',
+      'address': 'Address',
+      'enter_address': 'Enter address',
+      'pincode': 'Pincode',
+      'enter_pincode': 'Enter pincode',
+      'in_how_much_time_ambulance': 'In how much time do you want ambulance?',
+      'urgent_within_hour': 'Urgent (Within 1 hour)',
+      'urgent': 'Urgent',
+      'tomorrow': 'Tomorrow',
+      'schedule_ambulance_visit': 'Schedule ambulance visit',
+      'select_date': 'Select Date',
+      'select_time': 'Select Time',
+      'proceed_and_pay': 'PROCEED AND PAY',
+      'ambulance_request_submitted':
+          'Ambulance service request submitted successfully',
+      'please_enter_problem':
+          'Please enter why you want ambulance service',
+      'please_enter_valid_name': 'Please enter patient name',
+      'please_enter_valid_mobile':
+          'Please enter a valid 10-digit mobile number',
+      'please_enter_address': 'Please enter address',
+      'please_enter_pincode': 'Please enter pin code',
+      'please_select_time': 'Please select time',
+      'please_select_date_time': 'Please select both date and time',
+
+
 
       // Patient Sign Up
       'add_patient': 'Add Patient',
@@ -390,7 +427,7 @@ class AppTranslations extends Translations {
       'high_blood_pressure': 'High blood pressure',
       'stroke': 'Stroke',
       'diabetes_complications': 'Diabetes complications',
-      'other': 'other',
+      'other': 'Other',
       'enter_other_hospitalization_reason':
           'Enter other hospitalization reason',
       'vitals_bp_measurement': 'Vitals BP Measurement',
@@ -470,7 +507,7 @@ class AppTranslations extends Translations {
       'no_history_found': 'No history found.',
       'enter_hba1c_value': 'Enter HbA1c Value:',
       'eg_6_5': 'e.g. 6.5',
-      'select_date': 'Select Date:',
+      'select_date_colon': 'Select Date:',
       'dd_mm_yyyy': 'dd/MM/yyyy',
       'fill_hba1c_date': 'Please fill in both HbA1c value and date.',
 
@@ -1031,6 +1068,18 @@ class AppTranslations extends Translations {
       'location_permission_denied': 'Location Permission Denied',
       'please_enable_location_in_settings':
           'Location permission is permanently denied. Please enable it in device settings.',
+      'remain_emergency_package': 'Remain Emergency Package',
+      'remain_package_deduct': '1 package will be deducted from your account',
+      'wallet': 'Wallet',
+      'payment_txt': 'Payment',
+      'wallet_credit_deduct': '₹@amount will be deducted from your wallet credit',
+      'package_online': 'Package / Online',
+      'my_credit': 'My Credit: ',
+      'package_price': 'Package Price',
+      'pay': 'Pay',
+      'doctor_not_available_now': 'Doctor is not available Now',
+      'emergency_consultation_fee': 'Emergency Consultation Fee',
+      'insufficient_wallet_credit': 'Insufficient wallet credit. Please recharge your wallet.',
     },
   };
 }

@@ -59,8 +59,8 @@ class RazorpayService {
       'theme': {'color': '#00897B'},
     };
 
-    if (orderId != null && orderId.trim().isNotEmpty && orderId.startsWith('order_')) {
-      options['order_id'] = orderId;
+    if (orderId != null && orderId.trim().isNotEmpty) {
+      options['order_id'] = orderId.trim();
     }
 
     if (appLogo.isNotEmpty) {

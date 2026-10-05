@@ -10,6 +10,7 @@ import '../core/constants/app_constants.dart';
 import '../models/response/doctors/statewise_patient_count_response.dart';
 import '../models/response/doctors/statuswise_patients_response.dart';
 import '../services/api/api_client.dart';
+import '../views/widgets/choose_form_option_dialog.dart';
 import '../views/widgets/confirm_patient_dialog.dart';
 
 class PatientListController extends GetxController {
@@ -46,12 +47,16 @@ class PatientListController extends GetxController {
   final RxString scheduleMissedCount = '0'.obs;
   final RxString scheduleImpCount = '0'.obs;
 
+  // Default form types for doctor clinical form flow
+  final RxString defaultFormTypes = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
     scrollController = ScrollController()..addListener(_onScroll);
     _loadDoctorName().then((_) {
       fetchPatientCounts();
+      fetchDefaultFormTypes();
       fetchPatients();
     });
   }
@@ -94,6 +99,34 @@ class PatientListController extends GetxController {
           scheduleTodayCount.value = countRes.scheduleToday;
           scheduleMissedCount.value = countRes.scheduleMissed;
           scheduleImpCount.value = countRes.scheduleImp;
+        }
+      }
+    } catch (_) {
+      // Fail silently
+    }
+  }
+
+  /// Fetches default form types for doctor from api/v2/Doctor/get_default
+  Future<void> fetchDefaultFormTypes() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      if (doctorId.isEmpty) return;
+
+      final response = await apiClient.post(
+        ApiEndpoints.getDefault,
+        data: {
+          'doctor_id': doctorId,
+          'type': 'Doctor Default Form',
+        },
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        if (response.data['status'] == 'success') {
+          defaultFormTypes.value = response.data['data']?.toString() ?? '';
         }
       }
     } catch (_) {
@@ -308,5 +341,108 @@ class PatientListController extends GetxController {
     };
 
     Get.toNamed('/serving-patient', arguments: args);
+  }
+
+  /// Handles "Fill Clinical Form" action for In Process patients with pending clinical form
+  Future<void> onFillClinicalForm(PatientAppointmentData patient) async {
+    final prefs = await SharedPreferences.getInstance();
+    final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
+    final doctorNameVal = prefs.getString(AppConstants.prefUserName) ?? 'Doctor';
+
+    final patientFullName =
+        '${patient.firstName} ${patient.lastName}'.trim();
+    final isHomeService = patient.doctorHomeServiceId.isNotEmpty &&
+        patient.doctorHomeServiceId != '0';
+
+    final allFormTypes = [
+      'Blood Pressure and Sugar Care',
+      'Primary Care',
+      'Child Care',
+      'Women and Pregnancy',
+      'Accident and Wound',
+      'Mental health Care',
+      'Skin Care',
+    ];
+
+    final typesStr = defaultFormTypes.value;
+    final matchedForms =
+        allFormTypes.where((form) => typesStr.contains(form)).toList();
+
+    Future<void> navigateToSelectedForm(String selectedForm) async {
+      dynamic result;
+      if (selectedForm == 'Blood Pressure and Sugar Care') {
+        result = await Get.toNamed(
+          '/clinical-form',
+          arguments: {
+            'doctorId': doctorId,
+            'patientId': patient.patientId,
+            'doctorName': doctorNameVal,
+            'appointmentId': patient.id,
+            'place': patient.place.isNotEmpty ? patient.place : 'Home',
+            'age': patient.age,
+            'patientName': patientFullName,
+            'isFrom': 'Doctor',
+            'isFromDoctorHomeService': isHomeService,
+            'speciality': patient.speciality,
+            'formType': selectedForm,
+          },
+        );
+      } else {
+        result = await Get.toNamed(
+          '/primary-care',
+          arguments: {
+            'doctorId': doctorId,
+            'patientId': patient.patientId,
+            'doctorName': doctorNameVal,
+            'appointmentId': patient.id,
+            'place': patient.place.isNotEmpty ? patient.place : 'Home',
+            'age': patient.age,
+            'patientName': patientFullName,
+            'isFrom': 'Doctor',
+            'isFromDoctorHomeService': isHomeService,
+            'speciality': patient.speciality,
+            'formType': selectedForm,
+          },
+        );
+      }
+
+      if (result == true) {
+        fetchPatientCounts();
+        fetchPatients(search: searchController.text);
+      }
+    }
+
+    if (matchedForms.length == 1) {
+      await navigateToSelectedForm(matchedForms.first);
+    } else if (matchedForms.length > 1) {
+      Get.dialog(
+        ChooseFormOptionDialog(
+          formTypesString: typesStr,
+          onSelect: (form) => navigateToSelectedForm(form),
+        ),
+      );
+    } else {
+      // Default fallback to /clinical-form
+      final result = await Get.toNamed(
+        '/clinical-form',
+        arguments: {
+          'doctorId': doctorId,
+          'patientId': patient.patientId,
+          'doctorName': doctorNameVal,
+          'appointmentId': patient.id,
+          'place': patient.place.isNotEmpty ? patient.place : 'Home',
+          'age': patient.age,
+          'patientName': patientFullName,
+          'isFrom': 'Doctor',
+          'isFromDoctorHomeService': isHomeService,
+          'speciality': patient.speciality,
+        },
+      );
+
+      if (result == true) {
+        fetchPatientCounts();
+        fetchPatients(search: searchController.text);
+      }
+    }
   }
 }

@@ -162,6 +162,19 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                         // Patient Info Row
                         Row(
                           children: [
+                            if (isPatientView) ...[
+                              IconButton(
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                icon: const Icon(
+                                  Icons.arrow_back,
+                                  color: AppColors.navy,
+                                  size: 24,
+                                ),
+                                onPressed: () => Get.back(),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {

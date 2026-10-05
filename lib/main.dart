@@ -41,6 +41,9 @@ import 'views/screens/check_chest_pain_screen.dart';
 import 'controllers/check_chest_pain_controller.dart';
 import 'views/screens/chest_pain_other_questions_screen.dart';
 import 'controllers/chest_pain_other_questions_controller.dart';
+import 'views/screens/ambulance_service_request_screen.dart';
+import 'controllers/ambulance_service_request_controller.dart';
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -238,7 +241,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             Get.lazyPut(() => ChestPainOtherQuestionsController());
           }),
         ),
+        GetPage(
+          name: '/ambulance-service-request',
+          page: () => const AmbulanceServiceRequestScreen(),
+          binding: BindingsBuilder(() {
+            Get.lazyPut(() => AmbulanceServiceRequestController());
+          }),
+        ),
       ],
     );
   }
 }
+

@@ -226,8 +226,27 @@ class ServingPatientController extends GetxController {
     fromPatient = args['fromPatient'] as bool? ?? false;
     isFrom = args['isFrom']?.toString() ?? '';
 
+    final initialTab = args['initialTab']?.toString();
+    if (initialTab != null && initialTab.isNotEmpty) {
+      currentTab.value = initialTab;
+    }
+    final initialReportName =
+        (args['initialReportName'] ?? args['reportName'])?.toString() ?? '';
+    if (initialReportName.isNotEmpty) {
+      selectedFolderReportName.value = initialReportName;
+    }
+
     _loadUserType().then((_) {
       fetchPatientDetails();
+      if (currentTab.value == 'Reports') {
+        if (selectedFolderReportName.value.isNotEmpty) {
+          fetchFolderReports(selectedFolderReportName.value);
+        } else {
+          fetchReportCounts();
+        }
+      } else if (currentTab.value == 'Graph') {
+        fetchGraphData();
+      }
     });
   }
 
@@ -1118,6 +1137,16 @@ class ServingPatientController extends GetxController {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final currentUserId = prefs.getString(AppConstants.prefUserId) ?? '';
+      final currentUserType =
+          prefs.getString(AppConstants.prefLoginType) ?? userType.value;
+
+      final uploadUserId = currentUserId.isNotEmpty
+          ? currentUserId
+          : (doctorId.isNotEmpty ? doctorId : patientId);
+      final uploadUserType = currentUserType.isNotEmpty
+          ? currentUserType
+          : (userType.value.isNotEmpty ? userType.value : 'Doctor');
 
       final fileName = filePath.split('/').last;
       final isPdf = fileName.toLowerCase().endsWith('.pdf');
@@ -1126,10 +1155,10 @@ class ServingPatientController extends GetxController {
         'patient_id': patientId,
         'report_name': reportName,
         'admit_id': '0',
-        'report_from': 'Direct',
-        'report_from_id': '',
-        'uploaded_by': userType.value,
-        'uploaded_by_id': doctorId,
+        'report_from': isFrom.isNotEmpty ? isFrom : 'Direct',
+        'report_from_id': '0',
+        'uploaded_by': uploadUserType,
+        'uploaded_by_id': uploadUserId,
         'other_name': remarks,
         if (!isPdf)
           'report[]': await dio.MultipartFile.fromFile(

@@ -234,7 +234,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                           iconPath: 'assets/icons/svg/ic_emergency_call.svg',
                           iconColor: AppColors.error,
                           label: 'emergency_doctor'.tr,
-                          onTap: () {},
+                          onTap: () => controller.handleEmergencyDoctorTap(),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -243,9 +243,10 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                           iconPath: 'assets/icons/svg/ic_ambulance.svg',
                           iconColor: AppColors.error,
                           label: 'call_ambulance'.tr,
-                          onTap: () {},
+                          onTap: () => controller.handleAmbulanceTap(),
                         ),
                       ),
+
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -372,22 +373,22 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       PatientDashboardCircleBtn(
                         iconPath: 'assets/icons/svg/ic_ecg.svg',
                         label: 'ecg_report'.tr,
-                        onTap: () {},
+                        onTap: () => controller.handleReportTap('ECG'),
                       ),
                       PatientDashboardCircleBtn(
                         iconPath: 'assets/icons/svg/ic_specialist.svg',
                         label: 'sugar_report'.tr,
-                        onTap: () {},
+                        onTap: () => controller.handleReportTap('Blood sugar'),
                       ),
                       PatientDashboardCircleBtn(
                         iconPath: 'assets/icons/svg/ic_prescription.svg',
                         label: 'old_medicines'.tr,
-                        onTap: () {},
+                        onTap: () => controller.handleReportTap('Old Medicines'),
                       ),
                       PatientDashboardCircleBtn(
                         iconPath: 'assets/icons/svg/ic_patient_list.svg',
                         label: 'other_report'.tr,
-                        onTap: () {},
+                        onTap: () => controller.handleOtherReportsTap(),
                       ),
                     ],
                   ),
@@ -406,50 +407,62 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                   Obx(() {
                     final list = <Map<String, String>>[
                       {
+                        'id': 'my_dashboard',
                         'title': 'my_dashboard'.tr,
                         'icon': 'assets/icons/svg/ic_dashboard.svg',
                       },
                       {
+                        'id': 'online_pharmacy',
                         'title': 'online_pharmacy'.tr,
                         'icon': 'assets/icons/svg/ic_online_pharmacy.svg',
                       },
                       {
+                        'id': 'quick_form',
                         'title': 'quick_form'.tr,
                         'icon': 'assets/icons/svg/ic_quick.svg',
                       },
                       {
+                        'id': 'my_graphs',
                         'title': 'my_graphs'.tr,
                         'icon': 'assets/icons/svg/ic_graphs.svg',
                       },
                       {
+                        'id': 'info_education',
                         'title': 'info_education'.tr,
                         'icon': 'assets/icons/svg/ic_info_education.svg',
                       },
                       {
+                        'id': 'my_forms',
                         'title': 'my_forms'.tr,
                         'icon': 'assets/icons/svg/ic_my_forms.svg',
                       },
                       {
+                        'id': 'orders_status',
                         'title': 'orders_status'.tr,
                         'icon': 'assets/icons/svg/ic_delivery.svg',
                       },
                       {
+                        'id': 'collaborated_hospitals',
                         'title': 'collaborated_hospitals'.tr,
                         'icon': 'assets/icons/svg/ic_hospital_building.svg',
                       },
                       {
+                        'id': 'screening',
                         'title': 'screening'.tr,
                         'icon': 'assets/icons/svg/ic_screening.svg',
                       },
                       {
+                        'id': 'health_monitor',
                         'title': 'health_monitor'.tr,
                         'icon': 'assets/icons/svg/ic_health_monitor.svg',
                       },
                       {
+                        'id': 'stethoscope_device',
                         'title': 'stethoscope_device'.tr,
                         'icon': 'assets/icons/svg/ic_health_monitor.svg',
                       },
                       {
+                        'id': 'family_member',
                         'title': 'family_member'.tr,
                         'icon': 'assets/icons/svg/ic_patient_list.svg',
                       },
@@ -460,39 +473,46 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                             controller.type == "Nurse") &&
                         controller.rxIsAdmitted.value == "0") {
                       list.add({
+                        'id': 'ipd_admit',
                         'title': 'ipd_admit'.tr,
                         'icon': 'assets/icons/svg/ic_hospital_bed.svg',
                       });
                     }
 
                     list.add({
+                      'id': 'my_admit_details',
                       'title': 'my_admit_details'.tr,
                       'icon': 'assets/icons/svg/ic_hospital_bed.svg',
                     });
 
                     if (controller.type != "Patient") {
                       list.add({
+                        'id': 'patient_location',
                         'title': 'patient_location'.tr,
                         'icon': 'assets/icons/svg/location.svg',
                       });
                     } else {
                       list.add({
+                        'id': 'update_my_location',
                         'title': 'update_my_location'.tr,
                         'icon': 'assets/icons/svg/location.svg',
                       });
                     }
 
                     list.add({
+                      'id': 'echo_cardiography_report',
                       'title': 'echo_cardiography_report'.tr,
                       'icon': 'assets/icons/svg/echocardiography.svg',
                     });
                     list.add({
+                      'id': 'home_services',
                       'title': 'home_services'.tr,
                       'icon': 'assets/icons/svg/ic_orders_status.svg',
                     });
 
                     if (controller.rxCovidIconShow.value == "1") {
                       list.add({
+                        'id': 'covid_care_at_home',
                         'title': 'covid_care_at_home'.tr,
                         'icon': 'assets/images/covid_logo.png',
                       });
@@ -514,7 +534,9 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                         return DashboardCard(
                           title: item['title']!,
                           iconPath: item['icon']!,
-                          onTap: () {},
+                          onTap: () => controller.handleCategoryTap(
+                            item['id'] ?? '',
+                          ),
                         );
                       },
                     );

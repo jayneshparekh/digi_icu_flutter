@@ -990,6 +990,8 @@ class ClinicalFormController extends GetxController {
               '/patient-list',
               arguments: {'doctor_hs_req_id': doctorHsReqId},
             );
+          } else if (isFrom == 'Doctor') {
+            Get.back(result: true);
           } else {
             AppDialog.show(
               title: 'form_submitted'.tr,
@@ -1001,11 +1003,11 @@ class ClinicalFormController extends GetxController {
                   'Video Upload',
                   'Video upload is currently placeholder',
                 );
-                Get.offAllNamed('/manage-patients');
+                Get.back(result: true);
               },
               onCancel: () {
                 Get.back();
-                Get.offAllNamed('/manage-patients');
+                Get.back(result: true);
               },
               body: Text(
                 'upload_video_prompt'.tr,
