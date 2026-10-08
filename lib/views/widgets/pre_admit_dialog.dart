@@ -34,7 +34,7 @@ class PreAdmitDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'admit'.tr,
+                    'select_institute'.tr,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

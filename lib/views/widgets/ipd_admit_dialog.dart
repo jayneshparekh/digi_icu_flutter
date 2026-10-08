@@ -43,7 +43,20 @@ class IpdAdmitDialog extends StatelessWidget {
     if (controller.userType.value == 'Doctor' &&
         controller.selectedConsultantDoctorId.value.isEmpty) {
       controller.selectedConsultantDoctorId.value = controller.doctorId;
-      controller.selectedConsultantDoctorName.value = controller.fullName;
+      controller.selectedConsultantDoctorName.value =
+          controller.loggedInDoctorName.value;
+    }
+
+    // Default admit date and time initialization to current date and time
+    if (controller.admissionDate.value.isEmpty) {
+      final now = DateTime.now();
+      controller.admissionDate.value =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    }
+    if (controller.admissionTime.value.isEmpty) {
+      final now = TimeOfDay.now();
+      controller.admissionTime.value =
+          '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
     }
 
     final facilities = _getDynamicFacilities(instituteAmenities);
@@ -81,13 +94,27 @@ class IpdAdmitDialog extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'admit'.tr,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.navy,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'admit'.tr,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.navy,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${controller.fullName}/${controller.gender.isNotEmpty ? controller.gender[0].toUpperCase() : ''}/${controller.age}',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.coolGray,
+                      ),
+                    ),
+                  ],
                 ),
                 IconButton(
                   icon: const Icon(Icons.close, color: AppColors.error),
@@ -112,8 +139,8 @@ class IpdAdmitDialog extends StatelessWidget {
                               .value
                               .isNotEmpty
                           ? 'Dr. ${controller.selectedConsultantDoctorName.value}'
-                          : (controller.fullName.isNotEmpty
-                                ? 'Dr. ${controller.fullName}'
+                          : (controller.loggedInDoctorName.value.isNotEmpty
+                                ? 'Dr. ${controller.loggedInDoctorName.value}'
                                 : 'the institute');
                       final instPart =
                           controller.selectedInstituteName.value.isNotEmpty
@@ -632,9 +659,18 @@ class IpdAdmitDialog extends StatelessWidget {
                     // Admission Date & Time (Stacked Vertically)
                     InkWell(
                       onTap: () async {
+                        DateTime initialDate = DateTime.now();
+                        if (controller.admissionDate.value.isNotEmpty) {
+                          final parsed = DateTime.tryParse(
+                            controller.admissionDate.value,
+                          );
+                          if (parsed != null) {
+                            initialDate = parsed;
+                          }
+                        }
                         final DateTime? picked = await showDatePicker(
                           context: context,
-                          initialDate: DateTime.now(),
+                          initialDate: initialDate,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                         );
@@ -664,9 +700,21 @@ class IpdAdmitDialog extends StatelessWidget {
                     const SizedBox(height: 12),
                     InkWell(
                       onTap: () async {
+                        TimeOfDay initialTime = TimeOfDay.now();
+                        if (controller.admissionTime.value.isNotEmpty) {
+                          final parts =
+                              controller.admissionTime.value.split(':');
+                          if (parts.length == 2) {
+                            final h = int.tryParse(parts[0]);
+                            final m = int.tryParse(parts[1]);
+                            if (h != null && m != null) {
+                              initialTime = TimeOfDay(hour: h, minute: m);
+                            }
+                          }
+                        }
                         final TimeOfDay? picked = await showTimePicker(
                           context: context,
-                          initialTime: TimeOfDay.now(),
+                          initialTime: initialTime,
                         );
                         if (picked != null) {
                           controller.admissionTime.value =

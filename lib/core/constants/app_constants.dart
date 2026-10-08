@@ -42,6 +42,9 @@ class AppConstants {
   // Doctor profile images URL
   static const String doctorImageUrl = '${baseUrl}uploads/doctor_images/';
 
+  // QR code images URL
+  static const String qrCodeUrl = '${baseUrl}uploads/qr_codes/';
+
   // Emergency constants
   static const String emergencyDoctorId = 'emergency.doc';
 }

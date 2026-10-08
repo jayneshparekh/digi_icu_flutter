@@ -121,6 +121,7 @@ class ApiEndpoints {
   static const String whereAdmit = 'api/v2/User/where_admit';
   static const String getBeds = 'api/v2/User/get_beds';
   static const String getInstitute = 'api/v2/User/get_institute';
+  static const String getDischargeData = 'api/v2/User/get_discharge_data';
 
   // ==========================================
   // Payment Endpoints
@@ -139,6 +140,7 @@ class ApiEndpoints {
   // ==========================================
   static const String addAdmitPatientRequest =
       'web/IPDPatients/add_admit_patient_request';
+  static const String ipdPatientsList = 'web/IPDPatients/ipd_patients_list';
 
   // ==========================================
   // Institute Endpoints

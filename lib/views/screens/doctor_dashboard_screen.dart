@@ -176,6 +176,23 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
                         }
                       },
                     ),
+                    // IPD Patients Card
+                    DashboardCard(
+                      title: 'ipd_patients'.tr,
+                      iconPath: 'assets/icons/svg/ic_ipd_patient.svg',
+                      onTap: () {
+                        if (controller.accountStatus.value == '2') {
+                          _showPendingRegistrationDialog(context);
+                        } else {
+                          Get.toNamed(
+                            '/ipd-patient-list',
+                            arguments: {
+                              'institute_id': controller.instituteId.value,
+                            },
+                          );
+                        }
+                      },
+                    ),
                   ],
                 );
               },

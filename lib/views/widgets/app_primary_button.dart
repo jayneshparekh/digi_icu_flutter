@@ -42,6 +42,8 @@ class AppPrimaryButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(borderRadius),
           ),
           elevation: 0,
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
         ),
         child: isLoading
             ? const SizedBox(
@@ -54,6 +56,7 @@ class AppPrimaryButton extends StatelessWidget {
               )
             : Text(
                 label,
+                textAlign: TextAlign.center,
                 style:
                     labelStyle ??
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),

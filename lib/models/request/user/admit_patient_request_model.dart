@@ -21,6 +21,8 @@ class AdmitPatientRequestModel {
   final String place;
   final String admitBy;
   final String admitById;
+  final String admitRequest;
+  final String bedNo;
   final String admissionNotes;
   final String instituteLogo;
   final String instituteName;
@@ -50,6 +52,8 @@ class AdmitPatientRequestModel {
     required this.place,
     required this.admitBy,
     required this.admitById,
+    this.admitRequest = '',
+    this.bedNo = '',
     this.admissionNotes = '',
     this.instituteLogo = '',
     this.instituteName = '',
@@ -80,6 +84,8 @@ class AdmitPatientRequestModel {
     'place': place,
     'admit_by': admitBy,
     'admit_by_id': admitById,
+    'admit_request': admitRequest,
+    'bed_no': bedNo,
     'admission_notes': admissionNotes,
     'institute_logo': instituteLogo,
     'institute_name': instituteName,

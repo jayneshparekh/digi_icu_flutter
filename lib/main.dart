@@ -43,6 +43,10 @@ import 'views/screens/chest_pain_other_questions_screen.dart';
 import 'controllers/chest_pain_other_questions_controller.dart';
 import 'views/screens/ambulance_service_request_screen.dart';
 import 'controllers/ambulance_service_request_controller.dart';
+import 'views/screens/my_ipd_patient_list_screen.dart';
+import 'controllers/my_ipd_patient_list_controller.dart';
+import 'views/screens/discharge_summary_screen.dart';
+import 'controllers/discharge_summary_controller.dart';
 
 
 void main() {
@@ -246,6 +250,20 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           page: () => const AmbulanceServiceRequestScreen(),
           binding: BindingsBuilder(() {
             Get.lazyPut(() => AmbulanceServiceRequestController());
+          }),
+        ),
+        GetPage(
+          name: '/ipd-patient-list',
+          page: () => const MyIpdPatientListScreen(),
+          binding: BindingsBuilder(() {
+            Get.lazyPut(() => MyIpdPatientListController());
+          }),
+        ),
+        GetPage(
+          name: '/discharge-summary',
+          page: () => const DischargeSummaryScreen(),
+          binding: BindingsBuilder(() {
+            Get.lazyPut(() => DischargeSummaryController());
           }),
         ),
       ],

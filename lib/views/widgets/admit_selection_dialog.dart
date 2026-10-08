@@ -104,11 +104,9 @@ class AdmitSelectionDialog extends StatelessWidget {
                     height: 40,
                     onPressed: () {
                       Get.back();
-                      if (selectedOption.value == 'admit_request') {
-                        controller.confirmAndSubmitAdmitRequest();
-                      } else if (selectedOption.value == 'admit') {
-                        controller.getDiagnosisAndProceed();
-                      }
+                      final isAdmitRequest =
+                          selectedOption.value == 'admit_request';
+                      controller.onAdmitSelectionSubmit(isAdmitRequest);
                     },
                   ),
                 ),

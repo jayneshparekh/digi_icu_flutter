@@ -110,6 +110,8 @@ class ServingPatientController extends GetxController {
   final Rxn<Uint8List> canvasDrawingBytes = Rxn<Uint8List>();
   final RxString noteImagePath = ''.obs;
   final RxBool hasReferralDoctor = false.obs;
+  final RxBool isAdmitRequestSelection = false.obs;
+  final RxString loggedInDoctorName = ''.obs;
 
   // Active Center tab state
   final RxString currentTab = 'Dashboard'.obs;
@@ -253,6 +255,7 @@ class ServingPatientController extends GetxController {
   Future<void> _loadUserType() async {
     final prefs = await SharedPreferences.getInstance();
     userType.value = prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
+    loggedInDoctorName.value = prefs.getString(AppConstants.prefUserName) ?? '';
   }
 
   // ==========================================
@@ -261,17 +264,12 @@ class ServingPatientController extends GetxController {
 
   /// Validates admission prerequisites and opens the Admit Selection Dialog.
   /// Workflow:
-  /// - If already admitted -> notify user via snackbar
-  /// - If medical form incomplete -> notify user via snackbar
-  /// - If clinical form incomplete -> notify user via snackbar
-  /// - Otherwise -> open AdmitSelectionDialog
-  /// Validates admission prerequisites and opens the Admit Selection Dialog.
-  /// Workflow:
   /// - If already admitted -> notify user via AppSnackbars
   /// - If medical form incomplete -> notify user via AppSnackbars
   /// - If clinical form incomplete -> notify user via AppSnackbars
   /// - Otherwise -> open AdmitSelectionDialog
   Future<void> openAdmitDialog() async {
+    isAdmitRequestSelection.value = false;
     if (admitStatus.value == 'request_pending') {
       AppDialog.show(
         title: 'admit_request_confirm_title'.tr,
@@ -294,6 +292,13 @@ class ServingPatientController extends GetxController {
       return;
     }
     _showAdmitSelectionDialog();
+  }
+
+  /// Handles submit from AdmitSelectionDialog:
+  /// Stores selection flag (Admit Request vs Admit) and proceeds to diagnosis check.
+  void onAdmitSelectionSubmit(bool isAdmitRequest) {
+    isAdmitRequestSelection.value = isAdmitRequest;
+    getDiagnosisAndProceed();
   }
 
   /// Shows the Admit Selection Dialog with two options: Admit Request vs Admit.
@@ -548,6 +553,12 @@ class ServingPatientController extends GetxController {
       selectedAdmitBed.value = '';
       admitWardOptions.clear();
       admitBedOptions.clear();
+
+      final now = DateTime.now();
+      admissionDate.value =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+      admissionTime.value =
+          '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
 
       // Fetch institute details (logo, address, mobile)
       await fetchInstituteDetails(targetInstituteId);
@@ -827,6 +838,10 @@ class ServingPatientController extends GetxController {
           canvasDrawingBytes.value!.isNotEmpty;
       final bool hasImageFile = noteImagePath.value.isNotEmpty;
 
+      final logoUrl = selectedInstituteLogo.value.isEmpty
+          ? '${AppConstants.baseUrl}uploads/no_image_found.jpg'
+          : '${AppConstants.baseUrl}uploads/institute/${selectedInstituteLogo.value}';
+
       dio.Response response;
 
       if (isMultipartRole && (hasCanvasDrawing || hasImageFile)) {
@@ -846,7 +861,7 @@ class ServingPatientController extends GetxController {
 
         final formDataMap = <String, dynamic>{
           'institute_id': targetInstituteId,
-          'institute_logo': selectedInstituteLogo.value,
+          'institute_logo': logoUrl,
           'institute_name': selectedInstituteName.value,
           'institute_address': selectedInstituteAddress.value,
           'institute_mobile': selectedInstituteMobile.value,
@@ -869,8 +884,10 @@ class ServingPatientController extends GetxController {
           'advance_amount_payment_mode': advancePaymentMode.value,
           'advance_transaction_id': advanceTransactionId.value,
           'place': selectedAdmitPlace.value,
+          'bed_no': selectedAdmitBed.value,
           'admit_by': currentUserType,
           'admit_by_id': currentUserId,
+          'admit_request': isAdmitRequestSelection.value ? '1' : '',
           'admission_notes': admissionNotes.value,
         };
 
@@ -907,10 +924,12 @@ class ServingPatientController extends GetxController {
           advancePaymentMode: advancePaymentMode.value,
           advanceTransactionId: advanceTransactionId.value,
           place: selectedAdmitPlace.value,
+          bedNo: selectedAdmitBed.value,
           admitBy: currentUserType.isNotEmpty ? currentUserType : 'Doctor',
           admitById: currentUserId.isNotEmpty ? currentUserId : doctorId,
+          admitRequest: isAdmitRequestSelection.value ? '1' : '',
           admissionNotes: admissionNotes.value,
-          instituteLogo: selectedInstituteLogo.value,
+          instituteLogo: logoUrl,
           instituteName: selectedInstituteName.value,
           instituteAddress: selectedInstituteAddress.value,
           instituteMobile: selectedInstituteMobile.value,
@@ -928,7 +947,13 @@ class ServingPatientController extends GetxController {
             response.data['msg']?.toString() ??
             'admission_completed_success'.tr;
         if (response.data['status'] == 'success') {
-          isAdmitted.value = '1';
+          if (isAdmitRequestSelection.value) {
+            admitStatus.value = 'request_pending';
+            isAdmitted.value = '0';
+          } else {
+            isAdmitted.value = '1';
+            admitStatus.value = 'admitted';
+          }
           AppSnackbars.showSuccess('success'.tr, msg);
         } else {
           AppSnackbars.showError('error'.tr, msg);
