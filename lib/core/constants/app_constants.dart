@@ -39,6 +39,9 @@ class AppConstants {
   // Patient image uploads URL
   static const String patientImageUrl = '${baseUrl}uploads/patient_images/';
 
+  // Patient report uploads URL
+  static const String patientReportUrl = '${baseUrl}uploads/patient_reports/';
+
   // Doctor profile images URL
   static const String doctorImageUrl = '${baseUrl}uploads/doctor_images/';
 

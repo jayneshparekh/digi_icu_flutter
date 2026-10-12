@@ -122,6 +122,19 @@ class ApiEndpoints {
   static const String getBeds = 'api/v2/User/get_beds';
   static const String getInstitute = 'api/v2/User/get_institute';
   static const String getDischargeData = 'api/v2/User/get_discharge_data';
+  static const String getInvestigationsForIpdAdmit =
+      'api/v2/User/get_investigations_for_ipd_admit';
+  static const String getLastPrescriptionForDischarge =
+      'api/v2/User/get_last_prescription_for_discharge';
+  static const String deleteDischargePrescription =
+      'api/v2/User/delete_discharge_prescription';
+  static const String addDischargePrescription =
+      'api/v2/User/add_discharge_prescription';
+  static const String updateManualRx = 'api/v2/User/update_manual_rx';
+  static const String dischargePatientWeb =
+      'api/v2/User/discharge_patient_web';
+  static const String uploadDischargeSummaryPdf =
+      'api/v2/User/upload_discharge_summary_pdf';
 
   // ==========================================
   // Payment Endpoints

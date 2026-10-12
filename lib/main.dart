@@ -1,6 +1,8 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 import 'controllers/doctor_dashboard_controller.dart';
 import 'controllers/login_controller.dart';
@@ -116,6 +118,18 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       translations: AppTranslations(),
       locale: const Locale('en', 'US'),
       fallbackLocale: const Locale('en', 'US'),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        FlutterQuillLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('hi', 'IN'),
+        Locale('gu', 'IN'),
+        Locale('mr', 'IN'),
+      ],
       initialBinding: InitialBinding(),
       initialRoute: '/',
       getPages: [

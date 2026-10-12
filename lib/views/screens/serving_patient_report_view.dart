@@ -82,6 +82,23 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
       'countKey': 'thyroidCount',
       'checkKey': 'check_thyroid',
     },
+    {'title': '1', 'countKey': 'oneCount', 'checkKey': 'check_one'},
+    {'title': '2', 'countKey': 'twoCount', 'checkKey': 'check_two'},
+    {
+      'title': 'Clinical Video',
+      'countKey': 'clinicalVideoCount',
+      'checkKey': 'check_clinical_video',
+    },
+    {
+      'title': 'Discharge Summary',
+      'countKey': 'dischargeSummaryCount',
+      'checkKey': 'check_discharge_summary',
+    },
+    {
+      'title': 'Primary Care',
+      'countKey': 'primaryCareCount',
+      'checkKey': 'check_primary_care',
+    },
     {'title': 'PT INR', 'countKey': 'ptInrCount', 'checkKey': 'check_pt_inr'},
     {
       'title': 'Full Body Check',
@@ -99,6 +116,11 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
       'checkKey': 'check_angiography',
     },
     {'title': 'Other', 'countKey': 'otherCount', 'checkKey': 'check_other'},
+    {
+      'title': 'Health Monitor',
+      'countKey': 'healthMonitorCount',
+      'checkKey': 'check_health_monitor',
+    },
   ];
 
   static const List<String> allReportCategories = [
@@ -118,6 +140,11 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
     'Uric acid and Vit D',
     'Diabetic foot wound',
     'Thyroid',
+    '1',
+    '2',
+    'Clinical Video',
+    'Discharge Summary',
+    'Primary Care',
     'PT INR',
     'Full Body Check',
     'Hemoglobin CBC',
@@ -213,6 +240,9 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                   count: countVal,
                   hasNew: hasNew,
                   onTap: () {
+                    if (title == 'Health Monitor') {
+                      return;
+                    }
                     controller.fetchFolderReports(title);
                   },
                 );
@@ -352,19 +382,20 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
           ],
         ),
 
-        // FAB Action to Upload Report directly in Folder Screen
-        Positioned(
-          right: 16,
-          bottom: 16,
-          child: FloatingActionButton(
-            backgroundColor: AppColors.error,
-            onPressed: () => _openUploadReportFormDialog(
-              context,
-              initialCategory: folderTitle,
+        // FAB Action to Upload Report directly in Folder Screen (Hidden for Clinical Video)
+        if (folderTitle != 'Clinical Video')
+          Positioned(
+            right: 16,
+            bottom: 16,
+            child: FloatingActionButton(
+              backgroundColor: AppColors.error,
+              onPressed: () => _openUploadReportFormDialog(
+                context,
+                initialCategory: folderTitle,
+              ),
+              child: const Icon(Icons.add, color: AppColors.white, size: 28),
             ),
-            child: const Icon(Icons.add, color: AppColors.white, size: 28),
           ),
-        ),
       ],
     );
   }

@@ -230,8 +230,8 @@ class MyIpdPatientListController extends GetxController {
   }
 
   /// Handles Discharge Summary button click
-  void onDischargeSummaryClick(MyIpdPatientListItem patient) {
-    Get.toNamed(
+  Future<void> onDischargeSummaryClick(MyIpdPatientListItem patient) async {
+    final result = await Get.toNamed(
       '/discharge-summary',
       arguments: {
         'admitId': patient.admitId,
@@ -245,6 +245,9 @@ class MyIpdPatientListController extends GetxController {
         'instituteId': patient.instituteId,
       },
     );
+    if (result == true) {
+      fetchPatients();
+    }
   }
 
   /// Handles Discharge Request button click (placeholder)
