@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
 import 'package:digi_icu_flutter/core/constants/app_constants.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
@@ -66,6 +67,7 @@ class ServingPatientController extends GetxController {
   late final String qrCode;
   late final bool fromPatient;
   late final String isFrom;
+  late final String admitId;
   // Admit fields
   final RxString selectedInstituteId = ''.obs;
   final RxString selectedInstituteName = ''.obs;
@@ -227,6 +229,7 @@ class ServingPatientController extends GetxController {
     qrCode = args['qrCode']?.toString() ?? '';
     fromPatient = args['fromPatient'] as bool? ?? false;
     isFrom = args['isFrom']?.toString() ?? '';
+    admitId = args['admitId']?.toString() ?? '';
 
     final initialTab = args['initialTab']?.toString();
     if (initialTab != null && initialTab.isNotEmpty) {
@@ -236,6 +239,8 @@ class ServingPatientController extends GetxController {
         (args['initialReportName'] ?? args['reportName'])?.toString() ?? '';
     if (initialReportName.isNotEmpty) {
       selectedFolderReportName.value = initialReportName;
+    } else if (isFrom == 'discharge_summary') {
+      selectedFolderReportName.value = 'Discharge Summary';
     }
 
     _loadUserType().then((_) {
@@ -1173,15 +1178,16 @@ class ServingPatientController extends GetxController {
           ? currentUserType
           : (userType.value.isNotEmpty ? userType.value : 'Doctor');
 
-      final fileName = filePath.split('/').last;
+      final fileName = filePath.split(Platform.pathSeparator).last;
       final isPdf = fileName.toLowerCase().endsWith('.pdf');
+      final activeAdmitId = admitId.isNotEmpty ? admitId : '0';
 
       final formData = dio.FormData.fromMap({
         'patient_id': patientId,
         'report_name': reportName,
-        'admit_id': '0',
+        'admit_id': activeAdmitId,
         'report_from': isFrom.isNotEmpty ? isFrom : 'Direct',
-        'report_from_id': '0',
+        'report_from_id': isFrom == 'discharge_summary' ? activeAdmitId : '0',
         'uploaded_by': uploadUserType,
         'uploaded_by_id': uploadUserId,
         'other_name': remarks,
@@ -1207,10 +1213,21 @@ class ServingPatientController extends GetxController {
         final msg =
             response.data['msg']?.toString() ?? 'Report uploaded successfully';
         if (response.data['status'] == 'success') {
-          AppSnackbars.showSuccess('Success', msg);
-          fetchReportCounts();
-          if (selectedFolderReportName.value.isNotEmpty) {
-            fetchFolderReports(selectedFolderReportName.value);
+          if (isFrom == 'discharge_summary') {
+            await _uploadDischargeSummaryPdf(
+              token: token,
+              filePath: filePath,
+              fileName: fileName,
+              admitIdVal: activeAdmitId,
+              uploadUserType: uploadUserType,
+              uploadUserId: uploadUserId,
+            );
+          } else {
+            AppSnackbars.showSuccess('Success', msg);
+            fetchReportCounts();
+            if (selectedFolderReportName.value.isNotEmpty) {
+              fetchFolderReports(selectedFolderReportName.value);
+            }
           }
         } else {
           AppSnackbars.showError('Error', msg);
@@ -1220,6 +1237,62 @@ class ServingPatientController extends GetxController {
       AppSnackbars.showError('Error', 'Failed to upload report: $e');
     } finally {
       isLoadingReports.value = false;
+    }
+  }
+
+  /// Uploads discharge summary PDF matching Android uploadDischargePdf in MyReportsActivity
+  Future<void> _uploadDischargeSummaryPdf({
+    required String token,
+    required String filePath,
+    required String fileName,
+    required String admitIdVal,
+    required String uploadUserType,
+    required String uploadUserId,
+  }) async {
+    try {
+      final dischargeFormData = dio.FormData.fromMap({
+        'admit_id': admitIdVal,
+        'patient_id': patientId,
+        'uploaded_by': uploadUserType,
+        'uploaded_by_id': uploadUserId,
+        'discharge_pdf': await dio.MultipartFile.fromFile(
+          filePath,
+          filename: fileName,
+        ),
+      });
+
+      final dischargeResponse = await apiClient.post(
+        ApiEndpoints.uploadDischargeSummaryPdf,
+        data: dischargeFormData,
+        options: dio.Options(headers: {'Authorization': token}),
+      );
+
+      if (dischargeResponse.data != null) {
+        dynamic rawData = dischargeResponse.data;
+        if (rawData is String) {
+          try {
+            rawData = jsonDecode(rawData);
+          } catch (_) {}
+        }
+        if (rawData is Map<String, dynamic>) {
+          if (rawData['status'] == 'success') {
+            final msg = rawData['msg']?.toString() ?? 'ds_pdf_uploaded_success'.tr;
+            // Pop ServingPatientScreen — return true so openReportFolder reloads
+            Get.back(result: true);
+            // Wait one frame to let navigation settle, then show snackbar
+            await Future.delayed(const Duration(milliseconds: 400));
+            AppSnackbars.showSuccess('success'.tr, msg);
+            return;
+          } else {
+            AppSnackbars.showError(
+              'error'.tr,
+              rawData['msg']?.toString() ?? 'Failed to upload discharge PDF',
+            );
+          }
+        }
+      }
+    } catch (e) {
+      AppSnackbars.showError('error'.tr, 'Failed to upload discharge PDF: $e');
     }
   }
 

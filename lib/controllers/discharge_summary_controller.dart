@@ -1349,18 +1349,16 @@ class DischargeSummaryController extends GetxController {
           context: context,
           message: 'ds_warning_draft_saved'.tr,
           onConfirm: () {
-            activeTab.value = 'upload';
-            pickAndUploadPdf();
+            openReportFolder();
           },
         );
       } else {
-        activeTab.value = 'upload';
-        pickAndUploadPdf();
+        openReportFolder();
       }
     }
   }
 
-  /// Handles adding or replacing an uploaded PDF
+  /// Handles adding or replacing an uploaded PDF matching Android fabAddPdf click
   void onAddOrReplacePdfClicked(BuildContext context) {
     if (isDraftSaved.value || dischargePath.value.isNotEmpty) {
       showWarningDialog(
@@ -1368,11 +1366,34 @@ class DischargeSummaryController extends GetxController {
         message: dischargePath.value.isNotEmpty
             ? 'ds_warning_pdf_exists'.tr
             : 'ds_warning_draft_saved'.tr,
-        onConfirm: () => pickAndUploadPdf(),
+        onConfirm: () => openReportFolder(),
       );
     } else {
-      pickAndUploadPdf();
+      openReportFolder();
     }
+  }
+
+  /// Opens the Reports screen matching Android openReportFolder()
+  Future<void> openReportFolder() async {
+    await Get.toNamed(
+      '/serving-patient',
+      arguments: {
+        'patientId': patientId.value,
+        'fullName': patientName.value,
+        'age': age.value,
+        'gender': gender.value,
+        'mhcId': mhcId.value,
+        'admitId': admitId.value,
+        'initialTab': 'Reports',
+        'reportName': 'Discharge Summary',
+        'isFrom': 'discharge_summary',
+        'isFromID': admitId.value,
+      },
+    );
+
+    // Always reload after returning — the upload may have succeeded
+    activeTab.value = 'upload';
+    await loadDischargeData();
   }
 
   /// Standard warning confirmation dialog

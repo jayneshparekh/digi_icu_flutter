@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -161,8 +162,12 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
           canPop: false,
           onPopInvokedWithResult: (didPop, result) {
             if (didPop) return;
-            controller.selectedFolderReportName.value = '';
-            controller.fetchReportCounts();
+            if (controller.isFrom == 'discharge_summary') {
+              Get.back();
+            } else {
+              controller.selectedFolderReportName.value = '';
+              controller.fetchReportCounts();
+            }
           },
           child: _buildFolderDetailScreen(context, selectedFolder),
         );
@@ -271,8 +276,12 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                   IconButton(
                     icon: const Icon(Icons.arrow_back, color: AppColors.navy),
                     onPressed: () {
-                      controller.selectedFolderReportName.value = '';
-                      controller.fetchReportCounts();
+                      if (controller.isFrom == 'discharge_summary') {
+                        Get.back();
+                      } else {
+                        controller.selectedFolderReportName.value = '';
+                        controller.fetchReportCounts();
+                      }
                     },
                   ),
                   const SizedBox(width: 4),
@@ -531,6 +540,7 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
               ),
             ),
             const SizedBox(height: 8),
+            // Row 1: Camera + Gallery
             Row(
               children: [
                 Expanded(
@@ -566,6 +576,33 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
               ],
             ),
             const SizedBox(height: 8),
+            // Row 2: PDF picker (full width)
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                icon: const Icon(
+                  Icons.picture_as_pdf,
+                  color: AppColors.error,
+                ),
+                label: const Text('Pick PDF'),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: AppColors.error),
+                  foregroundColor: AppColors.error,
+                ),
+                onPressed: () async {
+                  final platformFile = await FilePicker.pickFile(
+                    type: FileType.custom,
+                    allowedExtensions: ['pdf'],
+                  );
+                  if (platformFile != null &&
+                      platformFile.path != null &&
+                      platformFile.path!.isNotEmpty) {
+                    selectedFilePath.value = platformFile.path!;
+                  }
+                },
+              ),
+            ),
+            const SizedBox(height: 8),
 
             // Live Image / File Preview Box
             Obx(() {
@@ -598,6 +635,24 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: Image.file(File(path), fit: BoxFit.cover),
+                      ),
+                    )
+                  else
+                    Container(
+                      height: 80,
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(bottom: 6),
+                      decoration: BoxDecoration(
+                        color: AppColors.lightGray,
+                        border: Border.all(color: AppColors.medicalGray),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.picture_as_pdf,
+                          size: 44,
+                          color: AppColors.error,
+                        ),
                       ),
                     ),
                   Row(

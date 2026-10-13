@@ -138,9 +138,24 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.lightGray,
-      body: SafeArea(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (controller.isFrom == 'discharge_summary') {
+          Get.back();
+          return;
+        }
+        if (controller.selectedFolderReportName.value.isNotEmpty) {
+          controller.selectedFolderReportName.value = '';
+          controller.fetchReportCounts();
+          return;
+        }
+        Get.back();
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.lightGray,
+        body: SafeArea(
         child: Obx(() {
           final isPatientView =
               controller.userType.value == 'Patient' || controller.fromPatient;
@@ -162,7 +177,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                         // Patient Info Row
                         Row(
                           children: [
-                            if (isPatientView) ...[
+                            if (isPatientView || controller.isFrom == 'discharge_summary') ...[
                               IconButton(
                                 padding: EdgeInsets.zero,
                                 constraints: const BoxConstraints(),
@@ -407,6 +422,7 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
           );
         }),
       ),
-    );
-  }
+    ),
+  );
+}
 }
