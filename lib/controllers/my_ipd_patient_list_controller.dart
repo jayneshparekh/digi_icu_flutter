@@ -4,6 +4,8 @@ import 'package:digi_icu_flutter/core/constants/app_constants.dart';
 import 'package:digi_icu_flutter/models/request/doctors/my_ipd_patient_list_request.dart';
 import 'package:digi_icu_flutter/models/response/doctors/my_ipd_patient_list_response.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
+import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -250,11 +252,85 @@ class MyIpdPatientListController extends GetxController {
     }
   }
 
-  /// Handles Discharge Request button click (placeholder)
+  /// Handles Discharge Request button click matching Android implementation
   void onDischargeRequestClick(MyIpdPatientListItem patient) {
-    AppSnackbars.showInfo(
-      'discharge_request'.tr,
-      '${'coming_soon'.tr} (${patient.patientName})',
+    AppDialog.show(
+      title: 'discharge_request'.tr,
+      body: Text(
+        'discharge_request_confirm_msg'.tr,
+        style: const TextStyle(
+          fontSize: 14,
+          color: AppColors.navy,
+        ),
+      ),
+      confirmLabel: 'ds_yes_opt'.tr,
+      cancelLabel: 'no_opt'.tr,
+      onConfirm: () => _submitDischargeRequest(patient),
     );
+  }
+
+  /// Sends discharge request to backend
+  Future<void> _submitDischargeRequest(MyIpdPatientListItem patient) async {
+    final admitId = patient.admitId;
+    if (admitId.isEmpty) {
+      AppSnackbars.showError('error'.tr, 'Invalid Admit ID');
+      return;
+    }
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final userId = doctorId.value.isNotEmpty
+          ? doctorId.value
+          : (prefs.getString(AppConstants.prefUserId) ?? '');
+      final userType = prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
+
+      final response = await apiClient.post(
+        ApiEndpoints.requestDischarge,
+        data: {
+          'admit_id': admitId,
+          'user_id': userId,
+          'user_type': userType,
+        },
+        options: dio.Options(
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        var rawData = response.data;
+        if (rawData is String) {
+          try {
+            rawData = jsonDecode(rawData);
+          } catch (_) {}
+        }
+
+        if (rawData is Map<String, dynamic>) {
+          final isSuccess = rawData['status'] == true ||
+              rawData['status'] == 'success' ||
+              rawData['status'] == 1 ||
+              rawData['status'] == '1';
+          final message = rawData['message']?.toString() ??
+              rawData['msg']?.toString() ??
+              (isSuccess
+                  ? 'discharge_request_success'.tr
+                  : 'discharge_request_failed'.tr);
+
+          if (isSuccess) {
+            AppSnackbars.showSuccess('success'.tr, message);
+            refreshList();
+          } else {
+            AppSnackbars.showError('error'.tr, message);
+          }
+          return;
+        }
+      }
+      AppSnackbars.showError('error'.tr, 'discharge_request_failed'.tr);
+    } catch (e) {
+      AppSnackbars.showError('error'.tr, 'Error: $e');
+    }
   }
 }

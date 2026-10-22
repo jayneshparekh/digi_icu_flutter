@@ -2,22 +2,26 @@ import 'package:digi_icu_flutter/controllers/serving_patient_controller.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:digi_icu_flutter/views/widgets/app_primary_button.dart';
 import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
+import 'package:digi_icu_flutter/views/widgets/ipd_admit_flow_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PreAdmitDialog extends StatelessWidget {
   final List<dynamic> institutes;
   final VoidCallback onSubmit;
+  final IPDAdmitFlowDelegate? delegate;
 
   const PreAdmitDialog({
     super.key,
     required this.institutes,
     required this.onSubmit,
+    this.delegate,
   });
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<ServingPatientController>();
+    final IPDAdmitFlowDelegate flowDelegate =
+        delegate ?? Get.find<ServingPatientController>();
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -52,15 +56,15 @@ class PreAdmitDialog extends StatelessWidget {
               // Institute Dropdown
               Obx(() {
                 final String? initialId =
-                    controller.selectedInstituteId.value.isNotEmpty &&
+                    flowDelegate.selectedInstituteId.value.isNotEmpty &&
                         institutes.any(
                           (i) =>
                               (i['id']?.toString() ==
-                                  controller.selectedInstituteId.value ||
+                                  flowDelegate.selectedInstituteId.value ||
                               i['institute_id']?.toString() ==
-                                  controller.selectedInstituteId.value),
+                                  flowDelegate.selectedInstituteId.value),
                         )
-                    ? controller.selectedInstituteId.value
+                    ? flowDelegate.selectedInstituteId.value
                     : null;
 
                 return DropdownButtonFormField<String>(
@@ -97,9 +101,9 @@ class PreAdmitDialog extends StatelessWidget {
                           '';
                       final instName =
                           institutes[index]['institute_name']?.toString() ?? '';
-                      controller.selectedInstituteId.value = instId;
-                      controller.selectedInstituteName.value = instName;
-                      controller.checkDayCareAvailability(instId);
+                      flowDelegate.selectedInstituteId.value = instId;
+                      flowDelegate.selectedInstituteName.value = instName;
+                      flowDelegate.checkDayCareAvailability(instId);
                     }
                   },
                 );
@@ -108,7 +112,7 @@ class PreAdmitDialog extends StatelessWidget {
 
               // Day Care vs Others Radio Selection
               Obx(() {
-                final isAvailable = controller.isDayCareAvailable.value;
+                final isAvailable = flowDelegate.isDayCareAvailable.value;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -121,12 +125,12 @@ class PreAdmitDialog extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     RadioGroup<String>(
-                      groupValue: controller.dayCareOption.value,
+                      groupValue: flowDelegate.dayCareOption.value,
                       onChanged: (val) {
                         if (val != null) {
                           if (val == 'day_care' && !isAvailable) return;
-                          controller.dayCareOption.value = val;
-                          controller.isDayCare.value = (val == 'day_care');
+                          flowDelegate.dayCareOption.value = val;
+                          flowDelegate.isDayCare.value = (val == 'day_care');
                         }
                       },
                       child: Column(
@@ -145,7 +149,7 @@ class PreAdmitDialog extends StatelessWidget {
                       ),
                     ),
                     if (!isAvailable &&
-                        controller.selectedInstituteId.value.isNotEmpty) ...[
+                        flowDelegate.selectedInstituteId.value.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Text(
                         'no_day_care_warning'.tr,
@@ -182,7 +186,7 @@ class PreAdmitDialog extends StatelessWidget {
                         label: 'submit'.tr,
                         height: 40,
                         onPressed:
-                            controller.selectedInstituteId.value.isNotEmpty
+                            flowDelegate.selectedInstituteId.value.isNotEmpty
                             ? onSubmit
                             : null,
                       ),

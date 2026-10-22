@@ -135,6 +135,8 @@ class ApiEndpoints {
       'api/v2/User/discharge_patient_web';
   static const String uploadDischargeSummaryPdf =
       'api/v2/User/upload_discharge_summary_pdf';
+  static const String finalDischargeLeader =
+      'api/v2/User/final_discharge_leader';
 
   // ==========================================
   // Payment Endpoints
@@ -154,6 +156,21 @@ class ApiEndpoints {
   static const String addAdmitPatientRequest =
       'web/IPDPatients/add_admit_patient_request';
   static const String ipdPatientsList = 'web/IPDPatients/ipd_patients_list';
+  static const String requestDischarge = 'web/IPDPatients/request_discharge';
+  static const String getAdmitRequestsByStatus =
+      'web/IPDPatients/get_admit_requests_by_status';
+  static const String markAdmitPatientRequestNotificationsAsRead =
+      'web/IPDPatients/mark_admit_patient_request_notifications_as_read';
+  static const String getDischargeRequestedPatients =
+      'web/IPDPatients/ipd_patients_discharge_request_list';
+  static const String markDischargePatientRequestNotificationsAsRead =
+      'web/IPDPatients/mark_discharge_patient_request_notifications_as_read';
+
+  // ==========================================
+  // Leader Endpoints
+  // ==========================================
+  static const String getAllBedsInfo = 'api/v2/Leader/get_all_beds_info';
+  static const String changePatientBed = 'api/v2/Leader/change_patient_bed';
 
   // ==========================================
   // Institute Endpoints

@@ -49,6 +49,10 @@ import 'views/screens/my_ipd_patient_list_screen.dart';
 import 'controllers/my_ipd_patient_list_controller.dart';
 import 'views/screens/discharge_summary_screen.dart';
 import 'controllers/discharge_summary_controller.dart';
+import 'views/screens/admit_patient_request_screen.dart';
+import 'controllers/admit_patient_request_controller.dart';
+import 'views/screens/discharge_request_screen.dart';
+import 'controllers/discharge_request_controller.dart';
 
 
 void main() {
@@ -278,6 +282,20 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           page: () => const DischargeSummaryScreen(),
           binding: BindingsBuilder(() {
             Get.lazyPut(() => DischargeSummaryController());
+          }),
+        ),
+        GetPage(
+          name: '/admit-patient-request',
+          page: () => const AdmitPatientRequestScreen(),
+          binding: BindingsBuilder(() {
+            Get.lazyPut(() => AdmitPatientRequestController());
+          }),
+        ),
+        GetPage(
+          name: '/discharge-request',
+          page: () => const DischargeRequestScreen(),
+          binding: BindingsBuilder(() {
+            Get.lazyPut(() => DischargeRequestController());
           }),
         ),
       ],

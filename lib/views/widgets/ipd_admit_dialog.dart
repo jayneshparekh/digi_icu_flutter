@@ -11,6 +11,7 @@ import 'package:digi_icu_flutter/views/widgets/app_primary_button.dart';
 import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:digi_icu_flutter/views/widgets/app_speech_input_widget.dart';
+import 'package:digi_icu_flutter/views/widgets/ipd_admit_flow_delegate.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,6 +21,7 @@ class IpdAdmitDialog extends StatelessWidget {
   final List<dynamic> instituteAmenities;
   final List<dynamic> beds;
   final VoidCallback? onSubmit;
+  final IPDAdmitFlowDelegate? delegate;
 
   final GlobalKey<AppDrawingCanvasState> canvasKey =
       GlobalKey<AppDrawingCanvasState>();
@@ -29,54 +31,56 @@ class IpdAdmitDialog extends StatelessWidget {
     required this.instituteAmenities,
     this.beds = const [],
     this.onSubmit,
+    this.delegate,
   });
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<ServingPatientController>();
+    final IPDAdmitFlowDelegate flowDelegate =
+        delegate ?? Get.find<ServingPatientController>();
     final ApiClient apiClient = Get.find<ApiClient>();
 
     final TextEditingController admissionNotesEditingController =
-        TextEditingController(text: controller.admissionNotes.value);
+        TextEditingController(text: flowDelegate.admissionNotes.value);
 
     // Auto-fill doctor info for Doctor role
-    if (controller.userType.value == 'Doctor' &&
-        controller.selectedConsultantDoctorId.value.isEmpty) {
-      controller.selectedConsultantDoctorId.value = controller.doctorId;
-      controller.selectedConsultantDoctorName.value =
-          controller.loggedInDoctorName.value;
+    if (flowDelegate.userType.value == 'Doctor' &&
+        flowDelegate.selectedConsultantDoctorId.value.isEmpty) {
+      flowDelegate.selectedConsultantDoctorId.value = flowDelegate.doctorId;
+      flowDelegate.selectedConsultantDoctorName.value =
+          flowDelegate.loggedInDoctorName.value;
     }
 
     // Default admit date and time initialization to current date and time
-    if (controller.admissionDate.value.isEmpty) {
+    if (flowDelegate.admissionDate.value.isEmpty) {
       final now = DateTime.now();
-      controller.admissionDate.value =
+      flowDelegate.admissionDate.value =
           '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
     }
-    if (controller.admissionTime.value.isEmpty) {
+    if (flowDelegate.admissionTime.value.isEmpty) {
       final now = TimeOfDay.now();
-      controller.admissionTime.value =
+      flowDelegate.admissionTime.value =
           '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
     }
 
     final facilities = _getDynamicFacilities(instituteAmenities);
 
     // Default place initialization
-    if (controller.selectedAdmitPlace.value.isEmpty && facilities.isNotEmpty) {
-      if (controller.isDayCare.value) {
+    if (flowDelegate.selectedAdmitPlace.value.isEmpty && facilities.isNotEmpty) {
+      if (flowDelegate.isDayCare.value) {
         final dayCare = facilities.firstWhere(
           (f) => f['key'] == 'Day Care',
           orElse: () => facilities.first,
         );
-        controller.selectedAdmitPlace.value = dayCare['key']!;
-        _fetchWardsForPlace(controller, apiClient, dayCare['key']!);
+        flowDelegate.selectedAdmitPlace.value = dayCare['key']!;
+        _fetchWardsForPlace(flowDelegate, apiClient, dayCare['key']!);
       } else {
         final nonDayCare = facilities.firstWhere(
           (f) => f['key'] != 'Day Care',
           orElse: () => facilities.first,
         );
-        controller.selectedAdmitPlace.value = nonDayCare['key']!;
-        _fetchWardsForPlace(controller, apiClient, nonDayCare['key']!);
+        flowDelegate.selectedAdmitPlace.value = nonDayCare['key']!;
+        _fetchWardsForPlace(flowDelegate, apiClient, nonDayCare['key']!);
       }
     }
 
@@ -107,7 +111,7 @@ class IpdAdmitDialog extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${controller.fullName}/${controller.gender.isNotEmpty ? controller.gender[0].toUpperCase() : ''}/${controller.age}',
+                      '${flowDelegate.fullName}/${flowDelegate.gender.isNotEmpty ? flowDelegate.gender[0].toUpperCase() : ''}/${flowDelegate.age}',
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -134,17 +138,17 @@ class IpdAdmitDialog extends StatelessWidget {
                     // Care Info Header Banner
                     Obx(() {
                       final docPart =
-                          controller
+                          flowDelegate
                               .selectedConsultantDoctorName
                               .value
                               .isNotEmpty
-                          ? 'Dr. ${controller.selectedConsultantDoctorName.value}'
-                          : (controller.loggedInDoctorName.value.isNotEmpty
-                                ? 'Dr. ${controller.loggedInDoctorName.value}'
+                          ? 'Dr. ${flowDelegate.selectedConsultantDoctorName.value}'
+                          : (flowDelegate.loggedInDoctorName.value.isNotEmpty
+                                ? 'Dr. ${flowDelegate.loggedInDoctorName.value}'
                                 : 'the institute');
                       final instPart =
-                          controller.selectedInstituteName.value.isNotEmpty
-                          ? ' in ${controller.selectedInstituteName.value}'
+                          flowDelegate.selectedInstituteName.value.isNotEmpty
+                          ? ' in ${flowDelegate.selectedInstituteName.value}'
                           : '';
                       final careText =
                           'The patient will be admitted under the care of $docPart$instPart';
@@ -174,15 +178,15 @@ class IpdAdmitDialog extends StatelessWidget {
 
                     // Consultant Doctor (Role Leader vs Doctor)
                     Obx(() {
-                      final role = controller.userType.value;
+                      final role = flowDelegate.userType.value;
                       if (role == 'Leader' || role == 'leader') {
                         final currentSelectedId =
-                            controller.selectedConsultantDoctorId.value;
+                            flowDelegate.selectedConsultantDoctorId.value;
 
                         final Map<String, String> docMap = {
                           '': 'please_select_doctor'.tr,
                         };
-                        for (final doc in controller.admitDoctors) {
+                        for (final doc in flowDelegate.admitDoctors) {
                           final docId =
                               (doc['id'] ?? doc['doctor_id'])?.toString() ?? '';
                           if (docId.isNotEmpty) {
@@ -220,10 +224,10 @@ class IpdAdmitDialog extends StatelessWidget {
                               }).toList(),
                               onChanged: (value) {
                                 if (value != null) {
-                                  controller.selectedConsultantDoctorId.value =
+                                  flowDelegate.selectedConsultantDoctorId.value =
                                       value;
                                   if (value.isNotEmpty) {
-                                    final match = controller.admitDoctors
+                                    final match = flowDelegate.admitDoctors
                                         .firstWhere(
                                           (d) =>
                                               (d['id'] ?? d['doctor_id'])
@@ -232,14 +236,14 @@ class IpdAdmitDialog extends StatelessWidget {
                                           orElse: () => null,
                                         );
                                     if (match != null) {
-                                      controller
+                                      flowDelegate
                                               .selectedConsultantDoctorName
                                               .value =
                                           match['doctor_name']?.toString() ??
                                           '${match['first_name'] ?? ''} ${match['last_name'] ?? ''}';
                                     }
                                   } else {
-                                    controller
+                                    flowDelegate
                                             .selectedConsultantDoctorName
                                             .value =
                                         '';
@@ -257,13 +261,13 @@ class IpdAdmitDialog extends StatelessWidget {
 
                     // Referral Doctor Dropdown
                     Obx(() {
-                      if (controller.userType.value == 'Leader' ||
-                          controller.userType.value == 'leader') {
+                      if (flowDelegate.userType.value == 'Leader' ||
+                          flowDelegate.userType.value == 'leader') {
                         return const SizedBox.shrink();
                       }
 
                       final currentSelectedId =
-                          controller.selectedReferralDoctorId.value;
+                          flowDelegate.selectedReferralDoctorId.value;
 
                       final List<DropdownMenuItem<String>> dropdownItems = [
                         DropdownMenuItem<String>(
@@ -276,10 +280,10 @@ class IpdAdmitDialog extends StatelessWidget {
 
                       for (
                         int i = 0;
-                        i < controller.referralDoctors.length;
+                        i < flowDelegate.referralDoctors.length;
                         i++
                       ) {
-                        final doc = controller.referralDoctors[i];
+                        final doc = flowDelegate.referralDoctors[i];
                         final docId = doc['id']?.toString() ?? '';
                         final docName =
                             doc['doctor_name']?.toString() ??
@@ -321,21 +325,21 @@ class IpdAdmitDialog extends StatelessWidget {
                                   final index = int.tryParse(parts[0]) ?? -1;
                                   final realId = parts.sublist(1).join(':');
 
-                                  controller.selectedReferralDoctorId.value =
+                                  flowDelegate.selectedReferralDoctorId.value =
                                       realId;
                                   if (index >= 0 &&
                                       index <
-                                          controller.referralDoctors.length) {
+                                          flowDelegate.referralDoctors.length) {
                                     final match =
-                                        controller.referralDoctors[index];
-                                    controller.referralDoctor.value =
+                                        flowDelegate.referralDoctors[index];
+                                    flowDelegate.referralDoctor.value =
                                         match['doctor_name']?.toString() ??
                                         '${match['first_name'] ?? ''} ${match['last_name'] ?? ''}';
                                   }
                                 } else {
-                                  controller.selectedReferralDoctorId.value =
+                                  flowDelegate.selectedReferralDoctorId.value =
                                       '';
-                                  controller.referralDoctor.value = '';
+                                  flowDelegate.referralDoctor.value = '';
                                 }
                               }
                             },
@@ -347,7 +351,7 @@ class IpdAdmitDialog extends StatelessWidget {
 
                     // Approx Cost & Approx Days (Stacked Vertically)
                     TextFormField(
-                      initialValue: controller.approxCost.value,
+                      initialValue: flowDelegate.approxCost.value,
                       decoration: InputDecoration(
                         labelText: 'approx_cost'.tr,
                         border: const OutlineInputBorder(),
@@ -357,11 +361,11 @@ class IpdAdmitDialog extends StatelessWidget {
                         ),
                       ),
                       keyboardType: TextInputType.number,
-                      onChanged: (value) => controller.approxCost.value = value,
+                      onChanged: (value) => flowDelegate.approxCost.value = value,
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
-                      initialValue: controller.approxDays.value,
+                      initialValue: flowDelegate.approxDays.value,
                       decoration: InputDecoration(
                         labelText: 'approx_days'.tr,
                         border: const OutlineInputBorder(),
@@ -371,7 +375,7 @@ class IpdAdmitDialog extends StatelessWidget {
                         ),
                       ),
                       keyboardType: TextInputType.number,
-                      onChanged: (value) => controller.approxDays.value = value,
+                      onChanged: (value) => flowDelegate.approxDays.value = value,
                     ),
                     const SizedBox(height: 16),
 
@@ -399,7 +403,7 @@ class IpdAdmitDialog extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
-                            initialValue: controller.admissionAmount.value,
+                            initialValue: flowDelegate.admissionAmount.value,
                             decoration: InputDecoration(
                               labelText: 'amount'.tr,
                               border: const OutlineInputBorder(),
@@ -410,16 +414,16 @@ class IpdAdmitDialog extends StatelessWidget {
                             ),
                             keyboardType: TextInputType.number,
                             onChanged: (value) =>
-                                controller.admissionAmount.value = value,
+                                flowDelegate.admissionAmount.value = value,
                           ),
                           const SizedBox(height: 8),
                           Obx(
                             () => RadioGroup<String>(
                               groupValue:
-                                  controller.admissionPaymentStatus.value,
+                                  flowDelegate.admissionPaymentStatus.value,
                               onChanged: (value) {
                                 if (value != null) {
-                                  controller.admissionPaymentStatus.value =
+                                  flowDelegate.admissionPaymentStatus.value =
                                       value;
                                 }
                               },
@@ -447,7 +451,7 @@ class IpdAdmitDialog extends StatelessWidget {
                             ),
                           ),
                           Obx(() {
-                            if (controller.admissionPaymentStatus.value ==
+                            if (flowDelegate.admissionPaymentStatus.value ==
                                 'Paid') {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -455,10 +459,10 @@ class IpdAdmitDialog extends StatelessWidget {
                                   const SizedBox(height: 8),
                                   RadioGroup<String>(
                                     groupValue:
-                                        controller.admissionPaymentMode.value,
+                                        flowDelegate.admissionPaymentMode.value,
                                     onChanged: (value) {
                                       if (value != null) {
-                                        controller.admissionPaymentMode.value =
+                                        flowDelegate.admissionPaymentMode.value =
                                             value;
                                       }
                                     },
@@ -484,11 +488,11 @@ class IpdAdmitDialog extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  if (controller.admissionPaymentMode.value ==
+                                  if (flowDelegate.admissionPaymentMode.value ==
                                       'Online') ...[
                                     const SizedBox(height: 8),
                                     TextFormField(
-                                      initialValue: controller
+                                      initialValue: flowDelegate
                                           .admissionTransactionId
                                           .value,
                                       decoration: InputDecoration(
@@ -501,7 +505,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                             ),
                                       ),
                                       onChanged: (value) =>
-                                          controller
+                                          flowDelegate
                                                   .admissionTransactionId
                                                   .value =
                                               value,
@@ -541,7 +545,7 @@ class IpdAdmitDialog extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
-                            initialValue: controller.advanceAmount.value,
+                            initialValue: flowDelegate.advanceAmount.value,
                             decoration: InputDecoration(
                               labelText: 'amount'.tr,
                               border: const OutlineInputBorder(),
@@ -552,15 +556,15 @@ class IpdAdmitDialog extends StatelessWidget {
                             ),
                             keyboardType: TextInputType.number,
                             onChanged: (value) =>
-                                controller.advanceAmount.value = value,
+                                flowDelegate.advanceAmount.value = value,
                           ),
                           const SizedBox(height: 8),
                           Obx(
                             () => RadioGroup<String>(
-                              groupValue: controller.advancePaymentStatus.value,
+                              groupValue: flowDelegate.advancePaymentStatus.value,
                               onChanged: (value) {
                                 if (value != null) {
-                                  controller.advancePaymentStatus.value = value;
+                                  flowDelegate.advancePaymentStatus.value = value;
                                 }
                               },
                               child: Row(
@@ -587,7 +591,7 @@ class IpdAdmitDialog extends StatelessWidget {
                             ),
                           ),
                           Obx(() {
-                            if (controller.advancePaymentStatus.value ==
+                            if (flowDelegate.advancePaymentStatus.value ==
                                 'Paid') {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -595,10 +599,10 @@ class IpdAdmitDialog extends StatelessWidget {
                                   const SizedBox(height: 8),
                                   RadioGroup<String>(
                                     groupValue:
-                                        controller.advancePaymentMode.value,
+                                        flowDelegate.advancePaymentMode.value,
                                     onChanged: (value) {
                                       if (value != null) {
-                                        controller.advancePaymentMode.value =
+                                        flowDelegate.advancePaymentMode.value =
                                             value;
                                       }
                                     },
@@ -624,12 +628,12 @@ class IpdAdmitDialog extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  if (controller.advancePaymentMode.value ==
+                                  if (flowDelegate.advancePaymentMode.value ==
                                       'Online') ...[
                                     const SizedBox(height: 8),
                                     TextFormField(
                                       initialValue:
-                                          controller.advanceTransactionId.value,
+                                          flowDelegate.advanceTransactionId.value,
                                       decoration: InputDecoration(
                                         labelText: 'transaction_id'.tr,
                                         border: const OutlineInputBorder(),
@@ -640,7 +644,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                             ),
                                       ),
                                       onChanged: (value) =>
-                                          controller
+                                          flowDelegate
                                                   .advanceTransactionId
                                                   .value =
                                               value,
@@ -660,9 +664,9 @@ class IpdAdmitDialog extends StatelessWidget {
                     InkWell(
                       onTap: () async {
                         DateTime initialDate = DateTime.now();
-                        if (controller.admissionDate.value.isNotEmpty) {
+                        if (flowDelegate.admissionDate.value.isNotEmpty) {
                           final parsed = DateTime.tryParse(
-                            controller.admissionDate.value,
+                            flowDelegate.admissionDate.value,
                           );
                           if (parsed != null) {
                             initialDate = parsed;
@@ -675,7 +679,7 @@ class IpdAdmitDialog extends StatelessWidget {
                           lastDate: DateTime(2100),
                         );
                         if (picked != null) {
-                          controller.admissionDate.value =
+                          flowDelegate.admissionDate.value =
                               '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
                         }
                       },
@@ -691,7 +695,7 @@ class IpdAdmitDialog extends StatelessWidget {
                               ),
                             ),
                             controller: TextEditingController(
-                              text: controller.admissionDate.value,
+                              text: flowDelegate.admissionDate.value,
                             ),
                           ),
                         ),
@@ -701,9 +705,9 @@ class IpdAdmitDialog extends StatelessWidget {
                     InkWell(
                       onTap: () async {
                         TimeOfDay initialTime = TimeOfDay.now();
-                        if (controller.admissionTime.value.isNotEmpty) {
+                        if (flowDelegate.admissionTime.value.isNotEmpty) {
                           final parts =
-                              controller.admissionTime.value.split(':');
+                              flowDelegate.admissionTime.value.split(':');
                           if (parts.length == 2) {
                             final h = int.tryParse(parts[0]);
                             final m = int.tryParse(parts[1]);
@@ -717,7 +721,7 @@ class IpdAdmitDialog extends StatelessWidget {
                           initialTime: initialTime,
                         );
                         if (picked != null) {
-                          controller.admissionTime.value =
+                          flowDelegate.admissionTime.value =
                               '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
                         }
                       },
@@ -733,7 +737,7 @@ class IpdAdmitDialog extends StatelessWidget {
                               ),
                             ),
                             controller: TextEditingController(
-                              text: controller.admissionTime.value,
+                              text: flowDelegate.admissionTime.value,
                             ),
                           ),
                         ),
@@ -756,16 +760,16 @@ class IpdAdmitDialog extends StatelessWidget {
                           const SizedBox(height: 8),
                           RadioGroup<String>(
                             groupValue:
-                                controller.selectedAdmitPlace.value.isNotEmpty
-                                ? controller.selectedAdmitPlace.value
+                                flowDelegate.selectedAdmitPlace.value.isNotEmpty
+                                ? flowDelegate.selectedAdmitPlace.value
                                 : null,
                             onChanged: (value) {
                               if (value != null) {
-                                controller.selectedAdmitPlace.value = value;
-                                controller.selectedAdmitWard.value = '';
-                                controller.selectedAdmitBed.value = '';
+                                flowDelegate.selectedAdmitPlace.value = value;
+                                flowDelegate.selectedAdmitWard.value = '';
+                                flowDelegate.selectedAdmitBed.value = '';
                                 _fetchWardsForPlace(
-                                  controller,
+                                  flowDelegate,
                                   apiClient,
                                   value,
                                 );
@@ -777,7 +781,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                 children: facilities.map<Widget>((f) {
                                   final isDayCare = (f['key'] == 'Day Care');
                                   final isPrevDayCare =
-                                      controller.isDayCare.value;
+                                      flowDelegate.isDayCare.value;
                                   final enabled = isPrevDayCare
                                       ? isDayCare
                                       : !isDayCare;
@@ -811,7 +815,7 @@ class IpdAdmitDialog extends StatelessWidget {
 
                           // Ward Selection (Horizontal RadioGroup)
                           Obx(() {
-                            if (controller.admitWardOptions.isEmpty) {
+                            if (flowDelegate.admitWardOptions.isEmpty) {
                               return const SizedBox.shrink();
                             }
                             return Column(
@@ -827,24 +831,24 @@ class IpdAdmitDialog extends StatelessWidget {
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
                                   groupValue:
-                                      controller
+                                      flowDelegate
                                               .selectedAdmitWard
                                               .value
                                               .isNotEmpty &&
-                                          controller.admitWardOptions.contains(
-                                            controller.selectedAdmitWard.value,
+                                          flowDelegate.admitWardOptions.contains(
+                                            flowDelegate.selectedAdmitWard.value,
                                           )
-                                      ? controller.selectedAdmitWard.value
+                                      ? flowDelegate.selectedAdmitWard.value
                                       : null,
                                   onChanged: (value) {
                                     if (value != null) {
-                                      controller.selectedAdmitWard.value =
+                                      flowDelegate.selectedAdmitWard.value =
                                           value;
-                                      controller.selectedAdmitBed.value = '';
+                                      flowDelegate.selectedAdmitBed.value = '';
                                       _fetchBedsForWard(
-                                        controller,
+                                        flowDelegate,
                                         apiClient,
-                                        controller.selectedAdmitPlace.value,
+                                        flowDelegate.selectedAdmitPlace.value,
                                         value,
                                       );
                                     }
@@ -852,7 +856,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                   child: SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
-                                      children: controller.admitWardOptions
+                                      children: flowDelegate.admitWardOptions
                                           .map<Widget>((ward) {
                                             return Padding(
                                               padding: const EdgeInsets.only(
@@ -879,7 +883,7 @@ class IpdAdmitDialog extends StatelessWidget {
 
                           // Beds Selection (Responsive Grid / Wrap of Radio Buttons)
                           Obx(() {
-                            if (controller.admitBedOptions.isEmpty) {
+                            if (flowDelegate.admitBedOptions.isEmpty) {
                               return const SizedBox.shrink();
                             }
                             return Column(
@@ -895,24 +899,24 @@ class IpdAdmitDialog extends StatelessWidget {
                                 const SizedBox(height: 8),
                                 RadioGroup<String>(
                                   groupValue:
-                                      controller
+                                      flowDelegate
                                               .selectedAdmitBed
                                               .value
                                               .isNotEmpty &&
-                                          controller.admitBedOptions.contains(
-                                            controller.selectedAdmitBed.value,
+                                          flowDelegate.admitBedOptions.contains(
+                                            flowDelegate.selectedAdmitBed.value,
                                           )
-                                      ? controller.selectedAdmitBed.value
+                                      ? flowDelegate.selectedAdmitBed.value
                                       : null,
                                   onChanged: (value) {
                                     if (value != null) {
-                                      controller.selectedAdmitBed.value = value;
+                                      flowDelegate.selectedAdmitBed.value = value;
                                     }
                                   },
                                   child: Wrap(
                                     spacing: 12,
                                     runSpacing: 8,
-                                    children: controller.admitBedOptions
+                                    children: flowDelegate.admitBedOptions
                                         .map<Widget>((bed) {
                                           return Row(
                                             mainAxisSize: MainAxisSize.min,
@@ -941,13 +945,13 @@ class IpdAdmitDialog extends StatelessWidget {
                       hintText: 'enter_admission_notes'.tr,
                       maxLines: 4,
                       onChanged: (value) =>
-                          controller.admissionNotes.value = value,
+                          flowDelegate.admissionNotes.value = value,
                     ),
                     const SizedBox(height: 16),
 
                     // Drawing Canvas (Doctor Role)
                     Obx(() {
-                      if (controller.userType.value == 'Doctor') {
+                      if (flowDelegate.userType.value == 'Doctor') {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -974,7 +978,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 onSave: (bytes) {
-                                  controller.canvasDrawingBytes.value = bytes;
+                                  flowDelegate.canvasDrawingBytes.value = bytes;
                                   AppSnackbars.showSuccess(
                                     'success'.tr,
                                     'drawing_canvas_saved'.tr,
@@ -992,7 +996,7 @@ class IpdAdmitDialog extends StatelessWidget {
 
                     // Photo Note Attachment (Nurse / Leader / Duty Doctor Roles)
                     Obx(() {
-                      final role = controller.userType.value;
+                      final role = flowDelegate.userType.value;
                       final isNurseOrLeader =
                           role == 'Nurse' ||
                           role == 'Digi Icu Nurse' ||
@@ -1011,11 +1015,11 @@ class IpdAdmitDialog extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 8),
-                            if (controller.noteImagePath.value.isNotEmpty) ...[
+                            if (flowDelegate.noteImagePath.value.isNotEmpty) ...[
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.file(
-                                  File(controller.noteImagePath.value),
+                                  File(flowDelegate.noteImagePath.value),
                                   height: 150,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
@@ -1036,7 +1040,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                     ),
                                   ),
                                   onPressed: () =>
-                                      controller.noteImagePath.value = '',
+                                      flowDelegate.noteImagePath.value = '',
                                 ),
                               ),
                             ],
@@ -1051,7 +1055,7 @@ class IpdAdmitDialog extends StatelessWidget {
                               ),
                               label: Text('upload_notes_image'.tr),
                               onPressed: () =>
-                                  controller.showImagePickerForNotes(),
+                                  flowDelegate.showImagePickerForNotes(),
                             ),
                             const SizedBox(height: 12),
                           ],
@@ -1085,7 +1089,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                 color: AppColors.white,
                                 size: 18,
                               ),
-                              if (!controller.isAdmitPrescription.value)
+                              if (!flowDelegate.isAdmitPrescription.value)
                                 const Positioned(
                                   right: 0,
                                   top: 0,
@@ -1107,8 +1111,8 @@ class IpdAdmitDialog extends StatelessWidget {
                             Get.toNamed(
                               '/add-prescription',
                               arguments: {
-                                'patient_id': controller.patientId,
-                                'bookingId': controller.bookingId,
+                                'patient_id': flowDelegate.patientId,
+                                'bookingId': flowDelegate.bookingId,
                                 'admitId': '0',
                                 'isFromAdmit': true,
                               },
@@ -1146,19 +1150,19 @@ class IpdAdmitDialog extends StatelessWidget {
                     label: 'submit'.tr,
                     height: 40,
                     onPressed: () async {
-                      if (controller.userType.value == 'Doctor' &&
-                          controller.canvasDrawingBytes.value == null) {
+                      if (flowDelegate.userType.value == 'Doctor' &&
+                          flowDelegate.canvasDrawingBytes.value == null) {
                         final bytes = await canvasKey.currentState
                             ?.exportToPngImage();
                         if (bytes != null) {
-                          controller.canvasDrawingBytes.value = bytes;
+                          flowDelegate.canvasDrawingBytes.value = bytes;
                         }
                       }
                       if (onSubmit != null) {
                         Get.back();
                         onSubmit!();
                       } else {
-                        controller.validateAndConfirmAdmit();
+                        flowDelegate.validateAndConfirmAdmit();
                       }
                     },
                   ),
@@ -1225,7 +1229,7 @@ class IpdAdmitDialog extends StatelessWidget {
   }
 
   void _fetchWardsForPlace(
-    ServingPatientController controller,
+    IPDAdmitFlowDelegate flowDelegate,
     ApiClient apiClient,
     String? placeKey,
   ) async {
@@ -1233,9 +1237,9 @@ class IpdAdmitDialog extends StatelessWidget {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
-      final targetInstituteId = controller.selectedInstituteId.value.isNotEmpty
-          ? controller.selectedInstituteId.value
-          : controller.instituteId;
+      final targetInstituteId = flowDelegate.selectedInstituteId.value.isNotEmpty
+          ? flowDelegate.selectedInstituteId.value
+          : flowDelegate.instituteId;
 
       final req = AdmitPlaceRequestModel(
         admitIn: placeKey,
@@ -1254,49 +1258,49 @@ class IpdAdmitDialog extends StatelessWidget {
               .map((w) => w['name']?.toString() ?? '')
               .where((w) => w.isNotEmpty)
               .toList();
-          controller.admitWardOptions.value = wardsList;
+          flowDelegate.admitWardOptions.value = wardsList;
           if (wardsList.isNotEmpty) {
             final firstWard = wardsList.first;
-            controller.selectedAdmitWard.value = firstWard;
-            _fetchBedsForWard(controller, apiClient, placeKey, firstWard);
+            flowDelegate.selectedAdmitWard.value = firstWard;
+            _fetchBedsForWard(flowDelegate, apiClient, placeKey, firstWard);
           } else {
-            controller.selectedAdmitWard.value = '';
-            _fetchBedsForWard(controller, apiClient, placeKey, '');
+            flowDelegate.selectedAdmitWard.value = '';
+            _fetchBedsForWard(flowDelegate, apiClient, placeKey, '');
           }
         } else {
-          controller.admitWardOptions.clear();
-          controller.selectedAdmitWard.value = '';
-          _fetchBedsForWard(controller, apiClient, placeKey, '');
+          flowDelegate.admitWardOptions.clear();
+          flowDelegate.selectedAdmitWard.value = '';
+          _fetchBedsForWard(flowDelegate, apiClient, placeKey, '');
         }
       } else {
-        controller.admitWardOptions.clear();
-        controller.selectedAdmitWard.value = '';
-        _fetchBedsForWard(controller, apiClient, placeKey, '');
+        flowDelegate.admitWardOptions.clear();
+        flowDelegate.selectedAdmitWard.value = '';
+        _fetchBedsForWard(flowDelegate, apiClient, placeKey, '');
       }
     } catch (e) {
       debugPrint('Error fetching wards: $e');
-      controller.admitWardOptions.clear();
-      controller.selectedAdmitWard.value = '';
-      controller.admitBedOptions.clear();
+      flowDelegate.admitWardOptions.clear();
+      flowDelegate.selectedAdmitWard.value = '';
+      flowDelegate.admitBedOptions.clear();
     }
   }
 
   void _fetchBedsForWard(
-    ServingPatientController controller,
+    IPDAdmitFlowDelegate flowDelegate,
     ApiClient apiClient,
     String? placeKey,
     String? wardName,
   ) async {
     if (placeKey == null || placeKey.isEmpty) {
-      controller.admitBedOptions.clear();
+      flowDelegate.admitBedOptions.clear();
       return;
     }
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
-      final targetInstituteId = controller.selectedInstituteId.value.isNotEmpty
-          ? controller.selectedInstituteId.value
-          : controller.instituteId;
+      final targetInstituteId = flowDelegate.selectedInstituteId.value.isNotEmpty
+          ? flowDelegate.selectedInstituteId.value
+          : flowDelegate.instituteId;
 
       final req = GetBedsRequestModel(
         admitIn: placeKey,
@@ -1312,18 +1316,18 @@ class IpdAdmitDialog extends StatelessWidget {
       if (resp.statusCode == 200 && resp.data != null) {
         final beds = resp.data['data'] ?? [];
         if (beds is List) {
-          controller.admitBedOptions.value = beds
+          flowDelegate.admitBedOptions.value = beds
               .map((b) => b['bed_no']?.toString() ?? '')
               .toList();
         } else {
-          controller.admitBedOptions.clear();
+          flowDelegate.admitBedOptions.clear();
         }
       } else {
-        controller.admitBedOptions.clear();
+        flowDelegate.admitBedOptions.clear();
       }
     } catch (e) {
       debugPrint('Error fetching beds: $e');
-      controller.admitBedOptions.clear();
+      flowDelegate.admitBedOptions.clear();
     }
   }
 }

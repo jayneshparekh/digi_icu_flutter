@@ -27,6 +27,7 @@ import 'package:digi_icu_flutter/views/widgets/reason_template_dialog.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:digi_icu_flutter/views/widgets/patient_rating_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/admit_selection_dialog.dart';
+import 'package:digi_icu_flutter/views/widgets/ipd_admit_flow_delegate.dart';
 import 'package:digi_icu_flutter/views/widgets/pre_admit_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/ipd_admit_dialog.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -39,15 +40,20 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ServingPatientController extends GetxController {
+class ServingPatientController extends GetxController implements IPDAdmitFlowDelegate {
   final ApiClient apiClient = Get.find<ApiClient>();
 
   // Navigation / screen arguments
+  @override
   late final String patientId;
+  @override
   late final String fullName;
+  @override
   late final String age;
+  @override
   late final String gender;
   late final String mhcId;
+  @override
   late final String bookingId;
   late final String mobileNo;
   late final String note;
@@ -57,62 +63,102 @@ class ServingPatientController extends GetxController {
   late final String leaderMobNo;
   late final String isRefer;
   late final String doctorHomeServiceId;
+  @override
   late final String doctorId;
   late final RxString isAdmitted = ''.obs;
   final RxString admitStatus = 'normal'.obs;
   late final String videoUrl;
   late final RxString clinicalFormStatus = ''.obs;
   late final RxString medicalFormStatus = ''.obs;
+  @override
   late final String instituteId;
   late final String qrCode;
   late final bool fromPatient;
   late final String isFrom;
   late final String admitId;
   // Admit fields
+  @override
   final RxString selectedInstituteId = ''.obs;
+  @override
   final RxString selectedInstituteName = ''.obs;
+  @override
   final RxString selectedInstituteLogo = ''.obs;
+  @override
   final RxString selectedInstituteAddress = ''.obs;
+  @override
   final RxString selectedInstituteMobile = ''.obs;
+  @override
   final RxBool isDayCare = false.obs;
+  @override
   final RxBool isDayCareAvailable = false.obs;
+  @override
   final RxString dayCareOption = 'others'.obs;
   // Doctor selection for admit
   final RxString selectedAdmitDoctorId = ''.obs;
   final RxString selectedAdmitDoctor = ''.obs;
+  @override
   final RxString selectedConsultantDoctorId = ''.obs;
+  @override
   final RxString selectedConsultantDoctorName = ''.obs;
+  @override
   final RxList<dynamic> admitDoctors = <dynamic>[].obs;
+  @override
   final RxString selectedReferralDoctorId = ''.obs;
+  @override
   final RxList<dynamic> referralDoctors = <dynamic>[].obs;
+  @override
   final RxBool isAdmitPrescription = false.obs;
   // Place/Ward/Bed selection
+  @override
   final RxString selectedAdmitPlace = ''.obs;
+  @override
   final RxString selectedAdmitWard = ''.obs;
+  @override
   final RxString selectedAdmitBed = ''.obs;
+  @override
   final RxList<dynamic> admitWardOptions = <dynamic>[].obs;
+  @override
   final RxList<dynamic> admitBedOptions = <dynamic>[].obs;
   // Form fields
+  @override
   final RxString approxCost = ''.obs;
+  @override
   final RxString approxDays = ''.obs;
+  @override
   final RxString admissionAmount = ''.obs;
+  @override
   final RxString admissionDate = ''.obs;
+  @override
   final RxString admissionTime = ''.obs;
+  @override
   final RxString dischargeDate = ''.obs;
+  @override
   final RxString dischargeTime = ''.obs;
+  @override
   final RxString advanceAmount = ''.obs;
+  @override
   final RxString admissionPaymentStatus = 'Due'.obs;
+  @override
   final RxString admissionPaymentMode = 'Cash'.obs;
+  @override
   final RxString advancePaymentStatus = 'Due'.obs;
+  @override
   final RxString advancePaymentMode = 'Cash'.obs;
+  @override
   final RxString admissionTransactionId = ''.obs;
+  @override
   final RxString advanceTransactionId = ''.obs;
+  @override
   final RxString admissionNotes = ''.obs;
+  @override
   final RxString referralDoctor = ''.obs;
+  @override
   final Rxn<Uint8List> canvasDrawingBytes = Rxn<Uint8List>();
+  @override
   final RxString noteImagePath = ''.obs;
   final RxBool hasReferralDoctor = false.obs;
   final RxBool isAdmitRequestSelection = false.obs;
+  @override
   final RxString loggedInDoctorName = ''.obs;
 
   // Active Center tab state
@@ -121,6 +167,7 @@ class ServingPatientController extends GetxController {
   // Patient detail properties
   final RxString patientRating = '0'.obs;
   final RxBool isLoadingDetails = false.obs;
+  @override
   final RxString userType = 'Doctor'.obs;
 
   // Graph tab state & data
@@ -440,6 +487,7 @@ class ServingPatientController extends GetxController {
   }
 
   /// Checks day care availability for the selected institute using get_institute_amenities API.
+  @override
   Future<void> checkDayCareAvailability(String instId) async {
     if (instId.isEmpty) return;
     try {
@@ -770,6 +818,7 @@ class ServingPatientController extends GetxController {
   }
 
   /// Validates IPD admit fields and displays payment-aware confirmation dialog.
+  @override
   void validateAndConfirmAdmit() {
     final targetInstId = selectedInstituteId.value.isNotEmpty
         ? selectedInstituteId.value
@@ -987,6 +1036,7 @@ class ServingPatientController extends GetxController {
   }
 
   /// Prompts a bottom sheet to pick an image from camera or gallery for admission notes.
+  @override
   Future<void> showImagePickerForNotes() async {
     final picker = ImagePicker();
     Get.bottomSheet(

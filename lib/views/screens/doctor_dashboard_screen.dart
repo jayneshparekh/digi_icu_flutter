@@ -193,6 +193,28 @@ class DoctorDashboardScreen extends GetView<DoctorDashboardController> {
                         }
                       },
                     ),
+                    // Admit Request Card (ID 27)
+                    Obx(() {
+                      return DashboardCard(
+                        title: 'admit_request'.tr,
+                        iconPath: 'assets/icons/svg/ic_ipd_patient.svg',
+                        badgeText: controller.hasNewAdmitRequests.value
+                            ? 'new_badge'.tr
+                            : null,
+                        onTap: () => controller.onAdmitRequestClick(context),
+                      );
+                    }),
+                    // Discharge Request Card (ID 26)
+                    Obx(() {
+                      return DashboardCard(
+                        title: 'discharge_request'.tr,
+                        iconPath: 'assets/icons/svg/ic_ipd_patient.svg',
+                        badgeText: controller.hasNewDischargeRequests.value
+                            ? 'new_badge'.tr
+                            : null,
+                        onTap: () => controller.onDischargeRequestClick(context),
+                      );
+                    }),
                   ],
                 );
               },

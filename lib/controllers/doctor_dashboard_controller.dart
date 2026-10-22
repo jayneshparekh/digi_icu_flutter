@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:dio/dio.dart' as dio;
@@ -9,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants/app_constants.dart';
 import '../models/response/doctors/check_doctor_home_response.dart';
 import '../services/api/api_client.dart';
+import '../views/widgets/app_dialog.dart';
 
 class DoctorDashboardController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -32,6 +34,12 @@ class DoctorDashboardController extends GetxController {
   final RxString accountStatus = ''.obs;
   final RxString instituteDoctor = ''.obs;
   final RxString instituteId = ''.obs;
+
+  // New badge status for Admit Request (id 27)
+  final RxBool hasNewAdmitRequests = false.obs;
+
+  // New badge status for Discharge Request (id 26)
+  final RxBool hasNewDischargeRequests = false.obs;
 
   @override
   void onInit() {
@@ -73,7 +81,9 @@ class DoctorDashboardController extends GetxController {
       final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
-      if (doctorId.isEmpty) return;
+      if (doctorId.isEmpty) {
+        return;
+      }
 
       final response = await apiClient.post(
         ApiEndpoints.checkDoctorHome,
@@ -82,22 +92,244 @@ class DoctorDashboardController extends GetxController {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        final res = CheckDoctorHomeResponse.fromJson(response.data);
-        if (res.status == 'success' && res.data != null) {
-          accountStatus.value = res.data!.accountStatus;
-          instituteDoctor.value = res.data!.instituteDoctor;
-          instituteId.value = res.data!.instituteId;
+        var rawData = response.data;
+        if (rawData is String) {
+          try {
+            rawData = jsonDecode(rawData);
+          } catch (_) {}
+        }
+        if (rawData is Map<String, dynamic>) {
+          final res = CheckDoctorHomeResponse.fromJson(rawData);
+          if (res.status == 'success' && res.data != null) {
+            accountStatus.value = res.data!.accountStatus;
+            instituteDoctor.value = res.data!.instituteDoctor;
 
-          // Save variables to SharedPreferences
-          await prefs.setString('account_status', res.data!.accountStatus);
-          await prefs.setString('institute_doctor', res.data!.instituteDoctor);
-          await prefs.setString('institute_id', res.data!.instituteId);
+            final tempInstId = res.data!.instituteId.trim();
+            final validInstId = (tempInstId.isEmpty || tempInstId == 'null' || tempInstId == '0')
+                ? ''
+                : tempInstId;
+            instituteId.value = validInstId;
+
+            // Save variables to SharedPreferences
+            await prefs.setString('account_status', res.data!.accountStatus);
+            await prefs.setString('institute_doctor', res.data!.instituteDoctor);
+            await prefs.setString('institute_id', validInstId);
+            debugPrint('checkDoctorHome: successfully set institute_id to $validInstId');
+          }
         }
       }
     } catch (e) {
       // Fail silently
       Get.printError(info: 'checkDoctorHome exception: $e');
+    } finally {
+      // Always call badge fetchers whether institute_id was returned or already present
+      fetchAdmitRequestsBadge();
+      fetchDischargeRequestsBadge();
     }
+  }
+
+  /// Fetches new admit requests badge status
+  Future<void> fetchAdmitRequestsBadge() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final currentInstId = instituteId.value.isNotEmpty
+          ? instituteId.value
+          : (prefs.getString('institute_id') ?? '');
+
+      if (doctorId.isEmpty) {
+        return;
+      }
+
+      final formDataMap = <String, dynamic>{
+        'status': 'Admit Requested',
+        'leader_id': doctorId,
+      };
+      if (currentInstId.isNotEmpty) {
+        formDataMap['institute_id'] = currentInstId;
+      }
+
+      final resp = await apiClient.post(
+        ApiEndpoints.getAdmitRequestsByStatus,
+        data: dio.FormData.fromMap(formDataMap),
+        options: dio.Options(
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        ),
+      );
+
+      if (resp.statusCode == 200 && resp.data != null) {
+        var rawData = resp.data;
+        if (rawData is String) {
+          try {
+            rawData = jsonDecode(rawData);
+          } catch (_) {}
+        }
+        if (rawData is Map<String, dynamic>) {
+          final hasNew = rawData['has_new'];
+          hasNewAdmitRequests.value =
+              hasNew is bool ? hasNew : (hasNew?.toString() == 'true');
+        }
+      }
+    } catch (e) {
+      debugPrint('fetchAdmitRequestsBadge exception: $e');
+    }
+  }
+
+  /// Handles Admit Request dashboard card click (marks notification read & navigates)
+  Future<void> onAdmitRequestClick(BuildContext context) async {
+    if (accountStatus.value == '2') {
+      _showPendingRegistrationDialog(context);
+      return;
+    }
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final currentInstId = instituteId.value.isNotEmpty
+          ? instituteId.value
+          : (prefs.getString('institute_id') ?? '');
+
+      if (currentInstId.isNotEmpty) {
+        final formData = dio.FormData.fromMap({'institute_id': currentInstId});
+        apiClient.post(
+          ApiEndpoints.markAdmitPatientRequestNotificationsAsRead,
+          data: formData,
+          options: dio.Options(
+            headers: {
+              'Authorization': token,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error marking admit notifications as read: $e');
+    }
+
+    hasNewAdmitRequests.value = false;
+    Get.toNamed(
+      '/admit-patient-request',
+      arguments: {'institute_id': instituteId.value},
+    );
+  }
+
+  /// Helper to get or resolve current institute ID
+  Future<String> _resolveInstituteId() async {
+    String currentInstId = instituteId.value.trim();
+    if (currentInstId.isNotEmpty && currentInstId != 'null' && currentInstId != '0') {
+      return currentInstId;
+    }
+
+    // Refresh from checkDoctorHome as done in Android (the single source of truth for doctor's active institute)
+    await checkDoctorHome();
+    currentInstId = instituteId.value.trim();
+    if (currentInstId.isNotEmpty && currentInstId != 'null' && currentInstId != '0') {
+      return currentInstId;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    currentInstId = (prefs.getString('institute_id') ?? '').trim();
+    if (currentInstId.isNotEmpty && currentInstId != 'null' && currentInstId != '0') {
+      instituteId.value = currentInstId;
+      return currentInstId;
+    }
+
+    return '';
+  }
+
+  /// Fetches new discharge requests badge status
+  Future<void> fetchDischargeRequestsBadge() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+      final currentInstId = await _resolveInstituteId();
+
+      if (currentInstId.isEmpty) {
+        return;
+      }
+
+      final resp = await apiClient.post(
+        ApiEndpoints.getDischargeRequestedPatients,
+        data: {'institute_id': currentInstId},
+        options: dio.Options(
+          contentType: dio.Headers.formUrlEncodedContentType,
+          headers: {
+            'Authorization': token,
+          },
+        ),
+      );
+
+      if (resp.statusCode == 200 && resp.data != null) {
+        var rawData = resp.data;
+        if (rawData is String) {
+          try {
+            rawData = jsonDecode(rawData);
+          } catch (_) {}
+        }
+        if (rawData is Map<String, dynamic>) {
+          final hasNew = rawData['has_new'];
+          hasNewDischargeRequests.value =
+              hasNew == true || hasNew == 1 || hasNew?.toString() == 'true' || hasNew?.toString() == '1';
+        }
+      }
+    } catch (e) {
+      debugPrint('fetchDischargeRequestsBadge exception: $e');
+    }
+  }
+
+  /// Handles Discharge Request dashboard card click (marks notification read & navigates)
+  Future<void> onDischargeRequestClick(BuildContext context) async {
+    if (accountStatus.value == '2') {
+      _showPendingRegistrationDialog(context);
+      return;
+    }
+
+    final currentInstId = await _resolveInstituteId();
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      if (currentInstId.isNotEmpty) {
+        final formData = dio.FormData.fromMap({'institute_id': currentInstId});
+        await apiClient.post(
+          ApiEndpoints.markDischargePatientRequestNotificationsAsRead,
+          data: formData,
+          options: dio.Options(
+            headers: {
+              'Authorization': token,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error marking discharge notifications as read: $e');
+    }
+
+    hasNewDischargeRequests.value = false;
+    Get.toNamed(
+      '/discharge-request',
+      arguments: {'institute_id': currentInstId.isNotEmpty ? currentInstId : instituteId.value},
+    );
+  }
+
+  void _showPendingRegistrationDialog(BuildContext context) {
+    AppDialog.show(
+      title: 'warning'.tr,
+      confirmLabel: 'okay'.tr,
+      cancelLabel: 'cancel'.tr,
+      onConfirm: () => Get.back(),
+      onCancel: () => Get.back(),
+      body: Text(
+        'registration_pending_msg'.tr,
+        style: const TextStyle(fontSize: 14, color: AppColors.navy),
+      ),
+    );
   }
 
   /// Checks if orientation is already set. If yes, applies it and returns true.
