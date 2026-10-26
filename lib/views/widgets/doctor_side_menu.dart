@@ -1,4 +1,5 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -205,50 +206,16 @@ class DoctorSideMenu extends GetView<DoctorDashboardController> {
   }
 
   void _showPendingRegistrationDialog() {
-    Get.dialog(
-      AlertDialog(
-        backgroundColor: AppColors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        title: Text(
-          'warning_title'.tr,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: AppColors.navy,
-          ),
-        ),
-        content: Text(
-          'registration_pending'.tr,
-          style: TextStyle(fontSize: 14, color: AppColors.navy),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: Text(
-              'okay'.tr,
-              style: TextStyle(
-                color: AppColors.teal,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: Text(
-              'cancel'.tr,
-              style: TextStyle(
-                color: AppColors.medicalGray,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
+    AppDialog.show(
+      title: 'warning_title'.tr,
+      body: Text(
+        'registration_pending'.tr,
+        style: const TextStyle(fontSize: 14, color: AppColors.navy),
       ),
-      barrierDismissible: false,
+      confirmLabel: 'okay'.tr,
+      cancelLabel: 'cancel'.tr,
+      onConfirm: () => Get.back(),
+      onCancel: () => Get.back(),
     );
   }
 

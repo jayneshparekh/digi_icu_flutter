@@ -66,10 +66,9 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
             ),
           ],
         ),
-        body: Obx(() {
-          return Stack(
-            children: [
-              SingleChildScrollView(
+        body: Stack(
+          children: [
+            SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16.0,
                   vertical: 12.0,
@@ -147,101 +146,105 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                     const Divider(height: 24),
 
                     // --- 4. CHOLESTEROL ---
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.asset(
-                          'assets/images/m_cholesterol.png',
-                          width: 65,
-                          height: 65,
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'q_cholesterol'.tr,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.navy,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              RadioGroup<String>(
-                                groupValue: controller.hasCholesterol.value,
-                                onChanged: (val) =>
-                                    controller.hasCholesterol.value = val ?? '',
-                                child: Column(
-                                  children: ['Yes', 'No', "Don't Know"]
-                                      .map(
-                                        (opt) => Row(
-                                          children: [
-                                            AppRadio<String>(value: opt),
-                                            Text(
-                                              opt == "Don't Know"
-                                                  ? 'dont_know'.tr
-                                                  : opt.toLowerCase().tr,
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                              ),
-                            ],
+                    Obx(
+                      () => Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            'assets/images/m_cholesterol.png',
+                            width: 65,
+                            height: 65,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'q_cholesterol'.tr,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                RadioGroup<String>(
+                                  groupValue: controller.hasCholesterol.value,
+                                  onChanged: (val) =>
+                                      controller.hasCholesterol.value = val ?? '',
+                                  child: Column(
+                                    children: ['Yes', 'No', "Don't Know"]
+                                        .map(
+                                          (opt) => Row(
+                                            children: [
+                                              AppRadio<String>(value: opt),
+                                              Text(
+                                                opt == "Don't Know"
+                                                    ? 'dont_know'.tr
+                                                    : opt.toLowerCase().tr,
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     const Divider(height: 24),
 
                     // --- 5. ASTHMA ---
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.asset(
-                          'assets/images/m_asthma.png',
-                          width: 65,
-                          height: 65,
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'q_asthma'.tr,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.navy,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              RadioGroup<String>(
-                                groupValue: controller.hasAsthma.value,
-                                onChanged: (val) =>
-                                    controller.hasAsthma.value = val ?? '',
-                                child: Row(
-                                  children: ['Yes', 'No']
-                                      .map(
-                                        (opt) => Row(
-                                          children: [
-                                            AppRadio<String>(value: opt),
-                                            Text(opt.toLowerCase().tr),
-                                            const SizedBox(width: 24),
-                                          ],
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                              ),
-                            ],
+                    Obx(
+                      () => Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            'assets/images/m_asthma.png',
+                            width: 65,
+                            height: 65,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'q_asthma'.tr,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                RadioGroup<String>(
+                                  groupValue: controller.hasAsthma.value,
+                                  onChanged: (val) =>
+                                      controller.hasAsthma.value = val ?? '',
+                                  child: Row(
+                                    children: ['Yes', 'No']
+                                        .map(
+                                          (opt) => Row(
+                                            children: [
+                                              AppRadio<String>(value: opt),
+                                              Text(opt.toLowerCase().tr),
+                                              const SizedBox(width: 24),
+                                            ],
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
 
                     // --- PREGNANCY SECTIONS (FEMALE ONLY) ---
@@ -257,26 +260,28 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        RadioGroup<String>(
-                          groupValue: controller.isPregnant.value,
-                          onChanged: (val) =>
-                              controller.isPregnant.value = val ?? '',
-                          child: Row(
-                            children: ['Yes', 'No', 'May be']
-                                .map(
-                                  (opt) => Row(
-                                    children: [
-                                      AppRadio<String>(value: opt),
-                                      Text(
-                                        opt == 'May be'
-                                            ? 'may_be'.tr
-                                            : opt.toLowerCase().tr,
-                                      ),
-                                      const SizedBox(width: 16),
-                                    ],
-                                  ),
-                                )
-                                .toList(),
+                        Obx(
+                          () => RadioGroup<String>(
+                            groupValue: controller.isPregnant.value,
+                            onChanged: (val) =>
+                                controller.isPregnant.value = val ?? '',
+                            child: Row(
+                              children: ['Yes', 'No', 'May be']
+                                  .map(
+                                    (opt) => Row(
+                                      children: [
+                                        AppRadio<String>(value: opt),
+                                        Text(
+                                          opt == 'May be'
+                                              ? 'may_be'.tr
+                                              : opt.toLowerCase().tr,
+                                        ),
+                                        const SizedBox(width: 16),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -290,27 +295,29 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      RadioGroup<String>(
-                        groupValue: controller.duringPregnancy.value,
-                        onChanged: (val) =>
-                            controller.duringPregnancy.value = val ?? '',
-                        child: Column(
-                          children: ['Hypertension', 'Diabetes', 'Both', 'None']
-                              .map(
-                                (opt) => Row(
-                                  children: [
-                                    AppRadio<String>(value: opt),
-                                    Text(
-                                      opt == 'Both'
-                                          ? 'both'.tr
-                                          : opt == 'None'
-                                          ? 'none'.tr
-                                          : opt,
-                                    ),
-                                  ],
-                                ),
-                              )
-                              .toList(),
+                      Obx(
+                        () => RadioGroup<String>(
+                          groupValue: controller.duringPregnancy.value,
+                          onChanged: (val) =>
+                              controller.duringPregnancy.value = val ?? '',
+                          child: Column(
+                            children: ['Hypertension', 'Diabetes', 'Both', 'None']
+                                .map(
+                                  (opt) => Row(
+                                    children: [
+                                      AppRadio<String>(value: opt),
+                                      Text(
+                                        opt == 'Both'
+                                            ? 'both'.tr
+                                            : opt == 'None'
+                                            ? 'none'.tr
+                                            : opt,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ),
                         ),
                       ),
                     ],
@@ -433,7 +440,8 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                     const Divider(height: 24),
 
                     // --- 6. ALLERGY TO MEDICINES ---
-                    Row(
+                    Obx(
+                      () => Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Image.asset(
@@ -564,10 +572,12 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                         ),
                       ],
                     ),
+                    ),
                     const Divider(height: 24),
 
                     // --- 7. BLEEDING TENDENCIES ---
-                    Row(
+                    Obx(
+                      () => Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Image.asset(
@@ -614,10 +624,12 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                         ),
                       ],
                     ),
+                    ),
                     const Divider(height: 24),
 
                     // --- 8. OTHER SURGERY / TREATMENT ---
-                    Row(
+                    Obx(
+                      () => Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Image.asset(
@@ -750,6 +762,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                         ),
                       ],
                     ),
+                    ),
 
                     const SizedBox(height: 24),
 
@@ -772,10 +785,9 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
                   ],
                 ),
               ),
-              AppLoadingOverlay(isLoading: controller.isLoading.value),
+              Obx(() => AppLoadingOverlay(isLoading: controller.isLoading.value)),
             ],
-          );
-        }),
+          ),
       ),
     );
   }
@@ -799,8 +811,9 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
     bool hideRegularQuestion = false,
     required bool allowDontKnow,
   }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Obx(
+      () => Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Image.asset(iconPath, width: 65, height: 65),
         const SizedBox(width: 16),
@@ -1086,6 +1099,7 @@ class MedicalFormScreen extends GetView<MedicalFormController> {
           ),
         ),
       ],
+    ),
     );
   }
 

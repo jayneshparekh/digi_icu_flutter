@@ -58,95 +58,99 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
           ),
         ],
       ),
-      body: Obx(() {
-        final activePlace = controller.selectedPlace.value;
-        return Stack(
-          children: [
-            SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 24.0,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Conditionally show problem explanation
-                  if (controller.speciality.isNotEmpty ||
-                      controller.isFromDoctorHomeService) ...[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 24.0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Conditionally show problem explanation
+                if (controller.speciality.isNotEmpty ||
+                    controller.isFromDoctorHomeService) ...[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppLabeledTextField(
+                          controller: controller.problemController,
+                          label: 'purpose_of_visit'.tr,
+                          hint: 'purpose_of_visit'.tr,
+                          maxLines: 4,
+                        ),
+                        const SizedBox(height: 24),
+                      ],
+                    ),
+                  ),
+                ],
+
+                // Question
+                Text(
+                  'where_are_you'.tr,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Location Options Row & Book Button
+                Obx(() {
+                  final activePlace = controller.selectedPlace.value;
+                  return Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          AppLabeledTextField(
-                            controller: controller.problemController,
-                            label: 'purpose_of_visit'.tr,
-                            hint: 'purpose_of_visit'.tr,
-                            maxLines: 4,
+                          _buildLocationOption(
+                            label: 'home'.tr,
+                            imagePath: 'assets/images/house.png',
+                            isSelected: activePlace == 'Home',
+                            onTap: () => controller.selectPlace('Home'),
                           ),
-                          const SizedBox(height: 24),
+                          _buildLocationOption(
+                            label: 'office'.tr,
+                            imagePath: 'assets/images/building.png',
+                            isSelected: activePlace == 'Office',
+                            onTap: () => controller.selectPlace('Office'),
+                          ),
+                          _buildLocationOption(
+                            label: 'outdoor'.tr,
+                            imagePath: 'assets/images/warehouse.png',
+                            isSelected: activePlace == 'Outdoor',
+                            onTap: () => controller.selectPlace('Outdoor'),
+                          ),
+                          _buildLocationOption(
+                            label: 'clinic_home_visit'.tr,
+                            imagePath: 'assets/images/health_clinic.png',
+                            isSelected: activePlace == 'Clinic',
+                            onTap: () => controller.selectPlace('Clinic'),
+                          ),
                         ],
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 48),
 
-                  // Question
-                  Text(
-                    'where_are_you'.tr,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.navy,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Location Options Row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildLocationOption(
-                        label: 'home'.tr,
-                        imagePath: 'assets/images/house.png',
-                        isSelected: activePlace == 'Home',
-                        onTap: () => controller.selectPlace('Home'),
-                      ),
-                      _buildLocationOption(
-                        label: 'office'.tr,
-                        imagePath: 'assets/images/building.png',
-                        isSelected: activePlace == 'Office',
-                        onTap: () => controller.selectPlace('Office'),
-                      ),
-                      _buildLocationOption(
-                        label: 'outdoor'.tr,
-                        imagePath: 'assets/images/warehouse.png',
-                        isSelected: activePlace == 'Outdoor',
-                        onTap: () => controller.selectPlace('Outdoor'),
-                      ),
-                      _buildLocationOption(
-                        label: 'clinic_home_visit'.tr,
-                        imagePath: 'assets/images/health_clinic.png',
-                        isSelected: activePlace == 'Clinic',
-                        onTap: () => controller.selectPlace('Clinic'),
-                      ),
+                      // Book Now Button (Shown only when a place is selected)
+                      if (activePlace.isNotEmpty)
+                        AppPrimaryButton(
+                          label: 'book_now'.tr,
+                          onPressed: () => controller.bookAppointment(),
+                          width: 160,
+                        ),
                     ],
-                  ),
-                  const SizedBox(height: 48),
-
-                  // Book Now Button (Shown only when a place is selected)
-                  if (activePlace.isNotEmpty)
-                    AppPrimaryButton(
-                      label: 'book_now'.tr,
-                      onPressed: () => controller.bookAppointment(),
-                      width: 160,
-                    ),
-                ],
-              ),
+                  );
+                }),
+              ],
             ),
-            AppLoadingOverlay(isLoading: controller.isLoading.value),
-          ],
-        );
-      }),
+          ),
+          Obx(() => AppLoadingOverlay(isLoading: controller.isLoading.value)),
+        ],
+      ),
     );
   }
 
@@ -167,7 +171,9 @@ class TakeAppointmentScreen extends GetView<TakeAppointmentController> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: isSelected ? AppColors.error : Colors.transparent,
+                color: isSelected
+                    ? AppColors.error
+                    : AppColors.white.withValues(alpha: 0),
                 width: 3,
               ),
             ),

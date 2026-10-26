@@ -207,7 +207,7 @@ class PackageCategoryScreen extends GetView<PackageCategoryController> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: const LinearGradient(
-            colors: [AppColors.info, Color(0xFF00E5FF)],
+            colors: [AppColors.info, AppColors.teal],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),

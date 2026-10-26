@@ -1,4 +1,5 @@
 import 'package:digi_icu_flutter/controllers/diagnosis_controller.dart';
+import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
 import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
 import 'package:digi_icu_flutter/views/widgets/app_speech_input_widget.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
@@ -29,67 +30,66 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
           ),
         ],
       ),
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        return Column(
-          children: [
-            // Compiled Diagnosis Summary Box
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              color: AppColors.lightGray,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'diagnosis_label'.tr,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: AppColors.navy,
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      controller.rxDiagnosisText.value.isNotEmpty
-                          ? controller.rxDiagnosisText.value
-                          : 'na'.tr,
-                      style: TextStyle(fontSize: 14, color: AppColors.navy),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  // Save Floating Button
-                  ElevatedButton(
-                    onPressed: () => controller.submitDiagnosis(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.success,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                    ),
-                    child: Icon(Icons.save, color: AppColors.white, size: 20),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1, thickness: 1),
-
-            // Scrollable Forms List
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              // Compiled Diagnosis Summary Box
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                color: AppColors.lightGray,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // 1. Other Diagnosis Section
-                    _buildSectionWrapper(
-                      child: Column(
+                    Text(
+                      'diagnosis_label'.tr,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: AppColors.navy,
+                      ),
+                    ),
+                    Expanded(
+                      child: Obx(
+                        () => Text(
+                          controller.rxDiagnosisText.value.isNotEmpty
+                              ? controller.rxDiagnosisText.value
+                              : 'na'.tr,
+                          style: TextStyle(fontSize: 14, color: AppColors.navy),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Save Floating Button
+                    ElevatedButton(
+                      onPressed: () => controller.submitDiagnosis(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.success,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                      ),
+                      child: Icon(Icons.save, color: AppColors.white, size: 20),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(height: 1, thickness: 1),
+
+              // Scrollable Forms List
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    children: [
+                      // 1. Other Diagnosis Section
+                      _buildSectionWrapper(
+                        builder: () => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
@@ -181,7 +181,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
 
                     // 2. Hypertension Section
                     _buildSectionWrapper(
-                      child: Column(
+                      builder: () => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
@@ -304,7 +304,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
 
                     // 3. Diabetes Section
                     _buildSectionWrapper(
-                      child: Column(
+                      builder: () => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
@@ -423,7 +423,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
 
                     // 4. Stroke Section
                     _buildSectionWrapper(
-                      child: Column(
+                      builder: () => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
@@ -472,7 +472,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
 
                     // 5. Ischemic Section
                     _buildSectionWrapper(
-                      child: Column(
+                      builder: () => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
@@ -534,7 +534,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
 
                     // 6. Coronary (CAD) Section
                     _buildSectionWrapper(
-                      child: Column(
+                      builder: () => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
@@ -592,7 +592,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
 
                     // 7. Rhythm Section
                     _buildSectionWrapper(
-                      child: Column(
+                      builder: () => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
@@ -661,7 +661,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
 
                     // 8. Retinopathy Section
                     _buildSectionWrapper(
-                      child: Column(
+                      builder: () => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
@@ -711,7 +711,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
 
                     // 9. Individual boxes section
                     _buildSectionWrapper(
-                      child: Wrap(
+                      builder: () => Wrap(
                         spacing: 16,
                         children: [
                           _buildCheckbox('ckd'.tr, controller.cbHtnCKD),
@@ -734,7 +734,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
 
                     // 10. Left Ventricular dysfunction (LVD)
                     _buildSectionWrapper(
-                      child: Column(
+                      builder: () => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
@@ -797,7 +797,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
 
                     // 11. NYHA Section
                     _buildSectionWrapper(
-                      child: Column(
+                      builder: () => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
@@ -881,7 +881,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
 
                     // 12. Dyslipidemia Section
                     _buildSectionWrapper(
-                      child: Column(
+                      builder: () => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
@@ -968,12 +968,14 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
               ),
             ),
           ],
-        );
-      }),
+        ),
+        Obx(() => AppLoadingOverlay(isLoading: controller.isLoading.value)),
+      ],
+    ),
     );
   }
 
-  Widget _buildSectionWrapper({required Widget child}) {
+  Widget _buildSectionWrapper({required Widget Function() builder}) {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 12),
@@ -982,7 +984,7 @@ class DiagnosisScreen extends GetView<DiagnosisController> {
         border: Border.all(color: AppColors.medicalGray),
         borderRadius: BorderRadius.circular(6),
       ),
-      child: child,
+      child: Obx(builder),
     );
   }
 

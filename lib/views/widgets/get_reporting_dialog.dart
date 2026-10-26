@@ -255,10 +255,10 @@ class _GetReportingDialogState extends State<GetReportingDialog> {
                 child: TextField(
                   controller: systolicBpCtrl,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Systolic BP (mmHg)',
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(
+                  decoration: InputDecoration(
+                    labelText: 'systolic_bp_label'.tr,
+                    border: const OutlineInputBorder(),
+                    contentPadding: const EdgeInsets.symmetric(
                       horizontal: 10,
                       vertical: 8,
                     ),
@@ -270,10 +270,10 @@ class _GetReportingDialogState extends State<GetReportingDialog> {
                 child: TextField(
                   controller: diastolicBpCtrl,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Diastolic BP (mmHg)',
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(
+                  decoration: InputDecoration(
+                    labelText: 'diastolic_bp_label'.tr,
+                    border: const OutlineInputBorder(),
+                    contentPadding: const EdgeInsets.symmetric(
                       horizontal: 10,
                       vertical: 8,
                     ),
@@ -315,9 +315,9 @@ class _GetReportingDialogState extends State<GetReportingDialog> {
             const SizedBox(height: 8),
             TextField(
               controller: otherSymptomsCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Specify Other Symptoms',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: 'specify_other_symptoms'.tr,
+                border: const OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 10,
                   vertical: 8,

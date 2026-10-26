@@ -26,10 +26,15 @@ class SplashController extends GetxController {
   Future<void> _checkSessionAndNavigate() async {
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool(AppConstants.prefIsLogin) ?? false;
+    final loginType = prefs.getString(AppConstants.prefLoginType) ?? '';
 
     Future.delayed(const Duration(seconds: 3), () {
       if (isLoggedIn) {
-        Get.offNamed('/doctor-dashboard');
+        if (loginType.toLowerCase() == 'patient') {
+          Get.offNamed('/patient-dashboard');
+        } else {
+          Get.offNamed('/doctor-dashboard');
+        }
       } else {
         Get.offNamed('/login');
       }

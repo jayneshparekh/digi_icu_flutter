@@ -364,7 +364,7 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
               children: [
                 _buildActionButton(
                   label: 'prescriptions_tab'.tr,
-                  color: const Color(0xFFFF5722),
+                  color: AppColors.teal,
                   onTap: () async {
                     final result = await Get.toNamed(
                       '/add-prescription',

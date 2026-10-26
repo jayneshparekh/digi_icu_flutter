@@ -1,6 +1,7 @@
 import 'package:digi_icu_flutter/controllers/serving_patient_controller.dart';
 import 'package:digi_icu_flutter/controllers/serving_patient_dashboard_controller.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:digi_icu_flutter/models/response/doctors/dashboard_details_response.dart';
 import 'package:digi_icu_flutter/views/widgets/serving_patient_dashboard_card.dart';
@@ -547,17 +548,17 @@ class ServingPatientDashboardView extends StatelessWidget {
   static Color _getWhoRiskColor(String risk) {
     switch (risk) {
       case '<10%':
-        return const Color(0xFF8BC34A);
+        return AppColors.success;
       case '10-20%':
-        return const Color(0xFFFFEB3B);
+        return AppColors.teal;
       case '20-30%':
-        return const Color(0xFFFF9800);
+        return AppColors.info;
       case '30-40%':
-        return const Color(0xFFFF5722);
+        return AppColors.warning;
       case '>40%':
-        return const Color(0xFFF44336);
+        return AppColors.error;
       default:
-        return const Color(0xFF8BC34A);
+        return AppColors.success;
     }
   }
 
@@ -566,45 +567,89 @@ class ServingPatientDashboardView extends StatelessWidget {
     BuildContext context,
     List<AdmissionHistoryItem> list,
   ) {
-    Get.dialog(
-      AlertDialog(
-        insetPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-        title: Text(
-          'admission_history'.tr,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: list.isEmpty
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 24.0),
-                  child: Text(
-                    'no_admission_history'.tr,
-                    textAlign: TextAlign.center,
-                  ),
-                )
-              : SingleChildScrollView(
-                  child: Table(
-                    border: TableBorder.all(color: AppColors.medicalGray),
-                    columnWidths: const {
-                      0: FlexColumnWidth(1.4),
-                      1: FlexColumnWidth(2.5),
-                      2: FlexColumnWidth(3.1),
-                    },
-                    children: [
-                      // Header Row
-                      TableRow(
-                        decoration: BoxDecoration(color: AppColors.teal),
+    AppDialog.show(
+      title: 'admission_history'.tr,
+      body: SizedBox(
+        width: double.maxFinite,
+        child: list.isEmpty
+            ? Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24.0),
+                child: Text(
+                  'no_admission_history'.tr,
+                  textAlign: TextAlign.center,
+                ),
+              )
+            : SingleChildScrollView(
+                child: Table(
+                  border: TableBorder.all(color: AppColors.medicalGray),
+                  columnWidths: const {
+                    0: FlexColumnWidth(1.4),
+                    1: FlexColumnWidth(2.5),
+                    2: FlexColumnWidth(3.1),
+                  },
+                  children: [
+                    // Header Row
+                    TableRow(
+                      decoration: const BoxDecoration(color: AppColors.teal),
+                      children: [
+                        TableCell(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'id'.tr,
+                              style: const TextStyle(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        TableCell(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'doctor'.tr,
+                              style: const TextStyle(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        TableCell(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'date'.tr,
+                              style: const TextStyle(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Data Rows
+                    ...list.map((item) {
+                      final isAdmitted =
+                          item.status.toLowerCase() == 'admitted';
+                      final rowBgColor = isAdmitted
+                          ? AppColors.success.withValues(alpha: 0.2)
+                          : AppColors.white.withValues(alpha: 0);
+
+                      return TableRow(
+                        decoration: BoxDecoration(color: rowBgColor),
                         children: [
                           TableCell(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'id'.tr,
-                                style: TextStyle(
-                                  color: AppColors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                item.appointmentId,
+                                style: const TextStyle(fontSize: 13),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -613,11 +658,8 @@ class ServingPatientDashboardView extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'doctor'.tr,
-                                style: TextStyle(
-                                  color: AppColors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                item.doctorName,
+                                style: const TextStyle(fontSize: 13),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -626,74 +668,23 @@ class ServingPatientDashboardView extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'date'.tr,
-                                style: TextStyle(
-                                  color: AppColors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                isAdmitted
+                                    ? 'A: ${item.admitDate}'
+                                    : 'A: ${item.admitDate}\nD: ${item.dischargeDate}',
+                                style: const TextStyle(fontSize: 12),
                                 textAlign: TextAlign.center,
                               ),
                             ),
                           ),
                         ],
-                      ),
-                      // Data Rows
-                      ...list.map((item) {
-                        final isAdmitted =
-                            item.status.toLowerCase() == 'admitted';
-                        final rowBgColor = isAdmitted
-                            ? AppColors.success.withValues(alpha: 0.2)
-                            : Colors.transparent;
-
-                        return TableRow(
-                          decoration: BoxDecoration(color: rowBgColor),
-                          children: [
-                            TableCell(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  item.appointmentId,
-                                  style: const TextStyle(fontSize: 13),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                            TableCell(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  item.doctorName,
-                                  style: const TextStyle(fontSize: 13),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                            TableCell(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  isAdmitted
-                                      ? 'A: ${item.admitDate}'
-                                      : 'A: ${item.admitDate}\nD: ${item.dischargeDate}',
-                                  style: const TextStyle(fontSize: 12),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      }),
-                    ],
-                  ),
+                      );
+                    }),
+                  ],
                 ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text('close'.tr, style: TextStyle(color: AppColors.error)),
-          ),
-        ],
+              ),
       ),
+      confirmLabel: 'close'.tr,
+      onConfirm: () => Get.back(),
     );
   }
 
@@ -711,196 +702,172 @@ class ServingPatientDashboardView extends StatelessWidget {
     final hba1cDateController = TextEditingController();
     String apiFormattedDate = '';
 
-    Get.dialog(
-      Obx(() {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    AppDialog.show(
+      title: text,
+      body: Obx(() {
+        return SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Text(
-                  text,
+              if (text == 'height_weight_bmi'.tr && height.isNotEmpty) ...[
+                Text(
+                  'height_label'.tr.replaceAll('@height', height),
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: AppColors.blue,
                   ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () => Get.back(),
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: AppColors.error,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.close, color: AppColors.white, size: 14),
-                ),
-              ),
-            ],
-          ),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (text == 'height_weight_bmi'.tr && height.isNotEmpty) ...[
-                  Text(
-                    'height_label'.tr.replaceAll('@height', height),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: AppColors.blue,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                ],
-                if (showListContainer.value) ...[
-                  Flexible(
-                    child: list.isEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text('no_history_found'.tr),
-                          )
-                        : ListView.separated(
-                            shrinkWrap: true,
-                            itemCount: list.length,
-                            separatorBuilder: (context, index) =>
-                                const Divider(),
-                            itemBuilder: (context, index) {
-                              final item = list[index];
-                              String datePart = '';
-                              if (item.created.isNotEmpty) {
-                                final parsed = DateTime.tryParse(item.created);
-                                if (parsed != null) {
-                                  datePart =
-                                      ' (${DateFormat('dd-MM-yyyy hh:mm a').format(parsed)})';
-                                } else {
-                                  datePart = ' (${item.created})';
-                                }
+                const SizedBox(height: 8),
+              ],
+              if (showListContainer.value) ...[
+                Flexible(
+                  child: list.isEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text('no_history_found'.tr),
+                        )
+                      : ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: list.length,
+                          separatorBuilder: (context, index) =>
+                              const Divider(),
+                          itemBuilder: (context, index) {
+                            final item = list[index];
+                            String datePart = '';
+                            if (item.created.isNotEmpty) {
+                              final parsed = DateTime.tryParse(item.created);
+                              if (parsed != null) {
+                                datePart =
+                                    ' (${DateFormat('dd-MM-yyyy hh:mm a').format(parsed)})';
+                              } else {
+                                datePart = ' (${item.created})';
                               }
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 4.0,
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4.0,
+                              ),
+                              child: Text(
+                                '${item.value}$datePart',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: AppColors.navy,
                                 ),
-                                child: Text(
-                                  '${item.value}$datePart',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: AppColors.navy,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                  ),
-                ] else ...[
-                  // HbA1c input form
-                  Text(
-                    'enter_hba1c_value'.tr,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  TextField(
-                    controller: hba1cValueController,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'eg_6_5'.tr,
-                      border: const OutlineInputBorder(),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 8,
-                      ),
-                    ),
-                  ),
+                              ),
+                            );
+                          },
+                        ),
+                ),
+                if (isHba1c) ...[
                   const SizedBox(height: 12),
-                  Text(
-                    'select_date'.tr,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FloatingActionButton.small(
+                      onPressed: () => showListContainer.value = false,
+                      backgroundColor: AppColors.teal,
+                      child: const Icon(Icons.add, color: AppColors.white),
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  TextField(
-                    controller: hba1cDateController,
-                    readOnly: true,
-                    onTap: () async {
-                      final selected = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime.now(),
-                      );
-                      if (selected != null) {
-                        hba1cDateController.text = DateFormat(
-                          'dd/MM/yyyy',
-                        ).format(selected);
-                        apiFormattedDate = DateFormat(
-                          'yyyy-MM-dd',
-                        ).format(selected);
+                ],
+              ] else ...[
+                // HbA1c input form
+                Text(
+                  'enter_hba1c_value'.tr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: hba1cValueController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'eg_6_5'.tr,
+                    border: const OutlineInputBorder(),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 8,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'select_date'.tr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: hba1cDateController,
+                  readOnly: true,
+                  onTap: () async {
+                    final selected = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime.now(),
+                    );
+                    if (selected != null) {
+                      hba1cDateController.text = DateFormat(
+                        'dd/MM/yyyy',
+                      ).format(selected);
+                      apiFormattedDate = DateFormat(
+                        'yyyy-MM-dd',
+                      ).format(selected);
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'dd_mm_yyyy'.tr,
+                    border: const OutlineInputBorder(),
+                    suffixIcon: const Icon(Icons.calendar_today, size: 18),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 8,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final val = hba1cValueController.text.trim();
+                      if (val.isEmpty || apiFormattedDate.isEmpty) {
+                        AppSnackbars.showError(
+                          'validation_error'.tr,
+                          'fill_hba1c_date'.tr,
+                        );
+                        return;
+                      }
+                      if (controller != null) {
+                        final success = await controller.addQuickForm(
+                          val,
+                          apiFormattedDate,
+                        );
+                        if (success) {
+                          Get.back();
+                        }
                       }
                     },
-                    decoration: InputDecoration(
-                      hintText: 'dd_mm_yyyy'.tr,
-                      border: const OutlineInputBorder(),
-                      suffixIcon: const Icon(Icons.calendar_today, size: 18),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 8,
-                      ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.teal,
+                    ),
+                    child: Text(
+                      'submit'.tr,
+                      style: const TextStyle(color: AppColors.white),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        final val = hba1cValueController.text.trim();
-                        if (val.isEmpty || apiFormattedDate.isEmpty) {
-                          AppSnackbars.showError(
-                            'validation_error'.tr,
-                            'fill_hba1c_date'.tr,
-                          );
-                          return;
-                        }
-                        if (controller != null) {
-                          final success = await controller.addQuickForm(
-                            val,
-                            apiFormattedDate,
-                          );
-                          if (success) {
-                            Get.back();
-                          }
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.teal,
-                      ),
-                      child: Text(
-                        'submit'.tr,
-                        style: TextStyle(color: AppColors.white),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ],
-            ),
+            ],
           ),
-          actions: isHba1c && showListContainer.value
-              ? [
-                  FloatingActionButton.small(
-                    onPressed: () => showListContainer.value = false,
-                    backgroundColor: AppColors.teal,
-                    child: Icon(Icons.add, color: AppColors.white),
-                  ),
-                ]
-              : null,
         );
       }),
     );

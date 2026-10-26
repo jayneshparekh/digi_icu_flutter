@@ -138,8 +138,8 @@ class TakeAppointmentController extends GetxController {
         final res = BookAppointmentResponse.fromJson(bookResponse.data);
         if (res.status == 'success') {
           AppSnackbars.showSuccess(
-            'Success',
-            'Appointment booked successfully!',
+            'success'.tr,
+            'appointment_booked_success'.tr,
           );
 
           if (res.defaultFormType.isNotEmpty) {
@@ -204,12 +204,18 @@ class TakeAppointmentController extends GetxController {
           AppSnackbars.showInfo('Booking Failed', res.msg);
         }
       } else {
-        AppSnackbars.showError('Error', 'Booking API failed');
+        AppSnackbars.showError('error'.tr, 'Booking API failed');
       }
     } catch (e) {
-      AppSnackbars.showError('Error', 'Something went wrong during booking');
+      AppSnackbars.showError('error'.tr, 'Something went wrong during booking');
     } finally {
       isLoading.value = false;
     }
+  }
+
+  @override
+  void onClose() {
+    problemController.dispose();
+    super.onClose();
   }
 }

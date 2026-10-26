@@ -1,4 +1,5 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_delta_from_html/flutter_quill_delta_from_html.dart';
@@ -23,14 +24,13 @@ class AppRichEditorDialog extends StatefulWidget {
     String? manualRxId,
     required Function(String html) onSave,
   }) {
-    return showDialog(
-      context: context ?? Get.context!,
-      barrierDismissible: false,
-      builder: (ctx) => AppRichEditorDialog(
+    return Get.dialog<void>(
+      AppRichEditorDialog(
         initialHtml: initialHtml,
         manualRxId: manualRxId,
         onSave: onSave,
       ),
+      barrierDismissible: false,
     );
   }
 
@@ -330,13 +330,9 @@ class _AppRichEditorDialogState extends State<AppRichEditorDialog> {
                       final plainText =
                           _quillController.document.toPlainText().trim();
                       if (plainText.isEmpty) {
-                        Get.snackbar(
+                        AppSnackbars.showWarning(
                           'warning_title'.tr,
                           'ds_please_enter_prescription'.tr,
-                          backgroundColor:
-                              AppColors.warning.withValues(alpha: 0.9),
-                          colorText: AppColors.white,
-                          snackPosition: SnackPosition.BOTTOM,
                         );
                         return;
                       }

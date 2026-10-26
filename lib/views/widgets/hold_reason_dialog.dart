@@ -139,11 +139,11 @@ class _HoldReasonDialogState extends State<HoldReasonDialog> {
             height: 38,
             child: ElevatedButton.icon(
               onPressed: widget.onGetReasonTemplateClick ?? () {},
-              icon: const Icon(Icons.list, size: 18, color: Colors.white),
+              icon: const Icon(Icons.list, size: 18, color: AppColors.white),
               label: Text('template'.tr),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.navy,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
               ),
             ),
@@ -187,7 +187,7 @@ class _HoldReasonDialogState extends State<HoldReasonDialog> {
               ),
               child: Text(
                 'submit'.tr,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: AppColors.white),
               ),
             ),
           ],

@@ -27,6 +27,7 @@ import 'package:digi_icu_flutter/views/widgets/reason_template_dialog.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:digi_icu_flutter/views/widgets/patient_rating_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/admit_selection_dialog.dart';
+import 'package:digi_icu_flutter/views/widgets/app_secondary_button.dart';
 import 'package:digi_icu_flutter/views/widgets/ipd_admit_flow_delegate.dart';
 import 'package:digi_icu_flutter/views/widgets/pre_admit_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/ipd_admit_dialog.dart';
@@ -360,32 +361,19 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
 
   /// Shows confirmation dialog before submitting Admit Request (addAdmitPatientRequest).
   void confirmAndSubmitAdmitRequest() {
-    Get.dialog(
-      AlertDialog(
-        title: Text('admit_request_confirm_title'.tr),
-        content: Text('admit_request_confirm_msg'.tr),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text(
-              'cancel'.tr,
-              style: const TextStyle(
-                color: AppColors.error,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal),
-            onPressed: () {
-              Get.back();
-              submitAdmitRequest();
-            },
-            child: Text('yes'.tr),
-          ),
-        ],
+    AppDialog.show(
+      title: 'admit_request_confirm_title'.tr,
+      body: Text(
+        'admit_request_confirm_msg'.tr,
+        style: const TextStyle(fontSize: 14, color: AppColors.navy),
       ),
-      barrierDismissible: false,
+      confirmLabel: 'yes'.tr,
+      cancelLabel: 'cancel'.tr,
+      onConfirm: () {
+        Get.back();
+        submitAdmitRequest();
+      },
+      onCancel: () => Get.back(),
     );
   }
 
@@ -582,7 +570,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
         barrierDismissible: false,
       );
     } catch (e) {
-      AppSnackbars.showError('Error', 'Failed to open pre-admit dialog: $e');
+      AppSnackbars.showError('error'.tr, 'Failed to open pre-admit dialog: $e');
     }
   }
 
@@ -1284,13 +1272,13 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
         }
       }
     } catch (e) {
-      AppSnackbars.showError('Error', 'Failed to upload report: $e');
+      AppSnackbars.showError('error'.tr, 'Failed to upload report: $e');
     } finally {
       isLoadingReports.value = false;
     }
   }
 
-  /// Uploads discharge summary PDF matching Android uploadDischargePdf in MyReportsActivity
+  /// Uploads discharge summary PDF
   Future<void> _uploadDischargeSummaryPdf({
     required String token,
     required String filePath,
@@ -1775,35 +1763,26 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
         }
       }
     } catch (e) {
-      AppSnackbars.showError('Error', 'Error adding rating: $e');
+      AppSnackbars.showError('error'.tr, 'Error adding rating: $e');
     } finally {
       isLoadingDetails.value = false;
     }
   }
 
   void _showFinishAppointmentDialog() {
-    Get.dialog(
-      AlertDialog(
-        title: const Text('Finish'),
-        content: const Text('Do you want to Finish this appointment?'),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: AppColors.medicalGray),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Get.back();
-              changeAppointmentStatus('', '1');
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal),
-            child: const Text('Yes', style: TextStyle(color: AppColors.white)),
-          ),
-        ],
+    AppDialog.show(
+      title: 'finish'.tr,
+      body: Text(
+        'finish_appointment_prompt'.tr,
+        style: const TextStyle(fontSize: 14, color: AppColors.navy),
       ),
+      confirmLabel: 'yes'.tr,
+      cancelLabel: 'cancel'.tr,
+      onConfirm: () {
+        Get.back();
+        changeAppointmentStatus('', '1');
+      },
+      onCancel: () => Get.back(),
     );
   }
 
@@ -1930,50 +1909,26 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
                   ),
                 ),
               ],
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      otherReasonController.dispose();
-                      Get.back();
-                    },
-                    child: Text(
-                      'cancel'.tr,
-                      style: const TextStyle(
-                        color: AppColors.error,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      final reason = isOtherSelected
-                          ? (otherReasonController.text.trim().isEmpty
-                                ? 'Other'
-                                : otherReasonController.text.trim())
-                          : selectedReason;
-                      otherReasonController.dispose();
-                      Get.back();
-                      _holdQuickAppointment(reason);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.teal,
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                    ),
-                    child: Text(
-                      'submit'.tr,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
             ],
           );
         },
       ),
+      confirmLabel: 'submit'.tr,
+      cancelLabel: 'cancel'.tr,
+      onConfirm: () {
+        final reason = isOtherSelected
+            ? (otherReasonController.text.trim().isEmpty
+                  ? 'Other'
+                  : otherReasonController.text.trim())
+            : selectedReason;
+        otherReasonController.dispose();
+        Get.back();
+        _holdQuickAppointment(reason);
+      },
+      onCancel: () {
+        otherReasonController.dispose();
+        Get.back();
+      },
     );
   }
 
@@ -1983,6 +1938,16 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
 
   @override
   void onClose() {
+    patientNoteController.dispose();
+    selfNoteController.dispose();
+    hospitalizationOtherController.dispose();
+    nonHospOtherController.dispose();
+    sv2Rv5Controller.dispose();
+    otherInterpretationController.dispose();
+    systolicController.dispose();
+    diastolicController.dispose();
+    metsController.dispose();
+    metOtherController.dispose();
     if (_otherReasonControllerInitialized) {
       _otherReasonController.dispose();
     }
@@ -2127,7 +2092,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
       }
     } catch (e) {
       debugPrint('Error changing appointment status: $e');
-      AppSnackbars.showError('Error', 'Failed to update status.');
+      AppSnackbars.showError('error'.tr, 'Failed to update status.');
     } finally {
       isLoadingDetails.value = false;
     }
@@ -2138,62 +2103,35 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     final noteController = TextEditingController();
     AppDialog.show(
       title: 'referral_note'.tr,
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextField(
-            controller: noteController,
-            maxLines: 3,
-            decoration: InputDecoration(
-              hintText: 'enter_referral_note'.tr,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 10,
-              ),
-            ),
+      body: TextField(
+        controller: noteController,
+        maxLines: 3,
+        decoration: InputDecoration(
+          hintText: 'enter_referral_note'.tr,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
           ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () => Get.back(),
-                child: Text(
-                  'cancel'.tr,
-                  style: const TextStyle(color: AppColors.error, fontSize: 16),
-                ),
-              ),
-              const SizedBox(width: 16),
-              ElevatedButton(
-                onPressed: () {
-                  final note = noteController.text.trim();
-                  if (note.isNotEmpty) {
-                    Get.back();
-                    _addReferralNotes(note);
-                  } else {
-                    AppSnackbars.showError(
-                      'validation_error'.tr,
-                      'please_enter_note'.tr,
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.teal,
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                ),
-                child: Text(
-                  'submit'.tr,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 10,
           ),
-        ],
+        ),
       ),
+      confirmLabel: 'submit'.tr,
+      cancelLabel: 'cancel'.tr,
+      onConfirm: () {
+        final note = noteController.text.trim();
+        if (note.isNotEmpty) {
+          Get.back();
+          _addReferralNotes(note);
+        } else {
+          AppSnackbars.showError(
+            'validation_error'.tr,
+            'please_enter_note'.tr,
+          );
+        }
+      },
+      onCancel: () => Get.back(),
     );
   }
 
@@ -2202,62 +2140,35 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     final noteController = TextEditingController();
     AppDialog.show(
       title: 'home_visit_note'.tr,
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextField(
-            controller: noteController,
-            maxLines: 3,
-            decoration: InputDecoration(
-              hintText: 'enter_home_visit_note'.tr,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 10,
-              ),
-            ),
+      body: TextField(
+        controller: noteController,
+        maxLines: 3,
+        decoration: InputDecoration(
+          hintText: 'enter_home_visit_note'.tr,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
           ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () => Get.back(),
-                child: Text(
-                  'cancel'.tr,
-                  style: const TextStyle(color: AppColors.error, fontSize: 16),
-                ),
-              ),
-              const SizedBox(width: 16),
-              ElevatedButton(
-                onPressed: () {
-                  final note = noteController.text.trim();
-                  if (note.isNotEmpty) {
-                    Get.back();
-                    _addDoctorVisitNotes(note);
-                  } else {
-                    AppSnackbars.showError(
-                      'validation_error'.tr,
-                      'please_enter_note'.tr,
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.teal,
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                ),
-                child: Text(
-                  'submit'.tr,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 10,
           ),
-        ],
+        ),
       ),
+      confirmLabel: 'submit'.tr,
+      cancelLabel: 'cancel'.tr,
+      onConfirm: () {
+        final note = noteController.text.trim();
+        if (note.isNotEmpty) {
+          Get.back();
+          _addDoctorVisitNotes(note);
+        } else {
+          AppSnackbars.showError(
+            'validation_error'.tr,
+            'please_enter_note'.tr,
+          );
+        }
+      },
+      onCancel: () => Get.back(),
     );
   }
 
@@ -3472,36 +3383,33 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
 
   Future<void> onFinishButtonPressed() async {
     if (isFrom == 'QuickAppointment') {
-      Get.dialog(
-        AlertDialog(
-          title: const Text('Serve Appointment'),
-          content: Text('Are you sure you want to serve $fullName?'),
-          actions: [
-            ElevatedButton(
-              onPressed: () async {
-                Get.back();
-                await serveQuickAppointment();
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal),
-              child: const Text('Serve'),
+      AppDialog.show(
+        title: 'serve_appointment'.tr,
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'serve_appointment_prompt'.tr.replaceAll('@name', fullName),
+              style: const TextStyle(fontSize: 14, color: AppColors.navy),
             ),
-            const SizedBox(width: 16),
-            ElevatedButton(
+            const SizedBox(height: 16),
+            AppSecondaryButton(
+              label: 'serve_and_next'.tr,
               onPressed: () async {
                 Get.back();
                 await serveAndNextQuickAppointment();
               },
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.teal),
-              child: const Text('Serve & Next'),
-            ),
-            const SizedBox(width: 16),
-            TextButton(
-              onPressed: () => Get.back(),
-              child: const Text('Cancel'),
             ),
           ],
         ),
-        barrierDismissible: false,
+        confirmLabel: 'serve'.tr,
+        cancelLabel: 'cancel'.tr,
+        onConfirm: () async {
+          Get.back();
+          await serveQuickAppointment();
+        },
+        onCancel: () => Get.back(),
       );
     } else {
       if (patientRating.value.isEmpty || patientRating.value == '0') {

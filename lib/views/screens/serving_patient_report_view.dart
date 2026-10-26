@@ -9,6 +9,7 @@ import '../widgets/app_dialog.dart';
 import '../widgets/app_folder_card.dart';
 import '../widgets/app_primary_button.dart';
 import '../widgets/app_report_tile.dart';
+import '../widgets/app_snackbars.dart';
 import '../widgets/get_reporting_dialog.dart';
 
 class ServingPatientReportView extends GetView<ServingPatientController> {
@@ -517,10 +518,10 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                   const SizedBox(height: 4),
                   TextField(
                     onChanged: (val) => otherRemarks.value = val,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Enter report details...',
-                      contentPadding: EdgeInsets.symmetric(
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      hintText: 'enter_report_details'.tr,
+                      contentPadding: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 10,
                       ),
@@ -531,9 +532,9 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
               );
             }),
 
-            const Text(
-              'Attach Document / Photo:',
-              style: TextStyle(
+            Text(
+              'attach_document_photo'.tr,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 13,
                 color: AppColors.navy,
@@ -546,7 +547,7 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                 Expanded(
                   child: OutlinedButton.icon(
                     icon: const Icon(Icons.camera_alt, color: AppColors.teal),
-                    label: const Text('Camera'),
+                    label: Text('camera'.tr),
                     onPressed: () async {
                       final img = await picker.pickImage(
                         source: ImageSource.camera,
@@ -563,7 +564,7 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                       Icons.photo_library,
                       color: AppColors.blue,
                     ),
-                    label: const Text('Gallery'),
+                    label: Text('gallery'.tr),
                     onPressed: () async {
                       final img = await picker.pickImage(
                         source: ImageSource.gallery,
@@ -584,7 +585,7 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                   Icons.picture_as_pdf,
                   color: AppColors.error,
                 ),
-                label: const Text('Pick PDF'),
+                label: Text('pick_pdf'.tr),
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: AppColors.error),
                   foregroundColor: AppColors.error,
@@ -697,9 +698,9 @@ class ServingPatientReportView extends GetView<ServingPatientController> {
                   isLoading: controller.isLoadingReports.value,
                   onPressed: () {
                     if (selectedFilePath.value.isEmpty) {
-                      Get.snackbar(
-                        'Error',
-                        'Please attach a report photo or document',
+                      AppSnackbars.showError(
+                        'error'.tr,
+                        'please_attach_report'.tr,
                       );
                       return;
                     }

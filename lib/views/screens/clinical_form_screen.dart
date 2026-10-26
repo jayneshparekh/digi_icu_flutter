@@ -18,6 +18,10 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
 
   @override
   Widget build(BuildContext context) {
+    final showSpecialityFields = controller.speciality.isEmpty;
+    final showSmoking = controller.mClinicalFormData.smoking == 'Yes';
+    final showAlcohol = controller.mClinicalFormData.alcohol == 'Yes';
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -59,32 +63,31 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
             ],
           ),
         ),
-        body: Obx(() {
-          final showSpecialityFields = controller.speciality.isEmpty;
-          final showSmoking = controller.mClinicalFormData.smoking == 'Yes';
-          final showAlcohol = controller.mClinicalFormData.alcohol == 'Yes';
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // ==========================================
+                  // SECTION 1: BP, Oxygen & Weight
+                  // ==========================================
+                  AppFormSectionHeader(
+                    subtitle: 'clinical_form_sec1'.tr,
+                    title: 'bp_oxygen_weight'.tr,
+                  ),
+                  const SizedBox(height: 24),
 
-          return Stack(
-            children: [
-              SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // ==========================================
-                    // SECTION 1: BP, Oxygen & Weight
-                    // ==========================================
-                    AppFormSectionHeader(
-                      subtitle: 'clinical_form_sec1'.tr,
-                      title: 'bp_oxygen_weight'.tr,
-                    ),
-                    const SizedBox(height: 24),
-
-                    // --- 1st BP ---
-                    _buildSubHeader('first_bp_question'.tr),
+                  Obx(
+                    () => Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // --- 1st BP ---
+                        _buildSubHeader('first_bp_question'.tr),
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -304,19 +307,26 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 32),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
 
-                    // ==========================================
-                    // SECTION 2: Investigations
-                    // ==========================================
-                    AppFormSectionHeader(
-                      subtitle: 'clinical_form_sec2'.tr,
-                      title: 'investigations'.tr,
-                    ),
-                    const SizedBox(height: 24),
+                  // ==========================================
+                  // SECTION 2: Investigations
+                  // ==========================================
+                  AppFormSectionHeader(
+                    subtitle: 'clinical_form_sec2'.tr,
+                    title: 'investigations'.tr,
+                  ),
+                  const SizedBox(height: 24),
 
-                    Row(
+                  Obx(
+                    () => Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.asset(
                           'assets/images/m_glucometer.png',
@@ -1282,20 +1292,27 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                         ),
                       ],
                     ],
-                    const SizedBox(height: 32),
-
-                    // ==========================================
-                    // SECTION 3: Symptoms
-                    // ==========================================
-                    AppFormSectionHeader(
-                      subtitle: 'clinical_form_sec3'.tr,
-                      title: 'symptoms'.tr,
+                      ],
                     ),
-                    const SizedBox(height: 24),
+                  ),
+                  const SizedBox(height: 32),
 
-                    // --- Feeling compared to last visit ---
-                    if (showSpecialityFields) ...[
-                      Row(
+                  // ==========================================
+                  // SECTION 3: Symptoms
+                  // ==========================================
+                  AppFormSectionHeader(
+                    subtitle: 'clinical_form_sec3'.tr,
+                    title: 'symptoms'.tr,
+                  ),
+                  const SizedBox(height: 24),
+
+                  Obx(
+                    () => Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // --- Feeling compared to last visit ---
+                        if (showSpecialityFields) ...[
+                          Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Image.asset(
@@ -1659,10 +1676,10 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                   child: Row(
                                     children: [
                                       AppRadio<String>(value: 'Yes'),
-                                      const Text('Yes'),
+                                      Text('yes'.tr),
                                       const SizedBox(width: 24),
                                       AppRadio<String>(value: 'No'),
-                                      const Text('No'),
+                                      Text('no'.tr),
                                     ],
                                   ),
                                 ),
@@ -1706,10 +1723,10 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                                   child: Row(
                                     children: [
                                       AppRadio<String>(value: 'Yes'),
-                                      const Text('Yes'),
+                                      Text('yes'.tr),
                                       const SizedBox(width: 24),
                                       AppRadio<String>(value: 'No'),
-                                      const Text('No'),
+                                      Text('no'.tr),
                                     ],
                                   ),
                                 ),
@@ -1779,20 +1796,27 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 32),
-
-                    // ==========================================
-                    // SECTION 4: About Habits & Vitals Again
-                    // ==========================================
-                    AppFormSectionHeader(
-                      subtitle: 'clinical_form_sec4'.tr,
-                      title: 'about_habits'.tr,
+                      ],
                     ),
-                    const SizedBox(height: 24),
+                  ),
+                  const SizedBox(height: 32),
 
-                    // --- OPTIONAL: Smoking ---
-                    if (showSmoking) ...[
-                      Row(
+                  // ==========================================
+                  // SECTION 4: About Habits & Vitals Again
+                  // ==========================================
+                  AppFormSectionHeader(
+                    subtitle: 'clinical_form_sec4'.tr,
+                    title: 'about_habits'.tr,
+                  ),
+                  const SizedBox(height: 24),
+
+                  Obx(
+                    () => Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // --- OPTIONAL: Smoking ---
+                        if (showSmoking) ...[
+                          Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Image.asset(
@@ -2362,30 +2386,32 @@ class ClinicalFormScreen extends GetView<ClinicalFormController> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 32),
                     ],
-
-                    // Submit Button
-                    AppPrimaryButton(
-                      label: 'submit'.tr,
-                      onPressed: () => controller.submitAll(),
-                      backgroundColor: AppColors.success,
-                      width: 160,
-                      height: 46,
-                      borderRadius: 6,
-                      labelStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 32),
                   ],
                 ),
               ),
-              AppLoadingOverlay(isLoading: controller.isLoading.value),
-            ],
-          );
-        }),
+
+              // Submit Button
+                  AppPrimaryButton(
+                    label: 'submit'.tr,
+                    onPressed: () => controller.submitAll(),
+                    backgroundColor: AppColors.success,
+                    width: 160,
+                    height: 46,
+                    borderRadius: 6,
+                    labelStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+            Obx(() => AppLoadingOverlay(isLoading: controller.isLoading.value)),
+          ],
+        ),
       ),
     );
   }

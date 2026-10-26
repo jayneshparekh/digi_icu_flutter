@@ -1,6 +1,7 @@
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
+import 'package:digi_icu_flutter/views/widgets/choose_patient_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -37,27 +38,13 @@ class LoginController extends GetxController {
   }
 
   Future<void> login() async {
-    if (!isFormValid) return;
+    if (!isFormValid) {
+      _showErrorSnackbar('please_enter_credentials'.tr);
+      return;
+    }
 
     final input = username.value.trim();
     final pass = password.value.trim();
-
-    // Validation
-    final hasDigits = RegExp(r'[0-9]').hasMatch(input);
-    if (hasDigits) {
-      // Must be exactly 10 digits and only numbers
-      final isOnlyDigits = RegExp(r'^[0-9]+$').hasMatch(input);
-      if (!isOnlyDigits || input.length != 10) {
-        _showErrorSnackbar('Wrong Credentials');
-        return;
-      }
-    } else {
-      // Must contain ".doc"
-      if (!input.contains('.doc')) {
-        _showErrorSnackbar('Wrong Credentials');
-        return;
-      }
-    }
 
     isLoading.value = true;
 
@@ -68,7 +55,6 @@ class LoginController extends GetxController {
           'email_id': input,
           'password': pass,
           'token': '',
-          // Empty FCM token as fallback
         },
       );
 
@@ -80,39 +66,28 @@ class LoginController extends GetxController {
             AppConstants.prefAuthorizationToken,
             loginRes.authToken,
           );
-          await prefs.setBool(AppConstants.prefIsLogin, true);
 
           if (loginRes.data != null) {
-            final data = loginRes.data!;
-            await prefs.setString(AppConstants.prefUserId, data.id);
-            await prefs.setString(AppConstants.prefLoginType, data.userType);
-            await prefs.setString(
-              AppConstants.prefUserName,
-              '${data.firstName} ${data.surname}',
-            );
-            await prefs.setString(AppConstants.prefUserMhcId, data.mhcId);
-            await prefs.setString(AppConstants.prefUserGender, data.gender);
-            await prefs.setString(AppConstants.prefUserAge, data.age);
-            await prefs.setString(
-              AppConstants.prefUserMobileNumber,
-              data.mobileNo,
-            );
-            await prefs.setString(AppConstants.prefUserEmail, data.mhcEmail);
-            await prefs.setString(
-              AppConstants.prefScreeningId,
-              data.screeningId,
-            );
-            await prefs.setString(
-              AppConstants.doctorRegSec2Pending,
-              data.section2,
-            );
-            await prefs.setString(
-              AppConstants.doctorRegSec3Pending,
-              data.section3,
+            await _storeUserDataAndNavigate(prefs, loginRes.data!);
+          } else if (loginRes.patientList.isNotEmpty) {
+            if (loginRes.patientList.length == 1) {
+              await _storeUserDataAndNavigate(prefs, loginRes.patientList[0]);
+            } else {
+              if (Get.context != null) {
+                ChoosePatientDialog.show(
+                  context: Get.context!,
+                  patients: loginRes.patientList,
+                  onSelect: (selectedPatient) async {
+                    await _storeUserDataAndNavigate(prefs, selectedPatient);
+                  },
+                );
+              }
+            }
+          } else {
+            _showErrorSnackbar(
+              loginRes.msg.isNotEmpty ? loginRes.msg : 'Login Failed',
             );
           }
-
-          Get.offAllNamed('/doctor-dashboard');
         } else {
           _showErrorSnackbar(
             loginRes.msg.isNotEmpty ? loginRes.msg : 'Login Failed',
@@ -127,6 +102,49 @@ class LoginController extends GetxController {
       _showErrorSnackbar('Connection error: $e');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> _storeUserDataAndNavigate(
+    SharedPreferences prefs,
+    LoginDataRes data,
+  ) async {
+    await prefs.setBool(AppConstants.prefIsLogin, true);
+    await prefs.setString(AppConstants.prefUserId, data.id);
+    await prefs.setString(AppConstants.prefLoginType, data.userType);
+    final fullName = '${data.firstName} ${data.surname}'.trim();
+    await prefs.setString(
+      AppConstants.prefUserName,
+      fullName.isNotEmpty ? fullName : data.firstName,
+    );
+    await prefs.setString(AppConstants.prefUserMhcId, data.mhcId);
+    await prefs.setString(AppConstants.prefUserGender, data.gender);
+    await prefs.setString(AppConstants.prefUserAge, data.age);
+    await prefs.setString(AppConstants.prefUserMobileNumber, data.mobileNo);
+    await prefs.setString(AppConstants.prefUserEmail, data.mhcEmail);
+    await prefs.setString(AppConstants.prefScreeningId, data.screeningId);
+    await prefs.setString(AppConstants.doctorRegSec2Pending, data.section2);
+    await prefs.setString(AppConstants.doctorRegSec3Pending, data.section3);
+
+    _redirectToDashboard(data.userType, data);
+  }
+
+  void _redirectToDashboard(String userType, LoginDataRes data) {
+    if (userType.toLowerCase() == 'patient') {
+      Get.offAllNamed(
+        '/patient-dashboard',
+        arguments: {
+          'patientId': data.id,
+          'patient_id': data.id,
+          'userName': '${data.firstName} ${data.surname}'.trim(),
+          'userAge': data.age,
+          'userGender': data.gender,
+          'screeningId': data.screeningId,
+          'type': 'Self',
+        },
+      );
+    } else {
+      Get.offAllNamed('/doctor-dashboard');
     }
   }
 

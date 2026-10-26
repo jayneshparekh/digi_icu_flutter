@@ -645,20 +645,29 @@ class DiagnosisController extends GetxController {
           // Navigate back with result true so callers (like getDiagnosisAndProceed) can resume
           Get.back(result: true);
           AppSnackbars.showSuccess(
-            'Success',
+            'success'.tr,
             msgVal.isNotEmpty ? msgVal : 'Diagnosis updated successfully.',
           );
         } else {
           AppSnackbars.showError(
-            'Error',
+            'error'.tr,
             msgVal.isNotEmpty ? msgVal : 'Failed to save diagnosis.',
           );
         }
       }
     } catch (e) {
-      AppSnackbars.showError('Error', 'Error saving diagnosis: $e');
+      AppSnackbars.showError('error'.tr, 'Error saving diagnosis: $e');
     } finally {
       isLoading.value = false;
     }
+  }
+
+  @override
+  void onClose() {
+    etEF.dispose();
+    for (final controller in otherControllers) {
+      controller.dispose();
+    }
+    super.onClose();
   }
 }

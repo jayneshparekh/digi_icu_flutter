@@ -1,4 +1,5 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
+import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
 import 'package:digi_icu_flutter/views/widgets/app_rich_editor_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_speech_input_widget.dart';
@@ -209,7 +210,7 @@ class DischargeSummaryScreen extends GetView<DischargeSummaryController> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 30),
-                      // Card matching MaterialCardView in Android
+                      // PDF card surface
                       Material(
                         color: AppColors.white,
                         elevation: 3,
@@ -1602,7 +1603,7 @@ class DischargeSummaryScreen extends GetView<DischargeSummaryController> {
                   decoration: BoxDecoration(
                     color: isOutOfRange
                         ? AppColors.warning.withValues(alpha: 0.18)
-                        : Colors.transparent,
+                        : AppColors.white.withValues(alpha: 0),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Row(
@@ -2242,47 +2243,19 @@ class DischargeSummaryScreen extends GetView<DischargeSummaryController> {
   }
 
   void _showDeleteRxConfirmation(BuildContext context, String medicineId) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.white,
-        title: Text(
-          'confirmation'.tr,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: AppColors.navy,
-          ),
-        ),
-        content: Text(
-          'ds_delete_prescription_confirm'.tr,
-          style: const TextStyle(fontSize: 14, color: AppColors.navy),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(
-              'no_opt'.tr,
-              style: const TextStyle(color: AppColors.coolGray),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
-              foregroundColor: AppColors.white,
-              elevation: 0,
-            ),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              controller.deleteDischargePrescription(medicineId);
-            },
-            child: Text(
-              'ds_yes_opt'.tr,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
+    AppDialog.show(
+      title: 'confirmation'.tr,
+      body: Text(
+        'ds_delete_prescription_confirm'.tr,
+        style: const TextStyle(fontSize: 14, color: AppColors.navy),
       ),
+      confirmLabel: 'ds_yes_opt'.tr,
+      cancelLabel: 'no_opt'.tr,
+      onConfirm: () {
+        Get.back();
+        controller.deleteDischargePrescription(medicineId);
+      },
+      onCancel: () => Get.back(),
     );
   }
 

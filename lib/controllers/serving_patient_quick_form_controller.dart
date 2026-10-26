@@ -4,6 +4,7 @@ import 'package:digi_icu_flutter/models/request/doctor/add_quick_form_req.dart';
 import 'package:digi_icu_flutter/models/request/doctor/get_quick_form_req.dart';
 import 'package:digi_icu_flutter/models/response/doctor/quick_form_detail_response.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
+import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
@@ -414,29 +415,20 @@ class ServingPatientQuickFormController extends GetxController {
       );
       if (response.statusCode == 200) {
         Get.back();
-        Get.snackbar(
+        AppSnackbars.showSuccess(
           'success'.tr,
           'form_submitted'.tr,
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green.shade600,
-          colorText: Colors.white,
         );
       } else {
-        Get.snackbar(
+        AppSnackbars.showError(
           'error'.tr,
-          response.data?['msg']?.toString() ?? 'Error submitting form',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red.shade600,
-          colorText: Colors.white,
+          response.data?['msg']?.toString() ?? 'error_submitting_form'.tr,
         );
       }
     } catch (e) {
-      Get.snackbar(
+      AppSnackbars.showError(
         'error'.tr,
         e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.shade600,
-        colorText: Colors.white,
       );
     } finally {
       isLoading.value = false;

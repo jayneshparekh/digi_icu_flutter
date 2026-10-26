@@ -1,5 +1,6 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
+import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -75,12 +76,8 @@ class _PatientRatingDialogState extends State<PatientRatingDialog> {
                     return Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Radio<String>(
+                        AppRadio<String>(
                           value: rate,
-                          activeColor: AppColors.teal,
-                          visualDensity: VisualDensity.compact,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
                         ),
                         const SizedBox(width: 4),
                         Text(

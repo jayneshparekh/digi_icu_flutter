@@ -11,6 +11,8 @@ import 'package:digi_icu_flutter/models/response/doctor/ipd_investigation_respon
 import 'package:digi_icu_flutter/models/response/user/discharge_patient_web_response.dart';
 import 'package:digi_icu_flutter/models/response/user/get_discharge_data_response.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
+import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
+import 'package:digi_icu_flutter/views/widgets/app_labeled_text_field.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
@@ -836,12 +838,9 @@ class DischargeSummaryController extends GetxController {
         }
         if (rawData is Map<String, dynamic> && rawData['status'] == 'success') {
           await loadDischargeRx();
-          Get.snackbar(
+          AppSnackbars.showSuccess(
             'success'.tr,
             rawData['msg']?.toString() ?? 'ds_prescription_deleted'.tr,
-            backgroundColor: AppColors.success.withValues(alpha: 0.9),
-            colorText: AppColors.white,
-            snackPosition: SnackPosition.BOTTOM,
           );
           return true;
         }
@@ -898,15 +897,12 @@ class DischargeSummaryController extends GetxController {
         }
         if (rawData is Map<String, dynamic> && rawData['status'] == 'success') {
           await loadDischargeRx();
-          Get.snackbar(
+          AppSnackbars.showSuccess(
             'success'.tr,
             rawData['msg']?.toString() ??
                 (finalId != null
                     ? 'ds_prescription_updated'.tr
                     : 'ds_prescription_added'.tr),
-            backgroundColor: AppColors.success.withValues(alpha: 0.9),
-            colorText: AppColors.white,
-            snackPosition: SnackPosition.BOTTOM,
           );
           return true;
         }
@@ -984,77 +980,27 @@ class DischargeSummaryController extends GetxController {
   void showPreparedByDialog(BuildContext context) {
     final textController = TextEditingController(text: preparedByName.value);
 
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        title: Text(
-          'ds_prepared_by_dialog_title'.tr,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: AppColors.navy,
-          ),
-        ),
-        content: TextField(
-          controller: textController,
-          autofocus: true,
-          style: const TextStyle(
-            fontSize: 14,
-            color: AppColors.navy,
-          ),
-          decoration: InputDecoration(
-            hintText: 'ds_enter_prepared_by_name'.tr,
-            hintStyle: const TextStyle(color: AppColors.coolGray, fontSize: 13),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppColors.medicalGray),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppColors.teal, width: 1.5),
-            ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(
-              'cancel'.tr,
-              style: const TextStyle(color: AppColors.coolGray),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.teal,
-              foregroundColor: AppColors.white,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6),
-              ),
-            ),
-            onPressed: () {
-              final name = textController.text.trim();
-              if (name.isNotEmpty) {
-                setPreparedByName(name);
-                Navigator.of(ctx).pop();
-              } else {
-                AppSnackbars.showWarning(
-                  'warning_title'.tr,
-                  'ds_name_cannot_be_empty'.tr,
-                );
-              }
-            },
-            child: Text(
-              'submit'.tr,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
+    AppDialog.show(
+      title: 'ds_prepared_by_dialog_title'.tr,
+      body: AppLabeledTextField(
+        label: 'ds_enter_prepared_by_name'.tr,
+        controller: textController,
       ),
+      confirmLabel: 'submit'.tr,
+      cancelLabel: 'cancel'.tr,
+      onConfirm: () {
+        final name = textController.text.trim();
+        if (name.isNotEmpty) {
+          setPreparedByName(name);
+          Get.back();
+        } else {
+          AppSnackbars.showWarning(
+            'warning_title'.tr,
+            'ds_name_cannot_be_empty'.tr,
+          );
+        }
+      },
+      onCancel: () => Get.back(),
     );
   }
 
@@ -1247,50 +1193,19 @@ class DischargeSummaryController extends GetxController {
       return;
     }
 
-    final confirmed = await Get.dialog<bool>(
-      AlertDialog(
-        backgroundColor: AppColors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        title: Text(
-          'ds_final_discharge_confirm_title'.tr,
-          style: const TextStyle(
-            color: AppColors.navy,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
+    final confirmed = await AppDialog.show<bool>(
+      title: 'ds_final_discharge_confirm_title'.tr,
+      body: Text(
+        'ds_final_discharge_confirm_msg'.tr,
+        style: const TextStyle(
+          color: AppColors.navy,
+          fontSize: 14,
         ),
-        content: Text(
-          'ds_final_discharge_confirm_msg'.tr,
-          style: const TextStyle(
-            color: AppColors.navy,
-            fontSize: 14,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(result: false),
-            child: Text(
-              'no_opt'.tr,
-              style: const TextStyle(color: AppColors.coolGray),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.success,
-              foregroundColor: AppColors.white,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6),
-              ),
-            ),
-            onPressed: () => Get.back(result: true),
-            child: Text(
-              'ds_yes_opt'.tr,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
       ),
+      confirmLabel: 'ds_yes_opt'.tr,
+      cancelLabel: 'no_opt'.tr,
+      onConfirm: () => Get.back(result: true),
+      onCancel: () => Get.back(result: false),
     );
 
     if (confirmed != true) return;
@@ -1339,7 +1254,7 @@ class DischargeSummaryController extends GetxController {
     activeTab.value = 'prepare';
   }
 
-  /// Handles Upload DS tab selection matching Android behavior
+  /// Handles Upload DS tab selection
   void onUploadDsTabSelected(BuildContext context) {
     if (dischargePath.value.isNotEmpty) {
       activeTab.value = 'upload';
@@ -1358,7 +1273,7 @@ class DischargeSummaryController extends GetxController {
     }
   }
 
-  /// Handles adding or replacing an uploaded PDF matching Android fabAddPdf click
+  /// Handles adding or replacing an uploaded PDF
   void onAddOrReplacePdfClicked(BuildContext context) {
     if (isDraftSaved.value || dischargePath.value.isNotEmpty) {
       showWarningDialog(
@@ -1373,7 +1288,7 @@ class DischargeSummaryController extends GetxController {
     }
   }
 
-  /// Opens the Reports screen matching Android openReportFolder()
+  /// Opens the Reports screen
   Future<void> openReportFolder() async {
     await Get.toNamed(
       '/serving-patient',
@@ -1402,54 +1317,22 @@ class DischargeSummaryController extends GetxController {
     required String message,
     required VoidCallback onConfirm,
   }) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        title: Text(
-          'warning_title'.tr,
-          style: const TextStyle(
-            color: AppColors.navy,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
+    AppDialog.show(
+      title: 'warning_title'.tr,
+      body: Text(
+        message,
+        style: const TextStyle(
+          color: AppColors.navy,
+          fontSize: 14,
         ),
-        content: Text(
-          message,
-          style: const TextStyle(
-            color: AppColors.navy,
-            fontSize: 14,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(
-              'no_opt'.tr,
-              style: const TextStyle(color: AppColors.coolGray),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.teal,
-              foregroundColor: AppColors.white,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6),
-              ),
-            ),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              onConfirm();
-            },
-            child: Text(
-              'ds_yes_opt'.tr,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
       ),
+      confirmLabel: 'ds_yes_opt'.tr,
+      cancelLabel: 'no_opt'.tr,
+      onConfirm: () {
+        Get.back();
+        onConfirm();
+      },
+      onCancel: () => Get.back(),
     );
   }
 

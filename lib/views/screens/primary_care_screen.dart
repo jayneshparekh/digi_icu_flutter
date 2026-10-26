@@ -74,10 +74,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
             );
           }),
         ),
-        body: Obx(() {
-          return Stack(
-            children: [
-              SingleChildScrollView(
+        body: Stack(
+          children: [
+            SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,67 +91,76 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: !controller.haveBPApparatus.value,
-                          onChanged: (val) =>
-                              controller.toggleBPApparatus(!(val ?? false)),
-                          activeColor: AppColors.teal,
-                        ),
-                        Text(
-                          'no_bp_apparatus'.tr,
-                          style: TextStyle(fontSize: 14, color: AppColors.navy),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    if (controller.haveBPApparatus.value) ...[
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: controller.systolicController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                labelText: 'systolic_bp'.tr,
-                                border: const OutlineInputBorder(),
-                              ),
+                    Obx(() => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Checkbox(
+                                  value: !controller.haveBPApparatus.value,
+                                  onChanged: (val) =>
+                                      controller.toggleBPApparatus(!(val ?? false)),
+                                  activeColor: AppColors.teal,
+                                ),
+                                Text(
+                                  'no_bp_apparatus'.tr,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: AppColors.navy,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          const SizedBox(width: 6),
-                          Expanded(
-                            child: TextField(
-                              controller: controller.diastolicController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                labelText: 'diastolic_bp'.tr,
-                                border: const OutlineInputBorder(),
+                            const SizedBox(height: 12),
+                            if (controller.haveBPApparatus.value) ...[
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: controller.systolicController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        labelText: 'systolic_bp'.tr,
+                                        border: const OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: controller.diastolicController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        labelText: 'diastolic_bp'.tr,
+                                        border: const OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: controller.pulseRateController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        labelText: 'pulse_rate'.tr,
+                                        border: const OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  AppTealIconButton(
+                                    assetPath:
+                                        'assets/icons/svg/ic_power_button.svg',
+                                    onTap: () {},
+                                    size: 48,
+                                    borderRadius: 8,
+                                  ),
+                                ],
                               ),
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Expanded(
-                            child: TextField(
-                              controller: controller.pulseRateController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                labelText: 'pulse_rate'.tr,
-                                border: const OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          AppTealIconButton(
-                            assetPath: 'assets/icons/svg/ic_power_button.svg',
-                            onTap: () {},
-                            size: 48,
-                            borderRadius: 8,
-                          ),
-                        ],
-                      ),
-                    ],
+                            ],
+                          ],
+                        )),
                     const SizedBox(height: 24),
 
                     // --- Blood Sugar Section ---
@@ -165,72 +173,77 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: !controller.haveGlucometer.value,
-                          onChanged: (val) =>
-                              controller.toggleGlucometer(!(val ?? false)),
-                          activeColor: AppColors.teal,
-                        ),
-                        Expanded(
-                          child: Text(
-                            'no_glucometer'.tr,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: AppColors.navy,
+                    Obx(() => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Checkbox(
+                                  value: !controller.haveGlucometer.value,
+                                  onChanged: (val) =>
+                                      controller.toggleGlucometer(!(val ?? false)),
+                                  activeColor: AppColors.teal,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    'no_glucometer'.tr,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColors.navy,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    if (controller.haveGlucometer.value) ...[
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: controller.fastingController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                labelText: 'fasting'.tr,
-                                border: const OutlineInputBorder(),
+                            const SizedBox(height: 12),
+                            if (controller.haveGlucometer.value) ...[
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: controller.fastingController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        labelText: 'fasting'.tr,
+                                        border: const OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: controller.afterFoodController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        labelText: 'after_food'.tr,
+                                        border: const OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: controller.randomController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        labelText: 'random'.tr,
+                                        border: const OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  AppTealIconButton(
+                                    assetPath: 'assets/icons/svg/ic_power_button.svg',
+                                    onTap: () {},
+                                    size: 48,
+                                    borderRadius: 8,
+                                  ),
+                                ],
                               ),
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Expanded(
-                            child: TextField(
-                              controller: controller.afterFoodController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                labelText: 'after_food'.tr,
-                                border: const OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Expanded(
-                            child: TextField(
-                              controller: controller.randomController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                labelText: 'random'.tr,
-                                border: const OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          AppTealIconButton(
-                            assetPath: 'assets/icons/svg/ic_power_button.svg',
-                            onTap: () {},
-                            size: 48,
-                            borderRadius: 8,
-                          ),
-                        ],
-                      ),
-                    ],
+                            ],
+                          ],
+                        )),
                     const SizedBox(height: 24),
 
                     // --- Stethoscope Recording ---
@@ -319,50 +332,52 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                     ),
                     const SizedBox(height: 12),
 
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 4.5,
-                          ),
-                      itemCount: symptomOptions.length,
-                      itemBuilder: (context, index) {
-                        final symptom = symptomOptions[index];
-                        final isSelected = controller.selectedQuickSymptoms
-                            .contains(symptom);
-                        return Row(
-                          children: [
-                            Checkbox(
-                              value: isSelected,
-                              onChanged: (selected) {
-                                if (selected == true) {
-                                  controller.selectedQuickSymptoms.add(symptom);
-                                } else {
-                                  controller.selectedQuickSymptoms.remove(
-                                    symptom,
-                                  );
-                                }
-                                controller.toggleSymptom(
-                                  symptom,
-                                  selected ?? false,
-                                );
-                              },
-                              activeColor: AppColors.teal,
+                    Obx(
+                      () => GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 4.5,
                             ),
-                            Expanded(
-                              child: Text(
-                                symptom.replaceAll(' ', '_').toLowerCase().tr,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: AppColors.navy,
+                        itemCount: symptomOptions.length,
+                        itemBuilder: (context, index) {
+                          final symptom = symptomOptions[index];
+                          final isSelected = controller.selectedQuickSymptoms
+                              .contains(symptom);
+                          return Row(
+                            children: [
+                              Checkbox(
+                                value: isSelected,
+                                onChanged: (selected) {
+                                  if (selected == true) {
+                                    controller.selectedQuickSymptoms.add(symptom);
+                                  } else {
+                                    controller.selectedQuickSymptoms.remove(
+                                      symptom,
+                                    );
+                                  }
+                                  controller.toggleSymptom(
+                                    symptom,
+                                    selected ?? false,
+                                  );
+                                },
+                                activeColor: AppColors.teal,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  symptom.replaceAll(' ', '_').toLowerCase().tr,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: AppColors.navy,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        );
-                      },
+                            ],
+                          );
+                        },
+                      ),
                     ),
                     const SizedBox(height: 16),
 
@@ -441,8 +456,11 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                     const SizedBox(height: 12),
 
                     // Previews of selected images
-                    if (controller.selectedImages.isNotEmpty)
-                      SizedBox(
+                    Obx(() {
+                      if (controller.selectedImages.isEmpty) {
+                        return const SizedBox.shrink();
+                      }
+                      return SizedBox(
                         height: 100,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
@@ -491,7 +509,8 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                             );
                           },
                         ),
-                      ),
+                      );
+                    }),
                     const SizedBox(height: 40),
 
                     // --- Submit Button ---
@@ -520,10 +539,9 @@ class PrimaryCareScreen extends GetView<PrimaryCareController> {
                   ],
                 ),
               ),
-              AppLoadingOverlay(isLoading: controller.isLoading.value),
+              Obx(() => AppLoadingOverlay(isLoading: controller.isLoading.value)),
             ],
-          );
-        }),
+          ),
       ),
     );
   }

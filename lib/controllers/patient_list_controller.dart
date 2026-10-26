@@ -445,4 +445,11 @@ class PatientListController extends GetxController {
       }
     }
   }
+
+  @override
+  void onClose() {
+    searchController.dispose();
+    scrollController.dispose();
+    super.onClose();
+  }
 }

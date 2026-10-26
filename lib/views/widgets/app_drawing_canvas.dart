@@ -88,14 +88,14 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
         widget.paletteColors ??
         const [
           AppColors.pureBlack,
-          Colors.purple,
+          AppColors.navy,
           AppColors.blue,
           AppColors.teal,
+          AppColors.info,
           AppColors.success,
-          Colors.yellow,
           AppColors.warning,
           AppColors.error,
-          Colors.brown,
+          AppColors.coolGray,
           AppColors.medicalGray,
         ];
   }

@@ -252,7 +252,7 @@ class MyIpdPatientListController extends GetxController {
     }
   }
 
-  /// Handles Discharge Request button click matching Android implementation
+  /// Handles Discharge Request button click
   void onDischargeRequestClick(MyIpdPatientListItem patient) {
     AppDialog.show(
       title: 'discharge_request'.tr,

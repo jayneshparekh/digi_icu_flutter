@@ -434,7 +434,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                     children: [
                                       AppRadio<String>(value: 'Paid'),
                                       const SizedBox(width: 4),
-                                      const Text('Paid'),
+                                      Text('paid'.tr),
                                     ],
                                   ),
                                   const SizedBox(width: 24),
@@ -443,7 +443,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                     children: [
                                       AppRadio<String>(value: 'Due'),
                                       const SizedBox(width: 4),
-                                      const Text('Due'),
+                                      Text('due'.tr),
                                     ],
                                   ),
                                 ],
@@ -473,7 +473,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                           children: [
                                             AppRadio<String>(value: 'Cash'),
                                             const SizedBox(width: 4),
-                                            const Text('Cash'),
+                                            Text('cash'.tr),
                                           ],
                                         ),
                                         const SizedBox(width: 24),
@@ -482,7 +482,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                           children: [
                                             AppRadio<String>(value: 'Online'),
                                             const SizedBox(width: 4),
-                                            const Text('Online'),
+                                            Text('online'.tr),
                                           ],
                                         ),
                                       ],
@@ -574,7 +574,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                     children: [
                                       AppRadio<String>(value: 'Paid'),
                                       const SizedBox(width: 4),
-                                      const Text('Paid'),
+                                      Text('paid'.tr),
                                     ],
                                   ),
                                   const SizedBox(width: 24),
@@ -583,7 +583,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                     children: [
                                       AppRadio<String>(value: 'Due'),
                                       const SizedBox(width: 4),
-                                      const Text('Due'),
+                                      Text('due'.tr),
                                     ],
                                   ),
                                 ],
@@ -613,7 +613,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                           children: [
                                             AppRadio<String>(value: 'Cash'),
                                             const SizedBox(width: 4),
-                                            const Text('Cash'),
+                                            Text('cash'.tr),
                                           ],
                                         ),
                                         const SizedBox(width: 24),
@@ -622,7 +622,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                           children: [
                                             AppRadio<String>(value: 'Online'),
                                             const SizedBox(width: 4),
-                                            const Text('Online'),
+                                            Text('online'.tr),
                                           ],
                                         ),
                                       ],

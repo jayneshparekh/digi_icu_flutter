@@ -78,7 +78,7 @@ class DischargeRequestController extends GetxController {
 
     final prefs = await SharedPreferences.getInstance();
 
-    // Query checkDoctorHome API directly as the true authority on the doctor's institute (matching Android)
+    // Query checkDoctorHome API directly as the true authority on the doctor's institute
     try {
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final userId = prefs.getString(AppConstants.prefUserId) ?? '';

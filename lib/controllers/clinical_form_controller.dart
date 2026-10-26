@@ -1017,22 +1017,58 @@ class ClinicalFormController extends GetxController {
           }
         } else {
           AppSnackbars.showError(
-            'Error',
+            'error'.tr,
             response.data['msg'] ?? 'Submission failed',
           );
         }
       } else {
         AppSnackbars.showError(
-          'Error',
+          'error'.tr,
           'Submission failed. Server returned status: ${response.statusCode}',
         );
       }
     } catch (e) {
       isLoading.value = false;
       AppSnackbars.showError(
-        'Error',
+        'error'.tr,
         'An error occurred during submission: $e',
       );
     }
+  }
+
+  @override
+  void onClose() {
+    systolicController.dispose();
+    diastolicController.dispose();
+    pulseRateController.dispose();
+    heightController.dispose();
+    weightController.dispose();
+    spo2Controller.dispose();
+    fastingController.dispose();
+    afterFoodController.dispose();
+    randomController.dispose();
+    creatinineController.dispose();
+    hba1cController.dispose();
+    totalCholesterolController.dispose();
+    hdlController.dispose();
+    ldlController.dispose();
+    vldlController.dispose();
+    t3Controller.dispose();
+    t4Controller.dispose();
+    tshController.dispose();
+    uricAcidController.dispose();
+    urineAlbuminNumericController.dispose();
+    otherInvestigationsController.dispose();
+    otherSymptomsController.dispose();
+    systolic2Controller.dispose();
+    diastolic2Controller.dispose();
+    heartRate2Controller.dispose();
+    dizzinessSystolicController.dispose();
+    dizzinessDiastolicController.dispose();
+    hospitalizationReasonCustomController.dispose();
+    systolic3Controller.dispose();
+    diastolic3Controller.dispose();
+    heartRate3Controller.dispose();
+    super.onClose();
   }
 }

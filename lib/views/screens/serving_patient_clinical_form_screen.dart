@@ -113,10 +113,10 @@ class ServingPatientClinicalFormScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: Obx(() {
-        return Stack(
-          children: [
-            IgnorePointer(
+      body: Stack(
+        children: [
+          Obx(
+            () => IgnorePointer(
               ignoring: controller.isPatientMode.value,
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
@@ -2174,10 +2174,10 @@ class ServingPatientClinicalFormScreen extends StatelessWidget {
                 ),
               ),
             ),
-            AppLoadingOverlay(isLoading: controller.isLoading.value),
-          ],
-        );
-      }),
+          ),
+          Obx(() => AppLoadingOverlay(isLoading: controller.isLoading.value)),
+        ],
+      ),
     );
   }
 }

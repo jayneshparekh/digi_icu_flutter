@@ -459,7 +459,7 @@ class AmbulanceServiceRequestScreen
                 color: AppColors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
+                    color: AppColors.pureBlack.withValues(alpha: 0.05),
                     offset: const Offset(0, -2),
                     blurRadius: 4,
                   ),
@@ -491,7 +491,7 @@ class AmbulanceServiceRequestScreen
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: AppColors.pureBlack.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),

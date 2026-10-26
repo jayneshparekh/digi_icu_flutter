@@ -193,18 +193,30 @@ class PrimaryCareController extends GetxController {
         final msg =
             response.data['msg']?.toString() ?? 'Form submitted successfully';
         if (status == 'success') {
-          AppSnackbars.showSuccess('Success', msg);
+          AppSnackbars.showSuccess('success'.tr, msg);
           Get.back(result: true);
         } else {
           AppSnackbars.showInfo('Submission Failed', msg);
         }
       } else {
-        AppSnackbars.showError('Error', 'API submission failed');
+        AppSnackbars.showError('error'.tr, 'API submission failed');
       }
     } catch (e) {
-      AppSnackbars.showError('Error', 'Something went wrong submitting form');
+      AppSnackbars.showError('error'.tr, 'Something went wrong submitting form');
     } finally {
       isLoading.value = false;
     }
+  }
+
+  @override
+  void onClose() {
+    systolicController.dispose();
+    diastolicController.dispose();
+    pulseRateController.dispose();
+    fastingController.dispose();
+    afterFoodController.dispose();
+    randomController.dispose();
+    symptomsController.dispose();
+    super.onClose();
   }
 }

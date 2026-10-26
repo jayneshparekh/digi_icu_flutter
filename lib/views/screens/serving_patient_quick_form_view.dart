@@ -507,22 +507,22 @@ class ServingPatientQuickFormView extends StatelessWidget {
                     spacing: 8,
                     children: [
                       FilterChip(
-                        label: const Text('Anterior'),
+                        label: Text('anterior'.tr),
                         selected: controller.cbAnterior.value,
                         onSelected: (v) => controller.cbAnterior.value = v,
                       ),
                       FilterChip(
-                        label: const Text('Lateral'),
+                        label: Text('lateral'.tr),
                         selected: controller.cbLateral.value,
                         onSelected: (v) => controller.cbLateral.value = v,
                       ),
                       FilterChip(
-                        label: const Text('Inferior'),
+                        label: Text('inferior'.tr),
                         selected: controller.cbInferior.value,
                         onSelected: (v) => controller.cbInferior.value = v,
                       ),
                       FilterChip(
-                        label: const Text('Posterior'),
+                        label: Text('posterior'.tr),
                         selected: controller.cbPosterior.value,
                         onSelected: (v) => controller.cbPosterior.value = v,
                       ),

@@ -224,7 +224,7 @@ class DoctorDashboardController extends GetxController {
       return currentInstId;
     }
 
-    // Refresh from checkDoctorHome as done in Android (the single source of truth for doctor's active institute)
+    // Refresh from checkDoctorHome as the single source of truth for doctor's active institute
     await checkDoctorHome();
     currentInstId = instituteId.value.trim();
     if (currentInstId.isNotEmpty && currentInstId != 'null' && currentInstId != '0') {

@@ -70,7 +70,7 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
             children: [
               ListTile(
                 leading: const Icon(Icons.camera_alt, color: AppColors.teal),
-                title: const Text('Take Photo'),
+                title: Text('take_photo'.tr),
                 onTap: () {
                   Navigator.pop(context);
                   _pickImage(ImageSource.camera);
@@ -78,7 +78,7 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library, color: AppColors.blue),
-                title: const Text('Choose from Gallery'),
+                title: Text('choose_from_gallery'.tr),
                 onTap: () {
                   Navigator.pop(context);
                   _pickImage(ImageSource.gallery);
@@ -279,7 +279,7 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                           !controller.showDefaults.value,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: controller.showDefaults.value
-                            ? const Color(0xFFFF5722)
+                            ? AppColors.warning
                             : AppColors.teal,
                         foregroundColor: AppColors.white,
                         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -417,9 +417,11 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                         padding: const EdgeInsets.all(8),
                         margin: const EdgeInsets.only(bottom: 8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFF8E1),
+                          color: AppColors.warning.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: const Color(0xFFFFD54F)),
+                          border: Border.all(
+                            color: AppColors.warning.withValues(alpha: 0.5),
+                          ),
                         ),
                         child: Text(
                           controller.ongoingPresMsg.value,
@@ -759,8 +761,10 @@ class AddPrescriptionScreen extends GetView<AddPrescriptionController> {
                                   child: GestureDetector(
                                     onTap: () => controller.removeImage(index),
                                     child: Container(
-                                      decoration: const BoxDecoration(
-                                        color: Colors.black54,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.pureBlack.withValues(
+                                          alpha: 0.54,
+                                        ),
                                         shape: BoxShape.circle,
                                       ),
                                       child: const Icon(
