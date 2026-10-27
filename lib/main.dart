@@ -53,6 +53,8 @@ import 'views/screens/admit_patient_request_screen.dart';
 import 'controllers/admit_patient_request_controller.dart';
 import 'views/screens/discharge_request_screen.dart';
 import 'controllers/discharge_request_controller.dart';
+import 'views/screens/leader_dashboard_screen.dart';
+import 'controllers/leader_dashboard_controller.dart';
 
 
 void main() {
@@ -191,6 +193,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           page: () => const PatientDashboardScreen(),
           binding: BindingsBuilder(() {
             Get.lazyPut(() => PatientDashboardController());
+          }),
+        ),
+        GetPage(
+          name: '/leader-dashboard',
+          page: () => const LeaderDashboardScreen(),
+          binding: BindingsBuilder(() {
+            Get.lazyPut(() => LeaderDashboardController());
           }),
         ),
         GetPage(

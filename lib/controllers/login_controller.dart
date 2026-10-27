@@ -61,6 +61,9 @@ class LoginController extends GetxController {
       if (response.statusCode == 200 && response.data != null) {
         final loginRes = LoginResponse.fromJson(response.data);
         if (loginRes.status == 'success') {
+          // Tell the OS autofill service to prompt to save the credentials
+          TextInput.finishAutofillContext(shouldSave: true);
+
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString(
             AppConstants.prefAuthorizationToken,
@@ -125,12 +128,14 @@ class LoginController extends GetxController {
     await prefs.setString(AppConstants.prefScreeningId, data.screeningId);
     await prefs.setString(AppConstants.doctorRegSec2Pending, data.section2);
     await prefs.setString(AppConstants.doctorRegSec3Pending, data.section3);
+    await prefs.setString(AppConstants.prefInstituteName, data.instituteName);
 
     _redirectToDashboard(data.userType, data);
   }
 
   void _redirectToDashboard(String userType, LoginDataRes data) {
-    if (userType.toLowerCase() == 'patient') {
+    final lowerUserType = userType.toLowerCase();
+    if (lowerUserType == 'patient') {
       Get.offAllNamed(
         '/patient-dashboard',
         arguments: {
@@ -143,6 +148,8 @@ class LoginController extends GetxController {
           'type': 'Self',
         },
       );
+    } else if (lowerUserType == 'leader' || lowerUserType == 'reception') {
+      Get.offAllNamed('/leader-dashboard');
     } else {
       Get.offAllNamed('/doctor-dashboard');
     }

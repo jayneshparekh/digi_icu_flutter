@@ -169,6 +169,8 @@ class ApiEndpoints {
   // ==========================================
   // Leader Endpoints
   // ==========================================
+  static const String checkLeaderHome = 'api/v2/Leader/check_leader_home';
+  static const String getLeaderPatientList = 'api/v2/Leader/get_patient_list';
   static const String getAllBedsInfo = 'api/v2/Leader/get_all_beds_info';
   static const String changePatientBed = 'api/v2/Leader/change_patient_bed';
 

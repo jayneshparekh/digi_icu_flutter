@@ -22,7 +22,7 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
         searchController: controller.searchController,
         onSearch: (val) => controller.searchPatients(),
         onRefresh: () => controller.refreshList(),
-        onHome: () => Get.offAllNamed('/doctor-dashboard'),
+        onHome: controller.onHome,
       ),
       body: Column(
         children: [
@@ -270,6 +270,9 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
                 height: 34,
                 child: ElevatedButton(
                   onPressed: () {
+                    final isLeader = controller.isFrom.value == 'leader' ||
+                        controller.userType.value.toLowerCase() == 'leader' ||
+                        controller.userType.value.toLowerCase() == 'reception';
                     Get.toNamed(
                       '/patient-dashboard',
                       arguments: {
@@ -277,10 +280,14 @@ class ManagePatientsScreen extends GetView<ManagePatientsController> {
                         'userName': '${patient.firstName} ${patient.lastName}',
                         'userAge': patient.age,
                         'userGender': patient.gender,
-                        'type': controller.userType.value,
-                        'leaderId': '',
-                        'isFrom': 'doctor',
-                        'doctorId': controller.doctorId.value,
+                        'type': isLeader ? 'Leader' : controller.userType.value,
+                        'leaderId': isLeader
+                            ? (controller.leaderId.value.isNotEmpty
+                                ? controller.leaderId.value
+                                : controller.doctorId.value)
+                            : '',
+                        'isFrom': isLeader ? 'leader' : 'doctor',
+                        'doctorId': isLeader ? '' : controller.doctorId.value,
                       },
                     );
                   },

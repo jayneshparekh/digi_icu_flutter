@@ -14,6 +14,7 @@ class AppLabeledTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final ValueChanged<String>? onChanged;
   final int maxLines;
+  final Iterable<String>? autofillHints;
 
   const AppLabeledTextField({
     super.key,
@@ -26,6 +27,7 @@ class AppLabeledTextField extends StatelessWidget {
     this.suffixIcon,
     this.onChanged,
     this.maxLines = 1,
+    this.autofillHints,
   });
 
   @override
@@ -49,6 +51,7 @@ class AppLabeledTextField extends StatelessWidget {
           obscureText: obscureText,
           onChanged: onChanged,
           maxLines: maxLines,
+          autofillHints: autofillHints,
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(color: AppColors.medicalGray, fontSize: 14),

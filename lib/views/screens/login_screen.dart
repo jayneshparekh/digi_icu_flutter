@@ -36,54 +36,64 @@ class LoginScreen extends GetView<LoginController> {
                     // Input Fields Form & Login Button
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          AppLabeledTextField(
-                            onChanged: (val) => controller.username.value = val,
-                            label: 'mobile_login_id'.tr,
-                            hint: 'mobile_login_id'.tr,
-                          ),
-                          const SizedBox(height: 12),
-                          AppLabeledTextField(
-                            onChanged: (val) => controller.password.value = val,
-                            obscureText: true,
-                            label: 'password'.tr,
-                            hint: 'password'.tr,
-                          ),
-                          const SizedBox(height: 8),
-                          GestureDetector(
-                            onTap: () {
-                              // Forgot password logic placeholder
-                            },
-                            child: Text(
-                              'forgot_password'.tr,
-                              style: TextStyle(
-                                color: AppColors.navy,
-                                fontWeight: FontWeight.w600,
-                                decoration: TextDecoration.underline,
+                      child: AutofillGroup(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            AppLabeledTextField(
+                              onChanged: (val) => controller.username.value = val,
+                              label: 'mobile_login_id'.tr,
+                              hint: 'mobile_login_id'.tr,
+                              keyboardType: TextInputType.text,
+                              autofillHints: const [
+                                AutofillHints.username,
+                                AutofillHints.telephoneNumber,
+                                AutofillHints.email,
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            AppLabeledTextField(
+                              onChanged: (val) => controller.password.value = val,
+                              obscureText: true,
+                              label: 'password'.tr,
+                              hint: 'password'.tr,
+                              keyboardType: TextInputType.visiblePassword,
+                              autofillHints: const [AutofillHints.password],
+                            ),
+                            const SizedBox(height: 8),
+                            GestureDetector(
+                              onTap: () {
+                                // Forgot password logic placeholder
+                              },
+                              child: Text(
+                                'forgot_password'.tr,
+                                style: TextStyle(
+                                  color: AppColors.navy,
+                                  fontWeight: FontWeight.w600,
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 24),
-                          // Login Button
-                          Obx(() {
-                            final isValid = controller.isFormValid;
-                            final isLoading = controller.isLoading.value;
+                            const SizedBox(height: 24),
+                            // Login Button
+                            Obx(() {
+                              final isValid = controller.isFormValid;
+                              final isLoading = controller.isLoading.value;
 
-                            return AppPrimaryButton(
-                              label: 'login_btn'.tr,
-                              onPressed: isValid ? controller.login : null,
-                              isLoading: isLoading,
-                              backgroundColor: AppColors.blue,
-                              labelStyle: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              height: 54,
-                            );
-                          }),
-                        ],
+                              return AppPrimaryButton(
+                                label: 'login_btn'.tr,
+                                onPressed: isValid ? controller.login : null,
+                                isLoading: isLoading,
+                                backgroundColor: AppColors.blue,
+                                labelStyle: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                height: 54,
+                              );
+                            }),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),

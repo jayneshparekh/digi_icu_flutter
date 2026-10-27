@@ -31,6 +31,12 @@ class ManagePatientsController extends GetxController {
   final RxString doctorId = ''.obs;
   final RxString userType = ''.obs;
 
+  // Navigation arguments / role tracking
+  final RxString isFrom = ''.obs;
+  final RxString leaderId = ''.obs;
+  final RxString instLeader = ''.obs;
+  final RxString defaultInstId = ''.obs;
+
   // Pagination states
   final RxInt currentPage = 1.obs;
   final RxBool hasMore = true.obs;
@@ -39,15 +45,44 @@ class ManagePatientsController extends GetxController {
   void onInit() {
     super.onInit();
     scrollController = ScrollController()..addListener(_onScroll);
-    _loadDoctorPrefs();
-    fetchPatients();
+    _extractArguments();
+    _loadUserPrefs();
   }
 
-  Future<void> _loadDoctorPrefs() async {
+  void _extractArguments() {
+    final args = Get.arguments;
+    if (args is Map) {
+      isFrom.value = args['isFrom']?.toString() ?? '';
+      leaderId.value = args['leaderId']?.toString() ?? '';
+      instLeader.value = args['instLeader']?.toString() ?? '';
+      defaultInstId.value = args['defaultInstId']?.toString() ?? '';
+    }
+  }
+
+  Future<void> _loadUserPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     doctorName.value = prefs.getString(AppConstants.prefUserName) ?? 'Doctor';
     doctorId.value = prefs.getString(AppConstants.prefUserId) ?? '';
     userType.value = prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
+
+    // If isFrom is not passed in arguments, check loginType
+    if (isFrom.value.isEmpty) {
+      if (userType.value.toLowerCase() == 'leader' ||
+          userType.value.toLowerCase() == 'reception') {
+        isFrom.value = 'leader';
+      } else {
+        isFrom.value = 'doctor';
+      }
+    }
+
+    if (leaderId.value.isEmpty &&
+        (isFrom.value == 'leader' ||
+            userType.value.toLowerCase() == 'leader' ||
+            userType.value.toLowerCase() == 'reception')) {
+      leaderId.value = doctorId.value;
+    }
+
+    fetchPatients();
   }
 
   void _onScroll() {
@@ -61,7 +96,7 @@ class ManagePatientsController extends GetxController {
     }
   }
 
-  /// Load patients using get_patient_list API (supports pagination)
+  /// Load patients using role-specific API (supports pagination)
   Future<void> fetchPatients({bool isLoadMore = false}) async {
     if (isLoadMore) {
       if (isLoadMoreLoading.value || !hasMore.value) return;
@@ -77,19 +112,42 @@ class ManagePatientsController extends GetxController {
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
+      final currentUserId = prefs.getString(AppConstants.prefUserId) ?? '';
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
-      if (doctorId.isEmpty) {
-        errorMessage.value = 'Doctor ID not found. Please log in again.';
+      if (currentUserId.isEmpty) {
+        errorMessage.value = 'User ID not found. Please log in again.';
         patients.clear();
         return;
       }
 
+      final bool isLeaderRole = isFrom.value == 'leader' ||
+          userType.value.toLowerCase() == 'leader' ||
+          userType.value.toLowerCase() == 'reception';
+
+      final String endpoint = isLeaderRole
+          ? ApiEndpoints.getLeaderPatientList
+          : ApiEndpoints.getPatientList;
+
+      final dynamic postData = isLeaderRole
+          ? dio.FormData.fromMap({
+              'leader_id': leaderId.value.isNotEmpty ? leaderId.value : currentUserId,
+              'page_no': currentPage.value,
+            })
+          : dio.FormData.fromMap({
+              'doctor_id': currentUserId,
+              'page_no': currentPage.value,
+            });
+
       final response = await apiClient.post(
-        ApiEndpoints.getPatientList,
-        data: {'doctor_id': doctorId, 'page_no': currentPage.value},
-        options: dio.Options(headers: {'Authorization': token}),
+        endpoint,
+        data: postData,
+        options: dio.Options(
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        ),
       );
 
       if (response.statusCode == 200 && response.data != null) {
@@ -110,9 +168,8 @@ class ManagePatientsController extends GetxController {
           if (!isLoadMore) {
             patients.clear();
             totalPatientsCount.value = 0;
-            errorMessage.value = res.msg.isNotEmpty
-                ? res.msg
-                : 'No patients found';
+            errorMessage.value =
+                res.msg.isNotEmpty ? res.msg : 'No patients found';
           }
           hasMore.value = false;
         }
@@ -160,20 +217,33 @@ class ManagePatientsController extends GetxController {
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
-      final userType = prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
+      final currentUserId = prefs.getString(AppConstants.prefUserId) ?? '';
+      final currentUserType =
+          prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
+
+      final searchUserId = (isFrom.value == 'leader' && leaderId.value.isNotEmpty)
+          ? leaderId.value
+          : currentUserId;
+      final searchUserType = isFrom.value == 'leader' ? 'Leader' : currentUserType;
+
+      final formData = dio.FormData.fromMap({
+        'search': query,
+        'type': 'Patient',
+        'user_id': searchUserId,
+        'user_type': searchUserType,
+        'page_no': currentPage.value,
+      });
 
       final response = await apiClient.post(
         ApiEndpoints.search,
-        data: {
-          'search': query,
-          'type': 'Patient',
-          'user_id': doctorId,
-          'user_type': userType,
-          'page_no': currentPage.value,
-        },
-        options: dio.Options(headers: {'Authorization': token}),
+        data: formData,
+        options: dio.Options(
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        ),
       );
 
       if (response.statusCode == 200 && response.data != null) {
@@ -183,11 +253,9 @@ class ManagePatientsController extends GetxController {
             patients.addAll(res.data);
           } else {
             patients.assignAll(res.data);
-            totalPatientsCount.value =
-                res.data.length; // Search API doesn't return count field
+            totalPatientsCount.value = res.data.length;
           }
 
-          // If returned data length is less than page limit (20), we reached the end
           if (res.data.length < 20) {
             hasMore.value = false;
           }
@@ -239,6 +307,16 @@ class ManagePatientsController extends GetxController {
     } catch (e) {
       debugPrint('Dialer launch error: $e');
       AppSnackbars.showError('Error', 'Could not open dialer: $e');
+    }
+  }
+
+  void onHome() {
+    if (isFrom.value == 'leader' ||
+        userType.value.toLowerCase() == 'leader' ||
+        userType.value.toLowerCase() == 'reception') {
+      Get.offAllNamed('/leader-dashboard');
+    } else {
+      Get.offAllNamed('/doctor-dashboard');
     }
   }
 

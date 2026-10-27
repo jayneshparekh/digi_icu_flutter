@@ -7,81 +7,122 @@ import '../../controllers/patient_dashboard_controller.dart';
 import '../widgets/app_status_badge.dart';
 import '../widgets/marquee_text.dart';
 import '../widgets/patient_dashboard_widgets.dart';
+import '../widgets/patient_side_menu.dart';
 import '../widgets/dashboard_card.dart';
+import '../widgets/expandable_fab_menu.dart';
 
 class PatientDashboardScreen extends GetView<PatientDashboardController> {
   const PatientDashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.lightGray,
-      appBar: AppBar(
-        backgroundColor: AppColors.teal, // Teal background matching toolbar
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        titleSpacing: 0,
-        toolbarHeight: 64,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            children: [
-              // Back Button
-              IconButton(
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                icon: SvgPicture.asset(
-                  'assets/icons/svg/ic_back.svg',
-                  colorFilter: const ColorFilter.mode(
-                    AppColors.white,
-                    BlendMode.srcIn,
-                  ),
-                  width: 26,
-                  height: 26,
-                ),
-                onPressed: controller.handleBack,
-              ),
-              const SizedBox(width: 8),
-              // Patient Name & Doctor Details Header
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Obx(() {
-                      final displayName =
-                          controller.rxUserName.value.isNotEmpty
-                              ? controller.rxUserName.value
-                              : controller.userName;
-                      return Text(
-                        displayName,
-                        style: const TextStyle(
+    return Obx(() {
+      final isPatientLogin =
+          controller.loggedInUserType.value.toLowerCase() == 'patient';
+
+      return PopScope(
+        canPop: !isPatientLogin,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          controller.handleBack();
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.lightGray,
+          drawer: isPatientLogin
+              ? PatientSideMenu(
+                  onLogout: controller.logout,
+                  onAppointmentTap: controller.handleDoctorAppointmentTap,
+                  onChestPainTap: controller.handleChestPainTap,
+                  onQuickFormTap: controller.handleOpenQuickForm,
+                  onMyGraphsTap: () =>
+                      controller.handleOpenServingPatientTab('Graph'),
+                  onMyFormsTap: () =>
+                      controller.handleOpenServingPatientTab('Form'),
+                  onMyPackageTap: () =>
+                      controller.handleCategoryTap('my_package'),
+                )
+              : null,
+          appBar: AppBar(
+            backgroundColor: AppColors.teal, // Teal background matching toolbar
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            titleSpacing: 0,
+            toolbarHeight: 64,
+            title: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                children: [
+                  // Back Button or Drawer Hamburger Icon
+                  if (isPatientLogin)
+                    Builder(
+                      builder: (scaffoldCtx) => IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: const Icon(
+                          Icons.menu,
                           color: AppColors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          size: 26,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      );
-                    }),
-                    Obx(() {
-                      return Text(
-                        'Dr. ${controller.doctorName.value}',
-                        style: TextStyle(
-                          color: AppColors.white.withValues(alpha: 0.85),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
+                        onPressed: () => Scaffold.of(scaffoldCtx).openDrawer(),
+                      ),
+                    )
+                  else
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      icon: SvgPicture.asset(
+                        'assets/icons/svg/ic_back.svg',
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.white,
+                          BlendMode.srcIn,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      );
-                    }),
-                  ],
-                ),
+                        width: 26,
+                        height: 26,
+                      ),
+                      onPressed: controller.handleBack,
+                    ),
+                  const SizedBox(width: 8),
+                  // Patient Name & Doctor Details Header
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Obx(() {
+                          final displayName =
+                              controller.rxUserName.value.isNotEmpty
+                                  ? controller.rxUserName.value
+                                  : controller.userName;
+                          return Text(
+                            displayName,
+                            style: const TextStyle(
+                              color: AppColors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          );
+                        }),
+                        if (!isPatientLogin)
+                          Obx(() {
+                            return Text(
+                              'Dr. ${controller.doctorName.value}',
+                              style: TextStyle(
+                                color: AppColors.white.withValues(alpha: 0.85),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            );
+                          }),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
         actions: [
           // Circular Logo Image on the Right
           Center(
@@ -108,10 +149,12 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
           ),
         ],
       ),
-      body: Column(
+      body: Stack(
         children: [
-          // Divider Line
-          Container(height: 1, color: AppColors.lightGray),
+          Column(
+            children: [
+              // Divider Line
+              Container(height: 1, color: AppColors.lightGray),
           // Top Layout Section (llTop)
           Container(
             color: AppColors.teal, // medium teal matching mockup
@@ -157,13 +200,16 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                 const SizedBox(height: 16),
                 // Recommended horizontal grid items
                 Obx(() {
-                  final currentUserType = controller.type;
+                  final effectiveUserType =
+                      controller.loggedInUserType.value.isNotEmpty
+                          ? controller.loggedInUserType.value
+                          : controller.type;
                   final isAdmitted = controller.rxIsAdmitted.value;
                   final showDigiIcu =
-                      (currentUserType == "Doctor" ||
-                          currentUserType == "Nurse" ||
-                          currentUserType == "Digi Icu Nurse" ||
-                          currentUserType == "Leader") &&
+                      (effectiveUserType == "Doctor" ||
+                          effectiveUserType == "Nurse" ||
+                          effectiveUserType == "Digi Icu Nurse" ||
+                          effectiveUserType == "Leader") &&
                       isAdmitted == "1";
 
                   return Row(
@@ -468,9 +514,14 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       },
                     ];
 
-                    if ((controller.type == "Doctor" ||
-                            controller.type == "Leader" ||
-                            controller.type == "Nurse") &&
+                    final effectiveUserType =
+                        controller.loggedInUserType.value.isNotEmpty
+                            ? controller.loggedInUserType.value
+                            : controller.type;
+
+                    if ((effectiveUserType == "Doctor" ||
+                            effectiveUserType == "Leader" ||
+                            effectiveUserType == "Nurse") &&
                         controller.rxIsAdmitted.value == "0") {
                       list.add({
                         'id': 'ipd_admit',
@@ -485,7 +536,7 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                       'icon': 'assets/icons/svg/ic_hospital_bed.svg',
                     });
 
-                    if (controller.type != "Patient") {
+                    if (effectiveUserType != "Patient") {
                       list.add({
                         'id': 'patient_location',
                         'title': 'patient_location'.tr,
@@ -607,13 +658,14 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: AppColors.teal,
-        shape: const CircleBorder(),
-        child: Icon(Icons.add, color: AppColors.white, size: 28),
-      ),
-    );
+      ExpandableFabMenu(controller: controller),
+    ],
+  ),
+  floatingActionButton: null,
+  floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+),
+      );
+    });
   }
 
   Widget _buildBadgeButton(String text, Color color) {

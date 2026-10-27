@@ -42,6 +42,7 @@ class PatientDashboardController extends GetxController {
   String homeServiceDoctorId = '';
   String doctorHsReqId = '';
   String problem = '';
+  final RxString loggedInUserType = ''.obs;
 
   final RxString doctorName = ''.obs;
   final Rxn<InstallmentDetailsRes> rxInstallmentDetails =
@@ -149,6 +150,8 @@ class PatientDashboardController extends GetxController {
     }
 
     rxUserName.value = userName;
+    final prefLoginType = prefs.getString(AppConstants.prefLoginType) ?? '';
+    loggedInUserType.value = prefLoginType;
     doctorName.value = prefs.getString(AppConstants.prefUserName) ?? 'Doctor';
 
     fetchSliders();
@@ -427,6 +430,22 @@ class PatientDashboardController extends GetxController {
       arguments: {
         'patientId': patientId,
         'formId': null,
+      },
+    );
+  }
+
+  void handleOpenMedicalForm() {
+    Get.toNamed(
+      '/medical-form',
+      arguments: {
+        'patientId': patientId,
+        'userName': rxUserName.value.isNotEmpty ? rxUserName.value : userName,
+        'userAge': userAge,
+        'userGender': userGender,
+        'from': 'from_medical_form',
+        'type': type.isNotEmpty ? type : 'Patient',
+        'doctorId': doctorId,
+        'doctorName': doctorName.value,
       },
     );
   }
@@ -834,11 +853,21 @@ class PatientDashboardController extends GetxController {
   }
 
   void handleBack() {
+    if (loggedInUserType.value.toLowerCase() == 'patient') {
+      AppSnackbars.showWarning('warning'.tr, 'you_cant_go_back'.tr);
+      return;
+    }
     if (Get.key.currentState?.canPop() ?? false) {
       Get.back();
     } else {
       Get.offAllNamed('/doctor-dashboard');
     }
+  }
+
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    Get.offAllNamed('/login');
   }
 
   void onPayNowClick(

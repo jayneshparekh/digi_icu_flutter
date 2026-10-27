@@ -30,8 +30,11 @@ class SplashController extends GetxController {
 
     Future.delayed(const Duration(seconds: 3), () {
       if (isLoggedIn) {
-        if (loginType.toLowerCase() == 'patient') {
+        final lower = loginType.toLowerCase();
+        if (lower == 'patient') {
           Get.offNamed('/patient-dashboard');
+        } else if (lower == 'leader' || lower == 'reception') {
+          Get.offNamed('/leader-dashboard');
         } else {
           Get.offNamed('/doctor-dashboard');
         }

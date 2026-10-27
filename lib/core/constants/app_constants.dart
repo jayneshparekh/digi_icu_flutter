@@ -31,6 +31,7 @@ class AppConstants {
   static const String prefSelectedLeaderId = 'selected_leader_id';
   static const String prefSelectedDoctorId = 'selected_doctor_id';
   static const String prefAddress = 'address';
+  static const String prefInstituteName = 'institute_name';
 
 
   // Orientation settings
