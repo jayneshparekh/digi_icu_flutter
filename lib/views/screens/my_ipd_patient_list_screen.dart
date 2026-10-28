@@ -286,6 +286,8 @@ class MyIpdPatientListScreen extends GetView<MyIpdPatientListController> {
                       '${AppConstants.qrCodeUrl}${patient.qrCode}',
                       width: 72,
                       height: 72,
+                      cacheWidth: 216,
+                      cacheHeight: 216,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
@@ -616,6 +618,8 @@ class MyIpdPatientListScreen extends GetView<MyIpdPatientListController> {
                 '${AppConstants.qrCodeUrl}${patient.qrCode}',
                 width: 220,
                 height: 220,
+                cacheWidth: 440,
+                cacheHeight: 440,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return const Icon(

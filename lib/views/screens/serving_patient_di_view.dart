@@ -704,6 +704,7 @@ class ServingPatientDiView extends GetView<ServingPatientController> {
                 borderRadius: BorderRadius.circular(6),
                 child: Image.network(
                   controller.ecgReportImageUrl.value,
+                  cacheHeight: 450,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => const Center(
                     child: Icon(

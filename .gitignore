@@ -48,3 +48,4 @@ app.*.map.json
 .agents/
 .planning/
 PROJECT_ANALYSIS.md
+tool/

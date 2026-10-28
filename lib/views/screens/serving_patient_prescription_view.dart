@@ -112,6 +112,9 @@ class ServingPatientPrescriptionView extends GetView<ServingPatientController> {
                           borderRadius: BorderRadius.circular(6),
                           child: Image.network(
                             url,
+                            width: 100,
+                            cacheWidth: 300,
+                            cacheHeight: 300,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) =>
                                 const Center(

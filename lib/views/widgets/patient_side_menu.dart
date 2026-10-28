@@ -92,7 +92,7 @@ class PatientSideMenu extends StatelessWidget {
               ),
             ),
             const Divider(height: 1, color: AppColors.lightGray),
-            // Menu Items List (Matching patient_nav_menu.xml in MHC-Android)
+            // Menu items list
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),

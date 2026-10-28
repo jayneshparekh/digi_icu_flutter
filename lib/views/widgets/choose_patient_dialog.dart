@@ -17,17 +17,16 @@ class ChoosePatientDialog extends StatelessWidget {
   });
 
   static Future<void> show({
-    required BuildContext context,
+    BuildContext? context,
     required List<LoginDataRes> patients,
     required Function(LoginDataRes selectedPatient) onSelect,
   }) {
-    return showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (_) => ChoosePatientDialog(
+    return Get.dialog<void>(
+      ChoosePatientDialog(
         patients: patients,
         onSelect: onSelect,
       ),
+      barrierDismissible: true,
     );
   }
 

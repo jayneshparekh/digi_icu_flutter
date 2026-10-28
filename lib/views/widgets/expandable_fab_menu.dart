@@ -77,15 +77,15 @@ class _ExpandableFabMenuState extends State<ExpandableFabMenu>
           (effectiveUserType == "Doctor" || effectiveUserType == "Nurse") &&
               isAdmitted;
 
-      // Build menu items list matching Android buttons:
-      // btnFab1: Blood Pressure
-      // btnFab2: Blood Sugar
-      // btnFab3: Blood Tests
-      // btnFab4: Weight
-      // btnFab5: Episode
-      // btnFab6: Medical Form (if medicalForm != 1)
-      // btnFab7: Admit Dashboard (if Doctor/Nurse && isAdmitted)
-      // btnFab8: Admit Chat (if Doctor/Nurse && isAdmitted)
+      // Build menu items list:
+      // 1. Blood Pressure
+      // 2. Blood Sugar
+      // 3. Blood Tests
+      // 4. Weight
+      // 5. Episode
+      // 6. Medical Form (if medicalForm != 1)
+      // 7. Admit Dashboard (if Doctor/Nurse && isAdmitted)
+      // 8. Admit Chat (if Doctor/Nurse && isAdmitted)
       final List<_FabMenuItem> items = [
         _FabMenuItem(
           label: 'blood_pressure'.tr,
@@ -165,7 +165,7 @@ class _ExpandableFabMenuState extends State<ExpandableFabMenu>
                 onTap: _close,
                 behavior: HitTestBehavior.opaque,
                 child: Container(
-                  color: Colors.black.withValues(alpha: 0.35),
+                  color: AppColors.pureBlack.withValues(alpha: 0.35),
                 ),
               ),
             ),
@@ -198,7 +198,7 @@ class _ExpandableFabMenuState extends State<ExpandableFabMenu>
                         children: [
                           // Label pill
                           Material(
-                            color: Colors.transparent,
+                            color: AppColors.white.withValues(alpha: 0),
                             child: InkWell(
                               onTap: item.onTap,
                               borderRadius: BorderRadius.circular(6),
@@ -212,7 +212,7 @@ class _ExpandableFabMenuState extends State<ExpandableFabMenu>
                                   borderRadius: BorderRadius.circular(6),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.15),
+                                      color: AppColors.pureBlack.withValues(alpha: 0.15),
                                       blurRadius: 4,
                                       offset: const Offset(0, 2),
                                     ),

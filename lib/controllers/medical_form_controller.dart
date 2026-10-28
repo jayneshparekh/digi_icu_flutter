@@ -4,11 +4,11 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants/api_endpoints.dart';
 import '../core/constants/app_constants.dart';
 import '../models/response/patients/medical_form_details_model.dart';
 import '../services/api/api_client.dart';
+import '../services/storage_service.dart';
 
 class MedicalFormController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -257,7 +257,7 @@ class MedicalFormController extends GetxController {
   }
 
   Future<void> _loadPatientInfo() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
     loggedInUserName.value = prefs.getString(AppConstants.prefUserName) ?? '';
     if (patientId.isEmpty) {
       patientId = prefs.getString(AppConstants.prefUserId) ?? '';
@@ -631,7 +631,7 @@ class MedicalFormController extends GetxController {
 
     isLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final Map<String, dynamic> fields = {

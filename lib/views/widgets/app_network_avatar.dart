@@ -20,6 +20,9 @@ class AppNetworkAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final pixelRatio = MediaQuery.maybeDevicePixelRatioOf(context) ?? 2.0;
+    final cacheDim = (size * pixelRatio).round();
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
       child: SizedBox(
@@ -30,6 +33,8 @@ class AppNetworkAvatar extends StatelessWidget {
                 imageUrl,
                 width: size,
                 height: size,
+                cacheWidth: cacheDim,
+                cacheHeight: cacheDim,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => _fallback(),
               )

@@ -6,7 +6,7 @@ import 'package:digi_icu_flutter/services/api/api_client.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../services/storage_service.dart';
 
 class DiagnosisController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -454,7 +454,7 @@ class DiagnosisController extends GetxController {
     if (patientId.isEmpty) return;
     isLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -616,7 +616,7 @@ class DiagnosisController extends GetxController {
     compileDiagnosis();
     isLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
 

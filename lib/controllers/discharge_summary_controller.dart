@@ -22,9 +22,11 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../services/storage_service.dart';
 
 class DischargeSummaryController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
+  late final SharedPreferences _prefs;
 
   // Patient Info from arguments
   final RxString patientId = ''.obs;
@@ -247,6 +249,9 @@ class DischargeSummaryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _prefs = Get.isRegistered<SharedPreferences>()
+        ? Get.find<SharedPreferences>()
+        : Get.find<StorageService>().prefs;
     _parseArguments();
     _loadUserInfo();
     loadDischargeData();
@@ -258,7 +263,7 @@ class DischargeSummaryController extends GetxController {
 
   Future<void> _loadUserInfo() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       loggedInUserName.value =
           prefs.getString(AppConstants.prefUserName) ?? '';
       loggedInUserId.value = prefs.getString(AppConstants.prefUserId) ?? '';
@@ -411,7 +416,7 @@ class DischargeSummaryController extends GetxController {
 
     try {
       isLoading.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final request = GetDischargeDataRequest(admitId: admitId.value);
@@ -656,7 +661,7 @@ class DischargeSummaryController extends GetxController {
 
     try {
       isLoadingInvestigations.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -709,7 +714,7 @@ class DischargeSummaryController extends GetxController {
     }
 
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -788,7 +793,7 @@ class DischargeSummaryController extends GetxController {
     if (admitId.value.isEmpty) return;
     try {
       isLoadingDischargeRx.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -820,7 +825,7 @@ class DischargeSummaryController extends GetxController {
   /// Delete a prescription item from discharge
   Future<bool> deleteDischargePrescription(String medicineId) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -855,7 +860,7 @@ class DischargeSummaryController extends GetxController {
     required String content,
   }) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final finalId = manualRxId ??
@@ -929,7 +934,7 @@ class DischargeSummaryController extends GetxController {
     if (instituteId.value.isEmpty) return;
     try {
       isLoadingInstituteDoctors.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -1009,7 +1014,7 @@ class DischargeSummaryController extends GetxController {
     required bool isPrintDraft,
     required bool isFinalDischarge,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = _prefs;
     final userId = loggedInUserId.value.isNotEmpty
         ? loggedInUserId.value
         : (prefs.getString(AppConstants.prefUserId) ?? '');
@@ -1093,7 +1098,7 @@ class DischargeSummaryController extends GetxController {
     DischargePatientWebRequest request,
   ) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -1358,7 +1363,7 @@ class DischargeSummaryController extends GetxController {
   Future<void> uploadDischargeSummaryPdf(File file) async {
     try {
       isUploadingPdf.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final userId = loggedInUserId.value.isNotEmpty
           ? loggedInUserId.value

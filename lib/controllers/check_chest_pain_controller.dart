@@ -6,6 +6,7 @@ import 'package:digi_icu_flutter/models/request/patients/download_chest_pain_pdf
 import 'package:digi_icu_flutter/models/response/patients/chest_pain_response.dart';
 import 'package:digi_icu_flutter/models/response/patients/common_pdf_response.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
+import 'package:digi_icu_flutter/services/storage_service.dart';
 import 'package:digi_icu_flutter/services/razorpay_service.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:digi_icu_flutter/views/widgets/chest_pain_score_dialog.dart';
@@ -17,7 +18,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CheckChestPainController extends GetxController {
@@ -115,7 +115,7 @@ class CheckChestPainController extends GetxController {
   }
 
   Future<void> _ensurePatientId() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
     if (patientId.isEmpty) {
       final selectedId =
           prefs.getString(AppConstants.prefSelectedPatientId) ?? '';
@@ -366,7 +366,7 @@ class CheckChestPainController extends GetxController {
 
     isLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -443,7 +443,7 @@ class CheckChestPainController extends GetxController {
 
     isLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(

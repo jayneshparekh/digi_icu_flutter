@@ -73,6 +73,8 @@ class AppTranslations extends Translations {
       'login_btn': 'Login',
       'select_your_account': 'Select Your Account',
       'please_enter_credentials': 'Please Enter Credentials',
+      'login_failed': 'Login Failed',
+      'user_id_not_found': 'User ID not found. Please log in again.',
       'you_cant_go_back': "You can't go back",
       'are_you_sure_logout': 'Are you sure you want to logout?',
       'leader_dashboard': 'Leader Dashboard',

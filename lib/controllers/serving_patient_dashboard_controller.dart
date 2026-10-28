@@ -7,7 +7,7 @@ import 'package:digi_icu_flutter/services/api/api_client.dart';
 import 'package:dio/dio.dart' as dio;
 
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../services/storage_service.dart';
 
 class ServingPatientDashboardController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -31,7 +31,7 @@ class ServingPatientDashboardController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -62,7 +62,7 @@ class ServingPatientDashboardController extends GetxController {
   Future<bool> addQuickForm(String hba1cValue, String hba1cDate) async {
     isLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(

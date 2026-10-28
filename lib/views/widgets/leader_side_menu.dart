@@ -78,7 +78,7 @@ class LeaderSideMenu extends GetView<LeaderDashboardController> {
               ),
             ),
             const Divider(height: 1, color: AppColors.lightGray),
-            // Menu Items List (Matching leader_nav_menu.xml in MHC-Android)
+            // Menu items list
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),

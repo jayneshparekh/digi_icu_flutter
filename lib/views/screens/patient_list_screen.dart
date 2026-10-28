@@ -251,6 +251,8 @@ class PatientListScreen extends GetView<PatientListController> {
                     '${AppConstants.patientImageUrl}${patient.profilePic}',
                     width: 64,
                     height: 64,
+                    cacheWidth: 192,
+                    cacheHeight: 192,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return const SizedBox.shrink();

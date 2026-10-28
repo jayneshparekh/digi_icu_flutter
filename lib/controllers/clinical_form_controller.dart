@@ -6,12 +6,12 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants/app_constants.dart';
 import '../models/response/doctors/medical_form_response.dart';
 import '../models/response/patients/clinical_form_details_model.dart';
 import '../models/response/patients/last_symptoms_response.dart';
 import '../services/api/api_client.dart';
+import '../services/storage_service.dart';
 
 class ClinicalFormController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -194,7 +194,7 @@ class ClinicalFormController extends GetxController {
 
   Future<void> lastSymptoms() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -278,7 +278,7 @@ class ClinicalFormController extends GetxController {
 
   Future<void> getMedicalFormData() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -861,7 +861,7 @@ class ClinicalFormController extends GetxController {
 
     try {
       isLoading.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final Map<String, dynamic> fields = {

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/leader_dashboard_controller.dart';
 import '../../core/theme/app_colors.dart';
+import '../widgets/app_dialog.dart';
 import '../widgets/dashboard_card.dart';
 import '../widgets/leader_side_menu.dart';
 
@@ -164,31 +165,18 @@ class LeaderDashboardScreen extends GetView<LeaderDashboardController> {
   }
 
   void _showLogoutConfirmDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('logout'.tr),
-        content: Text('are_you_sure_logout'.tr),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('cancel'.tr),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.teal,
-            ),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              controller.logout();
-            },
-            child: Text(
-              'logout'.tr,
-              style: const TextStyle(color: AppColors.white),
-            ),
-          ),
-        ],
+    AppDialog.show(
+      title: 'logout'.tr,
+      body: Text(
+        'are_you_sure_logout'.tr,
+        style: const TextStyle(
+          fontSize: 14,
+          color: AppColors.navy,
+        ),
       ),
+      confirmLabel: 'logout'.tr,
+      cancelLabel: 'cancel'.tr,
+      onConfirm: controller.logout,
     );
   }
 }

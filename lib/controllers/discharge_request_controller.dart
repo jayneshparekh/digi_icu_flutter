@@ -11,7 +11,7 @@ import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../services/storage_service.dart';
 
 class DischargeRequestController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -76,7 +76,7 @@ class DischargeRequestController extends GetxController {
       return instituteId.value.trim();
     }
 
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
 
     // Query checkDoctorHome API directly as the true authority on the doctor's institute
     try {
@@ -126,7 +126,7 @@ class DischargeRequestController extends GetxController {
   Future<void> loadDischargeRequests() async {
     try {
       isLoading.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final targetInstId = await _resolveInstituteId();
@@ -221,7 +221,7 @@ class DischargeRequestController extends GetxController {
     if (admitId.isEmpty) return;
     try {
       isLoadingDischargeSummary.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final request = GetDischargeDataRequest(admitId: admitId);
@@ -263,7 +263,7 @@ class DischargeRequestController extends GetxController {
 
     try {
       isSubmittingDischarge.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final userType = prefs.getString(AppConstants.prefLoginType) ?? 'Leader';
       final userId = prefs.getString(AppConstants.prefUserId) ?? '';

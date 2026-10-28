@@ -63,6 +63,7 @@ class AppReportTile extends StatelessWidget {
                         reportImgUrl,
                         height: 180,
                         width: double.infinity,
+                        cacheHeight: 360,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) => Container(
                           height: 140,

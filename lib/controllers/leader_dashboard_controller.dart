@@ -3,12 +3,12 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/constants/api_endpoints.dart';
 import '../core/constants/app_constants.dart';
 import '../core/theme/app_colors.dart';
 import '../services/api/api_client.dart';
+import '../services/storage_service.dart';
 
 class LeaderDashboardController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -46,7 +46,7 @@ class LeaderDashboardController extends GetxController {
   }
 
   Future<void> _loadLeaderInfo() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
     leaderId.value = prefs.getString(AppConstants.prefUserId) ?? '';
     leaderName.value = prefs.getString(AppConstants.prefUserName) ?? 'Leader';
     userType.value = prefs.getString(AppConstants.prefLoginType) ?? 'Leader';
@@ -58,7 +58,7 @@ class LeaderDashboardController extends GetxController {
 
   Future<void> checkLeaderHome() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final currentUserId = leaderId.value.isNotEmpty
           ? leaderId.value
           : (prefs.getString(AppConstants.prefUserId) ?? '');
@@ -105,7 +105,7 @@ class LeaderDashboardController extends GetxController {
     try {
       if (defaultInstituteId.value.isEmpty) return;
 
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final formData = dio.FormData.fromMap({
@@ -146,7 +146,7 @@ class LeaderDashboardController extends GetxController {
     try {
       if (defaultInstituteId.value.isEmpty) return;
 
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final currentUserId = leaderId.value.isNotEmpty
           ? leaderId.value
@@ -210,7 +210,7 @@ class LeaderDashboardController extends GetxController {
 
   Future<void> openAdmitRequest() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       if (defaultInstituteId.value.isNotEmpty) {
@@ -243,7 +243,7 @@ class LeaderDashboardController extends GetxController {
 
   Future<void> openDischargeRequest() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       if (defaultInstituteId.value.isNotEmpty) {
@@ -275,7 +275,7 @@ class LeaderDashboardController extends GetxController {
   }
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
     await prefs.clear();
     Get.offAllNamed('/login');
   }

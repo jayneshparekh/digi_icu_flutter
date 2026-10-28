@@ -40,6 +40,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../services/storage_service.dart';
 
 class ServingPatientController extends GetxController implements IPDAdmitFlowDelegate {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -250,9 +251,14 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   final TextEditingController metsController = TextEditingController();
   final TextEditingController metOtherController = TextEditingController();
 
+  late final SharedPreferences _prefs;
+
   @override
   void onInit() {
     super.onInit();
+    _prefs = Get.isRegistered<SharedPreferences>()
+        ? Get.find<SharedPreferences>()
+        : Get.find<StorageService>().prefs;
     final args = Get.arguments as Map<String, dynamic>? ?? {};
     patientId = args['patientId']?.toString() ?? '';
     fullName = args['fullName']?.toString() ?? '';
@@ -306,7 +312,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   }
 
   Future<void> _loadUserType() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = _prefs;
     userType.value = prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
     loggedInDoctorName.value = prefs.getString(AppConstants.prefUserName) ?? '';
   }
@@ -381,7 +387,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   /// Maps the response and shows result snackbar via AppSnackbars.
   Future<void> submitAdmitRequest() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -429,7 +435,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   /// If diagnosis is missing (status != 'success'), shows error snackbar and redirects to DiagnosisScreen.
   Future<void> getDiagnosisAndProceed() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -479,7 +485,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   Future<void> checkDayCareAvailability(String instId) async {
     if (instId.isEmpty) return;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final resp = await apiClient.post(
@@ -520,7 +526,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   /// Opens the Pre-Admit Dialog to select institute and set day-care option.
   Future<void> openPreAdmitDialog() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final userId = prefs.getString(AppConstants.prefUserId) ?? doctorId;
       var role = prefs.getString(AppConstants.prefLoginType) ?? userType.value;
@@ -577,7 +583,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   /// Opens the IPD Admit Dialog (full admit form with bed selection, etc.).
   Future<void> openIpdAdmitDialog() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final targetInstituteId = selectedInstituteId.value.isNotEmpty
@@ -643,7 +649,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   Future<void> fetchInstituteDetails(String instId) async {
     if (instId.isEmpty || instId == '0') return;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final currentUserType =
           prefs.getString(AppConstants.prefLoginType) ?? userType.value;
@@ -685,7 +691,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   Future<void> fetchDoctorsForInstitute(String instId) async {
     if (instId.isEmpty) return;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final currentUserType =
           prefs.getString(AppConstants.prefLoginType) ?? userType.value;
@@ -717,7 +723,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
       return;
     }
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final url = '${ApiEndpoints.getLabIdApiPrefix}$instId';
 
@@ -756,7 +762,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
       return;
     }
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final req = CommonLabReq(labId: labId);
       final resp = await apiClient.post(
@@ -788,7 +794,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   /// Checks if an IPD admit prescription exists for current booking.
   Future<void> checkAdmitPrescription() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final resp = await apiClient.post(
         ApiEndpoints.checkAdmitPrescription,
@@ -853,7 +859,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   /// Final submit: builds payload and calls ApiEndpoints.admitPatientFromWeb API.
   Future<void> submitAdmit() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final currentUserType =
           prefs.getString(AppConstants.prefLoginType) ?? userType.value;
@@ -1074,7 +1080,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     if (patientId.isEmpty || bookingId.isEmpty) return;
     isLoadingDetails.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -1140,7 +1146,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     if (patientId.isEmpty) return;
     isLoadingReports.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -1166,7 +1172,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     selectedFolderReportName.value = reportName;
     isLoadingFolderReports.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -1203,7 +1209,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     if (patientId.isEmpty || filePath.isEmpty) return;
     isLoadingReports.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final currentUserId = prefs.getString(AppConstants.prefUserId) ?? '';
       final currentUserType =
@@ -1336,7 +1342,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
 
   Future<void> deleteFolderReport(String reportId) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final formData = dio.FormData.fromMap({'report_id': reportId});
@@ -1394,7 +1400,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     required String reportImgName,
   }) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final userType = prefs.getString(AppConstants.prefLoginType) ?? 'doctor';
       final userId = prefs.getString(AppConstants.prefUserId) ?? '';
@@ -1476,7 +1482,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     prescriptionType.value = type;
     isLoadingPrescriptions.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -1506,7 +1512,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   Future<Map<String, dynamic>?> fetchMedicineDetails(String id) async {
     isLoadingMedicines.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -1534,7 +1540,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   ) async {
     try {
       isLoadingDetails.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       // Format summary text
@@ -1670,7 +1676,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
 
   Future<void> fetchBPGraph() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -1693,7 +1699,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
 
   Future<void> fetchSugarGraph() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -1715,7 +1721,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
 
   Future<void> fetchOtherGraph() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -1738,7 +1744,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   Future<void> addRating(String ratingValue) async {
     isLoadingDetails.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -1792,7 +1798,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   ) async {
     isLoadingDetails.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -1961,7 +1967,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   /// type = "Reason").
   Future<void> _showReasonTemplateDialog() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -2009,7 +2015,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   /// Hold endpoint for Quick Appointment: POST v2/Doctor/hold_quick_appointment.
   Future<void> _holdQuickAppointment(String reason) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final userId = prefs.getString(AppConstants.prefUserId) ?? '';
       final userTypeStr =
@@ -2050,7 +2056,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   Future<void> _changeAppointmentStatus(String reason, String ptStatus) async {
     isLoadingDetails.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final req = ChangeAppointmentStatusReq(
@@ -2175,7 +2181,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   /// Submits referral notes via POST v2/Doctor/add_referral_notes.
   Future<void> _addReferralNotes(String referralNote) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final req = AddReferralNotesReq(
@@ -2207,7 +2213,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   /// Submits doctor visit notes via POST v2/Doctor/add_home_visit_notes.
   Future<void> _addDoctorVisitNotes(String homeVisitNote) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final req = AddDoctorVisitNotesReq(
@@ -2244,7 +2250,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
 
   Future<void> fetchDiagnosisData() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -2267,7 +2273,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
 
   Future<void> fetchEcgReport() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -2302,7 +2308,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
 
     isLoadingDi.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final req = AddPatientNoteReq(
@@ -2344,7 +2350,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
 
     isLoadingDi.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final req = AddSelfNoteReq(
@@ -2416,7 +2422,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
 
     isLoadingDi.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final req = AddEventReq(
@@ -2460,7 +2466,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
 
     isLoadingDi.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final req = AddEcgReq(
@@ -2509,7 +2515,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
 
     isLoadingDi.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final req = AddBpReq(
@@ -2544,7 +2550,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   Future<void> submitTmt() async {
     isLoadingDi.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final req = AddTmtReq(
@@ -2585,7 +2591,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   Future<void> fetchNoteTemplates() async {
     try {
       isLoadingDi.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -2659,7 +2665,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     if (patientId.isEmpty) return;
     try {
       isLoadingDi.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final formData = dio.FormData.fromMap({'patient_id': patientId});
@@ -2800,7 +2806,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     if (patientId.isEmpty) return;
     try {
       isLoadingDi.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -2880,7 +2886,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     if (patientId.isEmpty) return;
     try {
       isLoadingDi.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -3001,7 +3007,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     if (patientId.isEmpty) return;
     try {
       isLoadingDi.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -3104,7 +3110,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     if (patientId.isEmpty) return;
     try {
       isLoadingDi.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -3185,7 +3191,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     if (patientId.isEmpty) return;
     try {
       isLoadingDi.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -3276,7 +3282,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   Future<void> serveQuickAppointment() async {
     isLoadingDetails.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final userId = prefs.getString(AppConstants.prefUserId) ?? '';
       final userTypeStr =
@@ -3316,7 +3322,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   Future<void> serveAndNextQuickAppointment() async {
     isLoadingDetails.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final userId = prefs.getString(AppConstants.prefUserId) ?? '';
       final userTypeStr =

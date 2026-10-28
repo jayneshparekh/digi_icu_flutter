@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants/app_constants.dart';
 import '../models/response/users/login_response.dart';
 import '../services/api/api_client.dart';
+import '../services/storage_service.dart';
 
 class LoginController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -64,7 +65,7 @@ class LoginController extends GetxController {
           // Tell the OS autofill service to prompt to save the credentials
           TextInput.finishAutofillContext(shouldSave: true);
 
-          final prefs = await SharedPreferences.getInstance();
+          final prefs = StorageService.to.prefs;
           await prefs.setString(
             AppConstants.prefAuthorizationToken,
             loginRes.authToken,
@@ -88,12 +89,12 @@ class LoginController extends GetxController {
             }
           } else {
             _showErrorSnackbar(
-              loginRes.msg.isNotEmpty ? loginRes.msg : 'Login Failed',
+              loginRes.msg.isNotEmpty ? loginRes.msg : 'login_failed'.tr,
             );
           }
         } else {
           _showErrorSnackbar(
-            loginRes.msg.isNotEmpty ? loginRes.msg : 'Login Failed',
+            loginRes.msg.isNotEmpty ? loginRes.msg : 'login_failed'.tr,
           );
         }
       } else {
@@ -156,6 +157,6 @@ class LoginController extends GetxController {
   }
 
   void _showErrorSnackbar(String message) {
-    AppSnackbars.showError('Error', message);
+    AppSnackbars.showError('error'.tr, message);
   }
 }

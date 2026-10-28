@@ -19,9 +19,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/storage_service.dart';
 
 class AdmitPatientRequestController extends GetxController implements IPDAdmitFlowDelegate {
   final ApiClient apiClient = Get.find<ApiClient>();
+  late final SharedPreferences _prefs;
 
   @override
   late final String instituteId;
@@ -201,6 +203,9 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
   @override
   void onInit() {
     super.onInit();
+    _prefs = Get.isRegistered<SharedPreferences>()
+        ? Get.find<SharedPreferences>()
+        : Get.find<StorageService>().prefs;
     final args = Get.arguments as Map<String, dynamic>? ?? {};
     instituteId = args['institute_id']?.toString() ?? args['instituteId']?.toString() ?? '';
 
@@ -229,7 +234,7 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
   Future<void> loadAdmitRequests() async {
     try {
       isLoading.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final userId = prefs.getString(AppConstants.prefUserId) ?? '';
       final currentInstId = instituteId.isNotEmpty
@@ -322,7 +327,7 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
   Future<void> _checkDiagnosisAndProceed(AdmitRequestPatientItem patient) async {
     try {
       isLoading.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -373,7 +378,7 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
 
   Future<void> _openPreAdmitDialog(AdmitRequestPatientItem patient) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final userId = prefs.getString(AppConstants.prefUserId) ?? '';
       var role = prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
@@ -439,7 +444,7 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
   Future<void> checkDayCareAvailability(String instId) async {
     if (instId.isEmpty) return;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final resp = await apiClient.post(
@@ -475,7 +480,7 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
 
   Future<void> _openIpdAdmitDialog(AdmitRequestPatientItem patient) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final targetInstituteId = selectedInstituteId.value;
 
@@ -531,7 +536,7 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
   Future<void> _fetchInstituteDetails(String instId) async {
     if (instId.isEmpty) return;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final userId = prefs.getString(AppConstants.prefUserId) ?? '';
       final userTypeVal = prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
@@ -561,7 +566,7 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
 
   Future<void> _fetchDoctorsForInstitute(String instId) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final resp = await apiClient.post(
@@ -583,7 +588,7 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
       return;
     }
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final url = '${ApiEndpoints.getLabIdApiPrefix}$instId';
 
@@ -620,7 +625,7 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
       return;
     }
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final req = CommonLabReq(labId: labId);
       final resp = await apiClient.post(
@@ -651,7 +656,7 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
 
   Future<void> _checkAdmitPrescription() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final resp = await apiClient.post(
         ApiEndpoints.checkAdmitPrescription,
@@ -742,7 +747,7 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
 
     try {
       isSubmittingAdmission.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final currentUserId = prefs.getString(AppConstants.prefUserId) ?? '';
       final currentUserType = prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
@@ -827,7 +832,7 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
   Future<void> _loadBedsHierarchy(AdmitRequestPatientItem patient) async {
     try {
       isLoadingBedsHierarchy.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final targetInstId = patient.instituteId?.isNotEmpty == true ? patient.instituteId! : instituteId;
 
@@ -888,7 +893,7 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
 
     try {
       isSubmittingBedChange.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final targetInstId = patient.instituteId?.isNotEmpty == true ? patient.instituteId! : instituteId;
 

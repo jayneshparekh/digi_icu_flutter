@@ -5,7 +5,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/constants/api_endpoints.dart';
 import '../core/constants/app_constants.dart';
@@ -13,6 +12,7 @@ import '../models/request/patients/add_ambulance_service_req.dart';
 import '../models/response/patients/add_ambulance_res.dart';
 import '../models/response/payment/order_response.dart';
 import '../services/api/api_client.dart';
+import '../services/storage_service.dart';
 import '../services/razorpay_service.dart';
 import '../views/widgets/app_snackbars.dart';
 
@@ -69,7 +69,7 @@ class AmbulanceServiceRequestController extends GetxController {
 
   Future<void> _initData() async {
     final args = Get.arguments as Map<String, dynamic>?;
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
 
     patientId = (args?['patientId'] ??
             args?['patient_id'] ??
@@ -133,7 +133,7 @@ class AmbulanceServiceRequestController extends GetxController {
 
   Future<void> _fetchPatientDetails() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await _apiClient.post(
@@ -447,7 +447,7 @@ class AmbulanceServiceRequestController extends GetxController {
     // 2. Generate Razorpay Order
     isLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final userEmail = prefs.getString(AppConstants.prefUserEmail) ?? '';
       final currentUserId = prefs.getString(AppConstants.prefUserId) ?? patientId;
@@ -540,7 +540,7 @@ class AmbulanceServiceRequestController extends GetxController {
   }) async {
     isLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final currentUserId = prefs.getString(AppConstants.prefUserId) ?? patientId;
 
       // 1. Verify Payment Signature

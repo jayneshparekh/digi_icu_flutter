@@ -3,12 +3,12 @@ import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/constants/app_constants.dart';
 import '../models/response/doctors/get_patient_list_response.dart';
 import '../services/api/api_client.dart';
+import '../services/storage_service.dart';
 
 class ManagePatientsController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -60,7 +60,7 @@ class ManagePatientsController extends GetxController {
   }
 
   Future<void> _loadUserPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
     doctorName.value = prefs.getString(AppConstants.prefUserName) ?? 'Doctor';
     doctorId.value = prefs.getString(AppConstants.prefUserId) ?? '';
     userType.value = prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
@@ -111,12 +111,12 @@ class ManagePatientsController extends GetxController {
     }
 
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final currentUserId = prefs.getString(AppConstants.prefUserId) ?? '';
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       if (currentUserId.isEmpty) {
-        errorMessage.value = 'User ID not found. Please log in again.';
+        errorMessage.value = 'user_id_not_found'.tr;
         patients.clear();
         return;
       }
@@ -169,7 +169,7 @@ class ManagePatientsController extends GetxController {
             patients.clear();
             totalPatientsCount.value = 0;
             errorMessage.value =
-                res.msg.isNotEmpty ? res.msg : 'No patients found';
+                res.msg.isNotEmpty ? res.msg : 'no_patients_found'.tr;
           }
           hasMore.value = false;
         }
@@ -216,7 +216,7 @@ class ManagePatientsController extends GetxController {
     }
 
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final currentUserId = prefs.getString(AppConstants.prefUserId) ?? '';
       final currentUserType =
           prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';

@@ -219,6 +219,7 @@ class _PatientDashboardSliderState extends State<PatientDashboardSlider> {
                 final item = widget.items[index];
                 return Image.network(
                   item.image,
+                  cacheHeight: 450,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(

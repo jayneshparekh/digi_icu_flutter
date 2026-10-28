@@ -3,12 +3,12 @@ import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants/app_constants.dart';
 import '../models/request/patients/doctor_list_patient_side_req.dart';
 import '../models/response/patients/doctor_list_patient_side_response.dart';
 import '../models/response/patients/check_payment_status_response.dart';
 import '../services/api/api_client.dart';
+import '../services/storage_service.dart';
 
 class AppointmentController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -61,7 +61,7 @@ class AppointmentController extends GetxController {
     isLoading.value = true;
     errorMsg.value = '';
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       loggedInUserName.value = prefs.getString(AppConstants.prefUserName) ?? '';
 
@@ -126,7 +126,7 @@ class AppointmentController extends GetxController {
   Future<void> checkPaymentStatus(DoctorDataModel doctor) async {
     isLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(

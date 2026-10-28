@@ -6,6 +6,7 @@ import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:digi_icu_flutter/models/request/user/admit_place_request_model.dart';
 import 'package:digi_icu_flutter/models/request/user/get_beds_request_model.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
+import 'package:digi_icu_flutter/services/storage_service.dart';
 import 'package:digi_icu_flutter/views/widgets/app_drawing_canvas.dart';
 import 'package:digi_icu_flutter/views/widgets/app_primary_button.dart';
 import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
@@ -15,7 +16,6 @@ import 'package:digi_icu_flutter/views/widgets/ipd_admit_flow_delegate.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class IpdAdmitDialog extends StatelessWidget {
   final List<dynamic> instituteAmenities;
@@ -1235,7 +1235,7 @@ class IpdAdmitDialog extends StatelessWidget {
   ) async {
     if (placeKey == null || placeKey.isEmpty) return;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final targetInstituteId = flowDelegate.selectedInstituteId.value.isNotEmpty
           ? flowDelegate.selectedInstituteId.value
@@ -1296,7 +1296,7 @@ class IpdAdmitDialog extends StatelessWidget {
       return;
     }
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final targetInstituteId = flowDelegate.selectedInstituteId.value.isNotEmpty
           ? flowDelegate.selectedInstituteId.value

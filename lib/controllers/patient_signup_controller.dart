@@ -7,10 +7,10 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/constants/app_constants.dart';
 import '../services/api/api_client.dart';
+import '../services/storage_service.dart';
 
 class PatientSignUpController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -155,7 +155,7 @@ class PatientSignUpController extends GetxController {
       }
 
       // 2. Load preferences for auth token, doctor id, etc.
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final String token =
           prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final String doctorId = prefs.getString(AppConstants.prefUserId) ?? '';

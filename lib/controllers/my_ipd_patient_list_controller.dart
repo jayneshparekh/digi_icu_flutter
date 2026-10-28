@@ -10,8 +10,8 @@ import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../services/storage_service.dart';
 
 class MyIpdPatientListController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -65,7 +65,7 @@ class MyIpdPatientListController extends GetxController {
   }
 
   Future<void> _loadDoctorData() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
     doctorName.value = prefs.getString(AppConstants.prefUserName) ?? 'Doctor';
     doctorId.value = prefs.getString(AppConstants.prefUserId) ?? '';
 
@@ -102,7 +102,7 @@ class MyIpdPatientListController extends GetxController {
     }
 
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final docId = doctorId.value.isNotEmpty
           ? doctorId.value
@@ -278,7 +278,7 @@ class MyIpdPatientListController extends GetxController {
     }
 
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final userId = doctorId.value.isNotEmpty
           ? doctorId.value

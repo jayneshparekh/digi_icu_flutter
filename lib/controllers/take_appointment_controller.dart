@@ -5,11 +5,11 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants/app_constants.dart';
 import '../models/response/patients/appointment_slots_response.dart';
 import '../models/response/patients/book_appointment_response.dart';
 import '../services/api/api_client.dart';
+import '../services/storage_service.dart';
 import '../views/widgets/choose_form_option_dialog.dart';
 
 class TakeAppointmentController extends GetxController {
@@ -76,7 +76,7 @@ class TakeAppointmentController extends GetxController {
 
     isLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       loggedInUserName.value = prefs.getString(AppConstants.prefUserName) ?? '';
 

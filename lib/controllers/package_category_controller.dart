@@ -5,13 +5,13 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants/app_constants.dart';
 import '../models/request/payment/get_order_request.dart';
 import '../models/response/patients/doctor_list_patient_side_response.dart';
 import '../models/response/payment/get_order_response.dart';
 import '../models/response/users/package_categories_response.dart';
 import '../services/api/api_client.dart';
+import '../services/storage_service.dart';
 import '../services/razorpay_service.dart';
 
 class PackageCategoryController extends GetxController {
@@ -74,7 +74,7 @@ class PackageCategoryController extends GetxController {
   }
 
   Future<void> _loadUserPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
     userId = prefs.getString(AppConstants.prefUserId) ?? '';
     contactNumber = prefs.getString(AppConstants.prefUserMobileNumber) ?? '';
     email = prefs.getString(AppConstants.prefUserEmail) ?? '';
@@ -85,7 +85,7 @@ class PackageCategoryController extends GetxController {
     isLoading.value = true;
     errorMsg.value = '';
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -138,7 +138,7 @@ class PackageCategoryController extends GetxController {
 
     isLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final request = GetOrderRequest(
@@ -239,7 +239,7 @@ class PackageCategoryController extends GetxController {
 
     isLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(

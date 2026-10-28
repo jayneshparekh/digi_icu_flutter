@@ -16,32 +16,34 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final isPatientLogin =
-          controller.loggedInUserType.value.toLowerCase() == 'patient';
-
-      return PopScope(
-        canPop: !isPatientLogin,
-        onPopInvokedWithResult: (didPop, result) {
-          if (didPop) return;
-          controller.handleBack();
-        },
-        child: Scaffold(
-          backgroundColor: AppColors.lightGray,
-          drawer: isPatientLogin
-              ? PatientSideMenu(
-                  onLogout: controller.logout,
-                  onAppointmentTap: controller.handleDoctorAppointmentTap,
-                  onChestPainTap: controller.handleChestPainTap,
-                  onQuickFormTap: controller.handleOpenQuickForm,
-                  onMyGraphsTap: () =>
-                      controller.handleOpenServingPatientTab('Graph'),
-                  onMyFormsTap: () =>
-                      controller.handleOpenServingPatientTab('Form'),
-                  onMyPackageTap: () =>
-                      controller.handleCategoryTap('my_package'),
-                )
-              : null,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        controller.handleBack();
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.lightGray,
+        drawerEnableOpenDragGesture: false,
+        drawer: Obx(() {
+          final isPatientLogin =
+              controller.loggedInUserType.value.toLowerCase() == 'patient';
+          if (!isPatientLogin) {
+            return const SizedBox.shrink();
+          }
+          return PatientSideMenu(
+            onLogout: controller.logout,
+            onAppointmentTap: controller.handleDoctorAppointmentTap,
+            onChestPainTap: controller.handleChestPainTap,
+            onQuickFormTap: controller.handleOpenQuickForm,
+            onMyGraphsTap: () =>
+                controller.handleOpenServingPatientTab('Graph'),
+            onMyFormsTap: () =>
+                controller.handleOpenServingPatientTab('Form'),
+            onMyPackageTap: () =>
+                controller.handleCategoryTap('my_package'),
+          );
+        }),
           appBar: AppBar(
             backgroundColor: AppColors.teal, // Teal background matching toolbar
             elevation: 0,
@@ -53,21 +55,26 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
               child: Row(
                 children: [
                   // Back Button or Drawer Hamburger Icon
-                  if (isPatientLogin)
-                    Builder(
-                      builder: (scaffoldCtx) => IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        icon: const Icon(
-                          Icons.menu,
-                          color: AppColors.white,
-                          size: 26,
+                  Obx(() {
+                    final isPatientLogin =
+                        controller.loggedInUserType.value.toLowerCase() ==
+                        'patient';
+                    if (isPatientLogin) {
+                      return Builder(
+                        builder: (scaffoldCtx) => IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          icon: const Icon(
+                            Icons.menu,
+                            color: AppColors.white,
+                            size: 26,
+                          ),
+                          onPressed: () =>
+                              Scaffold.of(scaffoldCtx).openDrawer(),
                         ),
-                        onPressed: () => Scaffold.of(scaffoldCtx).openDrawer(),
-                      ),
-                    )
-                  else
-                    IconButton(
+                      );
+                    }
+                    return IconButton(
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                       icon: SvgPicture.asset(
@@ -80,7 +87,8 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                         height: 26,
                       ),
                       onPressed: controller.handleBack,
-                    ),
+                    );
+                  }),
                   const SizedBox(width: 8),
                   // Patient Name & Doctor Details Header
                   Expanded(
@@ -104,19 +112,24 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
                             overflow: TextOverflow.ellipsis,
                           );
                         }),
-                        if (!isPatientLogin)
-                          Obx(() {
-                            return Text(
-                              'Dr. ${controller.doctorName.value}',
-                              style: TextStyle(
-                                color: AppColors.white.withValues(alpha: 0.85),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            );
-                          }),
+                        Obx(() {
+                          final isPatientLogin =
+                              controller.loggedInUserType.value.toLowerCase() ==
+                              'patient';
+                          if (isPatientLogin) {
+                            return const SizedBox.shrink();
+                          }
+                          return Text(
+                            'Dr. ${controller.doctorName.value}',
+                            style: TextStyle(
+                              color: AppColors.white.withValues(alpha: 0.85),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          );
+                        }),
                       ],
                     ),
                   ),
@@ -660,12 +673,11 @@ class PatientDashboardScreen extends GetView<PatientDashboardController> {
       ),
       ExpandableFabMenu(controller: controller),
     ],
-  ),
-  floatingActionButton: null,
-  floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-),
-      );
-    });
+        ),
+        floatingActionButton: null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      ),
+    );
   }
 
   Widget _buildBadgeButton(String text, Color color) {

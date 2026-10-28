@@ -10,10 +10,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants/app_constants.dart';
 import '../models/response/doctors/check_doctor_home_response.dart';
 import '../services/api/api_client.dart';
+import '../services/storage_service.dart';
 import '../views/widgets/app_dialog.dart';
 
 class DoctorDashboardController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
+  late final SharedPreferences _prefs;
 
   final RxString doctorName = ''.obs;
   final RxString userType = ''.obs;
@@ -44,6 +46,9 @@ class DoctorDashboardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _prefs = Get.isRegistered<SharedPreferences>()
+        ? Get.find<SharedPreferences>()
+        : Get.find<StorageService>().prefs;
     // Ensure overlays are active and styled when Doctor Dashboard is initialized
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,
@@ -66,7 +71,7 @@ class DoctorDashboardController extends GetxController {
   }
 
   Future<void> _loadDoctorName() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = _prefs;
     doctorName.value = prefs.getString(AppConstants.prefUserName) ?? 'Doctor';
     userType.value = prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
     accountStatus.value = prefs.getString('account_status') ?? '';
@@ -77,7 +82,7 @@ class DoctorDashboardController extends GetxController {
   /// Calls check_home API to retrieve account verification status, institute info, etc.
   Future<void> checkDoctorHome() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
@@ -131,7 +136,7 @@ class DoctorDashboardController extends GetxController {
   /// Fetches new admit requests badge status
   Future<void> fetchAdmitRequestsBadge() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final currentInstId = instituteId.value.isNotEmpty
@@ -187,7 +192,7 @@ class DoctorDashboardController extends GetxController {
     }
 
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final currentInstId = instituteId.value.isNotEmpty
           ? instituteId.value
@@ -231,7 +236,7 @@ class DoctorDashboardController extends GetxController {
       return currentInstId;
     }
 
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = _prefs;
     currentInstId = (prefs.getString('institute_id') ?? '').trim();
     if (currentInstId.isNotEmpty && currentInstId != 'null' && currentInstId != '0') {
       instituteId.value = currentInstId;
@@ -244,7 +249,7 @@ class DoctorDashboardController extends GetxController {
   /// Fetches new discharge requests badge status
   Future<void> fetchDischargeRequestsBadge() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final currentInstId = await _resolveInstituteId();
 
@@ -291,7 +296,7 @@ class DoctorDashboardController extends GetxController {
     final currentInstId = await _resolveInstituteId();
 
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       if (currentInstId.isNotEmpty) {
@@ -335,7 +340,7 @@ class DoctorDashboardController extends GetxController {
   /// Checks if orientation is already set. If yes, applies it and returns true.
   /// Otherwise, sets default based on device type and returns false (requires dialog).
   Future<bool> checkAndApplyOrientation(double shortestSide) async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = _prefs;
     final savedOrientation = prefs.getString(AppConstants.prefUserOrientation);
 
     if (savedOrientation != null) {
@@ -352,7 +357,7 @@ class DoctorDashboardController extends GetxController {
   /// Saves the selected configuration (if default is checked) and applies the orientations.
   Future<void> saveAndApplySelectedOrientation() async {
     if (setAsDefault.value) {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       await prefs.setString(
         AppConstants.prefUserOrientation,
         selectedOrientation.value,
@@ -367,7 +372,7 @@ class DoctorDashboardController extends GetxController {
     } else {
       selectedOrientation.value = 'portrait';
     }
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = _prefs;
     await prefs.setString(
       AppConstants.prefUserOrientation,
       selectedOrientation.value,
@@ -390,7 +395,7 @@ class DoctorDashboardController extends GetxController {
   }
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = _prefs;
     // Revert orientation settings to system settings on logout
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,

@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart' as dio;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
 import 'package:digi_icu_flutter/core/constants/app_constants.dart';
 import 'package:digi_icu_flutter/models/response/patients/clinical_form_details_model.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
+import 'package:digi_icu_flutter/services/storage_service.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 
 class ServingPatientClinicalFormController extends GetxController {
@@ -173,7 +173,7 @@ class ServingPatientClinicalFormController extends GetxController {
   Future<void> fetchClinicalFormData() async {
     try {
       isLoading.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await _apiClient.post(
@@ -467,7 +467,7 @@ class ServingPatientClinicalFormController extends GetxController {
 
     try {
       isLoading.value = true;
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final docId = doctorId.isNotEmpty
           ? doctorId

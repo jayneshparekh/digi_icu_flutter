@@ -2265,6 +2265,10 @@ class ServingPatientMedicalFormView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                               child: Image.network(
                                 url,
+                                width: 80,
+                                height: 80,
+                                cacheWidth: 240,
+                                cacheHeight: 240,
                                 fit: BoxFit.cover,
                                 errorBuilder: (_, _, _) => const Center(
                                   child: Icon(

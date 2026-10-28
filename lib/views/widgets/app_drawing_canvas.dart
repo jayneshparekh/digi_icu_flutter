@@ -69,6 +69,7 @@ class AppDrawingCanvas extends StatefulWidget {
 class AppDrawingCanvasState extends State<AppDrawingCanvas> {
   final List<DrawingPath> _paths = [];
   final List<DrawingPath> _undoStack = [];
+  final _DrawingChangeNotifier _drawingNotifier = _DrawingChangeNotifier();
 
   DrawingPath? _currentPath;
   late Color _selectedColor;
@@ -100,33 +101,39 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
         ];
   }
 
+  @override
+  void dispose() {
+    _drawingNotifier.dispose();
+    super.dispose();
+  }
+
   void _onPanStart(DragStartDetails details, RenderBox box) {
     final localPosition = box.globalToLocal(details.globalPosition);
-    setState(() {
-      _currentPath = DrawingPath(
-        points: [localPosition],
-        color: _isEraserMode ? widget.backgroundColor : _selectedColor,
-        strokeWidth: _selectedStrokeWidth,
-        isEraser: _isEraserMode,
-      );
-      _undoStack.clear();
-    });
+    _currentPath = DrawingPath(
+      points: [localPosition],
+      color: _isEraserMode ? widget.backgroundColor : _selectedColor,
+      strokeWidth: _selectedStrokeWidth,
+      isEraser: _isEraserMode,
+    );
+    _undoStack.clear();
+    _drawingNotifier.notify();
   }
 
   void _onPanUpdate(DragUpdateDetails details, RenderBox box) {
     final localPosition = box.globalToLocal(details.globalPosition);
     if (_currentPath != null) {
-      setState(() {
-        _currentPath!.points.add(localPosition);
-      });
+      _currentPath!.points.add(localPosition);
+      _drawingNotifier.notify();
     }
   }
 
   void _onPanEnd(DragEndDetails details) {
     if (_currentPath != null) {
+      _paths.add(_currentPath!);
+      _currentPath = null;
+      _drawingNotifier.notify();
       setState(() {
-        _paths.add(_currentPath!);
-        _currentPath = null;
+        // Refresh toolbar button states (undo/redo availability)
       });
     }
   }
@@ -136,6 +143,7 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
       setState(() {
         _undoStack.add(_paths.removeLast());
       });
+      _drawingNotifier.notify();
     }
   }
 
@@ -144,6 +152,7 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
       setState(() {
         _paths.add(_undoStack.removeLast());
       });
+      _drawingNotifier.notify();
     }
   }
 
@@ -153,6 +162,7 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
         _undoStack.addAll(_paths.reversed);
         _paths.clear();
       });
+      _drawingNotifier.notify();
     }
   }
 
@@ -460,12 +470,15 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
                 _onPanUpdate(details, box);
               },
               onPanEnd: _onPanEnd,
-              child: CustomPaint(
-                size: Size(constraints.maxWidth, constraints.maxHeight),
-                painter: _DrawingPainter(
-                  paths: _paths,
-                  currentPath: _currentPath,
-                  backgroundColor: widget.backgroundColor,
+              child: RepaintBoundary(
+                child: CustomPaint(
+                  size: Size(constraints.maxWidth, constraints.maxHeight),
+                  painter: _DrawingPainter(
+                    paths: _paths,
+                    getCurrentPath: () => _currentPath,
+                    backgroundColor: widget.backgroundColor,
+                    repaint: _drawingNotifier,
+                  ),
                 ),
               ),
             );
@@ -478,13 +491,14 @@ class AppDrawingCanvasState extends State<AppDrawingCanvas> {
 
 class _DrawingPainter extends CustomPainter {
   final List<DrawingPath> paths;
-  final DrawingPath? currentPath;
+  final DrawingPath? Function() getCurrentPath;
   final Color backgroundColor;
 
   _DrawingPainter({
     required this.paths,
-    required this.currentPath,
+    required this.getCurrentPath,
     required this.backgroundColor,
+    required super.repaint,
   });
 
   @override
@@ -495,8 +509,9 @@ class _DrawingPainter extends CustomPainter {
       _drawPathOnCanvas(canvas, pathData);
     }
 
-    if (currentPath != null) {
-      _drawPathOnCanvas(canvas, currentPath!);
+    final current = getCurrentPath();
+    if (current != null) {
+      _drawPathOnCanvas(canvas, current);
     }
 
     canvas.restore();
@@ -506,6 +521,10 @@ class _DrawingPainter extends CustomPainter {
   bool shouldRepaint(covariant _DrawingPainter oldDelegate) {
     return true;
   }
+}
+
+class _DrawingChangeNotifier extends ChangeNotifier {
+  void notify() => notifyListeners();
 }
 
 void _drawPathOnCanvas(Canvas canvas, DrawingPath pathData) {

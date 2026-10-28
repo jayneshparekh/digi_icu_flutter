@@ -3,7 +3,6 @@ import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants/app_constants.dart';
 import '../models/request/emergency/get_remain_credit_list_req.dart';
 import '../models/request/emergency/get_user_package_detail_req.dart';
@@ -18,6 +17,7 @@ import '../models/response/patients/installment_details_res.dart';
 import '../models/response/patients/slider_response.dart';
 import '../models/response/payment/order_response.dart';
 import '../services/api/api_client.dart';
+import '../services/storage_service.dart';
 import '../services/razorpay_service.dart';
 import '../../views/widgets/installment_payment_dialog.dart';
 import '../views/widgets/app_snackbars.dart';
@@ -91,7 +91,7 @@ class PatientDashboardController extends GetxController {
   }
 
   Future<void> _initData() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
     final args = Get.arguments as Map<String, dynamic>?;
 
     final passedPatientId =
@@ -161,7 +161,7 @@ class PatientDashboardController extends GetxController {
   Future<void> fetchSliders() async {
     isSlidersLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -189,7 +189,7 @@ class PatientDashboardController extends GetxController {
   Future<void> checkHome() async {
     if (patientId.isEmpty) return;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -478,7 +478,7 @@ class PatientDashboardController extends GetxController {
 
   Future<void> handleEmergencyDoctorTap() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final currentUserId = prefs.getString(AppConstants.prefUserId) ?? '';
       final currentUserType = prefs.getString(AppConstants.prefLoginType) ?? type;
@@ -642,7 +642,7 @@ class PatientDashboardController extends GetxController {
   }) async {
     isEmergencyLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final userEmail = prefs.getString(AppConstants.prefUserEmail) ?? '';
       final userMobile = prefs.getString(AppConstants.prefUserMobileNumber) ?? '';
 
@@ -714,7 +714,7 @@ class PatientDashboardController extends GetxController {
   }) async {
     isEmergencyLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final currentUserId = prefs.getString(AppConstants.prefUserId) ?? '';
       final targetUserId = patientId.isNotEmpty ? patientId : currentUserId;
 
@@ -753,7 +753,7 @@ class PatientDashboardController extends GetxController {
   Future<void> _bookEmergencyAppointmentNow() async {
     isEmergencyLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final currentUserId = prefs.getString(AppConstants.prefUserId) ?? '';
       final currentUserType = prefs.getString(AppConstants.prefLoginType) ?? type;
@@ -865,7 +865,7 @@ class PatientDashboardController extends GetxController {
   }
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
     await prefs.clear();
     Get.offAllNamed('/login');
   }

@@ -47,6 +47,8 @@ class DashboardCard extends StatelessWidget {
                       child: iconPath.startsWith('http')
                           ? Image.network(
                               iconPath,
+                              cacheWidth: 108,
+                              cacheHeight: 108,
                               fit: BoxFit.contain,
                               errorBuilder: (context, error, stackTrace) => const Icon(
                                 Icons.broken_image,

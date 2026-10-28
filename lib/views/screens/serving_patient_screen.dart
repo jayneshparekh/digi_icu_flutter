@@ -35,6 +35,10 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
               child: qrCodeUrl.startsWith('http')
                   ? Image.network(
                       qrCodeUrl,
+                      width: 250,
+                      height: 250,
+                      cacheWidth: 500,
+                      cacheHeight: 500,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) =>
                           const Center(
@@ -247,6 +251,10 @@ class ServingPatientScreen extends GetView<ServingPatientController> {
                                   child: controller.qrCode.startsWith('http')
                                       ? Image.network(
                                           controller.qrCode,
+                                          width: 38,
+                                          height: 38,
+                                          cacheWidth: 96,
+                                          cacheHeight: 96,
                                           fit: BoxFit.cover,
                                           errorBuilder:
                                               (context, error, stackTrace) =>

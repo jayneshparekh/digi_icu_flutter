@@ -5,9 +5,9 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants/app_constants.dart';
 import '../services/api/api_client.dart';
+import '../services/storage_service.dart';
 
 class PrimaryCareController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -68,7 +68,7 @@ class PrimaryCareController extends GetxController {
   }
 
   Future<void> _loadLoggedInName() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
     loggedInUserName.value = prefs.getString(AppConstants.prefUserName) ?? '';
   }
 
@@ -144,7 +144,7 @@ class PrimaryCareController extends GetxController {
 
     isLoading.value = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final Map<String, dynamic> formMap = {

@@ -3,13 +3,13 @@ import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/constants/app_constants.dart';
 import '../models/response/doctors/statewise_patient_count_response.dart';
 import '../models/response/doctors/statuswise_patients_response.dart';
 import '../services/api/api_client.dart';
+import '../services/storage_service.dart';
 import '../views/widgets/choose_form_option_dialog.dart';
 import '../views/widgets/confirm_patient_dialog.dart';
 
@@ -69,14 +69,14 @@ class PatientListController extends GetxController {
   }
 
   Future<void> _loadDoctorName() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
     doctorName.value = prefs.getString(AppConstants.prefUserName) ?? 'Doctor';
   }
 
   /// Fetches status counts from api/v2/Doctor/get_no_of_patients
   Future<void> fetchPatientCounts() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
@@ -109,7 +109,7 @@ class PatientListController extends GetxController {
   /// Fetches default form types for doctor from api/v2/Doctor/get_default
   Future<void> fetchDefaultFormTypes() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
@@ -152,7 +152,7 @@ class PatientListController extends GetxController {
     }
 
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
@@ -245,7 +245,7 @@ class PatientListController extends GetxController {
     String type,
   ) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = StorageService.to.prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
 
       final response = await apiClient.post(
@@ -305,7 +305,7 @@ class PatientListController extends GetxController {
   }
 
   void _navigateToServingPatient(PatientAppointmentData patient) async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
     final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
 
     final fullName =
@@ -345,7 +345,7 @@ class PatientListController extends GetxController {
 
   /// Handles "Fill Clinical Form" action for In Process patients with pending clinical form
   Future<void> onFillClinicalForm(PatientAppointmentData patient) async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
     final doctorId = prefs.getString(AppConstants.prefUserId) ?? '';
     final doctorNameVal = prefs.getString(AppConstants.prefUserName) ?? 'Doctor';
 

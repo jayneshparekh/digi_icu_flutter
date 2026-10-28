@@ -1,9 +1,9 @@
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/constants/app_constants.dart';
+import '../services/storage_service.dart';
 
 class SplashController extends GetxController {
   @override
@@ -24,7 +24,7 @@ class SplashController extends GetxController {
   }
 
   Future<void> _checkSessionAndNavigate() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = StorageService.to.prefs;
     final isLoggedIn = prefs.getBool(AppConstants.prefIsLogin) ?? false;
     final loginType = prefs.getString(AppConstants.prefLoginType) ?? '';
 
