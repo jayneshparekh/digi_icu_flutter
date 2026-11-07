@@ -17,6 +17,7 @@ import 'package:digi_icu_flutter/models/request/doctor/add_doctor_visit_notes_re
 import 'package:digi_icu_flutter/models/request/doctor/hold_quick_appointment_req.dart';
 import 'package:digi_icu_flutter/models/request/user/change_appointment_status_req.dart';
 import 'package:digi_icu_flutter/models/request/user/admit_patient_request_model.dart';
+import 'package:digi_icu_flutter/services/ipd_admission_lookup_service.dart';
 import 'package:digi_icu_flutter/models/request/lab/common_lab_req.dart';
 import 'package:digi_icu_flutter/models/response/patients/patient_detail_response.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
@@ -42,8 +43,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/storage_service.dart';
 
-class ServingPatientController extends GetxController implements IPDAdmitFlowDelegate {
+class ServingPatientController extends GetxController
+    implements IPDAdmitFlowDelegate {
   final ApiClient apiClient = Get.find<ApiClient>();
+  final IpdAdmissionLookupService _admissionLookupService =
+      IpdAdmissionLookupService();
 
   // Navigation / screen arguments
   @override
@@ -256,9 +260,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
   @override
   void onInit() {
     super.onInit();
-    _prefs = Get.isRegistered<SharedPreferences>()
-        ? Get.find<SharedPreferences>()
-        : Get.find<StorageService>().prefs;
+    _prefs = StorageService.to.prefs;
     final args = Get.arguments as Map<String, dynamic>? ?? {};
     patientId = args['patientId']?.toString() ?? '';
     fullName = args['fullName']?.toString() ?? '';
@@ -811,6 +813,56 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
     }
   }
 
+  @override
+  Future<void> fetchAdmitWards(String placeKey) async {
+    if (placeKey.isEmpty) {
+      admitWardOptions.clear();
+      admitBedOptions.clear();
+      return;
+    }
+
+    try {
+      final targetInstituteId = selectedInstituteId.value.isNotEmpty
+          ? selectedInstituteId.value
+          : instituteId;
+      final wards = await _admissionLookupService.fetchWards(
+        place: placeKey,
+        instituteId: targetInstituteId,
+      );
+      admitWardOptions.assignAll(wards);
+      selectedAdmitWard.value = wards.isNotEmpty ? wards.first : '';
+      await fetchAdmitBeds(placeKey, selectedAdmitWard.value);
+    } catch (e) {
+      debugPrint('Error fetching admission wards: $e');
+      admitWardOptions.clear();
+      admitBedOptions.clear();
+      selectedAdmitWard.value = '';
+    }
+  }
+
+  @override
+  Future<void> fetchAdmitBeds(String placeKey, String wardName) async {
+    if (placeKey.isEmpty) {
+      admitBedOptions.clear();
+      return;
+    }
+
+    try {
+      final targetInstituteId = selectedInstituteId.value.isNotEmpty
+          ? selectedInstituteId.value
+          : instituteId;
+      final beds = await _admissionLookupService.fetchBeds(
+        place: placeKey,
+        ward: wardName,
+        instituteId: targetInstituteId,
+      );
+      admitBedOptions.assignAll(beds);
+    } catch (e) {
+      debugPrint('Error fetching admission beds: $e');
+      admitBedOptions.clear();
+    }
+  }
+
   /// Validates IPD admit fields and displays payment-aware confirmation dialog.
   @override
   void validateAndConfirmAdmit() {
@@ -1320,7 +1372,8 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
         }
         if (rawData is Map<String, dynamic>) {
           if (rawData['status'] == 'success') {
-            final msg = rawData['msg']?.toString() ?? 'ds_pdf_uploaded_success'.tr;
+            final msg =
+                rawData['msg']?.toString() ?? 'ds_pdf_uploaded_success'.tr;
             // Pop ServingPatientScreen — return true so openReportFolder reloads
             Get.back(result: true);
             // Wait one frame to let navigation settle, then show snackbar
@@ -2114,9 +2167,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
         maxLines: 3,
         decoration: InputDecoration(
           hintText: 'enter_referral_note'.tr,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 12,
             vertical: 10,
@@ -2131,10 +2182,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
           Get.back();
           _addReferralNotes(note);
         } else {
-          AppSnackbars.showError(
-            'validation_error'.tr,
-            'please_enter_note'.tr,
-          );
+          AppSnackbars.showError('validation_error'.tr, 'please_enter_note'.tr);
         }
       },
       onCancel: () => Get.back(),
@@ -2151,9 +2199,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
         maxLines: 3,
         decoration: InputDecoration(
           hintText: 'enter_home_visit_note'.tr,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 12,
             vertical: 10,
@@ -2168,10 +2214,7 @@ class ServingPatientController extends GetxController implements IPDAdmitFlowDel
           Get.back();
           _addDoctorVisitNotes(note);
         } else {
-          AppSnackbars.showError(
-            'validation_error'.tr,
-            'please_enter_note'.tr,
-          );
+          AppSnackbars.showError('validation_error'.tr, 'please_enter_note'.tr);
         }
       },
       onCancel: () => Get.back(),

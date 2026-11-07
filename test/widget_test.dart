@@ -6,13 +6,31 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:digi_icu_flutter/main.dart';
+import 'package:digi_icu_flutter/services/storage_service.dart';
 
-void main() {
+void main() async {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() async {
+    Get.testMode = true;
+    Get.reset();
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService().init();
+    Get.put<StorageService>(storage, permanent: true);
+  });
+
+  tearDown(() async {
+    Get.reset();
+  });
+
   testWidgets('App smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
+    await tester.pump(const Duration(seconds: 3));
     expect(find.byType(MyApp), findsOneWidget);
   });
 }

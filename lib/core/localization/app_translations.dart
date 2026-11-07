@@ -17,6 +17,16 @@ class AppTranslations extends Translations {
       'yes': 'Yes',
       'no': 'No',
       'form_submitted': 'Form Submitted',
+      'opening_form': 'Opening @type Form',
+      'viewing_record': 'Viewing Record',
+      'form_id_label': 'Form ID: ',
+      'request_timeout': 'The request timed out. Please try again.',
+      'connection_error': 'Unable to connect. Check your internet connection.',
+      'server_unavailable':
+          'The server is unavailable. Please try again later.',
+      'request_failed': 'The request could not be completed.',
+      'request_cancelled': 'The request was cancelled.',
+      'unexpected_error': 'Something went wrong. Please try again.',
       'error_submitting_form': 'Error submitting form',
       'enter_report_details': 'Enter report details...',
       'attach_document_photo': 'Attach Document / Photo:',
@@ -123,8 +133,10 @@ class AppTranslations extends Translations {
       'admit_details_label': 'Admit Details:',
       'search_ipd_hint': 'Search patients by name or MHC ID...',
       'no_ipd_patients_found': 'There is no patient in @status.',
-      'failed_to_load_ipd_patients': 'Failed to load patient list. Please try again.',
-      'discharge_draft_info': 'Discharge summary draft has been saved on @date by @by',
+      'failed_to_load_ipd_patients':
+          'Failed to load patient list. Please try again.',
+      'discharge_draft_info':
+          'Discharge summary draft has been saved on @date by @by',
       'admit_description_format': 'Patient admitted on @date in @institute.',
       'coming_soon': 'Coming soon',
 
@@ -186,8 +198,7 @@ class AppTranslations extends Translations {
       'ds_surgical_procedures_label': 'Surgical Procedures :',
       'ds_yes_opt': 'Yes',
       'ds_enter_surgeon_name_hint': 'Enter Surgeon Name',
-      'ds_enter_surgical_procedure_hint':
-          'Enter Surgical Procedure Performed',
+      'ds_enter_surgical_procedure_hint': 'Enter Surgical Procedure Performed',
       'ds_discharge_type_label': 'Discharge Type :',
       'ds_dt_regular': 'Regular',
       'ds_dt_on_request': 'On Request',
@@ -330,8 +341,7 @@ class AppTranslations extends Translations {
       'proceed_and_pay': 'PROCEED AND PAY',
       'ambulance_request_submitted':
           'Ambulance service request submitted successfully',
-      'please_enter_problem':
-          'Please enter why you want ambulance service',
+      'please_enter_problem': 'Please enter why you want ambulance service',
       'please_enter_valid_name': 'Please enter patient name',
       'please_enter_valid_mobile':
           'Please enter a valid 10-digit mobile number',
@@ -339,8 +349,6 @@ class AppTranslations extends Translations {
       'please_enter_pincode': 'Please enter pin code',
       'please_select_time': 'Please select time',
       'please_select_date_time': 'Please select both date and time',
-
-
 
       // Patient Sign Up
       'add_patient': 'Add Patient',
@@ -1191,7 +1199,8 @@ class AppTranslations extends Translations {
       'change_place_and_bed_title': 'Change Place & Bed',
       'search_patients_hint': 'Search patients by name or MHC ID...',
       'no_admit_requests_found': 'No admit requests found.',
-      'failed_to_load_admit_requests': 'Failed to load admit requests. Please try again.',
+      'failed_to_load_admit_requests':
+          'Failed to load admit requests. Please try again.',
       'admit_patient_btn': 'Admit Patient',
       'bed_and_place_changed_success': 'Bed and Place changed successfully!',
       'please_select_place': 'Please select a Place',
@@ -1199,7 +1208,8 @@ class AppTranslations extends Translations {
       'please_select_bed': 'Please select a Bed number',
       'select_place_hint': '-- Select Place --',
       'select_name_hint': '-- Select Name --',
-      'select_place_and_section_to_view_beds': 'Select place and section to view empty beds.',
+      'select_place_and_section_to_view_beds':
+          'Select place and section to view empty beds.',
       'no_empty_beds_available': 'No empty beds available.',
       'current_label': 'Current:',
       'place_label_text': 'Place:',
@@ -1221,13 +1231,15 @@ class AppTranslations extends Translations {
       'enter_due_pharmacy_amount': 'Enter Pharmacy Due Amount',
       'enter_due_lab_amount': 'Enter Lab Due Amount',
       'enter_due_other_amount': 'Enter Other Due Amount',
-      'no_discharge_summary_uploaded': 'Discharge summary has not been uploaded yet.',
+      'no_discharge_summary_uploaded':
+          'Discharge summary has not been uploaded yet.',
       'upload_summary': 'Upload Summary',
       'discharge_btn': 'Discharge',
       'discharge_request_completed': 'Discharge request completed successfully',
       'admit_id_empty_warning': 'Admit ID is missing for this record',
       'no_discharge_requests_found': 'No discharge requests found.',
-      'failed_to_load_discharge_requests': 'Failed to load discharge requests. Please try again.',
+      'failed_to_load_discharge_requests':
+          'Failed to load discharge requests. Please try again.',
       'clearance_status': 'Bill Clearance & Discharge',
       'view_summary': 'View Summary',
 
@@ -1310,14 +1322,16 @@ class AppTranslations extends Translations {
       'remain_package_deduct': '1 package will be deducted from your account',
       'wallet': 'Wallet',
       'payment_txt': 'Payment',
-      'wallet_credit_deduct': '₹@amount will be deducted from your wallet credit',
+      'wallet_credit_deduct':
+          '₹@amount will be deducted from your wallet credit',
       'package_online': 'Package / Online',
       'my_credit': 'My Credit: ',
       'package_price': 'Package Price',
       'pay': 'Pay',
       'doctor_not_available_now': 'Doctor is not available Now',
       'emergency_consultation_fee': 'Emergency Consultation Fee',
-      'insufficient_wallet_credit': 'Insufficient wallet credit. Please recharge your wallet.',
+      'insufficient_wallet_credit':
+          'Insufficient wallet credit. Please recharge your wallet.',
       'no_data_found': 'No Data Found',
     },
   };

@@ -403,33 +403,8 @@ class ClinicalFormController extends GetxController {
     return true;
   }
 
-  void submit() {
-    mClinicalFormData.systolic1 = systolicController.text.trim();
-    mClinicalFormData.diastolic1 = diastolicController.text.trim();
-    mClinicalFormData.heartRate1 = pulseRateController.text.trim();
-    mClinicalFormData.height = heightController.text.trim();
-    mClinicalFormData.weight = weightController.text.trim();
-    mClinicalFormData.spo2 = spo2Choice.value;
-    mClinicalFormData.spo2Details = spo2Controller.text.trim();
-    mClinicalFormData.bpApparatus = haveBPApparatus.value ? 'Yes' : 'No';
-
-    if (mClinicalFormData.height.isNotEmpty &&
-        mClinicalFormData.weight.isNotEmpty) {
-      final weightVal = double.tryParse(mClinicalFormData.weight) ?? 0.0;
-      final heightVal =
-          (double.tryParse(mClinicalFormData.height) ?? 0.0) / 100;
-      if (heightVal > 0) {
-        final bmi = weightVal / (heightVal * heightVal);
-        mClinicalFormData.bmi = bmi.toStringAsFixed(1);
-      }
-    } else {
-      mClinicalFormData.bmi = '';
-    }
-
-    if (checkValidation()) {
-      Get.toNamed('/clinical-form-sec2');
-    }
-  }
+  /// Submits the complete clinical form after validating every section.
+  void submit() => submitAll();
 
   bool checkValidationSec2() {
     if (checkSugarVal.value) {

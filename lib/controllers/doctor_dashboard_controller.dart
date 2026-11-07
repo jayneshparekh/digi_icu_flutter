@@ -46,9 +46,7 @@ class DoctorDashboardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _prefs = Get.isRegistered<SharedPreferences>()
-        ? Get.find<SharedPreferences>()
-        : Get.find<StorageService>().prefs;
+    _prefs = StorageService.to.prefs;
     // Ensure overlays are active and styled when Doctor Dashboard is initialized
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,

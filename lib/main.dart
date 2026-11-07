@@ -34,6 +34,7 @@ import 'views/screens/clinical_form_screen.dart';
 import 'views/screens/medical_form_screen.dart';
 import 'controllers/medical_form_controller.dart';
 import 'controllers/serving_patient_controller.dart';
+import 'controllers/serving_patient_form_tab_controller.dart';
 import 'views/screens/serving_patient_screen.dart';
 import 'views/screens/diagnosis_screen.dart';
 import 'controllers/diagnosis_controller.dart';
@@ -55,7 +56,6 @@ import 'views/screens/discharge_request_screen.dart';
 import 'controllers/discharge_request_controller.dart';
 import 'views/screens/leader_dashboard_screen.dart';
 import 'controllers/leader_dashboard_controller.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'services/storage_service.dart';
 
 void main() async {
@@ -64,7 +64,6 @@ void main() async {
   // Initialize StorageService singleton once at startup
   final storageService = await StorageService().init();
   Get.put<StorageService>(storageService, permanent: true);
-  Get.put<SharedPreferences>(storageService.prefs, permanent: true);
 
   // Force standard overlays to prevent immersive/full screen behavior
   SystemChrome.setEnabledSystemUIMode(
@@ -178,6 +177,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           page: () => const ServingPatientScreen(),
           binding: BindingsBuilder(() {
             Get.lazyPut(() => ServingPatientController());
+            Get.lazyPut(() => ServingPatientFormTabController());
           }),
         ),
         GetPage(
@@ -317,4 +317,3 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     );
   }
 }
-

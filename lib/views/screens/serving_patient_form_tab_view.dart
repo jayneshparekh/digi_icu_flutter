@@ -1,19 +1,16 @@
 import 'package:digi_icu_flutter/controllers/serving_patient_controller.dart';
-import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
+import 'package:digi_icu_flutter/controllers/serving_patient_form_tab_controller.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
-import 'package:digi_icu_flutter/models/request/doctor/quick_form_list_req.dart';
 import 'package:digi_icu_flutter/models/response/doctor/form_list_response.dart';
-import 'package:digi_icu_flutter/services/api/api_client.dart';
 import 'package:digi_icu_flutter/views/screens/serving_patient_quick_form_view.dart';
-import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart' hide Response;
+import 'package:get/get.dart';
 
 import 'package:digi_icu_flutter/views/screens/serving_patient_medical_form_view.dart';
 import 'package:digi_icu_flutter/views/screens/serving_patient_clinical_form_screen.dart';
 import 'package:digi_icu_flutter/views/widgets/prescription_row_tile.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
+import 'package:digi_icu_flutter/views/widgets/app_loading_overlay.dart';
 
 class ServingPatientFormTabView extends StatefulWidget {
   const ServingPatientFormTabView({super.key});
@@ -24,10 +21,11 @@ class ServingPatientFormTabView extends StatefulWidget {
 }
 
 class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
-  final ApiClient _apiClient = ApiClient();
+  final ServingPatientFormTabController _formController =
+      Get.find<ServingPatientFormTabController>();
   String selectedHeaderTab = 'Clinical';
   bool isLoading = false;
-  List<Map<String, dynamic>> formList = [];
+  List<FormListData> formList = [];
 
   @override
   void initState() {
@@ -47,158 +45,38 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
   }
 
   Future<void> fetchQuickFormList() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      final patientId = _getPatientId();
-      final Response response = await _apiClient.post(
-        ApiEndpoints.quickFormsList,
-        data: QuickFormListReq(patientId: patientId).toJson(),
-      );
-      if (response.statusCode == 200 && response.data != null) {
-        final formResponse = FormListResponse.fromJson(
-          Map<String, dynamic>.from(response.data as Map),
-        );
-        if (formResponse.status == 'success') {
-          setState(() {
-            formList = formResponse.data
-                .map(
-                  (item) => {
-                    'id': item.id,
-                    'patient_note': item.patientNote,
-                    'created': item.created,
-                    'appointment_id': item.appointmentId,
-                    'first_name': item.firstName,
-                    'last_name': item.lastName,
-                  },
-                )
-                .toList();
-          });
-        } else {
-          setState(() {
-            formList = [];
-          });
-        }
-      } else {
-        setState(() {
-          formList = [];
-        });
-      }
-    } catch (_) {
-      setState(() {
-        formList = [];
-      });
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    await _loadFormList('Quick');
   }
 
   Future<void> fetchMedicalFormList() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      final patientId = _getPatientId();
-      final Response response = await _apiClient.post(
-        ApiEndpoints.medicalFormsList,
-        data: QuickFormListReq(patientId: patientId).toJson(),
-      );
-      if (response.statusCode == 200 && response.data != null) {
-        final formResponse = FormListResponse.fromJson(
-          Map<String, dynamic>.from(response.data as Map),
-        );
-        if (formResponse.status == 'success') {
-          setState(() {
-            formList = formResponse.data.reversed
-                .map(
-                  (item) => {
-                    'id': item.id,
-                    'patient_note': item.patientNote,
-                    'created': item.created,
-                    'appointment_id': item.appointmentId,
-                    'first_name': item.firstName,
-                    'last_name': item.lastName,
-                  },
-                )
-                .toList();
-          });
-        } else {
-          setState(() {
-            formList = [];
-          });
-        }
-      } else {
-        setState(() {
-          formList = [];
-        });
-      }
-    } catch (_) {
-      setState(() {
-        formList = [];
-      });
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    await _loadFormList('Medical');
   }
 
   Future<void> fetchClinicalFormList() async {
+    await _loadFormList('Clinical');
+  }
+
+  Future<void> _loadFormList(String tab) async {
     setState(() {
       isLoading = true;
     });
     try {
-      final patientId = _getPatientId();
-      final Response response = await _apiClient.post(
-        ApiEndpoints.clinicalFormsList,
-        data: QuickFormListReq(patientId: patientId).toJson(),
+      final forms = await _formController.fetchForms(
+        tab: tab,
+        patientId: _getPatientId(),
       );
-      if (response.statusCode == 200 && response.data != null) {
-        final formResponse = FormListResponse.fromJson(
-          Map<String, dynamic>.from(response.data as Map),
-        );
-        if (formResponse.status == 'success') {
-          setState(() {
-            final sorted = formResponse.data.reversed.toList()
-              ..sort(
-                (a, b) => (int.tryParse(b.id.toString()) ?? 0).compareTo(
-                  int.tryParse(a.id.toString()) ?? 0,
-                ),
-              );
-            formList = sorted
-                .map(
-                  (item) => {
-                    'id': item.id,
-                    'patient_note': item.patientNote,
-                    'created': item.created,
-                    'appointment_id': item.appointmentId,
-                    'first_name': item.firstName,
-                    'last_name': item.lastName,
-                  },
-                )
-                .toList();
-          });
-        } else {
-          setState(() {
-            formList = [];
-          });
-        }
-      } else {
-        setState(() {
-          formList = [];
-        });
-      }
+      if (!mounted) return;
+      setState(() {
+        formList = forms;
+      });
     } catch (_) {
-      setState(() {
-        formList = [];
-      });
+      if (mounted) {
+        setState(() => formList = []);
+      }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
   }
 
@@ -350,7 +228,9 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
                         } else {
                           AppSnackbars.showInfo(
                             'info'.tr,
-                            'Opening $selectedHeaderTab Form',
+                            'opening_form'.trParams({
+                              'type': selectedHeaderTab,
+                            }),
                           );
                         }
                       },
@@ -396,23 +276,23 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
                       itemCount: formList.length,
                       itemBuilder: (context, index) {
                         final item = formList[index];
-                        final recordDate = item['created'] ?? 'N/A';
-                        final visitIdStr = item['id']?.toString() ?? '';
+                        final recordDate = item.created;
+                        final visitIdStr = item.id;
                         return PrescriptionRowTile(
                           index: index + 1,
                           visitNo: visitIdStr,
-                          labelPrefix: 'Form ID: ',
+                          labelPrefix: 'form_id_label'.tr,
                           date: recordDate,
                           onTap: () {
                             if (selectedHeaderTab == 'Quick') {
                               Get.to(
                                 () => const ServingPatientQuickFormView(),
-                                arguments: {'formId': item['id']},
+                                arguments: {'formId': item.id},
                               );
                             } else if (selectedHeaderTab == 'Medical') {
                               Get.to(
                                 () => const ServingPatientMedicalFormView(),
-                                arguments: {'formId': item['id']},
+                                arguments: {'formId': item.id},
                               )?.then((res) {
                                 if (res != null) {
                                   fetchMedicalFormList();
@@ -423,7 +303,7 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
                                 () => const ServingPatientClinicalFormScreen(),
                                 arguments: {
                                   'patientId': _getPatientId(),
-                                  'formId': item['id'],
+                                  'formId': item.id,
                                   'patientName':
                                       Get.isRegistered<
                                         ServingPatientController
@@ -451,7 +331,7 @@ class _ServingPatientFormTabViewState extends State<ServingPatientFormTabView> {
                             } else {
                               AppSnackbars.showInfo(
                                 'info'.tr,
-                                'Viewing Record',
+                                'viewing_record'.tr,
                               );
                             }
                           },

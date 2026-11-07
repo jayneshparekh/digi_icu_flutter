@@ -45,6 +45,8 @@ abstract class IPDAdmitFlowDelegate {
   RxString get selectedAdmitBed;
   RxList<dynamic> get admitWardOptions;
   RxList<dynamic> get admitBedOptions;
+  Future<void> fetchAdmitWards(String placeKey);
+  Future<void> fetchAdmitBeds(String placeKey, String wardName);
 
   // Financial & Schedule Fields
   RxString get approxCost;

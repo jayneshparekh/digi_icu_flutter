@@ -7,6 +7,7 @@ import 'package:digi_icu_flutter/models/request/user/admit_patient_request_model
 import 'package:digi_icu_flutter/models/response/leader/place_bed_info_response.dart';
 import 'package:digi_icu_flutter/models/response/patient/admit_request_response.dart';
 import 'package:digi_icu_flutter/services/api/api_client.dart';
+import 'package:digi_icu_flutter/services/ipd_admission_lookup_service.dart';
 import 'package:digi_icu_flutter/views/widgets/app_dialog.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:digi_icu_flutter/views/widgets/change_bed_dialog.dart';
@@ -21,8 +22,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/storage_service.dart';
 
-class AdmitPatientRequestController extends GetxController implements IPDAdmitFlowDelegate {
+class AdmitPatientRequestController extends GetxController
+    implements IPDAdmitFlowDelegate {
   final ApiClient apiClient = Get.find<ApiClient>();
+  final IpdAdmissionLookupService _admissionLookupService =
+      IpdAdmissionLookupService();
   late final SharedPreferences _prefs;
 
   @override
@@ -41,11 +45,14 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
   final RxBool isSubmittingBedChange = false.obs;
 
   // List of patients
-  final RxList<AdmitRequestPatientItem> allPatients = <AdmitRequestPatientItem>[].obs;
-  final RxList<AdmitRequestPatientItem> filteredPatients = <AdmitRequestPatientItem>[].obs;
+  final RxList<AdmitRequestPatientItem> allPatients =
+      <AdmitRequestPatientItem>[].obs;
+  final RxList<AdmitRequestPatientItem> filteredPatients =
+      <AdmitRequestPatientItem>[].obs;
 
   // Currently focused patient for Admission / Bed Change flow
-  final Rxn<AdmitRequestPatientItem> currentSelectedPatient = Rxn<AdmitRequestPatientItem>();
+  final Rxn<AdmitRequestPatientItem> currentSelectedPatient =
+      Rxn<AdmitRequestPatientItem>();
 
   // ==========================================
   // Pre-Admit & IPD Admit Dialog State (implements IPDAdmitFlowDelegate)
@@ -203,11 +210,12 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
   @override
   void onInit() {
     super.onInit();
-    _prefs = Get.isRegistered<SharedPreferences>()
-        ? Get.find<SharedPreferences>()
-        : Get.find<StorageService>().prefs;
+    _prefs = StorageService.to.prefs;
     final args = Get.arguments as Map<String, dynamic>? ?? {};
-    instituteId = args['institute_id']?.toString() ?? args['instituteId']?.toString() ?? '';
+    instituteId =
+        args['institute_id']?.toString() ??
+        args['instituteId']?.toString() ??
+        '';
 
     searchController.addListener(() {
       searchQuery.value = searchController.text.trim();
@@ -324,7 +332,9 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
     await _checkDiagnosisAndProceed(patient);
   }
 
-  Future<void> _checkDiagnosisAndProceed(AdmitRequestPatientItem patient) async {
+  Future<void> _checkDiagnosisAndProceed(
+    AdmitRequestPatientItem patient,
+  ) async {
     try {
       isLoading.value = true;
       final prefs = _prefs;
@@ -342,7 +352,8 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
         if (response.data['status'] == 'success') {
           _showAdmitConfirmationDialog(patient);
         } else {
-          final msg = response.data['msg']?.toString() ?? 'record_diagnosis_prompt'.tr;
+          final msg =
+              response.data['msg']?.toString() ?? 'record_diagnosis_prompt'.tr;
           AppSnackbars.showError('error'.tr, msg);
           final result = await Get.toNamed(
             '/diagnosis',
@@ -396,11 +407,15 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
       );
 
       List<dynamic> instituteList = [];
-      if (resp.statusCode == 200 && resp.data != null && resp.data['status'] == 'success') {
+      if (resp.statusCode == 200 &&
+          resp.data != null &&
+          resp.data['status'] == 'success') {
         instituteList = resp.data['data'] ?? [];
       }
 
-      final fallbackInstId = patient.instituteId?.isNotEmpty == true ? patient.instituteId! : instituteId;
+      final fallbackInstId = patient.instituteId?.isNotEmpty == true
+          ? patient.instituteId!
+          : instituteId;
       if (instituteList.isEmpty && fallbackInstId.isNotEmpty) {
         instituteList = [
           {
@@ -417,7 +432,8 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
         selectedInstituteName.value = patient.instituteName ?? '';
       } else if (instituteList.isNotEmpty) {
         final first = instituteList.first;
-        selectedInstituteId.value = (first['id'] ?? first['institute_id'])?.toString() ?? '';
+        selectedInstituteId.value =
+            (first['id'] ?? first['institute_id'])?.toString() ?? '';
         selectedInstituteName.value = first['institute_name']?.toString() ?? '';
       }
 
@@ -453,8 +469,11 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
         options: dio.Options(headers: {'Authorization': token}),
       );
 
-      if (resp.statusCode == 200 && resp.data != null && resp.data['status'] == 'success') {
-        final dayCareVal = resp.data['day_care']?.toString() ??
+      if (resp.statusCode == 200 &&
+          resp.data != null &&
+          resp.data['status'] == 'success') {
+        final dayCareVal =
+            resp.data['day_care']?.toString() ??
             resp.data['data']?[0]?['day_care']?.toString() ??
             '0';
         final available = dayCareVal != '0';
@@ -513,15 +532,13 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
       );
 
       if (amenitiesResp.statusCode == 200 && amenitiesResp.data != null) {
-        final Map<String, dynamic> data = amenitiesResp.data['data'] is Map<String, dynamic>
+        final Map<String, dynamic> data =
+            amenitiesResp.data['data'] is Map<String, dynamic>
             ? amenitiesResp.data['data']
             : amenitiesResp.data;
 
         Get.dialog(
-          IpdAdmitDialog(
-            instituteAmenities: [data],
-            delegate: this,
-          ),
+          IpdAdmitDialog(instituteAmenities: [data], delegate: this),
           barrierDismissible: false,
         );
       } else {
@@ -539,24 +556,33 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
       final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final userId = prefs.getString(AppConstants.prefUserId) ?? '';
-      final userTypeVal = prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
+      final userTypeVal =
+          prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
 
       final resp = await apiClient.post(
         ApiEndpoints.getInstitute,
         data: {'user_id': userId, 'user_type': userTypeVal},
         options: dio.Options(headers: {'Authorization': token}),
       );
-      if (resp.statusCode == 200 && resp.data != null && resp.data['status'] == 'success') {
+      if (resp.statusCode == 200 &&
+          resp.data != null &&
+          resp.data['status'] == 'success') {
         final List<dynamic> list = resp.data['data'] ?? [];
         final match = list.firstWhere(
-          (item) => item['id']?.toString() == instId || item['institute_id']?.toString() == instId,
+          (item) =>
+              item['id']?.toString() == instId ||
+              item['institute_id']?.toString() == instId,
           orElse: () => null,
         );
         if (match != null) {
-          selectedInstituteName.value = match['institute_name']?.toString() ?? '';
-          selectedInstituteLogo.value = match['institute_logo']?.toString() ?? '';
-          selectedInstituteAddress.value = match['institute_adress']?.toString() ?? '';
-          selectedInstituteMobile.value = match['institute_mobile_no']?.toString() ?? '';
+          selectedInstituteName.value =
+              match['institute_name']?.toString() ?? '';
+          selectedInstituteLogo.value =
+              match['institute_logo']?.toString() ?? '';
+          selectedInstituteAddress.value =
+              match['institute_adress']?.toString() ?? '';
+          selectedInstituteMobile.value =
+              match['institute_mobile_no']?.toString() ?? '';
         }
       }
     } catch (e) {
@@ -574,7 +600,9 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
         data: {'institute_id': instId},
         options: dio.Options(headers: {'Authorization': token}),
       );
-      if (resp.statusCode == 200 && resp.data != null && resp.data['status'] == 'success') {
+      if (resp.statusCode == 200 &&
+          resp.data != null &&
+          resp.data['status'] == 'success') {
         admitDoctors.assignAll(resp.data['data'] ?? []);
       }
     } catch (e) {
@@ -604,7 +632,8 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
             resData = jsonDecode(resData);
           } catch (_) {}
         }
-        if (resData is Map && resData['status']?.toString().toLowerCase() == 'success') {
+        if (resData is Map &&
+            resData['status']?.toString().toLowerCase() == 'success') {
           final labId = resData['lab_id']?.toString();
           if (labId != null && labId.isNotEmpty && labId != '0') {
             await _fetchReferralDoctors(labId);
@@ -663,7 +692,9 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
         data: {'appointment_id': bookingId, 'type': 'ipd'},
         options: dio.Options(headers: {'Authorization': token}),
       );
-      if (resp.statusCode == 200 && resp.data != null && resp.data['status'] == 'success') {
+      if (resp.statusCode == 200 &&
+          resp.data != null &&
+          resp.data['status'] == 'success') {
         isAdmitPrescription.value = (resp.data['msg']?.toString() != '0');
       }
     } catch (e) {
@@ -711,8 +742,10 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
     }
 
     final bool isPaidAmount =
-        (admissionAmount.value.isNotEmpty && admissionPaymentStatus.value == 'Paid') ||
-        (advanceAmount.value.isNotEmpty && advancePaymentStatus.value == 'Paid');
+        (admissionAmount.value.isNotEmpty &&
+            admissionPaymentStatus.value == 'Paid') ||
+        (advanceAmount.value.isNotEmpty &&
+            advancePaymentStatus.value == 'Paid');
 
     final String confirmMsg = isPaidAmount
         ? 'confirm_payment_admit_msg'.tr
@@ -750,7 +783,8 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
       final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
       final currentUserId = prefs.getString(AppConstants.prefUserId) ?? '';
-      final currentUserType = prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
+      final currentUserType =
+          prefs.getString(AppConstants.prefLoginType) ?? 'Doctor';
 
       final logoUrl = selectedInstituteLogo.value.isNotEmpty
           ? 'https://www.mhclinic.net/MHC/theme/images/institute/${selectedInstituteLogo.value}'
@@ -760,7 +794,9 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
         instituteId: selectedInstituteId.value,
         patientId: patient.patientId ?? '',
         appointmentId: patient.lastAppointmentId ?? '',
-        doctorId: selectedConsultantDoctorId.value.isNotEmpty ? selectedConsultantDoctorId.value : (patient.doctorId ?? ''),
+        doctorId: selectedConsultantDoctorId.value.isNotEmpty
+            ? selectedConsultantDoctorId.value
+            : (patient.doctorId ?? ''),
         referralDoctor: referralDoctor.value,
         admitDate: admissionDate.value,
         admitTime: admissionTime.value,
@@ -798,10 +834,16 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
         final resData = response.data;
         if (resData['status'] == 'success') {
           Get.back(); // close dialog
-          AppSnackbars.showSuccess('success'.tr, 'admission_completed_success'.tr);
+          AppSnackbars.showSuccess(
+            'success'.tr,
+            'admission_completed_success'.tr,
+          );
           loadAdmitRequests();
         } else {
-          AppSnackbars.showError('error'.tr, resData['msg']?.toString() ?? 'admission_failed'.tr);
+          AppSnackbars.showError(
+            'error'.tr,
+            resData['msg']?.toString() ?? 'admission_failed'.tr,
+          );
         }
       } else {
         AppSnackbars.showError('error'.tr, 'admission_failed'.tr);
@@ -834,7 +876,9 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
       isLoadingBedsHierarchy.value = true;
       final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
-      final targetInstId = patient.instituteId?.isNotEmpty == true ? patient.instituteId! : instituteId;
+      final targetInstId = patient.instituteId?.isNotEmpty == true
+          ? patient.instituteId!
+          : instituteId;
 
       final resp = await apiClient.post(
         ApiEndpoints.getAllBedsInfo,
@@ -847,7 +891,11 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
         if (res.status == 'success') {
           placeList.assignAll(res.data);
           if (changeSelectedPlace.value.isNotEmpty) {
-            updateChangeBeds(changeSelectedPlace.value, changeSelectedName.value, patient.currentBedNo);
+            updateChangeBeds(
+              changeSelectedPlace.value,
+              changeSelectedName.value,
+              patient.currentBedNo,
+            );
           }
         }
       }
@@ -858,6 +906,56 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
     }
   }
 
+  @override
+  Future<void> fetchAdmitWards(String placeKey) async {
+    if (placeKey.isEmpty) {
+      admitWardOptions.clear();
+      admitBedOptions.clear();
+      return;
+    }
+
+    try {
+      final targetInstituteId = selectedInstituteId.value.isNotEmpty
+          ? selectedInstituteId.value
+          : instituteId;
+      final wards = await _admissionLookupService.fetchWards(
+        place: placeKey,
+        instituteId: targetInstituteId,
+      );
+      admitWardOptions.assignAll(wards);
+      selectedAdmitWard.value = wards.isNotEmpty ? wards.first : '';
+      await fetchAdmitBeds(placeKey, selectedAdmitWard.value);
+    } catch (e) {
+      debugPrint('Error fetching admission wards: $e');
+      admitWardOptions.clear();
+      admitBedOptions.clear();
+      selectedAdmitWard.value = '';
+    }
+  }
+
+  @override
+  Future<void> fetchAdmitBeds(String placeKey, String wardName) async {
+    if (placeKey.isEmpty) {
+      admitBedOptions.clear();
+      return;
+    }
+
+    try {
+      final targetInstituteId = selectedInstituteId.value.isNotEmpty
+          ? selectedInstituteId.value
+          : instituteId;
+      final beds = await _admissionLookupService.fetchBeds(
+        place: placeKey,
+        ward: wardName,
+        instituteId: targetInstituteId,
+      );
+      admitBedOptions.assignAll(beds);
+    } catch (e) {
+      debugPrint('Error fetching admission beds: $e');
+      admitBedOptions.clear();
+    }
+  }
+
   void updateChangeBeds(String place, String name, String? curBed) {
     final placeObj = placeList.firstWhereOrNull((p) => p.place == place);
     final nameObj = placeObj?.names.firstWhereOrNull((n) => n.name == name);
@@ -865,7 +963,9 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
 
     if (curBed != null && curBed.isNotEmpty && !beds.contains(curBed)) {
       beds.add(curBed);
-      beds.sort((a, b) => (int.tryParse(a) ?? 0).compareTo(int.tryParse(b) ?? 0));
+      beds.sort(
+        (a, b) => (int.tryParse(a) ?? 0).compareTo(int.tryParse(b) ?? 0),
+      );
     }
     changeAvailableBeds.assignAll(beds);
   }
@@ -895,7 +995,9 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
       isSubmittingBedChange.value = true;
       final prefs = _prefs;
       final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
-      final targetInstId = patient.instituteId?.isNotEmpty == true ? patient.instituteId! : instituteId;
+      final targetInstId = patient.instituteId?.isNotEmpty == true
+          ? patient.instituteId!
+          : instituteId;
 
       final req = ChangePatientBedRequest(
         instituteId: targetInstId,
@@ -919,10 +1021,16 @@ class AdmitPatientRequestController extends GetxController implements IPDAdmitFl
         final resData = resp.data;
         if (resData['status'] == 'success') {
           Get.back(); // close dialog
-          AppSnackbars.showSuccess('success'.tr, 'bed_and_place_changed_success'.tr);
+          AppSnackbars.showSuccess(
+            'success'.tr,
+            'bed_and_place_changed_success'.tr,
+          );
           loadAdmitRequests();
         } else {
-          AppSnackbars.showError('error'.tr, resData['msg']?.toString() ?? 'failed_to_change_bed'.tr);
+          AppSnackbars.showError(
+            'error'.tr,
+            resData['msg']?.toString() ?? 'failed_to_change_bed'.tr,
+          );
         }
       } else {
         AppSnackbars.showError('error'.tr, 'failed_to_change_bed'.tr);

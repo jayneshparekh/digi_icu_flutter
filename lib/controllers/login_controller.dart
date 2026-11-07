@@ -5,7 +5,6 @@ import 'package:digi_icu_flutter/views/widgets/choose_patient_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/constants/app_constants.dart';
 import '../models/response/users/login_response.dart';
@@ -52,11 +51,7 @@ class LoginController extends GetxController {
     try {
       final response = await apiClient.post(
         ApiEndpoints.signin,
-        data: {
-          'email_id': input,
-          'password': pass,
-          'token': '',
-        },
+        data: {'email_id': input, 'password': pass, 'token': ''},
       );
 
       if (response.statusCode == 200 && response.data != null) {
@@ -65,24 +60,24 @@ class LoginController extends GetxController {
           // Tell the OS autofill service to prompt to save the credentials
           TextInput.finishAutofillContext(shouldSave: true);
 
-          final prefs = StorageService.to.prefs;
-          await prefs.setString(
+          final storage = StorageService.to;
+          await storage.setString(
             AppConstants.prefAuthorizationToken,
             loginRes.authToken,
           );
 
           if (loginRes.data != null) {
-            await _storeUserDataAndNavigate(prefs, loginRes.data!);
+            await _storeUserDataAndNavigate(loginRes.data!);
           } else if (loginRes.patientList.isNotEmpty) {
             if (loginRes.patientList.length == 1) {
-              await _storeUserDataAndNavigate(prefs, loginRes.patientList[0]);
+              await _storeUserDataAndNavigate(loginRes.patientList[0]);
             } else {
               if (Get.context != null) {
                 ChoosePatientDialog.show(
                   context: Get.context!,
                   patients: loginRes.patientList,
                   onSelect: (selectedPatient) async {
-                    await _storeUserDataAndNavigate(prefs, selectedPatient);
+                    await _storeUserDataAndNavigate(selectedPatient);
                   },
                 );
               }
@@ -98,38 +93,36 @@ class LoginController extends GetxController {
           );
         }
       } else {
-        _showErrorSnackbar('Something went wrong: ${response.statusCode}');
+        _showErrorSnackbar('request_failed'.tr);
       }
     } catch (e, stacktrace) {
-      debugPrint('Login Error Details: $e');
-      debugPrint('Stacktrace: $stacktrace');
-      _showErrorSnackbar('Connection error: $e');
+      debugPrint('Login request failed: $e');
+      debugPrintStack(stackTrace: stacktrace);
+      _showErrorSnackbar(ApiClient.errorMessageKey(e).tr);
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> _storeUserDataAndNavigate(
-    SharedPreferences prefs,
-    LoginDataRes data,
-  ) async {
-    await prefs.setBool(AppConstants.prefIsLogin, true);
-    await prefs.setString(AppConstants.prefUserId, data.id);
-    await prefs.setString(AppConstants.prefLoginType, data.userType);
+  Future<void> _storeUserDataAndNavigate(LoginDataRes data) async {
+    final storage = StorageService.to;
+    await storage.setBool(AppConstants.prefIsLogin, true);
+    await storage.setString(AppConstants.prefUserId, data.id);
+    await storage.setString(AppConstants.prefLoginType, data.userType);
     final fullName = '${data.firstName} ${data.surname}'.trim();
-    await prefs.setString(
+    await storage.setString(
       AppConstants.prefUserName,
       fullName.isNotEmpty ? fullName : data.firstName,
     );
-    await prefs.setString(AppConstants.prefUserMhcId, data.mhcId);
-    await prefs.setString(AppConstants.prefUserGender, data.gender);
-    await prefs.setString(AppConstants.prefUserAge, data.age);
-    await prefs.setString(AppConstants.prefUserMobileNumber, data.mobileNo);
-    await prefs.setString(AppConstants.prefUserEmail, data.mhcEmail);
-    await prefs.setString(AppConstants.prefScreeningId, data.screeningId);
-    await prefs.setString(AppConstants.doctorRegSec2Pending, data.section2);
-    await prefs.setString(AppConstants.doctorRegSec3Pending, data.section3);
-    await prefs.setString(AppConstants.prefInstituteName, data.instituteName);
+    await storage.setString(AppConstants.prefUserMhcId, data.mhcId);
+    await storage.setString(AppConstants.prefUserGender, data.gender);
+    await storage.setString(AppConstants.prefUserAge, data.age);
+    await storage.setString(AppConstants.prefUserMobileNumber, data.mobileNo);
+    await storage.setString(AppConstants.prefUserEmail, data.mhcEmail);
+    await storage.setString(AppConstants.prefScreeningId, data.screeningId);
+    await storage.setString(AppConstants.doctorRegSec2Pending, data.section2);
+    await storage.setString(AppConstants.doctorRegSec3Pending, data.section3);
+    await storage.setString(AppConstants.prefInstituteName, data.instituteName);
 
     _redirectToDashboard(data.userType, data);
   }

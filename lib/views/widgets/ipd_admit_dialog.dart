@@ -1,19 +1,12 @@
 import 'dart:io';
 import 'package:digi_icu_flutter/controllers/serving_patient_controller.dart';
-import 'package:digi_icu_flutter/core/constants/api_endpoints.dart';
-import 'package:digi_icu_flutter/core/constants/app_constants.dart';
 import 'package:digi_icu_flutter/core/theme/app_colors.dart';
-import 'package:digi_icu_flutter/models/request/user/admit_place_request_model.dart';
-import 'package:digi_icu_flutter/models/request/user/get_beds_request_model.dart';
-import 'package:digi_icu_flutter/services/api/api_client.dart';
-import 'package:digi_icu_flutter/services/storage_service.dart';
 import 'package:digi_icu_flutter/views/widgets/app_drawing_canvas.dart';
 import 'package:digi_icu_flutter/views/widgets/app_primary_button.dart';
 import 'package:digi_icu_flutter/views/widgets/app_radio.dart';
 import 'package:digi_icu_flutter/views/widgets/app_snackbars.dart';
 import 'package:digi_icu_flutter/views/widgets/app_speech_input_widget.dart';
 import 'package:digi_icu_flutter/views/widgets/ipd_admit_flow_delegate.dart';
-import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,7 +31,6 @@ class IpdAdmitDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final IPDAdmitFlowDelegate flowDelegate =
         delegate ?? Get.find<ServingPatientController>();
-    final ApiClient apiClient = Get.find<ApiClient>();
 
     final TextEditingController admissionNotesEditingController =
         TextEditingController(text: flowDelegate.admissionNotes.value);
@@ -66,21 +58,22 @@ class IpdAdmitDialog extends StatelessWidget {
     final facilities = _getDynamicFacilities(instituteAmenities);
 
     // Default place initialization
-    if (flowDelegate.selectedAdmitPlace.value.isEmpty && facilities.isNotEmpty) {
+    if (flowDelegate.selectedAdmitPlace.value.isEmpty &&
+        facilities.isNotEmpty) {
       if (flowDelegate.isDayCare.value) {
         final dayCare = facilities.firstWhere(
           (f) => f['key'] == 'Day Care',
           orElse: () => facilities.first,
         );
         flowDelegate.selectedAdmitPlace.value = dayCare['key']!;
-        _fetchWardsForPlace(flowDelegate, apiClient, dayCare['key']!);
+        flowDelegate.fetchAdmitWards(dayCare['key']!);
       } else {
         final nonDayCare = facilities.firstWhere(
           (f) => f['key'] != 'Day Care',
           orElse: () => facilities.first,
         );
         flowDelegate.selectedAdmitPlace.value = nonDayCare['key']!;
-        _fetchWardsForPlace(flowDelegate, apiClient, nonDayCare['key']!);
+        flowDelegate.fetchAdmitWards(nonDayCare['key']!);
       }
     }
 
@@ -224,7 +217,9 @@ class IpdAdmitDialog extends StatelessWidget {
                               }).toList(),
                               onChanged: (value) {
                                 if (value != null) {
-                                  flowDelegate.selectedConsultantDoctorId.value =
+                                  flowDelegate
+                                          .selectedConsultantDoctorId
+                                          .value =
                                       value;
                                   if (value.isNotEmpty) {
                                     final match = flowDelegate.admitDoctors
@@ -361,7 +356,8 @@ class IpdAdmitDialog extends StatelessWidget {
                         ),
                       ),
                       keyboardType: TextInputType.number,
-                      onChanged: (value) => flowDelegate.approxCost.value = value,
+                      onChanged: (value) =>
+                          flowDelegate.approxCost.value = value,
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
@@ -375,7 +371,8 @@ class IpdAdmitDialog extends StatelessWidget {
                         ),
                       ),
                       keyboardType: TextInputType.number,
-                      onChanged: (value) => flowDelegate.approxDays.value = value,
+                      onChanged: (value) =>
+                          flowDelegate.approxDays.value = value,
                     ),
                     const SizedBox(height: 16),
 
@@ -462,7 +459,9 @@ class IpdAdmitDialog extends StatelessWidget {
                                         flowDelegate.admissionPaymentMode.value,
                                     onChanged: (value) {
                                       if (value != null) {
-                                        flowDelegate.admissionPaymentMode.value =
+                                        flowDelegate
+                                                .admissionPaymentMode
+                                                .value =
                                             value;
                                       }
                                     },
@@ -561,10 +560,12 @@ class IpdAdmitDialog extends StatelessWidget {
                           const SizedBox(height: 8),
                           Obx(
                             () => RadioGroup<String>(
-                              groupValue: flowDelegate.advancePaymentStatus.value,
+                              groupValue:
+                                  flowDelegate.advancePaymentStatus.value,
                               onChanged: (value) {
                                 if (value != null) {
-                                  flowDelegate.advancePaymentStatus.value = value;
+                                  flowDelegate.advancePaymentStatus.value =
+                                      value;
                                 }
                               },
                               child: Row(
@@ -632,8 +633,9 @@ class IpdAdmitDialog extends StatelessWidget {
                                       'Online') ...[
                                     const SizedBox(height: 8),
                                     TextFormField(
-                                      initialValue:
-                                          flowDelegate.advanceTransactionId.value,
+                                      initialValue: flowDelegate
+                                          .advanceTransactionId
+                                          .value,
                                       decoration: InputDecoration(
                                         labelText: 'transaction_id'.tr,
                                         border: const OutlineInputBorder(),
@@ -706,8 +708,9 @@ class IpdAdmitDialog extends StatelessWidget {
                       onTap: () async {
                         TimeOfDay initialTime = TimeOfDay.now();
                         if (flowDelegate.admissionTime.value.isNotEmpty) {
-                          final parts =
-                              flowDelegate.admissionTime.value.split(':');
+                          final parts = flowDelegate.admissionTime.value.split(
+                            ':',
+                          );
                           if (parts.length == 2) {
                             final h = int.tryParse(parts[0]);
                             final m = int.tryParse(parts[1]);
@@ -768,11 +771,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                 flowDelegate.selectedAdmitPlace.value = value;
                                 flowDelegate.selectedAdmitWard.value = '';
                                 flowDelegate.selectedAdmitBed.value = '';
-                                _fetchWardsForPlace(
-                                  flowDelegate,
-                                  apiClient,
-                                  value,
-                                );
+                                flowDelegate.fetchAdmitWards(value);
                               }
                             },
                             child: SingleChildScrollView(
@@ -835,9 +834,12 @@ class IpdAdmitDialog extends StatelessWidget {
                                               .selectedAdmitWard
                                               .value
                                               .isNotEmpty &&
-                                          flowDelegate.admitWardOptions.contains(
-                                            flowDelegate.selectedAdmitWard.value,
-                                          )
+                                          flowDelegate.admitWardOptions
+                                              .contains(
+                                                flowDelegate
+                                                    .selectedAdmitWard
+                                                    .value,
+                                              )
                                       ? flowDelegate.selectedAdmitWard.value
                                       : null,
                                   onChanged: (value) {
@@ -845,9 +847,7 @@ class IpdAdmitDialog extends StatelessWidget {
                                       flowDelegate.selectedAdmitWard.value =
                                           value;
                                       flowDelegate.selectedAdmitBed.value = '';
-                                      _fetchBedsForWard(
-                                        flowDelegate,
-                                        apiClient,
+                                      flowDelegate.fetchAdmitBeds(
                                         flowDelegate.selectedAdmitPlace.value,
                                         value,
                                       );
@@ -910,7 +910,8 @@ class IpdAdmitDialog extends StatelessWidget {
                                       : null,
                                   onChanged: (value) {
                                     if (value != null) {
-                                      flowDelegate.selectedAdmitBed.value = value;
+                                      flowDelegate.selectedAdmitBed.value =
+                                          value;
                                     }
                                   },
                                   child: Wrap(
@@ -1015,7 +1016,10 @@ class IpdAdmitDialog extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 8),
-                            if (flowDelegate.noteImagePath.value.isNotEmpty) ...[
+                            if (flowDelegate
+                                .noteImagePath
+                                .value
+                                .isNotEmpty) ...[
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.file(
@@ -1226,108 +1230,5 @@ class IpdAdmitDialog extends StatelessWidget {
     return facilities
         .where((f) => f['count'] != '0' && f['count'] != null)
         .toList();
-  }
-
-  void _fetchWardsForPlace(
-    IPDAdmitFlowDelegate flowDelegate,
-    ApiClient apiClient,
-    String? placeKey,
-  ) async {
-    if (placeKey == null || placeKey.isEmpty) return;
-    try {
-      final prefs = StorageService.to.prefs;
-      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
-      final targetInstituteId = flowDelegate.selectedInstituteId.value.isNotEmpty
-          ? flowDelegate.selectedInstituteId.value
-          : flowDelegate.instituteId;
-
-      final req = AdmitPlaceRequestModel(
-        admitIn: placeKey,
-        instituteId: targetInstituteId,
-      );
-
-      final resp = await apiClient.post(
-        ApiEndpoints.whereAdmit,
-        data: req.toJson(),
-        options: dio.Options(headers: {'Authorization': token}),
-      );
-      if (resp.statusCode == 200 && resp.data != null) {
-        final wards = resp.data['data'] ?? [];
-        if (wards is List) {
-          final wardsList = wards
-              .map((w) => w['name']?.toString() ?? '')
-              .where((w) => w.isNotEmpty)
-              .toList();
-          flowDelegate.admitWardOptions.value = wardsList;
-          if (wardsList.isNotEmpty) {
-            final firstWard = wardsList.first;
-            flowDelegate.selectedAdmitWard.value = firstWard;
-            _fetchBedsForWard(flowDelegate, apiClient, placeKey, firstWard);
-          } else {
-            flowDelegate.selectedAdmitWard.value = '';
-            _fetchBedsForWard(flowDelegate, apiClient, placeKey, '');
-          }
-        } else {
-          flowDelegate.admitWardOptions.clear();
-          flowDelegate.selectedAdmitWard.value = '';
-          _fetchBedsForWard(flowDelegate, apiClient, placeKey, '');
-        }
-      } else {
-        flowDelegate.admitWardOptions.clear();
-        flowDelegate.selectedAdmitWard.value = '';
-        _fetchBedsForWard(flowDelegate, apiClient, placeKey, '');
-      }
-    } catch (e) {
-      debugPrint('Error fetching wards: $e');
-      flowDelegate.admitWardOptions.clear();
-      flowDelegate.selectedAdmitWard.value = '';
-      flowDelegate.admitBedOptions.clear();
-    }
-  }
-
-  void _fetchBedsForWard(
-    IPDAdmitFlowDelegate flowDelegate,
-    ApiClient apiClient,
-    String? placeKey,
-    String? wardName,
-  ) async {
-    if (placeKey == null || placeKey.isEmpty) {
-      flowDelegate.admitBedOptions.clear();
-      return;
-    }
-    try {
-      final prefs = StorageService.to.prefs;
-      final token = prefs.getString(AppConstants.prefAuthorizationToken) ?? '';
-      final targetInstituteId = flowDelegate.selectedInstituteId.value.isNotEmpty
-          ? flowDelegate.selectedInstituteId.value
-          : flowDelegate.instituteId;
-
-      final req = GetBedsRequestModel(
-        admitIn: placeKey,
-        instituteId: targetInstituteId,
-        name: wardName ?? '',
-      );
-
-      final resp = await apiClient.post(
-        ApiEndpoints.getBeds,
-        data: req.toJson(),
-        options: dio.Options(headers: {'Authorization': token}),
-      );
-      if (resp.statusCode == 200 && resp.data != null) {
-        final beds = resp.data['data'] ?? [];
-        if (beds is List) {
-          flowDelegate.admitBedOptions.value = beds
-              .map((b) => b['bed_no']?.toString() ?? '')
-              .toList();
-        } else {
-          flowDelegate.admitBedOptions.clear();
-        }
-      } else {
-        flowDelegate.admitBedOptions.clear();
-      }
-    } catch (e) {
-      debugPrint('Error fetching beds: $e');
-      flowDelegate.admitBedOptions.clear();
-    }
   }
 }

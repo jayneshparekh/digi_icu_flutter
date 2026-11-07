@@ -249,9 +249,7 @@ class DischargeSummaryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _prefs = Get.isRegistered<SharedPreferences>()
-        ? Get.find<SharedPreferences>()
-        : Get.find<StorageService>().prefs;
+    _prefs = StorageService.to.prefs;
     _parseArguments();
     _loadUserInfo();
     loadDischargeData();
